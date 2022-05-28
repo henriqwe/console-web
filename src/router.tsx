@@ -1,5 +1,5 @@
 import { Data } from "pages/Data";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { App } from "pages/App";
 
 export function Router() {
@@ -12,3 +12,6 @@ export function Router() {
     </BrowserRouter>
   );
 }
+
+// NProgress.start();
+// NProgress.done();

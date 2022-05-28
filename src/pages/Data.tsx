@@ -1,7 +1,9 @@
+import * as component from "components";
+
 export function Data() {
   return (
     <div>
-      <p className="text-red-600">Test 2</p>
+      <component.Header />
     </div>
-  )
+  );
 }

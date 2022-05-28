@@ -1,19 +1,23 @@
 import { Icon } from "@iconify/react";
+import { useLocation, Link } from "react-router-dom";
 import { ReactNode } from "react";
 
 export function Header() {
+  const { pathname } = useLocation();
   const headerSections = [
     {
       title: "API",
       icon: <Icon icon="icomoon-free:lab" className="w-4 h-4" />,
       legend: "Test the Ycodify API",
-      active: true,
+      active: pathname === "/",
+      route: "/",
     },
     {
       title: "DATA",
       icon: <Icon icon="dashicons:database" className="w-5 h-5" />,
       legend: "Data & Schema management",
-      active: false,
+      active: pathname === "/data",
+      route: "/data",
     },
   ];
 
@@ -21,18 +25,21 @@ export function Header() {
     <div className="relative flex items-start w-full bg-gray-600">
       <div className="flex items-center gap-4 w-[20%] px-6 py-1.5">
         <img
-          src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
+          src="http://www.ycodify.com/images/logo.png"
+          className="w-[70%]"
           alt="Logo"
         />
-        <p className="text-gray-200">Version 1.0.0</p>
+        <p className="text-gray-200">V1.0.0</p>
       </div>
       <div className="flex items-start justify-start flex-grow pt-6 border-l-2 border-gray-400">
         {headerSections.map((section) => (
           <HeaderSection
+            key={section.title}
             title={section.title}
             icon={section.icon}
             legend={section.legend}
             active={section.active}
+            route={section.route}
           />
         ))}
       </div>
@@ -45,14 +52,16 @@ export function HeaderSection({
   icon,
   legend,
   active,
+  route,
 }: {
   icon: ReactNode;
   title: string;
   legend: string;
   active: boolean;
+  route: string;
 }) {
   return (
-    <div className="relative">
+    <Link to={route} className="relative">
       <div
         className={`flex items-center gap-3 px-4 pb-6 cursor-pointer ${
           active
@@ -64,7 +73,7 @@ export function HeaderSection({
         {icon}
         <p>{title}</p>
       </div>
-    </div>
+    </Link>
   );
 }
 // #43495A
