@@ -29,9 +29,9 @@ export function Header() {
           className="w-[70%]"
           alt="Logo"
         />
-        <p className="text-gray-200">V1.0.0</p>
+        <p className="text-xs text-gray-200">V1.0.0</p>
       </div>
-      <div className="flex items-start justify-start flex-grow pt-6 border-l-2 border-gray-400">
+      <div className="flex items-center justify-center pt-4 border-l border-gray-400">
         {headerSections.map((section) => (
           <HeaderSection
             key={section.title}
@@ -63,15 +63,15 @@ export function HeaderSection({
   return (
     <Link to={route} className="relative">
       <div
-        className={`flex items-center gap-3 px-4 pb-6 cursor-pointer ${
+        className={`flex items-center gap-1 px-3 pb-6 cursor-pointer ${
           active
-            ? "after:block after:absolute after:h-1.5 after:bottom-0 after:left-0 after:bg-yellow-400 after:w-full text-yellow-400 "
+            ? "after:block after:absolute after:h-1 after:bottom-0 after:left-0 after:bg-yellow-400 after:w-full text-yellow-400 "
             : "text-gray-200"
         }`}
         title={legend}
       >
         {icon}
-        <p>{title}</p>
+        <p className="text-xs">{title}</p>
       </div>
     </Link>
   );
