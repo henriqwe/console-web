@@ -1,7 +1,7 @@
 import * as commom from "common";
 import * as data from "domains/data";
 
-export function Data() {
+export default function Data() {
   return (
     <data.DataProvider>
       <div className="h-screen">

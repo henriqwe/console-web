@@ -1,9 +1,10 @@
 import { Icon } from "@iconify/react";
-import { useLocation, Link } from "react-router-dom";
+import { useRouter } from 'next/router'
 import { ReactNode } from "react";
+import Link from "next/link";
 
 export function Header() {
-  const { pathname } = useLocation();
+  const { pathname } = useRouter();
   const headerSections = [
     {
       title: "API",
@@ -61,9 +62,9 @@ export function HeaderSection({
   route: string;
 }) {
   return (
-    <Link to={route} className="relative">
+    <Link href={route}>
       <div
-        className={`flex items-center gap-1 px-3 cursor-pointer h-[3.4rem] ${
+        className={`flex items-center gap-1 px-3 cursor-pointer relative h-[3.4rem] ${
           active
             ? "after:block after:absolute after:h-1 after:bottom-0 after:left-0 after:bg-yellow-400 after:w-full text-yellow-400 "
             : "text-gray-200"

@@ -12,7 +12,7 @@ type DataContextProps = {
 };
 
 type SelectedItem = {
-  type: 'schema' | 'table';
+  type: "schema" | "table";
   name: string;
   location: string;
   id: string;
@@ -28,7 +28,7 @@ export const DataContext = createContext<DataContextProps>(
 
 export const DataProvider = ({ children }: ProviderProps) => {
   const [selectedItem, setSelectedItem] = useState<{
-    type: 'schema' | 'table';
+    type: "schema" | "table";
     name: string;
     location: string;
     id: string;
