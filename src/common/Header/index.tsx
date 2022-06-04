@@ -66,7 +66,7 @@ export function HeaderSection({
       <div
         className={`flex items-center gap-1 px-3 cursor-pointer relative h-[3.4rem] ${
           active
-            ? "after:block after:absolute after:h-1 after:bottom-0 after:left-0 after:bg-yellow-400 after:w-full text-yellow-400 "
+            ? "after:block after:absolute after:h-1 after:bottom-0 after:left-0 after:bg-yellow-400 after:w-full text-yellow-400"
             : "text-gray-200"
         }`}
         title={legend}

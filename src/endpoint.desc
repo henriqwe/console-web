@@ -1,0 +1,182 @@
+protocolo: HTTP/REST
+
+verbs: POST, GET, PUT, DELETE
+
+BASE = https://baas.ycodify.com
+
+pattern: $BASE/api/v{version}/{service}/{endpoint}
+
+endoints:
+
+1. criar um novo schema
+            verbo: POST
+         endpoint: $BASE/api/v1/modeler/schema
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+2. listar o nome dos schemas já criados
+            verbo: GET
+         endpoint: $BASE/api/v1/modeler/schema
+  'Authorization': Bearer {TOKEN}
+
+3. recuperar a descrição de entidades de tipo sql de um schema, dado seu nome
+            verbo: GET
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/sql
+  'Authorization': Bearer {TOKEN}
+
+4. recuperar a descrição de entidades de tipo nosql de um schema, dado seu nome
+            verbo: GET
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/nosql
+  'Authorization': Bearer {TOKEN}
+
+5. atualizar o estado de um schema, dado seu nome
+            verbo: PUT
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: { "status":Boolean }
+
+6. deletar um schema, dado seu nome
+            verbo: DELETE
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}
+  'Authorization': Bearer {TOKEN}
+
+7. criar a conta de usuário administrador da aplicação:
+            verbo: POST
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/create-admin-account
+  'Authorization': Bearer {TOKEN}
+
+8. criar uma entidade em um schema, dado seu nome
+            verbo: POST
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+9. recuperar uma entidade em um schema, dado seu nome
+            verbo: GET
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}
+  'Authorization': Bearer {TOKEN}
+
+10. atualizar uma entidade em um schema, dado seu nome
+            verbo: PUT
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+11. deletar uma entidade em um schema, dado seu nome
+            verbo: DELETE
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}
+  'Authorization': Bearer {TOKEN}
+
+12. criar um atributo em um schema, dado seu nome
+            verbo: POST
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}/attribute
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+13. recuperar um atributo em um schema, dado seu nome
+            verbo: GET
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}/attribute/{attributeName}
+  'Authorization': Bearer {TOKEN}
+
+14. atualizar um atributo em um schema, dado seu nome
+            verbo: PUT
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}/attribute/{attributeName}
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+15. deletar um atributo em um schema, dado seu nome
+            verbo: DELETE
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}/attribute/{attributeName}
+  'Authorization': Bearer {TOKEN}
+
+16. criar um relacionamento em um schema, dado seu nome
+            verbo: POST
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}/association
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+17. recuperar um relacionamento em um schema, dado seu nome
+            verbo: GET
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}/association/{associationName}
+  'Authorization': Bearer {TOKEN}
+
+18. atualizar um relacionamento em um schema, dado seu nome
+            verbo: PUT
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}/association/{associationName}
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+19. deletar um relacionamento em um schema, dado seu nome
+            verbo: DELETE
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}/association/{associationName}
+  'Authorization': Bearer {TOKEN}
+
+20. criar um usuário para um schema de aplicação, dado seu nome
+            verbo: POST
+         endpoint: $BASE/api/v1/yc-ID/account
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+21. recuperar um usuário para um schema de aplicação, dado seu nome
+            verbo: GET
+         endpoint: $BASE/api/v1/yc-ID/account/{accountId}
+  'Authorization': Bearer {TOKEN}
+
+22. recuperar uma lista de usuários para um schema de aplicação, dado seu nome
+            verbo: GET
+         endpoint: $BASE/api/v1/yc-ID/account
+  'Authorization': Bearer {TOKEN}
+
+23. atuaizar um usuário para um schema de aplicação, dado seu nome
+            verbo: PUT
+         endpoint: $BASE/api/v1/yc-ID/account/{accountId}
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+24. atuaizar a senha de um usuário para um schema de aplicação, dado seu nome
+            verbo: PUT
+         endpoint: $BASE/api/v1/yc-ID/account/{accountId}/password
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+25. deletar um usuário para um schema de aplicação, dado seu nome
+            verbo: DELETE
+         endpoint: $BASE/api/v1/modeler/schema/{schemaName}/entity/{entityName}
+  'Authorization': Bearer {TOKEN}
+
+26. criar uma role para um schema de aplicação, dado seu nome
+            verbo: POST
+         endpoint: $BASE/api/v1/yc-ID/role
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+27. recuperar uma role para um schema de aplicação, dado seu nome
+            verbo: GET
+         endpoint: $BASE/api/v1/yc-ID/role
+  'Authorization': Bearer {TOKEN}
+
+28. atuaizar uma role para um schema de aplicação, dado seu nome
+            verbo: PUT
+         endpoint: $BASE/api/v1/yc-ID/role/{roleId}
+   'Content-Type': application/json
+  'Authorization': Bearer {TOKEN}
+             body: {}
+
+29. deletar um usuário para um schema de aplicação, dado seu nome
+            verbo: DELETE
+         endpoint: $BASE/api/v1/yc-ID/role/{roleId}
+  'Authorization': Bearer {TOKEN}
+
+

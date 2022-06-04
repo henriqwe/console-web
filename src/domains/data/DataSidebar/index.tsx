@@ -31,8 +31,8 @@ export function DataSideBar() {
         <div key={database.schema_name}>
           <div className="flex items-center gap-2 pb-2 cursor-pointer">
             <Icon icon="bxs:down-arrow" className="w-4 h-4" />
-            <Icon icon="dashicons:database" className="w-6 h-6" />
-            <p className="text-xl">{database.schema_name}</p>
+            <Icon icon="dashicons:database" className="w-5 h-5" />
+            <p className="text-base">{database.schema_name}</p>
           </div>
 
           {database.schemas.map((schema) => (
@@ -64,12 +64,12 @@ export function DataSideBar() {
                 {activeSchema === `${database.schema_name}${schema.tag}` ? (
                   <Icon
                     icon="ant-design:folder-open-filled"
-                    className="w-6 h-6"
+                    className="w-5 h-5"
                   />
                 ) : (
-                  <Icon icon="ant-design:folder-filled" className="w-6 h-6" />
+                  <Icon icon="ant-design:folder-filled" className="w-5 h-5" />
                 )}
-                <p className="text-lg">{schema.tag}</p>
+                <p className="text-sm">{schema.tag}</p>
               </div>
               {activeSchema === `${database.schema_name}${schema.tag}` &&
                 schema.Tables.map((table) => (
@@ -92,8 +92,8 @@ export function DataSideBar() {
                         );
                       }}
                     >
-                      <Icon icon="bi:table" className="w-5 h-5" />
-                      <p className="text-lg">{table.Name}</p>
+                      <Icon icon="bi:table" className="w-4 h-4" />
+                      <p className="text-sm">{table.Name}</p>
                     </div>
                   </div>
                 ))}
