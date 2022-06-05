@@ -1,5 +1,3 @@
-import { Icon } from "@iconify/react";
-import * as common from "common";
 import * as data from "domains/data";
 import { useState } from "react";
 
