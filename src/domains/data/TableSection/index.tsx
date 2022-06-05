@@ -43,23 +43,7 @@ export function TableSection() {
 
       <div className="w-full pr-6 h-[1px] bg-gray-300" />
 
-      <div className="p-4 mt-2">
-        <div className="flex justify-between w-full">
-          <div>
-            <p>Filter</p>
-            <div className="flex gap-1 mt-4">
-              <common.Input placeholder="-- value --" />
-            </div>
-          </div>
-
-          <div>
-            <p>Sort</p>
-            <div className="flex gap-1 mt-4">
-              <common.Input placeholder="-- value --" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <data.BrowserRows />
     </div>
   );
 }
