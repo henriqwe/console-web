@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import Link from "next/link";
 
@@ -24,10 +24,10 @@ export function Header() {
 
   return (
     <div className="relative flex items-start w-full bg-gray-600 h-[3.4rem]">
-      <div className="flex items-center gap-4 w-[20%] px-6 py-1.5 ">
+      <div className="flex items-center gap-4 w-[20%] px-6 py-1.5 mt-1 ">
         <img
           src="http://www.ycodify.com/images/logo.png"
-          className="w-[70%]"
+          className="w-[50%] 2xl:w-[40%]"
           alt="Logo"
         />
         <p className="text-xs text-gray-200">V1.0.0</p>
