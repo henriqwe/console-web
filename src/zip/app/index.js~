@@ -1,0 +1,1666 @@
+var _editor = null;
+var _tenantID = '';
+var _jwtoken = '';
+var _route = '';
+var _account = null;
+var _role = null;
+var _table_data = null;
+var _table_roles = null;
+var _table_accounts = null;
+var _table_log = null;
+var _disable_cli = false;
+var _commands = null;
+var _line = 0;
+
+const _delay = 200;
+
+const _app_lib = {
+	update_textarea: function (textarea_selector, line, commands) {
+		let remain_lines_ = '';
+		let remainLineIndex_ = Number(line + 1);
+		for (; remainLineIndex_ < commands.length - 1; remainLineIndex_++) {
+			remain_lines_ = remain_lines_ + commands[remainLineIndex_] + ';';
+		}
+		$(textarea_selector).val(remain_lines_.trim());
+	},
+	load_yUML_svg: function (text) {
+	    let code_ = '// {type:class}\n';
+	    let array = text.split('\n');
+	    for (let i = 0; i < array.length; i++) {
+	    	if (array[i].trim().startsWith('>')) {
+	    		code_ = code_+'\n'+array[i].replace('>','');
+	    	}
+	    }
+	    return new yuml_diagram().processYumlDocument(code_.replace('|',''), false);
+	},
+	tokenizer_yc_code: function (text) {
+		let tokens_ = [];
+		let aux_ = text.split(' ');
+		for (let i = 0; i < aux_.length; i++) {
+			let aux__ = aux_[i].split('\n');
+			for (let j = 0; j < aux__.length; j++) {
+				if (aux__[j].trim() != '') {
+					tokens_[tokens_.length] = aux__[j].trim();
+				}
+			}
+		}
+		return tokens_;
+	},
+	get_entities_names_from_yc_tokens: function (tokens) {
+		let entities_names_ = [];
+		for (let i = 0; i < tokens.length; i++) {
+			if (tokens[i] == 'entity') {
+				entities_names_[entities_names_.length]=tokens[i+1];
+			}
+		}
+		return entities_names_;
+	},
+	update_data_browsing_panel: function (table_selector, toggle_selector, data_browsing_modal_selector, datas) {
+		if (_table_data != null) {
+			_table_data.clear().destroy();
+		}
+
+		let index_ = 0;
+		let to_toggle_ = 'Toggle column: ';
+		columns = [];
+		for (var key in datas[0]) {
+			let visible_ = true;
+			if (key == 'createdat' || key == 'updatedat' || key == 'user' || key == 'role' || key == 'version' || key == 'id' || key == 'classUID') {
+				visible_ = false;
+			}
+			columns.push({
+				data: key,
+				title: key,
+				orderable: false,
+				visible: visible_,
+				render: function(data, type, row) {
+					if (Object.prototype.toString.call(data) === "[object Object]") {
+						let aux = JSON.parse(JSON.stringify(data));
+						delete aux.user;
+						delete aux.role;
+						delete aux.createdat;
+						delete aux.updatedat;
+						delete aux.classUID;
+						delete aux.version;
+						delete aux.id;
+						let span = '<span title="'+JSON.stringify(aux).replaceAll('"', '').replaceAll(',', ', ')+'">'+data.id+'</span>';
+						return span;
+					} else return data;
+				}
+			});
+			to_toggle_ = to_toggle_ + '<a class="toggle-vis" data-column="' + index_ + '">' + key + '</a>, ';
+			index_++;
+		}
+
+		columns.push({
+			data: '',
+			title: '',
+			className: "dt-center todelete",
+			defaultContent: '<i class="fa fa-trash"></i>',
+			orderable: false
+		});
+
+		$(toggle_selector).empty();
+		$(toggle_selector).html(to_toggle_.substring(0, to_toggle_.length - 2));
+
+		$(table_selector.concat(' thead')).empty();
+		$(table_selector.concat(' tbody')).empty();
+		_table_data = $(table_selector).DataTable({
+			data: [],
+			paging: false,
+			ordering: false,
+			info: false,
+			searching: false,
+			columns: columns
+		});
+
+		_table_data.rows.add(datas).draw();
+
+		$('a.toggle-vis').on('click', function(e) {
+			e.preventDefault();
+			var column_ = _table_data.column($(this).attr('data-column'));
+			column_.visible(!column_.visible());
+		});
+
+		$(table_selector.concat(' tbody')).on('click', 'td', function() {
+			if (!$($(this).closest('tr')).hasClass('selected')) {
+				_table_data.$('tr.selected').removeClass('selected');
+				$($(this).closest('tr')).addClass('selected');
+			}
+
+			if ($(this).hasClass('todelete')) {
+				let register_ = _table_data.row($(this).closest('tr')).data();
+				$('div#for-api textarea').val(JSON.stringify({
+					action: "DELETE",
+					object: {
+						classUID: register_.classUID,
+						id: register_.id,
+						role: register_.role
+					}
+				}, null, 2));
+				$(data_browsing_modal_selector).modal('hide');
+			}
+		});
+
+		$(table_selector.concat(' tbody')).on('dblclick', 'tr', function() {
+			let register_ = _table_data.row($(this).closest('tr')).data();
+			delete register_.createdat;
+			delete register_.updatedat;
+			delete register_.user;
+			$('div#for-api textarea').val(JSON.stringify({
+				action: "UPDATE",
+				object: register_
+			}, null, 2));
+			$(data_browsing_modal_selector).modal('hide');
+		});
+
+		$(data_browsing_modal_selector).modal('show');
+	},
+	pipe: function (line_, button_run_commands_selector, textarea_selector) {
+		if (line_ < _commands.length - 1) {
+			_app_lib.realize(_commands[line_].trim().split(' '), button_run_commands_selector, textarea_selector);
+		} else {
+			_editor.setValue(_editor.getValue().replaceAll('c:', '').replaceAll('u:', '').replaceAll('d:', '').replaceAll('r:', ''));
+			alert('success: model was deployed!');
+		}
+	},
+	realize: function (tokens, button_run_commands_selector, textarea_selector) {
+		let command_ = '';
+		switch (tokens[0]) {
+			case 'yc': {
+				switch (tokens[1]) {
+					case 'create': {
+						switch (tokens[2]) {
+							case 'schema': {
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								//command_ = 'c:' + tokens[3];
+								_gtools_lib.request(api.endpoint.modeling.schema.create, {
+									name: tokens[3]
+								}, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 201) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										//_editor.setValue(_editor.getValue().replace(command_, tokens[3]));
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							case 'entity': {
+								//command_ = 'c:' + tokens[4];
+								let endpoint = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.entity.create));
+								endpoint.url = endpoint.url.replace('{schemaName}', tokens[3]);
+								let spec;
+								if (tokens[5] != undefined && tokens[5].length > 4) {
+									let aux = tokens[5].substring(0, tokens[5].length - 1).replace('\'', '').replace('\'', '');
+									spec = JSON.parse(aux);	
+									spec.name = tokens[4];
+								} else {
+									spec = {
+										name: tokens[4]
+									};
+								}
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint, spec, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 201) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										//_editor.setValue(_editor.getValue().replace(command_, tokens[4]));
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							case 'attribute': {
+								//command_ = 'c:' + tokens[5];
+								let endpoint_ = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.entity.attribute.create));
+								endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3])
+									.replace('{entityName}', tokens[4]);
+								let spec;
+								if (tokens[6] != undefined && tokens[6].length > 4) {
+									let aux = tokens[6].substring(0, tokens[6].length - 1).replace('\'', '').replace('\'', '');
+									spec = JSON.parse(aux);	
+									spec.name = tokens[5];
+								} else {
+									spec = {
+										name: tokens[5]
+									};
+								}
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint_, spec, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 201) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										//_editor.setValue(_editor.getValue().replace(command_, tokens[5]));
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							case 'relationship': {
+								//command_ = 'c:' + tokens[5];
+								let endpoint_ = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.entity.relationship.create));
+								endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3])
+									.replace('{entityName}', tokens[4]);
+								let spec;
+								if (tokens[6] != undefined && tokens[6].length > 4) {
+									let aux = tokens[6].substring(0, tokens[6].length - 1).replace('\'', '').replace('\'', '');
+									spec = JSON.parse(aux);	
+									spec.name = tokens[5];
+								} else {
+									spec = {
+										name: tokens[5]
+									};
+								}
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint_, spec, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 201) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										//_editor.setValue(_editor.getValue().replace(command_, tokens[5]));
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							default: {
+								alert('yc command unknow yc "'+tokens[1]+' '+tokens[2]+' ..."');
+								break;
+							}
+						}
+						break;
+					}
+					case 'update': {
+						switch (tokens[2]) {
+							case 'schema': {
+								let endpoint_ = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.update));
+								endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3]);
+								let schema = JSON.parse(tokens[4].substring(1, tokens[4].length - 1));
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint_, schema, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 200) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										_editor.setValue(_editor.getValue().replace(command_, tokens[5]));
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							case 'entity': {
+								let endpoint_ = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.entity.update));
+								endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3])
+									.replace('{entityName}', tokens[4]);
+								let entity = JSON.parse(tokens[5].substring(1, tokens[5].length - 1));
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint_, entity, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 200) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							case 'attribute': {
+								let endpoint_ = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.entity.attribute.update));
+								endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3])
+									.replace('{entityName}', tokens[4])
+									.replace('{attributeName}', tokens[5]);
+								let attribute = JSON.parse(tokens[6].substring(1, tokens[6].length - 1));
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint_, attribute, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 200) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							case 'relationship': {
+								let endpoint_ = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.entity.relationship.update));
+								endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3])
+									.replace('{entityName}', tokens[4])
+									.replace('{relationshipName}', tokens[5]);
+								let relationship = JSON.parse(tokens[6].substring(1, tokens[6].length - 1));
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint_, relationship, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 200) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							default: {
+								alert('yc command unknow yc "'+tokens[1]+' '+tokens[2]+' ..."');
+								break;
+							}
+						}
+						break;
+					}
+					case 'delete': {
+						//command_ = 'd:';
+						switch (tokens[2]) {
+							case 'schema': {
+								let endpoint_ = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.delete));
+								endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3]);
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint_, null, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 200) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										//_editor.setValue(_editor.getValue().replace(command_, tokens[3]));
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							case 'entity': {
+								//command_ = 'd:' + tokens[4];
+								let endpoint_ = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.entity.delete));
+								endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3])
+									.replace('{entityName}', tokens[4]);
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint_, null, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 200) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										//_editor.setValue(_editor.getValue().replace(command_, tokens[4]));
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							case 'attribute': {
+								//command_ = 'd:' + tokens[5];
+								let endpoint_ = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.entity.attribute.delete));
+								endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3])
+									.replace('{entityName}', tokens[4])
+									.replace('{attributeName}', tokens[5]);
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint_, null, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 200) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										//_editor.setValue(_editor.getValue().replace(command_, tokens[5]));
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							case 'relationship': {
+								//command_ = 'd:' + tokens[5];
+								let endpoint_ = JSON.parse(
+									JSON.stringify(api.endpoint.modeling.schema.entity.relationship.delete));
+								endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3])
+									.replace('{entityName}', tokens[4])
+									.replace('{relationshipName}', tokens[5])
+									.replace('{relationshipType}', tokens[6]);
+								$(button_run_commands_selector).children('span.spinner-border').show();
+								_gtools_lib.request(endpoint_, null, function(response) {
+									setTimeout(function () {
+										$(button_run_commands_selector).children('span.spinner-border').hide();
+									}, _delay);
+									if (response.http.status == 200) {
+										_app_lib.update_textarea(textarea_selector, _line, _commands);
+										//_editor.setValue(_editor.getValue().replace(command_, tokens[5]));
+										setTimeout(function () {
+											_app_lib.pipe(++_line, button_run_commands_selector, textarea_selector);
+										}, 500);
+									} else {
+										console.log('error:', response);
+										alert(JSON.parse(response.data).message);
+									}
+								});
+								break;
+							}
+							default: {
+								alert('yc command unknow yc "'+tokens[1]+' '+tokens[2]+' ..."');
+								break;
+							}
+						}
+						break;
+					}
+					case 'create-admin-account': {
+						if (tokens[2] == 'schema') {
+							let endpoint_ = JSON.parse(
+								JSON.stringify(api.endpoint.modeling.schema.caa));
+							endpoint_.url = endpoint_.url.replace('{schemaName}', tokens[3]);
+							$(button_run_commands_selector).children('span.spinner-border').show();
+							_gtools_lib.request(endpoint_, null, function(response) {
+								setTimeout(function () {
+									$(button_run_commands_selector).children('span.spinner-border').hide();
+								}, _delay);
+								if (response.http.status == 201) {
+									$('div#for-cli textarea').val(response.data);
+								} else {
+									console.log('error:', response);
+									alert(JSON.parse(response.data).message);
+								}
+							});
+						} else {
+							alert('yc command unknow yc "'+tokens[1]+' '+tokens[2]+' ..."');
+						}
+						break;
+					}
+					default: {
+						alert('yc command unknow yc "'+tokens[1]+' ..."');
+						break;
+					}
+				}
+
+				break;
+			}
+			default: {
+				alert('yc command unknow!');
+				break;
+			}
+		}
+	},
+	accounts_table_constructor: function (datas) {
+		let columns_ = [{
+			data: 'name',
+			title: 'Name',
+			orderable: false
+		}, {
+			data: 'username',
+			title: 'Username',
+			orderable: false
+		}, {
+			data: 'email',
+			title: 'e-mail',
+			render: function(data, type, row) {
+				if (data) {
+					return data;
+				} else return '';
+			},
+			orderable: false
+		}, {
+			data: 'status',
+			title: 'Status',
+			render: function(data, type, row) {
+				switch (data) {
+					case 0: return 'SUSPENDED';
+					case 1: return 'ACTIVE';
+					case 2: return 'CANCELED';
+					default: return '?unknow?';
+				}
+			},
+			orderable: false
+		}, {
+			data: 'roles',
+			title: 'Roles',
+			orderable: false,
+			render: function(data, type, row) {
+				if (data) {
+					let s = '';
+					for (let i = 0; i < data.length; i++) {
+						s = s + data[i].name + ', ';
+					}
+					return s.substring(0, s.length - 2);
+				} else return '';
+			}
+		}, {
+			data: '',
+			title: '',
+			className: "dt-center todelete",
+			defaultContent: '<i class="fa fa-trash"></i>',
+			orderable: false
+		}];
+
+		$('table#accounts thead').empty();
+		$('table#accounts tbody').empty();
+		
+		let table_accounts = $('table#accounts').DataTable({
+			data: [],
+			paging: false,
+			ordering: false,
+			info: false,
+			searching: false,
+			columns: columns_
+		});
+
+		table_accounts.rows.add(datas).draw();
+
+		$('table#accounts tbody').on('click', 'td', function() {
+			if (!$($(this).closest('tr')).hasClass('selected')) {
+				table_accounts.$('tr.selected').removeClass('selected');
+				$($(this).closest('tr')).addClass('selected');
+			}
+
+			if ($(this).hasClass('todelete')) {
+				_account = table_accounts.row($(this).closest('tr')).data();
+				_route = 'to_delete_account';
+				$('div#app_login_modal').modal('show');
+			}
+		});
+
+		$('table#accounts tbody').on('dblclick', 'tr', function() {
+			let register_ = table_accounts.row($(this).closest('tr')).data();
+			_gtools_lib.populate('form#account', register_);
+
+			let s_ = '';
+			for (let i = 0; i < register_.roles.length; i++) {
+				s_ = s_ + register_.roles[i].name + ', ';
+			}
+			$('#accounts_modal form#account input[name=roles]').val(s_.substring(0, s_.length - 2));
+
+			$('#accounts_modal button#save_account').removeAttr('disabled');
+			$('#accounts_modal button#save_account span.spinner-border').hide();
+			$('#accounts_modal button#save_account span#text').text('Update Account');
+			$('#accounts_modal form#account input[name=password]').prop('disabled',true);
+
+			_route = 'to_update_account';
+			$('div#app_login_modal').modal('show');
+		});
+
+		return table_accounts;
+	},
+	roles_table_constructor: function(datas) {
+		let columns_ = [{
+			data: 'name',
+			title: 'Name',
+			orderable: false
+		}, {
+			data: 'status',
+			title: 'Status',
+			orderable: false,
+			render: function(data, type, row) {
+				if (data == 1) {
+					return 'ACTIVE';
+				} else return 'SUSPENDED';
+			}
+		}, {
+			data: 'defaultUse',
+			title: 'Default',
+			orderable: false,
+			render: function(data, type, row) {
+				if (data) {
+					return 'YES';
+				} else return 'NO';
+			}
+		}, {
+			data: 'schema',
+			title: 'Schema',
+			orderable: false
+		}, {
+			data: '',
+			title: '',
+			className: "dt-center todelete",
+			defaultContent: '<i class="fa fa-trash"></i>',
+			orderable: false
+		}];
+
+		$('table#roles thead').empty();
+		$('table#roles tbody').empty();
+		let table_roles = $('table#roles').DataTable({
+			data: [],
+			paging: false,
+			ordering: false,
+			info: false,
+			searching: false,
+			columns: columns_
+		});
+
+		table_roles.rows.add(datas).draw();
+
+		$('table#roles tbody').on('click', 'td', function() {
+			if (!$($(this).closest('tr')).hasClass('selected')) {
+				table_roles.$('tr.selected').removeClass('selected');
+				$($(this).closest('tr')).addClass('selected');
+			}
+
+			if ($(this).hasClass('todelete')) {
+				_role = table_roles.row($(this).closest('tr')).data();
+				_route = 'to_delete_role';
+				$('div#app_login_modal').modal('show');
+			}
+		});
+
+		$('table#roles tbody').on('dblclick', 'tr', function() {
+			let register_ = table_roles.row($(this).closest('tr')).data();
+			_role = register_;
+			_gtools_lib.populate('form#role', register_);
+			
+			$('#roles_modal form select[name=defaultUse] option[value='+(_role.defaultUse ? 'YES' : 'NO')+']').prop('selected', true);
+			$('#roles_modal button#save_role').text('Update Role');
+
+			_route = 'to_update_role';
+			$('div#app_login_modal').modal('show');
+		});
+
+		return table_roles;
+	},
+	update_table_by_object_type: function(endpoint, table) {
+		$('div#for-accounts-and-roles div.spinner-border').show();
+		_gtools_lib.baas.request(_tenantID, _jwtoken, null, function(response) {
+			setTimeout(function () {
+				$('div#for-accounts-and-roles div.spinner-border').hide();
+			}, _delay);
+			if (response.http.status == 200) {
+				table.clear().draw();
+				table.rows.add(response.data).draw();
+			} else if (response.http.status == 201) {
+				alert('action performed successfully!');
+			} else {
+				console.log('error:', response);
+				if (response.data.message && response.data.message.trim().length > 0) {
+					alert(response.data.message);
+				} else {
+					alert(response.data.error);
+				}
+			}
+		}, 'accounts_and_roles', endpoint);
+	},
+	logs_table_constructor: function (datas) {
+		let columns_ = [{
+			data: 'username',
+			title: 'Username',
+			render: function(data, type, row) {
+				if (data) {
+					return data;
+				} else return '';
+			},
+			orderable: false
+		}, {
+			data: 'httpMethod',
+			title: 'HTTP Method',
+			render: function(data, type, row) {
+				if (data) {
+					return data;
+				} else return '';
+			},
+			orderable: false
+		}, {
+			data: 'endpointUrl',
+			title: 'Endpoint',
+			render: function(data, type, row) {
+				if (data) {
+					return data;
+				} else return '';
+			},
+			orderable: false
+		}, {
+			data: 'statusCode',
+			title: 'SC',
+			render: function(data, type, row) {
+				if (data) {
+					return data;
+				} else return '';
+			},
+			orderable: false
+		}, {
+			data: 'message',
+			title: 'Message',
+			render: function(data, type, row) {
+				if (data) {
+					return data;
+				} else return '';
+			},
+			orderable: false
+		}, {
+			data: 'action',
+			title: 'Action',
+			render: function(data, type, row) {
+				if (data) {
+					return data;
+				} else return '';
+			},
+			orderable: false
+		}, {
+			data: 'local',
+			title: 'Local',
+			render: function(data, type, row) {
+				if (data) {
+					return data;
+				} else return '';
+			},
+			orderable: false
+		}, {
+			data: 'createdAt',
+			title: 'Created at',
+			render: function(data, type, row) {
+				if (data) {
+					return data;
+				} else return '';
+			},
+			orderable: false
+		}];
+
+		$('table#backend-montor thead').empty();
+		$('table#backend-montor tbody').empty();
+		
+		let table_logs = $('table#backend-montor').DataTable({
+			data: [],
+			paging: false,
+			ordering: false,
+			info: false,
+			searching: false,
+			columns: columns_
+		});
+
+		table_logs.rows.add(datas).draw();
+
+		$('table#backend-montor tbody').on('dblclick', 'tr', function() {
+			// let register_ = table_logs.row($(this).closest('tr')).data();
+			// _gtools_lib.populate('form#account', register_);
+
+			// let s_ = '';
+			// for (let i = 0; i < register_.roles.length; i++) {
+			// 	s_ = s_ + register_.roles[i].name + ', ';
+			// }
+			// $('#accounts_modal form#account input[name=roles]').val(s_.substring(0, s_.length - 2));
+
+			// $('#accounts_modal button#save_account').removeAttr('disabled');
+			// $('#accounts_modal button#save_account span.spinner-border').hide();
+			// $('#accounts_modal button#save_account span#text').text('Update Account');
+			// $('#accounts_modal form#account input[name=password]').prop('disabled',true);
+
+			// _route = 'to_update_account';
+			// $('div#app_login_modal').modal('show');
+		});
+
+		return table_logs;
+	},
+	editor_constructor: function (selector) {
+		let editor = CodeMirror.fromTextArea(document.getElementById(selector), {
+			styleActiveLine : true,
+			lineNumbers : true,
+			lineWrapping : true,
+			autoCloseBrackets : true,
+			scrollbarStyle : "simple",
+			matchTags: { bothTags: true },
+			extraKeys : {
+				"Alt-F" : "findPersistent"
+			},
+			mode : "text/x-yc"
+		});
+
+		var basePadding_ = 4;
+		editor.on("renderLine", function(cm, line, elt) {
+			var off_ = CodeMirror.countColumn(line.text, null, cm
+					.getOption("tabSize")) * editor.defaultCharWidth();
+			elt.style.textIndent = "-" + off_ + "px";
+			elt.style.paddingLeft = (basePadding_ + off_) + "px";
+		});
+		editor.refresh();
+
+		return editor;
+	}
+};
+
+
+$(document).ready(function() {
+	$('div#workspace-ac').show();
+	$('div#account-login').show();
+	$('div#account-register').hide();
+	$('div#workspace').hide();
+	$('div#for-schema button').removeAttr('disabled');
+	$('div#for-schema textarea').removeAttr('disabled');
+	$('div#for-accounts-and-roles').hide();
+	$('div#for-accounts-and-roles table#account').show();
+	$('div#for-accounts-and-roles table#roles').hide();
+	$('div#for-backend-monitor-panel').hide();
+	$('div#for-backend-monitor-panel table#error-montor').show();
+	$('.spinner-border').hide();
+
+	$('div#for-cli textarea').prop('readonly', true);
+
+	$('div#for-schema select option[value=2]').prop('selected', true);
+
+	_table_accounts = _app_lib.accounts_table_constructor([]);
+	_table_roles = _app_lib.roles_table_constructor([]);
+	_table_log = _app_lib.logs_table_constructor([]);
+	_editor = _app_lib.editor_constructor("code");
+
+	$('[data-toggle="tooltip"]').tooltip();
+
+	$('div#for-cli button#clear_textarea').click(function (e) {
+		$('div#for-cli textarea').val('');
+	});
+
+	$('div#for-api button#run-script').click(function(e) {
+		$('div#app_login_modal').modal('show');
+	});
+
+	$('input#disable-cli').change(function (e) {
+		if (_disable_cli) {
+			$('div#for-cli textarea').prop('readonly', true);
+		} else {
+			$('div#for-cli textarea').removeAttr('readonly');
+		}
+		_disable_cli = !_disable_cli;
+	});	
+
+	$('div#for-cli button#copy_clipboard').click(function (e) {
+		_gtools_lib.copy_clipboard('cli');
+	});
+
+	$('div#for-schema button#copy_schema_to_clipboard').click(function (e) {
+		_gtools_lib.copy_clipboard('code', _editor.getValue());
+	});
+
+	$('#popup_menu a#logout').click(function(e) {
+		location.reload(true);
+	});
+
+	$('#protocol-default').click();
+	
+	$('#to_register').click(function(e) {
+		$('div#account-login').hide();
+		$('div#account-register').show();
+	});
+
+	$('#to_login').click(function(e) {
+		$('div#account-login').show();
+		$('div#account-register').hide();
+	});
+
+	$('button#login').click(function(e) {
+		$('div#account-login .spinner-border').show();
+		$(this).prop('disabled', true);
+		let credentials_ = $('div#account-login form').serializeJSON();
+		_gtools_lib.request(api.endpoint.auth,
+			'grant_type=password'
+				.concat('&username=').concat(credentials_.username)
+				.concat('&password=').concat(credentials_.password),
+			function(response) {
+				$('div#account-login form input#password').val('');
+				$('div#account-login button#login').removeAttr('disabled');
+					$('.spinner-border').hide();
+				if (response.http.status == 200) {
+					_editor.setValue('');
+					$('div#account-login form input#username').val('');
+					$('textarea').val();
+					$('div#workspace-ac').hide();
+					$('div#account-login').hide();
+					$('div#account-register').hide();
+					$('div#for-accounts-and-roles').hide();
+					$('div#for-backend-monitor-panel').hide();
+					$("select").find('option').attr("selected", false);
+					$('input[type=radio]').removeAttr('checked');
+					$('div#for-schema .spinner-border').hide();
+					$('div#workspace').show();
+					api.credentials = JSON.parse(response.data);
+				} else if (response.http.status == 401) {
+					alert('error: unauthorized access!');
+				} else {
+					console.log('error:', response);
+					alert('error: login fails. '.concat(JSON.stringify(response.data)));
+				}
+			},
+			'login');
+	});
+
+	$('button#register').click(function (e) {
+		$('div#account-register .spinner-border').show();
+		$(this).prop('disabled', true);
+		let account_ = $('div#account-register form').serializeJSON();
+		let endpoint_ = api.endpoint.account.create;
+		_gtools_lib.request(endpoint_, account_, function(response) {
+			setTimeout(function () {
+				$('.spinner-border').hide();
+			}, 200);
+			$('div#account-register button#register').removeAttr('disabled');
+			if (response.http.status == 201) {
+				alert('account successfully registered.');
+				$('div#account-login form input#username').val(account_.username);
+				$('div#account-login form input#password').val('');
+				$('#to_login').click();
+			} else {
+				console.log('error:', response);
+				alert('error: register fails. '.concat(JSON.stringify(response.data)));
+			}
+		});
+	});
+
+	$('div#for-schema button#parser-to-cli').click(function(e) {
+		const elem_ = this;
+		$(elem_).children('span.spinner-border').show();
+		_gtools_lib.request(api.endpoint.modeling.parser.generate_cli,
+			_editor.getValue(),
+			function(response) {
+				setTimeout(function () {
+					$(elem_).children('span.spinner-border').hide();
+				}, _delay);
+				if (response.http.status == 200) {
+					let text_ = '';
+					let lines_ = response.data.split(';');
+					for (let i = 0; i < lines_.length; i++) {
+						text_ = text_ + lines_[i]+';\n';
+					}
+					$('div#for-cli textarea').val(text_.substring(0, text_.length-2));
+				} else {
+					console.log('error:', response);
+					if (response.data.message && response.data.message.trim().length > 0) {
+						alert(response.data.message);
+					} else {
+						alert(response.data.error);
+					}
+				}
+			}
+		);
+	});
+
+	$('div#for-schema button#parser-to-api').click(function(e) {
+		const elem_ = this;
+		$(elem_).children('span.spinner-border').show();
+		let protocol_ = $('div#for-api input[type=radio][name=protocol]:checked').val();
+		let endpoint_ = JSON.parse(
+			JSON.stringify(api.endpoint.modeling.parser.generate_scripts)
+					.replace('{script-type}', protocol_));
+		_gtools_lib.request(endpoint_,
+			_editor.getValue(),
+			function(response) {
+				setTimeout(function () {
+					$(elem_).children('span.spinner-border').hide();
+				}, _delay);
+				if (response.http.status == 200) {
+					if (protocol_ == 'YC') {
+						$('div#for-api p#curl-script #http_message_type').text('POST');
+						$('div#for-api p#curl-script #content_type').html('-H "Content-Type: application/json" \\<br>');
+						$('div#for-api p#curl-script #url').text('http://api.ycodify.com/baas/interpreters-grid/s');
+						$('div#for-api textarea').val(response.data);
+					} else if (protocol_ == 'REST') {
+						let body_ = JSON.parse(response.data);
+						if (body_.action == 'CREATE') {
+							$('div#for-api p#curl-script #http_message_type').text('POST');
+							$('div#for-api p#curl-script #content_type').html('-H "Content-Type: application/json" \\<br>');
+							$('div#for-api p#curl-script #url').text('http://api.ycodify.com/baas/interpreters-grid/s/rest/'.concat(body_.object.classUID));
+							delete body_.object.classUID;
+							$('div#for-api textarea').val(JSON.stringify(body_.object, null, 2));
+						} else if (body_.action == 'READ') {
+							$('div#for-api p#curl-script #http_message_type').text('GET');
+							$('div#for-api p#curl-script #content_type').html('');
+							$('div#for-api p#curl-script #url').text('http://api.ycodify.com/baas/interpreters-grid/s/rest/'.concat(body_.object.classUID).concat('/{id}/role/{role}/version/{version}'));
+						} else if (body_.action == 'UPDATE') {
+							$('div#for-api p#curl-script #http_message_type').text('PUT');
+							$('div#for-api p#curl-script #content_type').html('-H "Content-Type: application/json" \\<br>');
+							$('div#for-api p#curl-script #url').text('http://api.ycodify.com/baas/interpreters-grid/s/rest/'.concat(body_.object.classUID).concat('/{id}'));
+							delete body_.object.classUID;
+							$('div#for-api textarea').val(JSON.stringify(body_.object, null, 2));
+						} else if (body_.action == 'DELETE') {
+							$('div#for-api p#curl-script #http_message_type').text('DELETE');
+							$('div#for-api p#curl-script #content_type').html('');
+							$('div#for-api p#curl-script #url').text('http://api.ycodify.com/baas/interpreters-grid/s/rest/'.concat(body_.object.classUID).concat('/{id}/role/{role}/version/{version}'));
+						}
+					} else {
+						alert('error: protocol unknow');
+					}
+					_gtools_lib.baas.schema = {
+						name: _editor.getValue().trim().split(' ')[1]
+					};
+				} else {
+					console.log('error:', response);
+					if (response.data.message && response.data.message.trim().length > 0) {
+						alert(response.data.message);
+					} else {
+						alert(response.data.error);
+					}
+				}
+			}
+		);
+	});
+
+	$('div#for-schema button#schema_mngmnt_action').click(function(e) {
+		const elem_ = this;
+		$(elem_).children('i').hide();
+		$(elem_).children('span.spinner-border').show();
+		let option_ = $('div#for-schema select option:selected').val();
+		if (option_ == 1) {
+			let endpoint = api.endpoint.modeling.schema.read;
+			_gtools_lib.request(endpoint, null, function(response) {
+				setTimeout(function () {
+					$(elem_).children('i').show();
+					$(elem_).children('span.spinner-border').hide();
+				}, _delay);
+				if (response.http.status == 200) {
+					var lines_ = '';
+					for (let index in response.data) {
+						lines_ += response.data[index] + '\n';
+					}
+					_editor.setValue(lines_);
+				} else {
+					console.log('error:', response);
+					if (response.data.message && response.data.message.trim().length > 0) {
+						alert(response.data.message);
+					} else {
+						alert(response.data.error);
+					}
+				}
+			});
+		} else if (option_ == 2) {
+			let obj_name_ = _editor.getValue().replace('.', '-');
+			let endpoint = JSON.parse(
+				JSON.stringify(api.endpoint.modeling.parser.reverse));
+			endpoint.url = endpoint.url.replace("{path-to-object}", obj_name_);
+			_gtools_lib.request(endpoint, null, function(response) {
+				setTimeout(function () {
+					$(elem_).children('i').show();
+					$(elem_).children('span.spinner-border').hide();
+				}, _delay);
+				if (response.http.status == 200) {
+					_editor.setValue(response.data);
+				} else {
+					console.log('error:', response);
+					if (response.data.message && response.data.message.trim().length > 0) {
+						alert(response.data.message);
+					} else {
+						alert(response.data.error);
+					}
+				}
+			});
+		} else if (option_ == 4) {
+			let obj_name_ = _editor.getValue().split(' ')[1];
+			let endpoint = JSON.parse(
+				JSON.stringify(api.endpoint.modeling.schema.yumlCD));
+			endpoint.url = endpoint.url.replace("{schemaName}", obj_name_.replace('.', '-'))
+				.replace("{hasAttr}", "false");
+			_gtools_lib.request(endpoint, null, function(response) {
+				setTimeout(function () {
+					$(elem_).children('i').show();
+					$(elem_).children('span.spinner-border').hide();
+				}, _delay);
+				if (response.http.status == 200) {
+					_editor.setValue(response.data);
+					$('div#yuml_modal #svg').append(_app_lib.load_yUML_svg(response.data));
+
+					let code_ = '';
+					let array_ = response.data.split('\n');
+				    for (let i = 0; i < array_.length; i++) {
+				    	if (!array_[i].trim().startsWith('>')) {
+				    		code_ = code_+'\n'+array_[i];
+				    	}
+				    }
+					_editor.setValue(code_);
+
+					$('div#yuml_modal').modal('show');
+				} else {
+					console.log('error:', response);
+					if (response.data.message && response.data.message.trim().length > 0) {
+						alert(response.data.message);
+					} else {
+						alert(response.data.error);
+					}
+				}
+			});
+		} else if (option_ == 3) {
+			let body_ = _editor.getValue();
+			_gtools_lib.request(api.endpoint.modeling.parser.parse, body_, function(response) {
+				setTimeout(function () {
+					$(elem_).children('i').show();
+					$(elem_).children('span.spinner-border').hide();
+				}, _delay);
+				if (response.http.status == 200) {
+					$('div#for-cli textarea').val('yc create-admin-account schema '
+							.concat(_editor.getValue().split(' ')[1])
+							.concat(';'));
+				} else {
+					console.log('error:', response);
+					if (response.data.message && response.data.message.trim().length > 0) {
+						alert(response.data.message);
+					} else {
+						alert(response.data.error);
+					}
+				}
+			});
+		} else if (option_ == 5) {
+			setTimeout(function () {
+				$(elem_).children('i').show();
+				$(elem_).children('span.spinner-border').hide();
+			}, _delay);
+			_gtools_lib.baas.schema = {
+				name: _editor.getValue().trim().split(' ')[1]
+			};
+			_route = 'do_data_backup';
+			$('div#app_login_modal').modal('show');
+		}
+	});
+
+	$('div#app_login_modal button#authenticate').click(function(e) {
+		const elem_ = $('div#app_login_modal button#authenticate');
+		$(elem_).children('span.spinner-border').show();
+		$(elem_).prop('disabled', true);
+		let credentials = $('div#app_login_modal form').serializeJSON();
+		let data_ = 'grant_type=password'
+				.concat('&username=').concat(credentials.username)
+				.concat('&password=').concat(credentials.password);
+		_gtools_lib.baas.request(null, null, data_, function(response) {
+			$(elem_).children('span.spinner-border').hide();
+			$(elem_).removeAttr('disabled');
+			if (response.http.status == 200) {
+				_jwtoken = response.data.access_token;
+				_tenantID = credentials.username;
+				$('div#app_login_modal').modal('hide');
+				if (_route == 'accounts_and_roles_panel') {
+					_editor.setOption('readOnly', true);
+					$('div#for-accounts-and-roles select option[value=1]').trigger('change');
+				} else if (_route == 'change_account_password_panel') {
+					$('div#change_account_password_modal').modal('show');
+				} else if (_route == 'error_monitor_report_panel') {
+					$('div#for-cli').hide();
+					$('div#for-api').hide();
+					$('div#for-accounts-and-roles').hide();
+					$('div#for-backend-monitor-panel').show();
+					_editor.setOption('readOnly', true);
+					
+					let endpoint_ = null;
+					let type = $('#for-backend-monitor-panel select[name=type] option:selected').val();;
+					console.log('type: ',type);
+					if (type == 'ERROR') {
+					  console.log(new Date().getTime()-(3600*1000));
+					
+						endpoint_ = JSON.parse(JSON.stringify(api.endpoint.igrid.log.error.get));
+						endpoint_.url = endpoint_.url.replace('{operation}', "all").replace('{time}', (new Date().getTime()-(3600*1000))).replace('{op}', "gte");
+					} else if (type == 'INFO') {
+						endpoint_ = JSON.parse(JSON.stringify(api.endpoint.igrid.log.info.get));
+					} else if (type == 'CONSUMPTION') {
+						endpoint_ = JSON.parse(JSON.stringify(api.endpoint.igrid.log.consumption.get));
+					}
+					
+					console.log('endpoint_: ',endpoint_);
+					$('div#for-backend-monitor-panel div.spinner-border').show();
+					_gtools_lib.baas.request(_tenantID, _jwtoken, null, function(response) {
+					  _table_log.clear().draw();
+						setTimeout(function () {
+							$('div#for-backend-monitor-panel div.spinner-border').hide();
+						}, _delay);
+						console.log(response);
+						if (response.http.status == 200) {
+							_table_log.rows.add(datas).draw();
+							alert('action performed successfully!');
+						} else if (response.http.status == 404) {
+							alert('logs not found to the period!');
+						} else {
+							console.log('error:', response);
+							alert(JSON.parse(response.data).message);
+						}
+					}, 'accounts_and_roles', endpoint_);
+				} else if (_route == 'to_delete_account') {
+					let endpoint_ = JSON.parse(
+						JSON.stringify(api.endpoint.backend.account.delete));
+					endpoint_.url = endpoint_.url.replace('{username}', _account.username)
+						.replace('{version}', _account.version);
+					$('div#for-accounts-and-roles div.spinner-border').show();
+					_gtools_lib.baas.request(_tenantID, _jwtoken, null, function(response) {
+						setTimeout(function () {
+							$('div#for-accounts-and-roles div.spinner-border').hide();
+						}, _delay);
+						if (response.http.status == 200) {
+							_table_accounts.row('.selected').remove().draw(false);
+							alert('action performed successfully!');
+						} else {
+							console.log('error:', response);
+							alert(JSON.parse(response.data).message);
+						}
+					}, 'accounts_and_roles', endpoint_);
+				} else if (_route == 'to_update_account') {
+					$('#accounts_modal').modal('show');
+				} else if (_route == 'to_delete_role') {
+					let endpoint_ = JSON.parse(
+						JSON.stringify(api.endpoint.backend.role.delete));
+					endpoint_.url = endpoint_.url.replace('{name}', _role.name)
+						.replace('{version}', _role.version);
+					$('div#for-accounts-and-roles div.spinner-border').show();
+					_gtools_lib.baas.request(_tenantID, _jwtoken, null, function(response) {
+						setTimeout(function () {
+							$('div#for-accounts-and-roles div.spinner-border').hide();
+						}, _delay);
+						if (response.http.status == 200) {
+							_table_roles.row('.selected').remove().draw(false);
+							alert('action performed successfully!');
+						} else {
+							console.log('error:', response);
+							alert(JSON.parse(response.data).message);
+						}
+					}, 'accounts_and_roles', endpoint_);
+				} else if (_route == 'to_update_role') {
+					$('#roles_modal').modal('show');
+				} else if (_route == 'do_data_backup') {
+					const elem_ = this;
+					$(elem_).children('i').hide();
+					$(elem_).children('span.spinner-border').show();
+					let entities_ = _app_lib.get_entities_names_from_yc_tokens(
+						_app_lib.tokenizer_yc_code(_editor.getValue()));
+					_gtools_lib.baas.ds_data_backup_request(_tenantID, entities_, function (response) {
+						$(elem_).children('i').show();
+						$(elem_).children('span.spinner-border').hide();
+						if (response.status != 200) {
+							console.log('error:', response);
+							alert('error: backup fails');
+						}
+					});
+				} else {
+					const elem_ = $('div#for-api button#run-script');
+					$(elem_).children('span.spinner-border').show();
+					$(elem_).prop('disabled', true);
+					$('div#curl-script span#tenantID').attr('title', _tenantID);
+					$('div#curl-script span#jwtoken').attr('title', _jwtoken);
+					let data__ = JSON.parse($('div#for-api textarea').val());
+					_gtools_lib.baas.request(_tenantID, _jwtoken, data__, function(response) {
+						setTimeout(function () {
+							$(elem_).children('span.spinner-border').hide();
+							$(elem_).removeAttr('disabled');
+						}, _delay);
+						if (response.http.status == 200) {
+							if (data__.action == 'READ') {
+								_app_lib.update_data_browsing_panel('table#data_browsing', 'div#to_toggle', 
+									'div#data_browsing_modal', response.data.data);
+							} else {
+								alert('action performed successfully!');
+							}
+						} else if (response.http.status == 201) {
+							alert('action performed successfully! [id:' + response.data.id + ']');
+						} else if (response.http.status == 404 && data__.action == 'READ') {
+							alert('data not found!');
+						} else {
+							console.log('error:', response);
+							if (response.data.message && response.data.message.trim().length > 0) {
+								alert(response.data.message);
+							} else {
+								alert(response.data.error);
+							}
+						}
+					}, 'data');
+				}
+			} else {
+				console.log('error:', response);
+				if (response.data.message && response.data.message.trim().length > 0) {
+					alert(response.data.message);
+				} else {
+					alert(response.data.error);
+				}
+			}
+		}, 'login');
+	});
+
+	$('div#for-api input[type=radio][name=protocol]').change(function(e) {
+		if (this.value == 'YC') {
+			$('div#for-api p#curl-script #http_message_type').text('POST');
+			$('div#for-api p#curl-script #content_type').html('-H "Content-Type: application/json" \\<br>');
+			$('div#for-api p#curl-script #url').text('http://api.ycodify.com/baas/interpreters-grid/s');
+			$('div#for-api textarea').val('');
+			$('div#for-api button#run-script').removeAttr('disabled');
+		} else if (this.value == 'REST') {
+			$('div#for-api p#curl-script #http_message_type').text('POST');
+			$('div#for-api p#curl-script #content_type').html('-H "Content-Type: application/json" \\<br>');
+			$('div#for-api p#curl-script #url').text('http://api.ycodify.com/baas/interpreters-grid/s/rest/{classUID}');
+			$('div#for-api textarea').val('');
+			$('div#for-api button#run-script').prop('disabled', true);
+		}
+	});
+
+	$('div#for-api input[type=radio][name=protocol][value=YC]').prop('checked', true);
+	$('div#for-api p#curl-script #http_message_type').text('POST');
+	$('div#for-api p#curl-script #content_type').html('-H "Content-Type: application/json" \\<br>');
+	$('div#for-api p#curl-script #url').text('http://api.ycodify.com/baas/interpreters-grid/s');
+
+	$('div#for-cli button#run_commands').click(function(e) {
+		_commands = $('div#for-cli textarea').val().trim().split(';');
+		_app_lib.pipe(_line = 0, 'div#for-cli button#run_commands', 'div#for-cli textarea');
+	});
+	
+	$('#popup_menu a#accounts_and_roles_panel').click(function(e) {
+		_route = 'accounts_and_roles_panel';
+		_gtools_lib.baas.schema = {
+			name: _editor.getValue().trim().split(' ')[1]
+		};
+		$('#for-accounts-and-roles #schema_name').html(_gtools_lib.baas.schema.name);
+		$('div#app_login_modal button#authenticate span.spinner-border').hide();
+		$('div#app_login_modal').modal('show');
+	});
+	
+	$('#popup_menu a#error_monitor_report_panel').click(function(e) {
+		_route = 'error_monitor_report_panel';
+		_gtools_lib.baas.schema = {
+			name: _editor.getValue().trim().split(' ')[1]
+		};
+		$('#for-accounts-and-roles #schema_name').html(_gtools_lib.baas.schema.name);
+		$('div#app_login_modal button#authenticate span.spinner-border').hide();
+		$('div#app_login_modal').modal('show');
+	});
+
+	$('#popup_menu a#schema_browsing_panel').click(function(e) {
+		$('div#app_login_modal form input[name=password]').val('');
+
+		$('div#for-schema button').removeAttr('disabled');
+		$('div#for-schema textarea').removeAttr('disabled');
+
+		$('div#for-accounts-and-roles table#account').hide();
+		$('div#for-accounts-and-roles table#roles').hide();
+
+		_editor.setOption('readOnly', false);
+
+		$('div#for-cli').show();
+		$('div#for-api').show();
+		$('div#for-accounts-and-roles').hide();
+		$('div#for-backend-monitor-panel').hide();
+	});
+
+	$('div#for-accounts-and-roles select').change(function(e) {
+		$('div#for-schema button').prop('disabled', true);
+		$('div#for-schema textarea').prop('disabled', true);
+
+		$('div#for-cli').hide();
+		$('div#for-api').hide();
+
+		_gtools_lib.baas.schema = {
+			name: _editor.getValue().trim().split(' ')[1]
+		};
+
+		if (this.value == 1) {
+			$('div#for-accounts-and-roles table#accounts').show();
+			$('div#for-accounts-and-roles table#roles').hide();
+			$('#for-accounts-and-roles #object_type').html('Account');
+			$('#accounts_modal #object_type').html('Account');
+			_app_lib.update_table_by_object_type(JSON.parse(
+				JSON.stringify(api.endpoint.backend.account.get_all)), _table_accounts);
+			$('div#for-accounts-and-roles').show();
+		} else if (this.value == 2) {
+			$('div#for-accounts-and-roles table#accounts').hide();
+			$('div#for-accounts-and-roles table#roles').show();
+			$('#for-accounts-and-roles #object_type').html('Role');
+			$('#accounts_modal #object_type').html('Role');
+			_app_lib.update_table_by_object_type(JSON.parse(
+				JSON.stringify(api.endpoint.backend.role.get_all)), _table_roles);
+			$('div#for-accounts-and-roles').show();
+		} else if (this.value == 3) {
+			_route = 'change_account_password_panel';
+			$('#change_account_password_modal button#change_account_password span.spinner-border').hide();
+			$('div#app_login_modal').modal('show');
+		} else {
+			alert('error: render panel fails');
+			$('div#for-accounts-and-roles table#accounts').hide();
+			$('div#for-accounts-and-roles table#roles').hide();
+			$('#for-accounts-and-roles #object_type').html('');
+			$('#accounts_modal #object_type').html('');
+		}
+	});
+
+	$('button#create-account-or-role').click(function(e) {
+		if ($('div#for-accounts-and-roles select').val() == 1) {
+			$('#accounts_modal button#save_account').removeAttr('disabled');
+			$('#accounts_modal button#save_account span.spinner-border').hide();
+
+			$('#accounts_modal form select[name=status] option[value=1]').prop('selected', true);
+			$('#accounts_modal form input[name=password]').prop('disabled',false);
+			$('#accounts_modal button#save_account span#text').text('Create Account');
+			$('#accounts_modal').modal('show');
+		} else if ($('div#for-accounts-and-roles select').val() == 2) {
+			_role = null;
+			$('#roles_modal button#save_role').removeAttr('disabled');
+			$('#roles_modal button#save_role span.spinner-border').hide();
+
+			$('#roles_modal form select[name=status] option[value=1]').prop('selected', true);
+			$('#roles_modal form select[name=defaultUse] option[value=NO]').prop('selected', true);
+			$('#roles_modal button#save_role').text('Create Role');
+			$('#roles_modal').modal('show');
+		}
+	});
+
+	$('button#save_account').click(function(e) {
+		let account_ = $('div#accounts_modal form').serializeJSON();
+		account_.status = $('div#accounts_modal form select[name=status] option:selected').val();
+
+		if (!account_.name || account_.name.length <= 4) {
+			alert('info: you must define a value to the name field.');
+			return;
+		}
+
+		if (!account_.email || account_.email.length == 0 || account_.email.indexOf('@') < 0) {
+			alert('info: you must define a value to the email field.');
+			return;
+		}
+
+		if (!account_.status || !(Number(account_.status) == 0 || Number(account_.status) == 1)) {
+			alert('info: you must define a value to the status field.');
+			return;
+		}
+
+		if (!account_.username || account_.username.length <= 3) {
+			alert('info: the username must be at least 4 characters long;.');
+			return;
+		}
+
+		if ($('div#accounts_modal button#save_account span#text').text() == 'Create Account') {
+			if (!account_.password || account_.password.length <= 5) {
+				alert('info: the password must be at least 6 characters long.');
+				return;
+			}
+		}
+
+		if (!account_.roles || account_.roles.length == 0) {
+			alert('info: you must define a value to the roles field.');
+			return;
+		}
+
+		account_.roles = account_.roles.split(',');
+		let roles = [];
+		for (let i = 0; i < account_.roles.length; i++) {
+			roles.push({
+				name: account_.roles[i]
+			});
+		}
+		account_.roles = roles;
+		account_.status = Number(account_.status);
+
+		let endpoint_;
+		if ($('div#accounts_modal button#save_account span#text').text() == 'Create Account') {
+			endpoint_ = api.endpoint.backend.account.create;
+		} else if ($('div#accounts_modal button#save_account span#text').text() == 'Update Account') {
+			delete account_.password;
+			endpoint_ = api.endpoint.backend.account.update;
+		} else {
+			alert('error: unknow operation');
+			return;
+		}
+
+		const elem_ = $('div#accounts_modal button#save_account');
+		$(elem_).children('span.spinner-border').show();
+		$(elem_).prop('disabled', true);
+
+		_gtools_lib.baas.request(_tenantID, _jwtoken, account_, function(response) {
+			setTimeout(function () {
+				$(elem_).children('span.spinner-border').hide();
+				$(elem_).removeAttr('disabled');
+			}, _delay);
+			if (response.http.status == 201) {
+				_table_accounts.row.add(account_).draw();
+				$('#accounts_modal').modal('hide');
+				alert('action performed successfully!');
+			} else if (response.http.status == 200) {
+
+
+				_app_lib.update_table_by_object_type(JSON.parse(
+					JSON.stringify(api.endpoint.backend.account.get_all)), _table_accounts);
+				//update_table_accounts_or_roles(1);
+				
+
+				$('#accounts_modal').modal('hide');
+				alert('action performed successfully!');
+			} else {
+				console.log('error:', response);
+				if (response.data.message && response.data.message.trim().length > 0) {
+					alert(response.data.message);
+				} else {
+					alert(response.data.error);
+				}
+			}
+		}, 'accounts_and_roles', endpoint_);
+	});
+
+	$('button#save_role').click(function(e) {
+		let role_ = $('div#role_s_modal form').serializeJSON();
+		role.status = Number($('#roles_modal select[name=status] option:selected').val());
+		role_.defaultUse = $('#roles_modal select[name=defaultUse] option:selected').val() == 'YES' ? true : false;
+
+		if (!role_.name || role_.name.length == 0) {
+			alert('info: you must define a value to the name field.');
+			return;
+		}
+		role_.name = role_.name.toUpperCase();
+
+		if ((Number(role_.status) != 0 && Number(role_.status) != 1)) {
+			alert('info: you must define a value to the status field.');
+			return;
+		}
+		role_.status = Number(role_.status);
+
+		let endpoint_ = '';
+		if ($('div#roles_modal button#save_role span#text').text() == 'Create Role') {
+			endpoint_ = api.endpoint.backend.role.create;
+		} else if ($('div#roles_modal button#save_role span#text').text() == 'Update Role') {
+			endpoint_ = JSON.parse(
+				JSON.stringify(api.endpoint.backend.role.update));
+			endpoint_.url = endpoint_.url.replace('{name}', role_.name);
+		}
+
+		const elem_ = $('div#roles_modal button#save_role');
+		$(elem_).children('span.spinner-border').show();
+		$(elem_).prop('disabled', true);
+
+		_gtools_lib.baas.request(_tenantID, _jwtoken, role_, function(response) {
+			setTimeout(function () {
+				$(elem_).children('span.spinner-border').hide();
+				$(elem_).removeAttr('disabled');
+			}, _delay);
+			if (response.http.status == 201) {
+				role_.schema = _gtools_lib.baas.schema.name;
+				_table_roles.row.add(role_).draw();
+				$('#roles_modal').modal('hide');
+				alert('action performed successfully!');
+			} else if (response.http.status == 200) {
+				
+				
+				_app_lib.update_table_by_object_type(JSON.parse(
+					JSON.stringify(api.endpoint.backend.role.get_all)), _table_roles);
+				//update_table_accounts_or_roles(2);
+				
+				
+				$('#roles_modal').modal('hide');
+				alert('action performed successfully!');
+			} else {
+				console.log('error:', response);
+				if (response.data.message && response.data.message.trim().length > 0) {
+					alert(response.data.message);
+				} else {
+					alert(response.data.error);
+				}
+			}
+		}, 'accounts_and_roles', endpoint__);
+	});
+
+	$('#change_account_password_modal button#change_account_password').click(function(e) {
+		let account = $('div#change_account_password_modal form#account_for_change_password').serializeJSON();
+		let endpoint_ = JSON.parse(
+			JSON.stringify(api.endpoint.backend.account.updatePassword));
+		$('#change_account_password_modal button#change_account_password').prop('disabled', true);
+		$('#change_account_password_modal button#change_account_password span.spinner-border').show();
+		_gtools_lib.baas.request(_tenantID, _jwtoken, account, function(response) {
+			$('#change_account_password_modal button#change_account_password').removeAttr('disabled');
+			$('#change_account_password_modal button#change_account_password span.spinner-border').hide();
+			if (response.http.status == 200) {
+				$('#change_account_password_modal form input').val('');
+				$('#change_account_password_modal').modal('hide');
+				alert('action performed successfully!');
+			} else {
+				console.log('error:', response);
+				if (response.data.message && response.data.message.trim().length > 0) {
+					alert(response.data.message);
+				} else {
+					alert(response.data.error);
+				}
+			}
+		}, 'accounts_and_roles', endpoint_);
+	});
+});
