@@ -1,104 +1,142 @@
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as common from "common";
 import * as data from "domains/data";
+import axios from "axios";
+import { getCookie, setCookie } from "utils/cookies";
 
 export function DataSideBar() {
   const { setSelectedItem } = data.useData();
+  const [tables, setTables] = useState<string[]>([]);
   const [activeSchema, setActiveSchema] = useState<string>();
+  const [schemas, setSchemas] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
   const [activeTable, setActiveTable] = useState<string>();
-  const Databases = [
-    {
-      id: "1",
-      schema_name: "Mercado",
-      schemas: [
-        {
-          id: "12",
-          tag: "Franquias",
-          Tables: [{ Name: "Funcionarios", id: "121" }],
+
+  async function loadSchemas() {
+    const { data } = await axios.get("http://localhost:3000/api/schemas", {
+      headers: {
+        Authorization: `Bearer ${getCookie("access_key")}`,
+      },
+    });
+    setSchemas(data.data);
+  }
+
+  async function loadTables() {
+    const { data } = await axios.get(
+      `http://localhost:3000/api/schema?schemaName=${activeSchema}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getCookie("access_key")}`,
         },
-        {
-          id: "13",
-          tag: "Financeiro",
-          Tables: [{ Name: "Contas", id: '131' }, { Name: "Assinaturas", id: "132" }],
-        },
-      ],
-    },
-  ];
+      }
+    );
+    setTables(Object.keys(data.data) as string[]);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    loadSchemas();
+  }, []);
+
+  useEffect(() => {
+    if (activeSchema) {
+      loadTables();
+    }
+  }, [activeSchema]);
 
   return (
     <div className="w-[20%] px-6 pt-10 text-gray-600">
-      {Databases.map((database) => (
-        <div key={database.schema_name}>
-          <div className="flex items-center gap-2 pb-2 cursor-pointer">
-            <Icon icon="bxs:down-arrow" className="w-4 h-4" />
-            <Icon icon="dashicons:database" className="w-5 h-5" />
-            <p className="text-base">{database.schema_name}</p>
+      <div className="flex gap-4">
+        <button
+          type="button"
+          onClick={() => {
+            axios
+              .post("http://localhost:3000/api/login", {
+                username: "tester",
+                password: "123456",
+              })
+              .then(({ data }) => {
+                setCookie("access_key", data.data.access_token);
+              });
+          }}
+          className="p-2 bg-blue-300"
+        >
+          Login
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            loadSchemas();
+          }}
+          className="p-2 bg-blue-300"
+        >
+          load schemas
+        </button>
+      </div>
+
+      {schemas.map((schema) => (
+        <div key={schema}>
+          <div
+            className={`flex items-center gap-2 pb-2 cursor-pointer ${
+              activeSchema === `${schema}` && "text-orange-400"
+            }`}
+            onClick={() => {
+              setSelectedItem({
+                type: "schema",
+                name: schema,
+                location: `${schema}`,
+                id: schema,
+              });
+              setActiveSchema(`${schema}`);
+              setActiveTable(undefined);
+              setLoading(true);
+            }}
+          >
+            <Icon
+              icon="bxs:right-arrow"
+              className={`w-4 h-4 transition ${
+                activeSchema === `${schema}` && "rotate-90"
+              }`}
+            />
+
+            {activeSchema === `${schema}` ? (
+              <Icon icon="ant-design:folder-open-filled" className="w-5 h-5" />
+            ) : (
+              <Icon icon="ant-design:folder-filled" className="w-5 h-5" />
+            )}
+            <p className="text-sm">{schema}</p>
           </div>
-
-          {database.schemas.map((schema) => (
-            <div key={schema.tag}>
-              <div
-                className={`flex items-center gap-2 pb-2 ml-4 cursor-pointer ${
-                  activeSchema === `${database.schema_name}${schema.tag}` &&
-                  "text-orange-400"
-                }`}
-                onClick={() => {
-                  setSelectedItem({
-                    type: "schema",
-                    name: schema.tag,
-                    location: `${database.schema_name} > ${schema.tag}`,
-                    id: schema.id,
-                  });
-                  setActiveSchema(`${database.schema_name}${schema.tag}`);
-                  setActiveTable(undefined);
-                }}
-              >
-                <Icon
-                  icon="bxs:right-arrow"
-                  className={`w-4 h-4 transition ${
-                    activeSchema === `${database.schema_name}${schema.tag}` &&
-                    "rotate-90"
-                  }`}
-                />
-
-                {activeSchema === `${database.schema_name}${schema.tag}` ? (
-                  <Icon
-                    icon="ant-design:folder-open-filled"
-                    className="w-5 h-5"
-                  />
-                ) : (
-                  <Icon icon="ant-design:folder-filled" className="w-5 h-5" />
-                )}
-                <p className="text-sm">{schema.tag}</p>
+          {loading}
+          {activeSchema === schema &&
+            (loading ? (
+              <div className="w-5 h-5 ml-8">
+                 <common.Spinner />
               </div>
-              {activeSchema === `${database.schema_name}${schema.tag}` &&
-                schema.Tables.map((table) => (
-                  <div key={table.Name}>
-                    <div
-                      className={`flex items-center gap-2 pb-2 ml-14 cursor-pointer ${
-                        activeTable ===
-                          `${database.schema_name}${schema.tag}${table.Name}` &&
-                        "text-orange-400"
-                      }`}
-                      onClick={() => {
-                        setSelectedItem({
-                          type: "table",
-                          name: table.Name,
-                          location: `${database.schema_name} > ${schema.tag} > ${table.Name}`,
-                          id: table.id,
-                        });
-                        setActiveTable(
-                          `${database.schema_name}${schema.tag}${table.Name}`
-                        );
-                      }}
-                    >
-                      <Icon icon="bi:table" className="w-4 h-4" />
-                      <p className="text-sm">{table.Name}</p>
-                    </div>
+             
+            ) : (
+              tables.map((table) => (
+                <div key={table}>
+                  <div
+                    className={`flex items-center gap-2 pb-2 ml-8 cursor-pointer ${
+                      activeTable === `${schema}${table}` && "text-orange-400"
+                    }`}
+                    onClick={() => {
+                      setSelectedItem({
+                        type: "table",
+                        name: table,
+                        location: `${schema} > ${table}`,
+                        id: table,
+                      });
+                      setActiveTable(`${schema}${table}`);
+                    }}
+                  >
+                    <Icon icon="bi:table" className="w-4 h-4" />
+                    <p className="text-sm">{table}</p>
                   </div>
-                ))}
-            </div>
-          ))}
+                </div>
+              ))
+            ))}
         </div>
       ))}
     </div>
