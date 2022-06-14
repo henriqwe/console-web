@@ -46,99 +46,107 @@ export function DataSideBar() {
   }, [activeSchema]);
 
   return (
-    <div className="w-[20%] px-6 pt-10 text-gray-600">
-      <div className="flex gap-4">
-        <button
-          type="button"
-          onClick={() => {
-            axios
-              .post("http://localhost:3000/api/login", {
-                username: "tester",
-                password: "123456",
-              })
-              .then(({ data }) => {
-                setCookie("access_key", data.data.access_token);
-              });
-          }}
-          className="p-2 bg-blue-300"
-        >
-          Login
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            loadSchemas();
-          }}
-          className="p-2 bg-blue-300"
-        >
-          load schemas
-        </button>
+    <div className="w-[20%] text-gray-600">
+      <div className="flex w-full p-3 px-4 pl-8 bg-gray-200 ring-1 ring-gray-300">
+        <p>Explorer</p>
       </div>
 
-      {schemas.map((schema) => (
-        <div key={schema}>
-          <div
-            className={`flex items-center gap-2 pb-2 cursor-pointer ${
-              activeSchema === `${schema}` && "text-orange-400"
-            }`}
+      <div className="px-6 mt-10">
+        <div className="flex gap-4 mb-10">
+          <button
+            type="button"
             onClick={() => {
-              setSelectedItem({
-                type: "schema",
-                name: schema,
-                location: `${schema}`,
-                id: schema,
-              });
-              setActiveSchema(`${schema}`);
-              setActiveTable(undefined);
-              setLoading(true);
+              axios
+                .post("http://localhost:3000/api/login", {
+                  username: "tester",
+                  password: "123456",
+                })
+                .then(({ data }) => {
+                  setCookie("access_key", data.data.access_token);
+                });
             }}
+            className="p-2 bg-blue-300"
           >
-            <Icon
-              icon="bxs:right-arrow"
-              className={`w-4 h-4 transition ${
-                activeSchema === `${schema}` && "rotate-90"
-              }`}
-            />
-
-            {activeSchema === `${schema}` ? (
-              <Icon icon="ant-design:folder-open-filled" className="w-5 h-5" />
-            ) : (
-              <Icon icon="ant-design:folder-filled" className="w-5 h-5" />
-            )}
-            <p className="text-sm">{schema}</p>
-          </div>
-          {loading}
-          {activeSchema === schema &&
-            (loading ? (
-              <div className="w-5 h-5 ml-8">
-                 <common.Spinner />
-              </div>
-             
-            ) : (
-              tables.map((table) => (
-                <div key={table}>
-                  <div
-                    className={`flex items-center gap-2 pb-2 ml-8 cursor-pointer ${
-                      activeTable === `${schema}${table}` && "text-orange-400"
-                    }`}
-                    onClick={() => {
-                      setSelectedItem({
-                        type: "table",
-                        name: table,
-                        location: `${schema} > ${table}`,
-                        id: table,
-                      });
-                      setActiveTable(`${schema}${table}`);
-                    }}
-                  >
-                    <Icon icon="bi:table" className="w-4 h-4" />
-                    <p className="text-sm">{table}</p>
-                  </div>
-                </div>
-              ))
-            ))}
+            Login
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              loadSchemas();
+            }}
+            className="p-2 bg-blue-300"
+          >
+            load schemas
+          </button>
         </div>
-      ))}
+
+        {schemas.map((schema) => (
+          <div key={schema}>
+            <div
+              className={`flex items-center gap-2 pb-2 cursor-pointer ${
+                activeSchema === `${schema}` && "text-orange-400"
+              }`}
+              onClick={() => {
+                setSelectedItem({
+                  type: "schema",
+                  name: schema,
+                  location: `${schema}`,
+                  id: schema,
+                });
+                setActiveSchema(`${schema}`);
+                setActiveTable(undefined);
+                setLoading(true);
+              }}
+            >
+              <Icon
+                icon="bxs:right-arrow"
+                className={`w-4 h-4 transition ${
+                  activeSchema === `${schema}` && "rotate-90"
+                }`}
+              />
+
+              {activeSchema === `${schema}` ? (
+                <Icon
+                  icon="ant-design:folder-open-filled"
+                  className="w-5 h-5"
+                />
+              ) : (
+                <Icon icon="ant-design:folder-filled" className="w-5 h-5" />
+              )}
+              <p className="text-sm">{schema}</p>
+            </div>
+            {loading}
+            {activeSchema === schema &&
+              (loading ? (
+                <div className="w-5 h-5 ml-8">
+                  <common.Spinner />
+                </div>
+              ) : (
+                tables.map((table) => (
+                  <div key={table}>
+                    <div
+                      className={`flex items-center gap-2 pb-2 ml-8 cursor-pointer ${
+                        activeTable === `${schema}${table}` && "text-orange-400"
+                      }`}
+                      onClick={() => {
+                        setSelectedItem({
+                          type: "table",
+                          name: table,
+                          location: `${schema} > ${table}`,
+                          id: table,
+                        });
+                        setActiveTable(`${schema}${table}`);
+                      }}
+                    >
+                      <Icon icon="bi:table" className="w-4 h-4" />
+                      <p className="text-sm">{table}</p>
+                    </div>
+                  </div>
+                ))
+              ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
