@@ -16,15 +16,13 @@ type TemplateProps = {
     email: string;
     imageUrl: string;
   };
-  rightContent: ReactNode;
-  leftContent: ReactNode;
+  children: ReactNode
 };
 
 export function Template({
   menuItens,
   user,
-  leftContent,
-  rightContent,
+  children
 }: TemplateProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
@@ -209,25 +207,7 @@ export function Template({
 
         <main className="flex flex-1 overflow-hidden">
           {/* Primary column */}
-          <section
-            aria-labelledby="primary-heading"
-            className="flex w-[80%] h-full min-w-0 overflow-y-auto lg:order-last"
-          >
-            {rightContent}
-            {/* Your content */}
-          </section>
-
-          {/* Secondary column (hidden on smaller screens) */}
-
-          {leftContent}
-          {/* <aside className="w-[20%] bg-orange-300">
-            <div className="relative flex flex-col h-full overflow-y-auto bg-white border-r border-gray-200">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
-              laboriosam aspernatur maxime voluptates quae asperiores autem
-              labore. Earum nemo aperiam ducimus officiis hic ipsam eaque, odio
-              aliquam dolorem? Minus, corporis.
-            </div>
-          </aside> */}
+          {children}
         </main>
       </div>
     </div>

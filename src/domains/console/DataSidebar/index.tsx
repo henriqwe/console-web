@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import * as common from "common";
-import * as data from "domains/data";
+import * as data from "domains/console";
 import axios from "axios";
 import { getCookie, setCookie } from "utils/cookies";
 

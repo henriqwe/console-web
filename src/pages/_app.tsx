@@ -1,7 +1,14 @@
-import "styles/main.css";
+import 'styles/main.css'
+import 'react-toastify/dist/ReactToastify.css'
 
-import type { AppProps } from "next/app";
+import type { AppProps } from 'next/app'
+import { ToastContainer } from 'react-toastify'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Component {...pageProps} />
+      <ToastContainer closeOnClick={false} />
+    </>
+  )
 }
