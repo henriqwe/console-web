@@ -52,34 +52,6 @@ export function DataSideBar() {
       </div>
 
       <div className="px-6 mt-10">
-        <div className="flex gap-4 mb-10">
-          <button
-            type="button"
-            onClick={() => {
-              axios
-                .post("http://localhost:3000/api/login", {
-                  username: "tester",
-                  password: "123456",
-                })
-                .then(({ data }) => {
-                  setCookie("access_key", data.data.access_token);
-                });
-            }}
-            className="p-2 bg-blue-300"
-          >
-            Login
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              loadSchemas();
-            }}
-            className="p-2 bg-blue-300"
-          >
-            load schemas
-          </button>
-        </div>
-
         {schemas.map((schema) => (
           <div key={schema}>
             <div

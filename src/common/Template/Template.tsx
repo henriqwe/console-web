@@ -3,7 +3,6 @@ import { Fragment, ReactNode, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon, LogoutIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
-import { removeCookie } from 'utils'
 
 type TemplateProps = {
   menuItens: {
