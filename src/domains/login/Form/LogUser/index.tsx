@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as login from 'domains/login'
@@ -10,30 +10,35 @@ import {
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 export function LogUser() {
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { setFormType, logUserSchema } = login.useLogin()
   const {
-    register,
     formState: { errors },
     handleSubmit,
     control
   } = useForm({ resolver: yupResolver(logUserSchema) })
 
   async function Submit(formData: { userName: string; password: string }) {
+    setLoading(true)
     try {
       const { data } = await axios.post('http://localhost:3000/api/login', {
         username: formData.userName,
         password: formData.password
       })
       utils.setCookie('access_key', data.data.access_token)
+      utils.notification('Login realizado com sucesso', 'success')
       router.push('/')
     } catch (err: any) {
-      if(err.response.status === 401){
+      if (err.response.status === 401) {
         return utils.notification('Ops! Usuário ou senha incorretos', 'error')
       }
       utils.notification(err.message, 'error')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -67,7 +72,6 @@ export function LogUser() {
               </div>
             )}
           />
-
           <Controller
             name="password"
             control={control}
@@ -87,8 +91,9 @@ export function LogUser() {
               </div>
             )}
           />
-
-          <common.Button type="submit">Entrar</common.Button>
+          <common.Button type="submit" loading={loading} disabled={loading}>
+            Entrar
+          </common.Button>
         </div>
       </div>
 

@@ -1,30 +1,27 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Icon } from "@iconify/react";
-import { Fragment, ReactNode, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import CodeMirror from "@uiw/react-codemirror";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import { Fragment, ReactNode, useState } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { MenuIcon, XIcon, LogoutIcon } from '@heroicons/react/outline'
+import { useRouter } from 'next/router'
+import { removeCookie } from 'utils'
 
 type TemplateProps = {
   menuItens: {
-    name: string;
-    href: string;
-    icon: (props: React.ComponentProps<"svg">) => JSX.Element;
-  }[];
+    name: string
+    href: string
+    icon: (props: React.ComponentProps<'svg'>) => JSX.Element
+  }[]
   user: {
-    name: string;
-    email: string;
-    imageUrl: string;
-  };
+    name: string
+    email: string
+    imageUrl: string
+  }
   children: ReactNode
-};
+}
 
-export function Template({
-  menuItens,
-  user,
-  children
-}: TemplateProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export function Template({ menuItens, user, children }: TemplateProps) {
+  const router = useRouter()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   return (
     <div className="flex h-full min-h-[100vh]">
       <Transition.Root show={mobileMenuOpen} as={Fragment}>
@@ -107,25 +104,21 @@ export function Template({
                   </nav>
                 </div>
                 <div className="flex flex-shrink-0 p-4 border-t border-gray-200">
-                  <a href="#" className="flex-shrink-0 block group">
-                    <div className="flex items-center">
-                      <div>
-                        <img
-                          className="inline-block w-10 h-10 rounded-full"
-                          src={user.imageUrl}
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className="text-base font-medium text-gray-700 group-hover:text-gray-900">
-                          {user.name}
-                        </p>
-                        <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
-                          Account Settings
-                        </p>
-                      </div>
-                    </div>
-                  </a>
+                  <button
+                    type="button"
+                    className="flex items-center py-2 pl-1 text-base font-medium text-gray-600 rounded-md group hover:bg-gray-50 hover:text-gray-900"
+                    onClick={() => {
+                      // removeCookie('access_key')
+                      // router.push('/login')
+                      // setMobileMenuOpen(false)
+                    }}
+                  >
+                    <LogoutIcon
+                      className="w-6 h-6 mr-4 text-gray-400 group-hover:text-gray-500"
+                      aria-hidden="true"
+                    />
+                    Log out
+                  </button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -211,5 +204,5 @@ export function Template({
         </main>
       </div>
     </div>
-  );
+  )
 }

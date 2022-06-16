@@ -11,10 +11,21 @@ export function parseCookies(req?: any) {
 
 export function setCookie(
   key: string,
-  value: any,
+  value?: any,
   options?: Cookies.CookieAttributes
 ) {
   Cookies.set(key, value, {
+    ...options,
+    secure: process.env.NODE_ENV === 'production' ? true : false
+  })
+}
+
+export function removeCookie(
+  key: string,
+  options?: Cookies.CookieAttributes
+) {
+  Cookies.remove(key, {
+    path: '',
     ...options,
     secure: process.env.NODE_ENV === 'production' ? true : false
   })

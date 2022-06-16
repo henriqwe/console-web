@@ -8,6 +8,26 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
     try {
       const username = req.body.username
       const password = req.body.password
+      const email = req.body.email
+
+      await axios.post(
+        'https://api.ycodify.com/api/account/account',
+        {
+          username,
+          password,
+          email
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Basic '.concat(
+              Buffer.from('yc:c547d72d-607c-429c-81e2-0baec7dd068b').toString(
+                'base64'
+              )
+            )
+          }
+        }
+      )
 
       const { data } = await axios.post(
         'https://api.ycodify.com/api/security/oauth/token',
@@ -30,9 +50,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       setCookie('access_key', data.access_token)
       return res.status(200).json({ data })
     } catch (err: any) {
-      if(err.response.data.error_description === 'Bad credentials'){
-        return res.status(401).json({ err })
-      }
+      console.log(err)
       return res.status(err.response.status).json({ err })
     }
   }
