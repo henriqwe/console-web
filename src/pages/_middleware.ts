@@ -8,14 +8,13 @@ export function middleware(req: NextRequest) {
     return
   }
   const token = validateAuth(req)
-  console.log('token', token)
   if (req.nextUrl.pathname === '/login') {
     if (!token) {
       return
     }
-    return NextResponse.redirect('http://localhost:3000/')
+    return NextResponse.rewrite(new URL('/', req.url))
   }
   if (!token) {
-    return NextResponse.redirect('http://localhost:3000/login')
+    return NextResponse.rewrite(new URL('/login', req.url))
   }
 }
