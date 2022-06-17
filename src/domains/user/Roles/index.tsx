@@ -9,7 +9,7 @@ export function Roles() {
       `https://api.ycodify.com/api/caccount/account`,
       {
         headers: {
-          Authorization: `Bearer ${utils.getCookie('access_key')}`,
+          Authorization: `Bearer ${utils.getCookie('access_token')}`,
           Accept: 'application/json'
         }
       }

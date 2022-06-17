@@ -1,25 +1,25 @@
-import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
-import * as common from "common";
-import * as data from "domains/console";
-import axios from "axios";
-import { getCookie, setCookie } from "utils/cookies";
+import { Icon } from '@iconify/react'
+import { useEffect, useState } from 'react'
+import * as common from 'common'
+import * as data from 'domains/console'
+import axios from 'axios'
+import { getCookie, setCookie } from 'utils/cookies'
 
 export function DataSideBar() {
-  const { setSelectedItem } = data.useData();
-  const [tables, setTables] = useState<string[]>([]);
-  const [activeSchema, setActiveSchema] = useState<string>();
-  const [schemas, setSchemas] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [activeTable, setActiveTable] = useState<string>();
+  const { setSelectedItem } = data.useData()
+  const [tables, setTables] = useState<string[]>([])
+  const [activeSchema, setActiveSchema] = useState<string>()
+  const [schemas, setSchemas] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
+  const [activeTable, setActiveTable] = useState<string>()
 
   async function loadSchemas() {
-    const { data } = await axios.get("http://localhost:3000/api/schemas", {
+    const { data } = await axios.get('http://localhost:3000/api/schemas', {
       headers: {
-        Authorization: `Bearer ${getCookie("access_key")}`,
-      },
-    });
-    setSchemas(data.data);
+        Authorization: `Bearer ${getCookie('access_token')}`
+      }
+    })
+    setSchemas(data.data)
   }
 
   async function loadTables() {
@@ -27,23 +27,23 @@ export function DataSideBar() {
       `http://localhost:3000/api/schema?schemaName=${activeSchema}`,
       {
         headers: {
-          Authorization: `Bearer ${getCookie("access_key")}`,
-        },
+          Authorization: `Bearer ${getCookie('access_token')}`
+        }
       }
-    );
-    setTables(Object.keys(data.data) as string[]);
-    setLoading(false);
+    )
+    setTables(Object.keys(data.data) as string[])
+    setLoading(false)
   }
 
   useEffect(() => {
-    loadSchemas();
-  }, []);
+    loadSchemas()
+  }, [])
 
   useEffect(() => {
     if (activeSchema) {
-      loadTables();
+      loadTables()
     }
-  }, [activeSchema]);
+  }, [activeSchema])
 
   return (
     <div className="w-[20%] text-gray-600">
@@ -56,24 +56,24 @@ export function DataSideBar() {
           <div key={schema}>
             <div
               className={`flex items-center gap-2 pb-2 cursor-pointer ${
-                activeSchema === `${schema}` && "text-orange-400"
+                activeSchema === `${schema}` && 'text-orange-400'
               }`}
               onClick={() => {
                 setSelectedItem({
-                  type: "schema",
+                  type: 'schema',
                   name: schema,
                   location: `${schema}`,
-                  id: schema,
-                });
-                setActiveSchema(`${schema}`);
-                setActiveTable(undefined);
-                setLoading(true);
+                  id: schema
+                })
+                setActiveSchema(`${schema}`)
+                setActiveTable(undefined)
+                setLoading(true)
               }}
             >
               <Icon
                 icon="bxs:right-arrow"
                 className={`w-4 h-4 transition ${
-                  activeSchema === `${schema}` && "rotate-90"
+                  activeSchema === `${schema}` && 'rotate-90'
                 }`}
               />
 
@@ -98,16 +98,16 @@ export function DataSideBar() {
                   <div key={table}>
                     <div
                       className={`flex items-center gap-2 pb-2 ml-8 cursor-pointer ${
-                        activeTable === `${schema}${table}` && "text-orange-400"
+                        activeTable === `${schema}${table}` && 'text-orange-400'
                       }`}
                       onClick={() => {
                         setSelectedItem({
-                          type: "table",
+                          type: 'table',
                           name: table,
                           location: `${schema} > ${table}`,
-                          id: table,
-                        });
-                        setActiveTable(`${schema}${table}`);
+                          id: table
+                        })
+                        setActiveTable(`${schema}${table}`)
                       }}
                     >
                       <Icon icon="bi:table" className="w-4 h-4" />
@@ -120,5 +120,5 @@ export function DataSideBar() {
         ))}
       </div>
     </div>
-  );
+  )
 }

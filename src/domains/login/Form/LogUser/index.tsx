@@ -29,7 +29,7 @@ export function LogUser() {
         username: formData.userName,
         password: formData.password
       })
-      utils.setCookie('access_key', data.data.access_token)
+      utils.setCookie('access_token', data.data.access_token)
       utils.notification('Login realizado com sucesso', 'success')
       router.push('/')
     } catch (err: any) {

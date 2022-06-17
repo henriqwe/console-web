@@ -107,7 +107,7 @@ export function Template({ menuItens, user, children }: TemplateProps) {
                     type="button"
                     className="flex items-center py-2 pl-1 text-base font-medium text-gray-600 rounded-md group hover:bg-gray-50 hover:text-gray-900"
                     onClick={() => {
-                      // removeCookie('access_key')
+                      // removeCookie('access_token')
                       // router.push('/login')
                       // setMobileMenuOpen(false)
                     }}

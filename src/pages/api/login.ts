@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { stringify } from 'qs'
 import axios from 'axios'
-import { setCookie } from 'utils/cookies'
 
 export default async function login(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -27,10 +26,9 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
           }
         }
       )
-      setCookie('access_key', data.access_token)
       return res.status(200).json({ data })
     } catch (err: any) {
-      if(err.response.data.error_description === 'Bad credentials'){
+      if (err.response.data.error_description === 'Bad credentials') {
         return res.status(401).json({ err })
       }
       return res.status(err.response.status).json({ err })

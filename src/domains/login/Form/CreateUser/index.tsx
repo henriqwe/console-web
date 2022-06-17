@@ -37,7 +37,7 @@ export function CreateUser() {
           email: formData.email
         }
       )
-      utils.setCookie('access_key', data.data.access_token)
+      utils.setCookie('access_token', data.data.access_token)
       utils.notification('Usuário criado com sucesso', 'success')
       router.push('/')
     } catch (err: any) {
