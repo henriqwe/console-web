@@ -1,2 +1,4 @@
-export { DataSideBar } from "./DataSidebar";
-export { DataContext, DataProvider, useData } from "./DataContext";
+export { DataSideBar } from './DataSidebar'
+export { Editors } from './Editors'
+
+export { DataContext, DataProvider, useData } from './DataContext'
