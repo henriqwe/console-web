@@ -1,16 +1,14 @@
 import { Icon } from '@iconify/react'
 import { useEffect, useState } from 'react'
 import * as common from 'common'
-import * as data from 'domains/console'
+import * as consoleSection from 'domains/console'
 import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 
 export function DataTab() {
+  const { selectedTable, setSelectedTable } = consoleSection.useData()
   const [tables, setTables] = useState<string[]>([])
-  const [activeSchema, setActiveSchema] = useState<string>()
-  const [schemas, setSchemas] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
-  const [activeTable, setActiveTable] = useState<string>()
 
   async function loadTables() {
     const { data } = await axios.get(
@@ -27,7 +25,7 @@ export function DataTab() {
 
   useEffect(() => {
     loadTables()
-  }, [activeSchema])
+  }, [])
 
   return (
     <div className="px-6 mt-10">
@@ -40,10 +38,10 @@ export function DataTab() {
           <div key={table}>
             <div
               className={`flex items-center gap-2 pb-2 cursor-pointer ${
-                activeTable === `${table}` && 'text-orange-400'
+                selectedTable === `${table}` && 'text-orange-400'
               }`}
               onClick={() => {
-                setActiveTable(`${table}`)
+                setSelectedTable(`${table}`)
               }}
             >
               <Icon icon="bi:table" className="w-4 h-4" />
