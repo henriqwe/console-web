@@ -36,15 +36,14 @@ export function DataSection() {
           <table>
             <thead>
               <tr>
-              <th>title</th>
-            </tr>
+                <th>title</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
-              <td>value</td>
-            </tr>
+                <td>value</td>
+              </tr>
             </tbody>
-            
           </table>
         )}
       </div>
