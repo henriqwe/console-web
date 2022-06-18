@@ -54,7 +54,11 @@ export function CreateUser() {
     >
       <div className="flex flex-col items-center w-full px-6 pt-6 bg-white rounded-lg">
         <div className="flex flex-col items-center mb-10">
-          <img src="logoTextDark.png" alt="Logo" className="w-80" />
+          <img
+            src="/assets/images/logoTextDark.png"
+            alt="Logo"
+            className="w-80"
+          />
           <p>Web console</p>
         </div>
 
