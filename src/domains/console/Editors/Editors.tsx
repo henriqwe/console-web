@@ -14,14 +14,14 @@ export function Editors() {
     >
       <div className="w-[50%] h-full">
         <div className="flex flex-col  h-full">
-          <div className="flex flex-col  h-1/2">
-            <div className="flex items-center w-full h-14 px-4">
-              <p>YCode Console</p>
+          <div className="flex flex-col  h-1/2 bg-gray-200">
+            <div className="flex items-center w-full h-14 px-4 bg-gray-200  mb-1">
+              <p className="text-lg font-bold text-gray-700">YCode Console</p>
               <button className="p-2 ml-4 rounded-full">
                 <Icon icon="bxs:right-arrow" className={`w-4 h-4 transition`} />
               </button>
             </div>
-            <div className="flex h-full  w-full">
+            <div className="flex h-full  w-full ">
               <CodeMirror
                 value={`// Looks like you do not have any tables.\n// Click on the 'Data' tab on top to create tables\n// Try out YCode queries here after you create tables;`}
                 className="flex w-full h-ful"
@@ -37,7 +37,9 @@ export function Editors() {
             </div>
           </div>
           <div className="flex flex-col  h-1/2">
-            <div className="flex w-full p-2 pb-0 pl-8">Query variables</div>
+            <div className="flex items-center w-full h-14 px-4 bg-gray-200">
+              <p className="text-lg font-bold text-gray-700">Query variables</p>
+            </div>
             <div className="flex h-full  w-full">
               <CodeMirror
                 value=""
@@ -56,8 +58,8 @@ export function Editors() {
         <div className="flex flex-col  h-full">
           <div className=" flex h-full flex-col  w-full">
             <div className="flex flex-col  h-full">
-              <div className="flex items-center w-full h-14 px-4">
-                <p>Response</p>
+              <div className="flex items-center w-full h-14 px-4 bg-gray-200">
+                <p className="text-lg font-bold text-gray-700">Response</p>
               </div>
               <div className="flex h-full  w-full">
                 <CodeMirror
