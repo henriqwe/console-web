@@ -4,48 +4,36 @@ import {
   SetStateAction,
   useContext,
   useState,
-  Dispatch,
-} from "react";
+  Dispatch
+} from 'react'
 type DataContextProps = {
-  selectedItem?: SelectedItem;
-  setSelectedItem: Dispatch<SetStateAction<SelectedItem | undefined>>;
-};
-
-type SelectedItem = {
-  type: "schema" | "table";
-  name: string;
-  location: string;
-  id: string;
-};
+  currentTab: 'API' | 'DATA'
+  setCurrentTab: Dispatch<SetStateAction<'API' | 'DATA'>>
+}
 
 type ProviderProps = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
 export const DataContext = createContext<DataContextProps>(
   {} as DataContextProps
-);
+)
 
 export const DataProvider = ({ children }: ProviderProps) => {
-  const [selectedItem, setSelectedItem] = useState<{
-    type: "schema" | "table";
-    name: string;
-    location: string;
-    id: string;
-  }>();
+  const [currentTab, setCurrentTab] = useState<'API' | 'DATA'>('API')
 
   return (
     <DataContext.Provider
       value={{
-        selectedItem,
-        setSelectedItem,
+        currentTab,
+        setCurrentTab
       }}
     >
       {children}
     </DataContext.Provider>
-  );
-};
+  )
+}
 
 export const useData = () => {
-  return useContext(DataContext);
-};
+  return useContext(DataContext)
+}

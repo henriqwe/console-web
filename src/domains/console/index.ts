@@ -1,4 +1,7 @@
-export { DataSideBar } from './DataSidebar'
+export { SideBar } from './Sidebar'
+export { ApiTab } from './Sidebar/ApiTab'
+export { DataTab } from './Sidebar/DataTab'
+export { ApiSection } from './ApiSection'
+export { DataSection } from './DataSection'
 export { Editors } from './Editors'
-
 export { DataContext, DataProvider, useData } from './DataContext'

@@ -5,16 +5,16 @@ import axios from 'axios'
 
 export function Roles() {
   async function getRoles() {
-    const { data } = await axios.get(
-      `https://api.ycodify.com/api/caccount/account`,
-      {
-        headers: {
-          Authorization: `Bearer ${utils.getCookie('access_token')}`,
-          Accept: 'application/json'
-        }
-      }
-    )
-    console.log(data)
+    // const { data } = await axios.get(
+    //   `https://baas.ycodify.com/api/v1/modeler/schema`,
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${utils.getCookie('access_token')}`,
+    //       Accept: 'application/json'
+    //     }
+    //   }
+    // )
+    // console.log(data)
   }
 
   useEffect(() => {
