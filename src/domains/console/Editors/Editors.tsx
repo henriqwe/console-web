@@ -1,12 +1,32 @@
 import { javascript, javascriptLanguage } from '@codemirror/lang-javascript'
 import { Icon } from '@iconify/react'
 import CodeMirror from '@uiw/react-codemirror'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { getCookie } from 'utils/cookies'
 import { completeFromGlobalScope } from './Autocomplete'
 
 export function Editors() {
+  const [editorValue, seteditorValue] = useState<string>()
   const globalJavaScriptCompletions = javascriptLanguage.data.of({
     autocomplete: completeFromGlobalScope
   })
+
+  async function loadParser() {
+    const { data } = await axios.get(
+      `http://localhost:3000/api/parser?parserName=${'academia'}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getCookie('access_token')}`
+        }
+      }
+    )
+    seteditorValue(data.data)
+  }
+  useEffect(() => {
+    loadParser()
+  }, [])
+
   return (
     <section
       aria-labelledby="primary-heading"
@@ -23,7 +43,7 @@ export function Editors() {
             </div>
             <div className="flex h-full  w-full overflow-x-auto ">
               <CodeMirror
-                value={`// Looks like you do not have any tables.\n// Click on the 'Data' tab on top to create tables\n// Try out YCode queries here after you create tables;`}
+                value={editorValue}
                 className="flex w-full h-ful"
                 width="100%"
                 onChange={(value, viewUpdate) => {
