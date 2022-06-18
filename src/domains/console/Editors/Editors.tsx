@@ -14,7 +14,7 @@ export function Editors() {
     >
       <div className="w-[50%] h-full">
         <div className="flex flex-col  h-full">
-          <div className="flex flex-col  h-1/2 bg-gray-200">
+          <div className="flex flex-col  h-3/4 bg-gray-200">
             <div className="flex items-center w-full h-14 px-4 bg-gray-200  mb-1">
               <p className="text-lg font-bold text-gray-700">YCode Console</p>
               <button className="p-2 ml-4 rounded-full">
@@ -36,7 +36,7 @@ export function Editors() {
               />
             </div>
           </div>
-          <div className="flex flex-col  h-1/2">
+          <div className="flex flex-col  h-1/4">
             <div className="flex items-center w-full h-14 px-4 bg-gray-200">
               <p className="text-lg font-bold text-gray-700">Query variables</p>
             </div>
