@@ -1,4 +1,5 @@
 import * as consoleSection from 'domains/console'
+import { Header } from 'domains/console/Header'
 
 export default function Home() {
   return (
@@ -11,14 +12,20 @@ export default function Home() {
 function Page() {
   const { currentTab } = consoleSection.useData()
   return (
-    <div className="flex h-[100vh] gap-4 p-6 bg-gray-300 max-h-[100vh]">
+    <div className="flex h-[100vh] gap-4 p-6  max-h-[100vh]">
       <consoleSection.SideBar />
-
-      {currentTab === 'API' ? (
-        <consoleSection.ApiSection />
-      ) : (
-        <consoleSection.DataSection />
-      )}
+      <div className="flex flex-col w-full">
+        <div>
+          <Header />
+        </div>
+        <div>
+          {currentTab === 'API' ? (
+            <consoleSection.ApiSection />
+          ) : (
+            <consoleSection.DataSection />
+          )}
+        </div>
+      </div>
     </div>
   )
 }

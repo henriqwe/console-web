@@ -11,8 +11,8 @@ export function SideBar() {
   })
   const { setCurrentTab, currentTab } = consoleSection.useData()
   return (
-    <div className="w-[30%] h-full max-h-screen text-gray-600 flex flex-col gap-4">
-      <div className="flex justify-between w-full">
+    <div className="text-gray-600 bg-gray-100 rounded-lg w-[30%] h-full  flex flex-col gap-4">
+      <div className="flex justify-between w-full px-6 pt-6 pb-4">
         <div className="w-40">
           <img src="/assets/images/logoTextDark.png" alt="Logo" />
         </div>
@@ -20,7 +20,7 @@ export function SideBar() {
           <ArrowLeftIcon className="w-8 h-8" />
         </button>
       </div>
-      <div className="flex flex-col h-full max-h-[90%] text-gray-600 bg-white rounded-lg ">
+      <div className="mx-2">
         <div className="flex items-center justify-between w-full bg-gray-200 rounded-t-lg">
           <common.Tabs
             tabs={[
@@ -52,13 +52,13 @@ export function SideBar() {
             </button>
           </div> */}
         </div>
-
-        {currentTab === 'API' ? (
-          <consoleSection.ApiTab />
-        ) : (
-          <consoleSection.DataTab />
-        )}
       </div>
+
+      {currentTab === 'API' ? (
+        <consoleSection.ApiTab />
+      ) : (
+        <consoleSection.DataTab />
+      )}
     </div>
   )
 }
