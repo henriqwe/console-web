@@ -3,10 +3,15 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { validateAuth } from 'utils/auth'
 
+const whitelist = ['/api/', '/assets/']
+
 export function middleware(req: NextRequest) {
-  if (req.nextUrl.pathname.includes('/api/')) {
-    return
+  for (const path of whitelist) {
+    if (req.nextUrl.pathname.includes(path)) {
+      return
+    }
   }
+
   const token = validateAuth(req)
   if (req.nextUrl.pathname === '/login') {
     if (!token) {
@@ -17,4 +22,5 @@ export function middleware(req: NextRequest) {
   if (!token) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
+  return
 }
