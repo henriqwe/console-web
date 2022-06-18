@@ -9,14 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.0.0",
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
     "@hookform/resolvers": "^2.9.1",
     "@iconify/react": "^3.2.2",
-    "@uiw/react-codemirror": "^4.7.0",
+    "@uiw/react-codemirror": "^4.8.1",
     "axios": "^0.27.2",
     "cookie": "^0.5.0",
     "js-cookie": "^3.0.1",
+    "jsonwebtoken": "^8.5.1",
     "next": "12.1.6",
     "qs": "^6.10.3",
     "react": "18.1.0",
@@ -24,14 +26,12 @@
     "react-hook-form": "^7.32.1",
     "react-router-dom": "^6.3.0",
     "react-toastify": "^9.0.4",
-    "yup": "^0.32.11",
-    "jsonwebtoken": "^8.5.1"
-
+    "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^8.5.5",
     "@types/cookie": "^0.5.1",
     "@types/js-cookie": "^3.0.2",
+    "@types/jsonwebtoken": "^8.5.5",
     "@types/node": "^17.0.38",
     "@types/qs": "^6.9.7",
     "@types/react": "^18.0.10",
