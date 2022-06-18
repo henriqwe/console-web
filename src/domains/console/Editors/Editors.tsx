@@ -21,7 +21,7 @@ export function Editors() {
                 <Icon icon="bxs:right-arrow" className={`w-4 h-4 transition`} />
               </button>
             </div>
-            <div className="flex h-full  w-full ">
+            <div className="flex h-full  w-full overflow-x-auto ">
               <CodeMirror
                 value={`// Looks like you do not have any tables.\n// Click on the 'Data' tab on top to create tables\n// Try out YCode queries here after you create tables;`}
                 className="flex w-full h-ful"
@@ -40,7 +40,7 @@ export function Editors() {
             <div className="flex items-center w-full h-14 px-4 bg-gray-200">
               <p className="text-lg font-bold text-gray-700">Query variables</p>
             </div>
-            <div className="flex h-full  w-full">
+            <div className="flex h-full  w-full overflow-x-auto">
               <CodeMirror
                 value=""
                 className="flex w-full h-ful"
@@ -61,7 +61,7 @@ export function Editors() {
               <div className="flex items-center w-full h-14 px-4 bg-gray-200">
                 <p className="text-lg font-bold text-gray-700">Response</p>
               </div>
-              <div className="flex h-full  w-full">
+              <div className="flex h-full  w-full overflow-x-auto">
                 <CodeMirror
                   value=""
                   className="flex w-full h-full"
