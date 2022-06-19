@@ -3,8 +3,10 @@ import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import { Icon } from '@iconify/react'
 import { ArrowLeftIcon, UserIcon, DatabaseIcon } from '@heroicons/react/outline'
+import { useRouter } from 'next/router'
 
 export function SideBar() {
+  const router = useRouter()
   const [selectedTab, setSelectedTab] = useState<{ name: string; icon?: any }>({
     name: 'CONSOLE',
     icon: DatabaseIcon
@@ -21,7 +23,11 @@ export function SideBar() {
         <div className="w-40">
           <img src="/assets/images/logoTextDark.png" alt="Logo" />
         </div>
-        <button className="flex items-center justify-center w-10 h-10 bg-gray-200 border border-gray-400 rounded-[0.65rem] hover:bg-red-400 hover:text-white hover:border-red-400 transition">
+        <button
+          className="flex items-center justify-center w-10 h-10 bg-gray-200 border border-gray-400 rounded-[0.65rem] hover:bg-red-400 hover:text-white hover:border-red-400 transition"
+          onClick={() => router.push('/dashboard')}
+          type="button"
+        >
           <ArrowLeftIcon className="w-8 h-8" />
         </button>
       </div>
