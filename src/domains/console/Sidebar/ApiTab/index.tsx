@@ -38,14 +38,14 @@ export function ApiTab() {
   }, [])
 
   return (
-    <div className="flex-1 h-full px-2 mx-2 mb-5 overflow-y-auto ">
+    <div className="flex-1 h-full px-6 pt-4 overflow-y-auto bg-gray-100 rounded-b-lg">
       {loading ? (
         <div className="w-5 h-5 ml-8">
           <common.Spinner />
         </div>
       ) : (
         operations.map((schema) => (
-          <div key={schema}>
+          <div key={schema} className="flex flex-col gap-2 px-3">
             <div
               className={`flex items-center gap-2 pb-2 cursor-pointer`}
               onClick={() => {}}

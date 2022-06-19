@@ -28,7 +28,7 @@ export function DataTab() {
   }, [])
 
   return (
-    <div className="px-6 mt-10">
+    <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto bg-gray-100 rounded-b-lg">
       {loading ? (
         <div className="w-5 h-5 ml-8">
           <common.Spinner />

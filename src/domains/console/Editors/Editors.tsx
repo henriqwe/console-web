@@ -32,7 +32,7 @@ export function Editors() {
       <div className="w-[50%] max-h-[77vh] rounded-lg h-full">
         <div className="flex flex-col h-full rounded-lg">
           <div className="flex flex-col bg-gray-200 rounded-tl-lg h-3/4">
-            <div className="flex items-center w-full h-16 px-4 border-r">
+            <div className="flex items-center w-full h-16 px-4 border-r border-r-gray-300">
               <p className="text-lg font-bold text-gray-700">YCode Console</p>
               <button className="p-2 ml-4 rounded-full">
                 <Icon icon="bxs:right-arrow" className={`w-4 h-4 transition`} />
@@ -54,7 +54,7 @@ export function Editors() {
             </div>
           </div>
           <div className="flex flex-col h-1/4">
-            <div className="flex items-center w-full px-4 bg-gray-100 h-14">
+            <div className="flex items-center w-full px-4 bg-gray-200 h-14">
               <p className="text-lg font-bold text-gray-700">Query variables</p>
             </div>
             <div className="flex w-full h-full overflow-x-auto rounded-bl-lg">
@@ -75,7 +75,7 @@ export function Editors() {
         <div className="flex flex-col h-full">
           <div className="flex flex-col w-full h-full ">
             <div className="flex flex-col h-full">
-              <div className="flex items-center w-full h-16 px-4 bg-gray-100 rounded-tr-lg">
+              <div className="flex items-center w-full h-16 px-4 bg-gray-200 rounded-tr-lg">
                 <p className="text-lg font-bold text-gray-700">Response</p>
               </div>
               <div className="flex w-full h-full overflow-x-auto rounded-br-lg">

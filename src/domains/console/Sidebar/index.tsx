@@ -16,17 +16,17 @@ export function SideBar() {
 
   const { setCurrentTab, currentTab } = consoleSection.useData()
   return (
-    <div className="text-gray-600 rounded-lg w-[30%] h-full  flex flex-col gap-4">
-      <div className="flex items-center justify-between w-full pt-6 pb-4 pl-6 pr-2">
+    <div className="text-gray-600 rounded-lg w-[30%] h-full flex flex-col">
+      <div className="flex items-center justify-between w-full pt-6 pb-3 pl-6 bg-theme-1">
         <div className="w-40">
           <img src="/assets/images/logoTextDark.png" alt="Logo" />
         </div>
-        <button className="flex items-center justify-center w-10 h-10 bg-gray-300 border border-gray-400 rounded-[0.65rem]">
+        <button className="flex items-center justify-center w-10 h-10 bg-gray-200 border border-gray-400 rounded-[0.65rem] hover:bg-red-400 hover:text-white hover:border-red-400 transition">
           <ArrowLeftIcon className="w-8 h-8" />
         </button>
       </div>
-      <div className="px-2">
-        <div className="flex items-center justify-between w-full bg-gray-200 rounded-t-lg">
+      <div className="mt-4">
+        <div className="flex items-center justify-between w-full px-8 py-4 rounded-t-lg bg-theme-1">
           <common.Tabs
             tabs={[
               {
@@ -41,11 +41,11 @@ export function SideBar() {
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
           />
-        
         </div>
+         
       </div>
 
-      {currentTab === 'CONSOLE' ? (
+     {currentTab === 'CONSOLE' ? (
         <consoleSection.ApiTab />
       ) : (
         <consoleSection.DataTab />
