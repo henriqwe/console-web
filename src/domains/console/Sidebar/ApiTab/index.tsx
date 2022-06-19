@@ -18,16 +18,18 @@ export function ApiTab() {
       }
     })
     for (const schema of data.data) {
-      const { data: tables } = await axios.get(
-        `http://localhost:3000/api/schema?schemaName=${schema}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
+      if (schema === 'academia') {
+        const { data: tables } = await axios.get(
+          `http://localhost:3000/api/schema?schemaName=${schema}`,
+          {
+            headers: {
+              Authorization: `Bearer ${getCookie('access_token')}`
+            }
           }
+        )
+        for (const table of Object.keys(tables.data)) {
+          operations.push(`${table}`)
         }
-      )
-      for (const table of Object.keys(tables.data)) {
-        operations.push(`${schema}_${table}`)
       }
     }
     setOperations(operations)
