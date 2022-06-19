@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import { Icon } from '@iconify/react'
@@ -9,18 +9,23 @@ export function SideBar() {
     name: 'CONSOLE',
     icon: DatabaseIcon
   })
+
+  useEffect(() =>{
+    setCurrentTab(selectedTab.name as 'CONSOLE' | 'DATA')
+  },[selectedTab])
+
   const { setCurrentTab, currentTab } = consoleSection.useData()
   return (
-    <div className="text-gray-600 bg-gray-100 rounded-lg w-[30%] h-full  flex flex-col gap-4">
-      <div className="flex justify-between w-full px-6 pt-6 pb-4">
+    <div className="text-gray-600 rounded-lg w-[30%] h-full  flex flex-col gap-4">
+      <div className="flex items-center justify-between w-full pt-6 pb-4 pl-6 pr-2">
         <div className="w-40">
           <img src="/assets/images/logoTextDark.png" alt="Logo" />
         </div>
-        <button className="flex items-center justify-center w-10 h-10 bg-gray-300 border border-gray-400 rounded">
+        <button className="flex items-center justify-center w-10 h-10 bg-gray-300 border border-gray-400 rounded-[0.65rem]">
           <ArrowLeftIcon className="w-8 h-8" />
         </button>
       </div>
-      <div className="mx-2">
+      <div className="px-2">
         <div className="flex items-center justify-between w-full bg-gray-200 rounded-t-lg">
           <common.Tabs
             tabs={[
@@ -36,25 +41,11 @@ export function SideBar() {
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
           />
-          {/* <button>
-            <ArrowLeftIcon className="w-5 h-5" />
-          </button>
-          <p className="text-lg font-bold">Academia</p>
-          <div className="flex gap-2">
-            <button className="flex items-center justify-center w-6 h-6 border border-gray-400 rounded">
-              <UserIcon className="w-5 h-5" />
-            </button>
-            <button className="flex items-center justify-center w-6 h-6 border border-gray-400 rounded">
-              <Icon
-                icon="vscode-icons:file-type-config"
-                className={`w-5 h-5`}
-              />
-            </button>
-          </div> */}
+        
         </div>
       </div>
 
-      {currentTab === 'API' ? (
+      {currentTab === 'CONSOLE' ? (
         <consoleSection.ApiTab />
       ) : (
         <consoleSection.DataTab />

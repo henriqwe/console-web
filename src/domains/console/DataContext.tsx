@@ -7,8 +7,8 @@ import {
   Dispatch
 } from 'react'
 type DataContextProps = {
-  currentTab: 'API' | 'DATA'
-  setCurrentTab: Dispatch<SetStateAction<'API' | 'DATA'>>
+  currentTab: 'CONSOLE' | 'DATA'
+  setCurrentTab: Dispatch<SetStateAction<'CONSOLE' | 'DATA'>>
   selectedTable?: string
   setSelectedTable: Dispatch<SetStateAction<string | undefined>>
 }
@@ -22,7 +22,7 @@ export const DataContext = createContext<DataContextProps>(
 )
 
 export const DataProvider = ({ children }: ProviderProps) => {
-  const [currentTab, setCurrentTab] = useState<'API' | 'DATA'>('API')
+  const [currentTab, setCurrentTab] = useState<'CONSOLE' | 'DATA'>('CONSOLE')
   const [selectedTable, setSelectedTable] = useState<string>()
 
   return (
