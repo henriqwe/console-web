@@ -18,7 +18,7 @@ function Page() {
         <div>
           <Header />
         </div>
-        <div>
+        <div className="flex w-full h-full">
           {currentTab === 'CONSOLE' ? (
             <consoleSection.ApiSection />
           ) : (
