@@ -8,7 +8,7 @@ type TabsProps = {
 
 type Tab = {
   name: string
-  icon: (props: React.ComponentProps<'svg'>) => JSX.Element
+  icon?: (props: React.ComponentProps<'svg'>) => JSX.Element
 }
 
 export function Tabs({
@@ -54,14 +54,16 @@ export function Tabs({
                   setSelectedTab(tab)
                 }}
               >
-                <tab.icon
-                  className={`${
-                    tab.name === selectedTab.name
-                      ? 'text-indigo-500'
-                      : 'text-gray-400 group-hover:text-gray-500'
-                  } -ml-0.5 mr-2 h-5 w-5`}
-                  aria-hidden="true"
-                />
+                {tab.icon && (
+                  <tab.icon
+                    className={`${
+                      tab.name === selectedTab.name
+                        ? 'text-indigo-500'
+                        : 'text-gray-400 group-hover:text-gray-500'
+                    } -ml-0.5 mr-2 h-5 w-5`}
+                    aria-hidden="true"
+                  />
+                )}
                 <span>{tab.name}</span>
               </button>
             ))}

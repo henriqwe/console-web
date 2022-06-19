@@ -5,14 +5,14 @@ import { Icon } from '@iconify/react'
 import { ArrowLeftIcon, UserIcon, DatabaseIcon } from '@heroicons/react/outline'
 
 export function SideBar() {
-  const [selectedTab, setSelectedTab] = useState({
+  const [selectedTab, setSelectedTab] = useState<{ name: string; icon?: any }>({
     name: 'CONSOLE',
     icon: DatabaseIcon
   })
 
-  useEffect(() =>{
+  useEffect(() => {
     setCurrentTab(selectedTab.name as 'CONSOLE' | 'DATA')
-  },[selectedTab])
+  }, [selectedTab])
 
   const { setCurrentTab, currentTab } = consoleSection.useData()
   return (
@@ -42,10 +42,9 @@ export function SideBar() {
             setSelectedTab={setSelectedTab}
           />
         </div>
-         
       </div>
 
-     {currentTab === 'CONSOLE' ? (
+      {currentTab === 'CONSOLE' ? (
         <consoleSection.ApiTab />
       ) : (
         <consoleSection.DataTab />

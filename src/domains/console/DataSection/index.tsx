@@ -6,7 +6,11 @@ import { getCookie } from 'utils/cookies'
 
 export function DataSection() {
   const { selectedTable } = consoleSection.useData()
+  const [selectedTab, setSelectedTab] = useState({
+    name: 'Browser rows'
+  })
   const [loading, setLoading] = useState(true)
+  const [tableFields, setTableFields] = useState<string[]>([])
   const [tableData, setTableData] = useState('')
 
   async function loadTableData() {
@@ -18,8 +22,7 @@ export function DataSection() {
         }
       }
     )
-    // setTableData()
-    console.log(data)
+    setTableFields(Object.keys(data).filter((value) => value[0] !== '_'))
     setLoading(false)
   }
 
@@ -31,17 +34,22 @@ export function DataSection() {
 
   return (
     <common.Card className="flex flex-col h-full">
-      <div className="flex items-center w-full h-[3.5rem] px-4 bg-gray-200 border-gray-300 rounded-t-lg border-x">
+      <div className="flex items-center w-full h-16 px-4 bg-gray-200 border-gray-300 rounded-t-lg border-x">
         <p className="text-lg font-bold text-gray-700">
           {selectedTable ? selectedTable : 'Tables'}
         </p>
       </div>
       {selectedTable ? (
         <div
-          className={`flex ${
-            loading ? 'items-center' : 'items-start'
-          } justify-center h-full px-6 pt-10 bg-white rounded-b-lg`}
+          className={`flex flex-col ${
+            loading ? 'items-center justify-center' : 'items-start'
+          } h-full bg-white rounded-b-lg`}
         >
+          <common.Tabs
+            tabs={[{ name: 'Browser rows' }, { name: 'Modify' }]}
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+          />
           {loading ? (
             <div className="flex flex-col items-center justify-center gap-4">
               <div className="w-20 h-20">
@@ -53,18 +61,161 @@ export function DataSection() {
               </p>
             </div>
           ) : (
-            <table>
-              <thead>
-                <tr>
-                  <th>title</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>value</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="w-full h-full bg-orange-300 p-6 max-h-[10vh]">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <th key={field} className="border">
+                        {field}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="overflow-y-auto bg-blue-300">
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>{' '}
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="text-center">
+                    {tableFields.map((field) => (
+                      <td key={field} className="border">
+                        value
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       ) : (
