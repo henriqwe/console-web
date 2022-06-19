@@ -5,3 +5,8 @@ export { ApiSection } from './ApiSection'
 export { DataSection } from './DataSection'
 export { Editors } from './Console'
 export { DataContext, DataProvider, useData } from './DataContext'
+export {
+  ConsoleEditorContext,
+  ConsoleEditorProvider,
+  useConsoleEditor
+} from './ConsoleEditorContext'
