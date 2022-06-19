@@ -11,6 +11,8 @@ export function DataTab() {
   const [loading, setLoading] = useState(false)
 
   async function loadTables() {
+    setLoading(true)
+
     const { data } = await axios.get(
       `http://localhost:3000/api/schema?schemaName=${'academia'}`,
       {
@@ -30,8 +32,11 @@ export function DataTab() {
   return (
     <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto bg-gray-100 rounded-b-lg">
       {loading ? (
-        <div className="w-5 h-5 ml-8">
-          <common.Spinner />
+        <div className="flex h-full w-full justify-center items-center">
+          <div className="w-8 h-8 mr-8">
+            <common.Spinner />
+          </div>
+          <div>Loading...</div>
         </div>
       ) : (
         tables.map((table) => (

@@ -12,6 +12,7 @@ export function ApiTab() {
 
   async function loadOperations() {
     const operations = []
+    setLoading(true)
     const { data } = await axios.get('http://localhost:3000/api/schemas', {
       headers: {
         Authorization: `Bearer ${getCookie('access_token')}`
@@ -33,6 +34,7 @@ export function ApiTab() {
       }
     }
     setOperations(operations)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -42,8 +44,11 @@ export function ApiTab() {
   return (
     <div className="flex-1 h-full px-6 pt-4 overflow-y-auto bg-gray-100 rounded-b-lg">
       {loading ? (
-        <div className="w-5 h-5 ml-8">
-          <common.Spinner />
+        <div className="flex h-full w-full justify-center items-center">
+          <div className="w-8 h-8 mr-8">
+            <common.Spinner />
+          </div>
+          <div>Loading...</div>
         </div>
       ) : (
         operations.map((schema) => (
