@@ -3,23 +3,28 @@ import { Fragment, ReactNode, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import {
   CalendarIcon,
-  ChartBarIcon,
-  FolderIcon,
+  InformationCircleIcon,
+  CashIcon,
   HomeIcon,
-  InboxIcon,
+  BookOpenIcon,
   MenuIcon,
-  UsersIcon,
+  UserIcon,
   XIcon,
   DocumentTextIcon
 } from '@heroicons/react/outline'
 
 const navigation = [
   { name: 'Projects', href: '#', icon: HomeIcon, current: true },
-  { name: 'Billing', href: '#', icon: UsersIcon, current: false },
+  { name: 'Billing', href: '#', icon: CashIcon, current: false },
   { name: 'Docs', href: '#', icon: DocumentTextIcon, current: false },
-  { name: 'Tutorial', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Help And Suport', href: '#', icon: InboxIcon, current: false },
-  { name: 'My Account', href: '#', icon: ChartBarIcon, current: false }
+  { name: 'Tutorial', href: '#', icon: BookOpenIcon, current: false },
+  {
+    name: 'Help And Suport',
+    href: '#',
+    icon: InformationCircleIcon,
+    current: false
+  },
+  { name: 'My Account', href: '#', icon: UserIcon, current: false }
 ]
 
 type TemplateProps = {

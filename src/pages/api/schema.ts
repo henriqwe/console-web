@@ -6,11 +6,6 @@ export default async function schemas(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    console.log({
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${req.headers.authorization}`,
-    });
     try {
       const { data } = await axios.get(
         `https://api.ycodify.com/api/modeler/schema/${req.query.schemaName}`,
@@ -22,7 +17,6 @@ export default async function schemas(
           },
         }
       );
-      console.log(data);
       return res.status(200).json({ data });
     } catch (err) {
       console.log(err);
