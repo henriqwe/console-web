@@ -4,11 +4,13 @@ import * as common from 'common'
 import * as data from 'domains/console'
 import axios from 'axios'
 import { getCookie } from 'utils/cookies'
+import * as consoleEditor from '../../ConsoleEditorContext'
 
 export function ApiTab() {
   const [operations, setOperations] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [activeTable, setActiveTable] = useState<string>()
+  const { formatQueryOrMutation } = consoleEditor.useConsoleEditor()
 
   async function loadOperations() {
     const operations = []
@@ -69,6 +71,7 @@ export function ApiTab() {
                     }`}
                     onClick={() => {
                       setActiveTable(`${schema}${table}`)
+                      formatQueryOrMutation(table, schema)
                     }}
                   >
                     <p className="text-sm">{table}</p>

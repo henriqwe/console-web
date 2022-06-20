@@ -1,10 +1,11 @@
 import * as consoleSection from 'domains/console'
 import { Header } from 'domains/console/Header'
-
 export default function Home() {
   return (
     <consoleSection.DataProvider>
-      <Page />
+      <consoleSection.ConsoleEditorProvider>
+        <Page />
+      </consoleSection.ConsoleEditorProvider>
     </consoleSection.DataProvider>
   )
 }
