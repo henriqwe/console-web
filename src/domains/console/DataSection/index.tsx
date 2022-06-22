@@ -3,8 +3,10 @@ import * as consoleSection from 'domains/console'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { getCookie } from 'utils/cookies'
+import { useRouter } from 'next/router'
 
 export function DataSection() {
+  const router = useRouter()
   const { selectedTable } = consoleSection.useData()
   const [selectedTab, setSelectedTab] = useState({
     name: 'Browser rows'
@@ -15,7 +17,7 @@ export function DataSection() {
 
   async function loadTableData() {
     const { data } = await axios.get(
-      `https://api.ycodify.com/api/modeler/schema/${'academia'}/entity/${selectedTable}`,
+      `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
       {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`

@@ -4,8 +4,10 @@ import axios from 'axios'
 import { PlusIcon, SearchIcon } from '@heroicons/react/outline'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useRouter } from 'next/router'
 
 export function Projects() {
+  const router = useRouter()
   const { control, watch } = useForm()
   const [showFiltered, setShowFiltered] = useState(false)
   const [filteredSchemas, setFilteredSchemas] = useState<string[]>([])
@@ -87,7 +89,12 @@ export function Projects() {
           <common.Card className="p-6 bg-white shadow-lg" key={schema}>
             <div className="flex items-center justify-between">
               <p className="text-lg">{schema}</p>
-              <button className="px-3 py-2 text-white bg-indigo-500 rounded-lg">
+              <button
+                className="px-3 py-2 text-white bg-indigo-500 rounded-lg"
+                onClick={() => {
+                  router.push(`/console/${schema}`)
+                }}
+              >
                 Launch console
               </button>
             </div>

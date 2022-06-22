@@ -11,6 +11,7 @@ import axios from 'axios'
 import { javascriptLanguage } from '@codemirror/lang-javascript'
 import { getCookie } from 'utils/cookies'
 import { completeFromGlobalScope } from './Console/Editors/Autocomplete'
+import { useRouter } from 'next/router'
 
 type ConsoleEditorContextProps = {
   consoleValue: string | undefined
@@ -28,6 +29,7 @@ export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
 )
 
 export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
+  const router = useRouter()
   const [consoleValue, setConsoleValue] = useState<string>()
 
   const globalJavaScriptCompletions = javascriptLanguage.data.of({
@@ -36,7 +38,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
   async function loadParser() {
     const { data } = await axios.get(
-      `http://localhost:3000/api/parser?parserName=${'academia'}`,
+      `http://localhost:3000/api/parser?parserName=${router.query.name}`,
       {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`

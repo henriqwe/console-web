@@ -25,7 +25,7 @@ export function SideBar() {
         </div>
         <button
           className="flex items-center justify-center w-10 h-10 bg-gray-200 border border-gray-400 rounded-[0.65rem] hover:bg-red-400 hover:text-white hover:border-red-400 transition"
-          onClick={() => router.push('/dashboard')}
+          onClick={() => router.push('/')}
           type="button"
         >
           <ArrowLeftIcon className="w-8 h-8" />
