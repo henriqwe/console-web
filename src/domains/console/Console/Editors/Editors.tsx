@@ -1,11 +1,18 @@
 import { javascript } from '@codemirror/lang-javascript'
 import { Icon } from '@iconify/react'
 import CodeMirror from '@uiw/react-codemirror'
+import * as common from 'common'
 
 import * as consoleEditor from '../../ConsoleEditorContext'
 export function Editors() {
-  const { consoleValue, globalJavaScriptCompletions } =
-    consoleEditor.useConsoleEditor()
+  const {
+    consoleValue,
+    globalJavaScriptCompletions,
+    runOperation,
+    consoleResponse,
+    setConsoleValue,
+    consoleResponseLoading
+  } = consoleEditor.useConsoleEditor()
 
   return (
     <div className="flex w-full h-full rounded-lg">
@@ -14,8 +21,22 @@ export function Editors() {
           <div className="flex flex-col bg-gray-200 rounded-tl-lg h-3/4">
             <div className="flex items-center w-full h-16 px-4 border-r border-r-gray-300">
               <p className="text-lg font-bold text-gray-700">YCode Console</p>
-              <button className="p-2 ml-4 rounded-full">
-                <Icon icon="bxs:right-arrow" className={`w-4 h-4 transition`} />
+              <button
+                className="p-2 ml-4 rounded-full"
+                title="Run"
+                onClick={runOperation}
+                disabled={consoleResponseLoading}
+              >
+                {consoleResponseLoading ? (
+                  <div className="w-4 h-4">
+                    <common.Spinner />
+                  </div>
+                ) : (
+                  <Icon
+                    icon="bxs:right-arrow"
+                    className={`w-4 h-4 transition`}
+                  />
+                )}
               </button>
             </div>
             <div className="flex w-full h-full overflow-x-auto ">
@@ -24,7 +45,7 @@ export function Editors() {
                 className="flex w-full h-ful"
                 width="100%"
                 onChange={(value, viewUpdate) => {
-                  console.log('value:', value)
+                  setConsoleValue(value)
                 }}
                 extensions={[
                   javascript({ jsx: true }),
@@ -60,7 +81,7 @@ export function Editors() {
               </div>
               <div className="flex w-full h-full overflow-x-auto rounded-br-lg">
                 <CodeMirror
-                  value=""
+                  value={consoleResponse}
                   className="flex w-full h-full"
                   width="100%"
                   onChange={(value, viewUpdate) => {
