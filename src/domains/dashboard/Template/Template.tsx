@@ -2,7 +2,7 @@
 import { Fragment, ReactNode, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import {
-  CalendarIcon,
+  LogoutIcon,
   InformationCircleIcon,
   CashIcon,
   HomeIcon,
@@ -12,6 +12,8 @@ import {
   XIcon,
   DocumentTextIcon
 } from '@heroicons/react/outline'
+import { useRouter } from 'next/router'
+import { setCookie } from 'utils'
 
 const navigation = [
   { name: 'Projects', href: '#', icon: HomeIcon, current: true },
@@ -32,6 +34,7 @@ type TemplateProps = {
 }
 
 export function Template({ children }: TemplateProps) {
+  const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -168,7 +171,7 @@ export function Template({ children }: TemplateProps) {
                   <a
                     key={item.name}
                     href={item.href}
-                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition ${
                       item.current
                         ? 'bg-gray-900 text-white'
                         : 'text-gray-300 hover:bg-gray-700 hover:text-white'
@@ -186,6 +189,19 @@ export function Template({ children }: TemplateProps) {
                   </a>
                 ))}
               </nav>
+              <a
+                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-red-700 hover:text-white cursor-pointer mx-2 transition`}
+                onClick={() => {
+                  // setCookie('access_token')
+                  router.push('/login')
+                }}
+              >
+                <LogoutIcon
+                  className={`mr-3 flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-300`}
+                  aria-hidden="true"
+                />
+                Logout
+              </a>
             </div>
           </div>
         </div>

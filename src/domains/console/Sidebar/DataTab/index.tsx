@@ -4,8 +4,10 @@ import * as common from 'common'
 import * as consoleSection from 'domains/console'
 import axios from 'axios'
 import { getCookie } from 'utils/cookies'
+import { useRouter } from 'next/router'
 
 export function DataTab() {
+  const router = useRouter()
   const { selectedTable, setSelectedTable } = consoleSection.useData()
   const [tables, setTables] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
@@ -14,7 +16,7 @@ export function DataTab() {
     setLoading(true)
 
     const { data } = await axios.get(
-      `http://localhost:3000/api/schema?schemaName=${'academia'}`,
+      `http://localhost:3000/api/schema?schemaName=${router.query.name}`,
       {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`
@@ -32,7 +34,7 @@ export function DataTab() {
   return (
     <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto bg-gray-100 rounded-b-lg">
       {loading ? (
-        <div className="flex h-full w-full justify-center items-center">
+        <div className="flex items-center justify-center w-full h-full">
           <div className="w-8 h-8 mr-8">
             <common.Spinner />
           </div>
