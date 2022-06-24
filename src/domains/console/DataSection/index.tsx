@@ -5,6 +5,17 @@ import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 
+type TableData = {
+  name: string
+  comment: string
+  createdAt: number
+  isIndex: boolean
+  isNullable: boolean
+  isUnique: boolean
+  length: number
+  type: string
+}
+
 export function DataSection() {
   const router = useRouter()
   const { selectedTable } = consoleSection.useData()
@@ -13,7 +24,7 @@ export function DataSection() {
   })
   const [loading, setLoading] = useState(true)
   const [tableFields, setTableFields] = useState<string[]>([])
-  const [tableData, setTableData] = useState('')
+  const [tableData, setTableData] = useState<TableData[]>()
 
   async function loadTableData() {
     const { data } = await axios.get(
@@ -24,7 +35,17 @@ export function DataSection() {
         }
       }
     )
+    const tableData: TableData[] = []
+    Object.keys(data).map((key) => {
+      if (key !== '_classDef') {
+        tableData.push({
+          name: key,
+          ...data[key]
+        })
+      }
+    })
     setTableFields(Object.keys(data).filter((value) => value[0] !== '_'))
+    setTableData(tableData)
     setLoading(false)
   }
 
@@ -42,182 +63,23 @@ export function DataSection() {
         </p>
       </div>
       {selectedTable ? (
-        <div
-          className={`flex flex-col ${
-            loading ? 'items-center justify-center' : 'items-start'
-          } h-full bg-white rounded-b-lg`}
-        >
+        <div>
           <common.Tabs
             tabs={[{ name: 'Browser rows' }, { name: 'Modify' }]}
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
           />
-          {loading ? (
-            <div className="flex flex-col items-center justify-center gap-4">
-              <div className="w-20 h-20">
-                <common.Spinner />
-              </div>
-
-              <p className="text-lg font-bold text-gray-700">
-                Loading table data
-              </p>
-            </div>
+          {selectedTab.name === 'Browser rows' ? (
+            <consoleSection.BrowserRowsTab
+              loading={loading}
+              tableFields={tableFields}
+            />
           ) : (
-            <div className="w-full h-full bg-orange-300 p-6 max-h-[10vh]">
-              <table className="w-full">
-                <thead>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <th key={field} className="border">
-                        {field}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="overflow-y-auto bg-blue-300">
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>{' '}
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="text-center">
-                    {tableFields.map((field) => (
-                      <td key={field} className="border">
-                        value
-                      </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <consoleSection.ModifyTab
+              loading={loading}
+              tableData={tableData}
+              tableFields={tableFields}
+            />
           )}
         </div>
       ) : (
