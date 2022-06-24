@@ -11,13 +11,19 @@ import axios from 'axios'
 import { javascriptLanguage } from '@codemirror/lang-javascript'
 import { getCookie } from 'utils/cookies'
 import { completeFromGlobalScope } from './Console/Editors/Autocomplete'
+import * as utils from 'utils'
 import { useRouter } from 'next/router'
 
 type ConsoleEditorContextProps = {
-  consoleValue: string | undefined
-  setConsoleValue: Dispatch<SetStateAction<string | undefined>>
+  consoleValue: string
+  setConsoleValue: Dispatch<SetStateAction<string>>
   globalJavaScriptCompletions: any
   formatQueryOrMutation(type: string, entity: string): void
+  consoleResponse: string
+  setConsoleResponse: Dispatch<SetStateAction<string>>
+  runOperation(): Promise<void>
+  consoleResponseLoading: boolean
+  setconsoleResponseLoading: Dispatch<SetStateAction<boolean>>
 }
 
 type ProviderProps = {
@@ -29,8 +35,10 @@ export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
 )
 
 export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
+  const [consoleValue, setConsoleValue] = useState<string>('')
+  const [consoleResponse, setConsoleResponse] = useState<string>('')
+  const [consoleResponseLoading, setconsoleResponseLoading] = useState(false)
   const router = useRouter()
-  const [consoleValue, setConsoleValue] = useState<string>()
 
   const globalJavaScriptCompletions = javascriptLanguage.data.of({
     autocomplete: completeFromGlobalScope
@@ -45,18 +53,18 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         }
       }
     )
-    setConsoleValue(data.data)
   }
+
   function formatQueryOrMutation(type: string, entity: string) {
     switch (type) {
       case 'insert':
         setConsoleValue(
-          `{\n "action":"CREATE",\n "object":{\n   "_entity": "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
+          `{\n "action":"CREATE",\n "object":{\n   "classUID": "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
         )
         break
       case 'update':
         setConsoleValue(
-          `{\n "action":"UPDATE",\n "object":{\n   "_id": "",\n   "_entity": "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
+          `{\n "action":"UPDATE",\n "object":{\n   "_id": "",\n   "classUID: "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
         )
         break
       case 'delete':
@@ -64,7 +72,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         break
       case 'select':
         setConsoleValue(
-          `{\n "action":"READ",\n "object":{\n   "_entity": "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
+          `{\n "action":"READ",\n "object":{\n   "classUID": "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
         )
         break
       case 'select by pk':
@@ -74,6 +82,47 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         setConsoleValue('')
         break
     }
+  }
+
+  async function runOperation() {
+    try {
+      setconsoleResponseLoading(true)
+      const { data } = await axios.post(
+        `http://localhost:3000/api/interpreter`,
+        {
+          data: JSON.parse(consoleValue)
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${getCookie('access_token')}`
+          }
+        }
+      )
+      let text = ''
+      for (const textData of data.data) {
+        const formatedResponse = await formatResponse(JSON.stringify(textData))
+        text += `${formatedResponse},\n`
+      }
+      setConsoleResponse(text)
+      utils.notification('Operação realizada com sucesso', 'success')
+      setconsoleResponseLoading(false)
+    } catch (err: any) {
+      utils.notification(err.message, 'error')
+      setconsoleResponseLoading(false)
+    }
+  }
+
+  async function formatResponse(value: string) {
+    let text = value
+    const operations = [
+      { searchValue: ',', replaceValue: ',\n  ' },
+      { searchValue: '{', replaceValue: '{\n  ' },
+      { searchValue: '}', replaceValue: '\n}' }
+    ]
+    operations.forEach((op) => {
+      text = text.replaceAll(op.searchValue, op.replaceValue)
+    })
+    return text
   }
   useEffect(() => {
     loadParser()
@@ -85,7 +134,12 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         consoleValue,
         setConsoleValue,
         globalJavaScriptCompletions,
-        formatQueryOrMutation
+        formatQueryOrMutation,
+        consoleResponse,
+        setConsoleResponse,
+        runOperation,
+        consoleResponseLoading,
+        setconsoleResponseLoading
       }}
     >
       {children}
