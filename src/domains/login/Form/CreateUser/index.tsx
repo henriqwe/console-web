@@ -38,7 +38,7 @@ export function CreateUser() {
         }
       )
       utils.setCookie('access_token', data.data.access_token)
-      utils.notification('Usuário criado com sucesso', 'success')
+      utils.notification('User created successfully', 'success')
       router.push('/')
     } catch (err: any) {
       utils.notification(err.message, 'error')

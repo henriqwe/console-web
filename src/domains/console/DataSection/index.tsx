@@ -18,7 +18,7 @@ type TableData = {
 
 export function DataSection() {
   const router = useRouter()
-  const { selectedTable } = consoleSection.useData()
+  const { selectedTable, reload } = consoleSection.useData()
   const [selectedTab, setSelectedTab] = useState({
     name: 'Browser rows'
   })
@@ -53,11 +53,11 @@ export function DataSection() {
     if (selectedTable) {
       loadTableData()
     }
-  }, [selectedTable])
+  }, [selectedTable, reload])
 
   return (
     <common.Card className="flex flex-col h-full">
-      <div className="flex items-center w-full h-16 px-4 bg-gray-200 border-gray-300 rounded-t-lg border-x">
+      <div className="flex items-center w-full px-4 bg-gray-200 border-gray-300 rounded-t-lg min-h-[4rem] border-x">
         <p className="text-lg font-bold text-gray-700">
           {selectedTable ? selectedTable : 'Tables'}
         </p>
@@ -78,7 +78,6 @@ export function DataSection() {
             <consoleSection.ModifyTab
               loading={loading}
               tableData={tableData}
-              tableFields={tableFields}
             />
           )}
         </div>

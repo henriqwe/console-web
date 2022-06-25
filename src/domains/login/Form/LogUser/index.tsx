@@ -30,11 +30,14 @@ export function LogUser() {
         password: formData.password
       })
       utils.setCookie('access_token', data.data.access_token)
-      utils.notification('Login realizado com sucesso', 'success')
+      utils.notification('Login successfully', 'success')
       router.push('/')
     } catch (err: any) {
       if (err.response.status === 401) {
-        return utils.notification('Ops! Usuário ou senha incorretos', 'error')
+        return utils.notification(
+          'Ops! Incorrect username or password',
+          'error'
+        )
       }
       utils.notification(err.message, 'error')
     } finally {

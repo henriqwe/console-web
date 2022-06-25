@@ -104,7 +104,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         text += `${formatedResponse},\n`
       }
       setConsoleResponse(text)
-      utils.notification('Operação realizada com sucesso', 'success')
+      utils.notification('Operation performed successfully', 'success')
       setconsoleResponseLoading(false)
     } catch (err: any) {
       utils.notification(err.message, 'error')
