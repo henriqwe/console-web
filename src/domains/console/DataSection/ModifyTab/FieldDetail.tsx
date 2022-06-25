@@ -3,7 +3,7 @@ import * as utils from 'utils'
 import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleData from 'domains/console'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
@@ -30,8 +30,10 @@ export function FieldDetail({
   setShowDetails: Dispatch<SetStateAction<boolean>>
 }) {
   const router = useRouter()
+  const [openModal, setOpenModal] = useState(false)
   const { fieldSchema, selectedTable, setReload, reload } =
     consoleData.useData()
+
   const {
     handleSubmit,
     formState: { errors },
@@ -50,6 +52,21 @@ export function FieldDetail({
         // name: formData.Name,
         type: formData.Type.value
       },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
+        }
+      }
+    )
+    setReload(!reload)
+    utils.notification('field updated successfully', 'success')
+    setShowDetails(false)
+  }
+
+  async function Remove() {
+    await axios.delete(
+      `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -210,11 +227,29 @@ export function FieldDetail({
             loading={false}
             disabled={false}
             color="red"
+            onClick={() => setOpenModal(true)}
           >
             Remove
           </common.Button>
         </div>
       </form>
+      <common.Modal
+        open={openModal}
+        setOpen={setOpenModal}
+        title={`Remove ${data.name} field?`}
+        description={
+          <>
+            <p className="text-sm text-gray-600">
+              Are you sure you want to remove this field?{' '}
+            </p>
+            <p className="text-sm font-bold text-gray-600">
+              this action is irreversible!!!
+            </p>
+          </>
+        }
+        buttonTitle="Remove field"
+        handleSubmit={Remove}
+      />
     </common.Card>
   )
 }
