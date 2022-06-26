@@ -19,25 +19,31 @@ export function Editors() {
       <div className="w-[50%] max-h-[77vh] rounded-lg h-full">
         <div className="flex flex-col h-full rounded-lg">
           <div className="flex flex-col bg-gray-200 rounded-tl-lg h-3/4">
-            <div className="flex items-center w-full h-16 px-4 border-r border-r-gray-300">
+            <div className="flex items-center justify-between w-full pl-4 border-r min-h-[3.5rem] max-h-[3.5rem] border-r-gray-300">
               <p className="text-lg font-bold text-gray-700">YCode Console</p>
-              <button
-                className="p-2 ml-4 rounded-full"
-                title="Run"
-                onClick={runOperation}
-                disabled={consoleResponseLoading}
-              >
-                {consoleResponseLoading ? (
-                  <div className="w-4 h-4">
-                    <common.Spinner />
-                  </div>
-                ) : (
-                  <Icon
-                    icon="bxs:right-arrow"
-                    className={`w-4 h-4 transition`}
-                  />
-                )}
-              </button>
+              <div className="flex h-full">
+                <button
+                  className="flex items-center h-full gap-2 p-2 text-blue-400 border-gray-400 border-x"
+                  title="Run"
+                  onClick={runOperation}
+                  disabled={consoleResponseLoading}
+                >
+                  Run
+                  {consoleResponseLoading && (
+                    <div className="w-4 h-4">
+                      <common.Spinner />
+                    </div>
+                  )}
+                </button>
+                <button
+                  className="flex items-center h-full gap-2 p-2 text-blue-400 border-gray-400 border-x"
+                  title="Docs"
+                  onClick={() => null}
+                  disabled={consoleResponseLoading}
+                >
+                  Docs
+                </button>
+              </div>
             </div>
             <div className="flex w-full h-full overflow-x-auto ">
               <CodeMirror
