@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 
 export function DataTab() {
   const router = useRouter()
-  const { selectedTable, setSelectedTable } = consoleSection.useData()
+  const { selectedTable, setSelectedTable, reload } = consoleSection.useData()
   const [tables, setTables] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -31,7 +31,7 @@ export function DataTab() {
     if (router.query.name) {
       loadTables()
     }
-  }, [router.query.name])
+  }, [router.query.name, reload])
 
   return (
     <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto bg-gray-100 rounded-b-lg">

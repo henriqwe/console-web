@@ -23,9 +23,9 @@ export const Button = ({
       textColor = 'text-white'
       break
     case 'green':
-      buttonColor = 'bg-green-300'
-      hoverButtonColor = 'hover:bg-green-400'
-      disableButtonColor = 'disabled:bg-green-200'
+      buttonColor = 'bg-lime-400'
+      hoverButtonColor = 'hover:bg-lime-500'
+      disableButtonColor = 'disabled:bg-lime-600'
       textColor = 'text-gray-800'
       break
     case 'yellow':

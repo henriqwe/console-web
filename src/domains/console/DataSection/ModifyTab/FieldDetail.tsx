@@ -95,7 +95,7 @@ export function FieldDetail({
         className="flex flex-col gap-4 mt-4"
         onSubmit={handleSubmit((formData) => Save(formData as FormData))}
       >
-        {/* <div className="grid w-full grid-cols-2">
+        <div className="grid w-full grid-cols-2">
           <p className="flex items-center content-center">Name</p>
           <Controller
             name="Name"
@@ -110,7 +110,7 @@ export function FieldDetail({
               />
             )}
           />
-        </div> */}
+        </div>
         <div className="grid w-full grid-cols-2">
           <p className="flex items-center content-center">Type</p>
           <Controller

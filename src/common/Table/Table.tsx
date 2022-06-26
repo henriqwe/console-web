@@ -3,7 +3,7 @@ type TableProps = {
   values?: any[]
 }
 
-export function Table({ tableColumns = [], values = [] }: TableProps) {
+export function Table({ tableColumns = [], values }: TableProps) {
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col mt-8">
@@ -42,8 +42,8 @@ export function Table({ tableColumns = [], values = [] }: TableProps) {
                       </tr>
                     ))
                   ) : (
-                    <tr className="bg-white intro-x dark:bg-darkmode-600">
-                      <td colSpan={tableColumns.length} className="text-center">
+                    <tr className="bg-white  intro-x dark:bg-darkmode-600">
+                      <td colSpan={tableColumns.length} className="py-2 text-center">
                         Data not found!
                       </td>
                     </tr>

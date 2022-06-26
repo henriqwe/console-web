@@ -14,7 +14,6 @@ export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
   const { selectedTable } = consoleData.useData()
   async function loadData() {
     try {
-      console.log('passou')
       const { data } = await axios.post(
         `http://localhost:3000/api/interpreter`,
         {
@@ -29,7 +28,6 @@ export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
         }
       )
       setTableData(data.data)
-      console.log('terminou')
     } catch (err: any) {
       utils.notification(err.message, 'error')
     } finally {
@@ -37,11 +35,11 @@ export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
     }
   }
 
-  console.log(tableData)
   useEffect(() => {
+    setTableData(undefined)
+    setLoading(true)
     loadData()
-    return () => setTableData(undefined)
-  }, [])
+  }, [selectedTable])
 
   return (
     <div
