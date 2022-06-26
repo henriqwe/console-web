@@ -44,7 +44,9 @@ export function DataSection() {
         })
       }
     })
-    setTableFields(Object.keys(data).filter((value) => value[0] !== '_'))
+    const tableFields = Object.keys(data).filter((value) => value[0] !== '_')
+    tableFields.unshift('id')
+    setTableFields(tableFields)
     setTableData(tableData)
     setLoading(false)
   }
@@ -53,6 +55,7 @@ export function DataSection() {
     if (selectedTable) {
       loadTableData()
     }
+    return () => setLoading(true)
   }, [selectedTable, reload])
 
   return (
@@ -70,15 +73,9 @@ export function DataSection() {
             setSelectedTab={setSelectedTab}
           />
           {selectedTab.name === 'Browser rows' ? (
-            <consoleSection.BrowserRowsTab
-              loading={loading}
-              tableFields={tableFields}
-            />
+            <consoleSection.BrowserRowsTab tableFields={tableFields} />
           ) : (
-            <consoleSection.ModifyTab
-              loading={loading}
-              tableData={tableData}
-            />
+            <consoleSection.ModifyTab loading={loading} tableData={tableData} />
           )}
         </div>
       ) : (

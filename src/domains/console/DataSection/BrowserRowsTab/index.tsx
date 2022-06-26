@@ -1,11 +1,48 @@
 import * as common from 'common'
+import * as consoleData from 'domains/console'
+import * as utils from 'utils'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 type BrowserRowsProps = {
-  loading: boolean
   tableFields: string[]
 }
 
-export function BrowserRowsTab({loading, tableFields}:BrowserRowsProps) {
+export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
+  const [loading, setLoading] = useState(true)
+  const [tableData, setTableData] = useState()
+  const { selectedTable } = consoleData.useData()
+  async function loadData() {
+    try {
+      console.log('passou')
+      const { data } = await axios.post(
+        `http://localhost:3000/api/interpreter`,
+        {
+          data: JSON.parse(
+            `{\n "action":"READ",\n "object":{\n   "classUID": "${selectedTable}",\n   "_role": "ROLE_ADMIN"\n }\n}`
+          )
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
+      setTableData(data.data)
+      console.log('terminou')
+    } catch (err: any) {
+      utils.notification(err.message, 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  console.log(tableData)
+  useEffect(() => {
+    loadData()
+    return () => setTableData(undefined)
+  }, [])
+
   return (
     <div
       className={`flex flex-col ${
@@ -22,7 +59,7 @@ export function BrowserRowsTab({loading, tableFields}:BrowserRowsProps) {
         </div>
       ) : (
         <div className="w-full h-full bg-gray-100 overflow-y">
-          <common.Table tableColumns={tableFields} values={[{}]} />
+          <common.Table tableColumns={tableFields} values={tableData} />
         </div>
       )}
     </div>

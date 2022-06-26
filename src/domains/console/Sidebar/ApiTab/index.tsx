@@ -41,8 +41,10 @@ export function ApiTab() {
   }
 
   useEffect(() => {
-    loadOperations()
-  }, [])
+    if (router.query.name) {
+      loadOperations()
+    }
+  }, [router.query.name])
 
   return (
     <div className="flex-1 h-full px-6 pt-4 overflow-y-auto bg-gray-100 rounded-b-lg">
@@ -88,7 +90,10 @@ function Operation({
           setActive(!active)
         }}
       >
-        <Icon icon="bxs:right-arrow" className={`w-4 h-4 transition ${active && 'rotate-90'}`} />
+        <Icon
+          icon="bxs:right-arrow"
+          className={`w-4 h-4 transition ${active && 'rotate-90'}`}
+        />
         <p className="text-sm">{schema}</p>
       </div>
       {active &&

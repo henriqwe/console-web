@@ -28,8 +28,10 @@ export function DataTab() {
   }
 
   useEffect(() => {
-    loadTables()
-  }, [])
+    if (router.query.name) {
+      loadTables()
+    }
+  }, [router.query.name])
 
   return (
     <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto bg-gray-100 rounded-b-lg">

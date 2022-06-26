@@ -125,8 +125,10 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     return text
   }
   useEffect(() => {
-    loadParser()
-  }, [])
+    if (router.query.name) {
+      loadParser()
+    }
+  }, [router.query.name])
 
   return (
     <ConsoleEditorContext.Provider

@@ -1,16 +1,6 @@
-const people = [
-  {
-    name: 'Lindsay Walton',
-    title: 'Front-end Developer',
-    email: 'lindsay.walton@example.com',
-    role: 'Member'
-  }
-  // More people...
-]
-
 type TableProps = {
   tableColumns: string[]
-  values: any[]
+  values?: any[]
 }
 
 export function Table({ tableColumns = [], values = [] }: TableProps) {
@@ -35,21 +25,29 @@ export function Table({ tableColumns = [], values = [] }: TableProps) {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {values.map((value, index) => (
-                    <tr
-                      key={value}
-                      className={index % 2 === 0 ? undefined : 'bg-gray-50'}
-                    >
-                      {tableColumns.map((column, index) => (
-                        <td
-                          className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6"
-                          key={value[column] || index}
-                        >
-                          {value[column]}
-                        </td>
-                      ))}
+                  {values ? (
+                    values.map((value, index) => (
+                      <tr
+                        key={index}
+                        className={index % 2 === 0 ? undefined : 'bg-gray-50'}
+                      >
+                        {tableColumns.map((column, index) => (
+                          <td
+                            className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6"
+                            key={value[column] || index}
+                          >
+                            {value[column]}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="bg-white intro-x dark:bg-darkmode-600">
+                      <td colSpan={tableColumns.length} className="text-center">
+                        Data not found!
+                      </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>

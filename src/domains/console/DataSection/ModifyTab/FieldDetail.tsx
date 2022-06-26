@@ -124,7 +124,10 @@ export function FieldDetail({
                 options={[
                   { name: 'String', value: 'String' },
                   { name: 'Integer', value: 'Integer' },
-                  { name: 'Array', value: 'Array' }
+                  { name: 'Long', value: 'Long' },
+                  { name: 'Boolean', value: 'Boolean' },
+                  { name: 'Double', value: 'Double' },
+                  { name: 'Timestamp', value: 'Timestamp' }
                 ]}
                 errors={errors.Type}
               />
