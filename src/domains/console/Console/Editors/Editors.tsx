@@ -2,16 +2,20 @@ import { javascript } from '@codemirror/lang-javascript'
 import { Icon } from '@iconify/react'
 import CodeMirror from '@uiw/react-codemirror'
 import * as common from 'common'
+import { useState } from 'react'
 
 import * as consoleEditor from '../../ConsoleEditorContext'
 export function Editors() {
+  const [slideOpen, setSlideOpen] = useState(false)
+
   const {
     consoleValue,
     globalJavaScriptCompletions,
     runOperation,
     consoleResponse,
     setConsoleValue,
-    consoleResponseLoading
+    consoleResponseLoading,
+    documentationValue
   } = consoleEditor.useConsoleEditor()
 
   return (
@@ -38,7 +42,7 @@ export function Editors() {
                 <button
                   className="flex items-center h-full gap-2 p-2 text-blue-400 border-gray-400 border-x"
                   title="Docs"
-                  onClick={() => null}
+                  onClick={() => setSlideOpen(!slideOpen)}
                   disabled={consoleResponseLoading}
                 >
                   Docs
@@ -101,6 +105,16 @@ export function Editors() {
           </div>
         </div>
       </div>
+      <common.Slide
+        open={slideOpen}
+        setOpen={setSlideOpen}
+        title={'Documentation'}
+        content={
+          <div>
+            <span className="whitespace-pre-wrap">{`${documentationValue}`}</span>
+          </div>
+        }
+      />
     </div>
   )
 }

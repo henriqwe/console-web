@@ -24,6 +24,8 @@ type ConsoleEditorContextProps = {
   runOperation(): Promise<void>
   consoleResponseLoading: boolean
   setconsoleResponseLoading: Dispatch<SetStateAction<boolean>>
+  documentationValue: string
+  setdocumentationValue: Dispatch<SetStateAction<string>>
 }
 
 type ProviderProps = {
@@ -35,8 +37,9 @@ export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
 )
 
 export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
-  const [consoleValue, setConsoleValue] = useState<string>('')
-  const [consoleResponse, setConsoleResponse] = useState<string>('')
+  const [consoleValue, setConsoleValue] = useState('')
+  const [documentationValue, setdocumentationValue] = useState('')
+  const [consoleResponse, setConsoleResponse] = useState('')
   const [consoleResponseLoading, setconsoleResponseLoading] = useState(false)
   const router = useRouter()
 
@@ -53,35 +56,35 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         }
       }
     )
+    setdocumentationValue(data.data)
   }
 
   function formatQueryOrMutation(type: string, entity: string) {
+    let action: string
     switch (type) {
       case 'insert':
-        setConsoleValue(
-          `{\n "action":"CREATE",\n "object":{\n   "classUID": "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
-        )
+        action = 'CREATE'
         break
       case 'update':
-        setConsoleValue(
-          `{\n "action":"UPDATE",\n "object":{\n   "_id": "",\n   "classUID: "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
-        )
+        action = 'UPDATE'
         break
       case 'delete':
-        setConsoleValue('')
+        action = 'DELETE'
         break
       case 'select':
-        setConsoleValue(
-          `{\n "action":"READ",\n "object":{\n   "classUID": "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
-        )
+        action = 'READ'
         break
       case 'select by pk':
-        setConsoleValue('')
+        action = 'READ'
         break
       default:
-        setConsoleValue('')
+        action = 'READ'
         break
     }
+
+    setConsoleValue(
+      `{\n "action":"${action}",\n "object":{\n   "classUID": "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
+    )
   }
 
   async function runOperation() {
@@ -141,7 +144,9 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         setConsoleResponse,
         runOperation,
         consoleResponseLoading,
-        setconsoleResponseLoading
+        setconsoleResponseLoading,
+        documentationValue,
+        setdocumentationValue
       }}
     >
       {children}
