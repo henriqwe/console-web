@@ -3,18 +3,20 @@ import * as utils from 'utils'
 import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleData from 'domains/console'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { PencilIcon, XIcon, CheckIcon } from '@heroicons/react/outline'
+import { Dispatch, ReactNode, SetStateAction, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 
 type FormData = {
-  Name: string
-  Type: SelectValue
-  Nullable: SelectValue
-  Unique: SelectValue
-  Index: SelectValue
-  Comment: string
+  comment?: string
+  isIndex?: boolean
+  isNullable?: boolean
+  isUnique?: boolean
+  name?: string
+  length?: number
+  type?: string
 }
 
 type SelectValue = {
@@ -31,11 +33,19 @@ export function FieldDetail({
 }) {
   const router = useRouter()
   const [openModal, setOpenModal] = useState(false)
+  const [activeFields, setActiveFields] = useState({
+    Name: true,
+    Type: true,
+    Nullable: true,
+    Unique: true,
+    Index: true,
+    Comment: true
+  })
   const { fieldSchema, selectedTable, setReload, reload } =
     consoleData.useData()
 
   const {
-    handleSubmit,
+    watch,
     formState: { errors },
     control
   } = useForm({ resolver: yupResolver(fieldSchema) })
@@ -43,15 +53,7 @@ export function FieldDetail({
   async function Save(formData: FormData) {
     await axios.put(
       `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
-      {
-        comment: formData.Comment,
-        createdAt: 1653612544841,
-        isIndex: formData.Index.value,
-        isNullable: formData.Nullable.value,
-        isUnique: formData.Unique.value,
-        // name: formData.Name,
-        type: formData.Type.value
-      },
+      formData,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -91,51 +93,92 @@ export function FieldDetail({
         </button>
         <p className="font-bold">{data.name}</p>
       </div>
-      <form
-        className="flex flex-col gap-4 mt-4"
-        onSubmit={handleSubmit((formData) => Save(formData as FormData))}
-      >
-        <div className="grid w-full grid-cols-2">
-          <p className="flex items-center content-center">Name</p>
+      <section className="flex flex-col gap-4 mt-4">
+        <FormField
+          title="Name"
+          handleSubmit={() => Save({ name: watch('Name') })}
+          setActiveFields={setActiveFields}
+        >
           <Controller
             name="Name"
             defaultValue={data.name}
             control={control}
             render={({ field: { onChange, value } }) => (
-              <common.Input
-                placeholder="field name"
-                value={value}
-                onChange={onChange}
-                errors={errors.Name}
-              />
+              <div className="flex-1">
+                <common.Input
+                  placeholder="field name"
+                  value={value}
+                  onChange={onChange}
+                  errors={errors.Name}
+                  disabled={activeFields.Name}
+                />
+              </div>
             )}
           />
-        </div>
-        <div className="grid w-full grid-cols-2">
-          <p className="flex items-center content-center">Type</p>
-          <Controller
-            name="Type"
-            defaultValue={{ name: data.type, value: data.type }}
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <common.Select
-                onChange={onChange}
-                value={value}
-                options={[
-                  { name: 'String', value: 'String' },
-                  { name: 'Integer', value: 'Integer' },
-                  { name: 'Long', value: 'Long' },
-                  { name: 'Boolean', value: 'Boolean' },
-                  { name: 'Double', value: 'Double' },
-                  { name: 'Timestamp', value: 'Timestamp' }
-                ]}
-                errors={errors.Type}
+        </FormField>
+        <FormField
+          title="Type"
+          handleSubmit={() =>
+            Save({
+              type: watch('Type').value,
+              length:
+                watch('Type').value === 'String' ? watch('Length') : undefined
+            })
+          }
+          setActiveFields={setActiveFields}
+        >
+          <div className="flex items-center flex-1 gap-4">
+            <div className="flex-1">
+              <Controller
+                name="Type"
+                defaultValue={{ name: data.type, value: data.type }}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <common.Select
+                    onChange={onChange}
+                    value={value}
+                    options={[
+                      { name: 'String', value: 'String' },
+                      { name: 'Integer', value: 'Integer' },
+                      { name: 'Long', value: 'Long' },
+                      { name: 'Boolean', value: 'Boolean' },
+                      { name: 'Double', value: 'Double' },
+                      { name: 'Timestamp', value: 'Timestamp' }
+                    ]}
+                    errors={errors.Type}
+                    disabled={activeFields.Type}
+                  />
+                )}
               />
+            </div>
+            {(watch('Type') ? watch('Type').value : data.type) === 'String' && (
+              <div className="flex-1">
+                <Controller
+                  name="Length"
+                  defaultValue={data.length}
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <div className="flex-1">
+                      <common.Input
+                        placeholder="field length"
+                        value={value}
+                        onChange={onChange}
+                        errors={errors.Length}
+                        type="number"
+                        disabled={activeFields.Type}
+                      />
+                    </div>
+                  )}
+                />
+              </div>
             )}
-          />
-        </div>
-        <div className="grid w-full grid-cols-2">
-          <p className="flex items-center content-center">Nullable</p>
+          </div>
+        </FormField>
+        <FormField
+          title="Nullable"
+          handleSubmit={() => Save({ isNullable: watch('Nullable').value })}
+          setActiveFields={setActiveFields}
+        >
           <Controller
             name="Nullable"
             defaultValue={{
@@ -144,20 +187,26 @@ export function FieldDetail({
             }}
             control={control}
             render={({ field: { onChange, value } }) => (
-              <common.Select
-                onChange={onChange}
-                value={value}
-                options={[
-                  { name: 'True', value: true },
-                  { name: 'False', value: false }
-                ]}
-                errors={errors.Nullable}
-              />
+              <div className="flex-1">
+                <common.Select
+                  onChange={onChange}
+                  value={value}
+                  options={[
+                    { name: 'True', value: true },
+                    { name: 'False', value: false }
+                  ]}
+                  errors={errors.Nullable}
+                  disabled={activeFields.Nullable}
+                />
+              </div>
             )}
           />
-        </div>
-        <div className="grid w-full grid-cols-2">
-          <p className="flex items-center content-center">Unique</p>
+        </FormField>
+        <FormField
+          title="Unique"
+          handleSubmit={() => Save({ isUnique: watch('Unique').value })}
+          setActiveFields={setActiveFields}
+        >
           <Controller
             name="Unique"
             defaultValue={{
@@ -166,20 +215,26 @@ export function FieldDetail({
             }}
             control={control}
             render={({ field: { onChange, value } }) => (
-              <common.Select
-                onChange={onChange}
-                value={value}
-                options={[
-                  { name: 'True', value: true },
-                  { name: 'False', value: false }
-                ]}
-                errors={errors.Unique}
-              />
+              <div className="flex-1">
+                <common.Select
+                  onChange={onChange}
+                  value={value}
+                  options={[
+                    { name: 'True', value: true },
+                    { name: 'False', value: false }
+                  ]}
+                  errors={errors.Unique}
+                  disabled={activeFields.Unique}
+                />
+              </div>
             )}
           />
-        </div>
-        <div className="grid w-full grid-cols-2">
-          <p className="flex items-center content-center">Index</p>
+        </FormField>
+        <FormField
+          title="Index"
+          handleSubmit={() => Save({ isIndex: watch('Index').value })}
+          setActiveFields={setActiveFields}
+        >
           <Controller
             name="Index"
             defaultValue={{
@@ -188,43 +243,44 @@ export function FieldDetail({
             }}
             control={control}
             render={({ field: { onChange, value } }) => (
-              <common.Select
-                onChange={onChange}
-                value={value}
-                options={[
-                  { name: 'True', value: true },
-                  { name: 'False', value: false }
-                ]}
-                errors={errors.Index}
-              />
+              <div className="flex-1">
+                <common.Select
+                  onChange={onChange}
+                  value={value}
+                  options={[
+                    { name: 'True', value: true },
+                    { name: 'False', value: false }
+                  ]}
+                  errors={errors.Index}
+                  disabled={activeFields.Index}
+                />
+              </div>
             )}
           />
-        </div>
-        <div className="grid w-full grid-cols-2">
-          <p className="flex items-center content-center">Comment</p>
+        </FormField>
+        <FormField
+          title="Comment"
+          handleSubmit={() => Save({ comment: watch('Comment') })}
+          setActiveFields={setActiveFields}
+        >
           <Controller
             name="Comment"
             defaultValue={data.comment}
             control={control}
             render={({ field: { onChange, value } }) => (
-              <common.Input
-                placeholder="field name"
-                onChange={onChange}
-                value={value}
-                errors={errors.Comment}
-              />
+              <div className="flex-1">
+                <common.Input
+                  placeholder="field comment"
+                  onChange={onChange}
+                  value={value}
+                  errors={errors.Comment}
+                  disabled={activeFields.Comment}
+                />
+              </div>
             )}
           />
-        </div>
+        </FormField>
         <div className="flex gap-4 mt-4">
-          <common.Button
-            type="submit"
-            loading={false}
-            disabled={false}
-            color="yellow"
-          >
-            Save
-          </common.Button>
           <common.Button
             type="button"
             loading={false}
@@ -235,7 +291,7 @@ export function FieldDetail({
             Remove
           </common.Button>
         </div>
-      </form>
+      </section>
       <common.Modal
         open={openModal}
         setOpen={setOpenModal}
@@ -254,5 +310,86 @@ export function FieldDetail({
         handleSubmit={Remove}
       />
     </common.Card>
+  )
+}
+
+function FormField({
+  children,
+  title,
+  handleSubmit,
+  setActiveFields
+}: {
+  children: ReactNode
+  title: string
+  handleSubmit: () => Promise<void>
+  setActiveFields: Dispatch<
+    SetStateAction<{
+      Name: boolean
+      Type: boolean
+      Nullable: boolean
+      Unique: boolean
+      Index: boolean
+      Comment: boolean
+    }>
+  >
+}) {
+  const [activeEdit, setActiveEdit] = useState(false)
+  return (
+    <form
+      className="grid w-full grid-cols-2"
+      onSubmit={(event) => {
+        event.preventDefault()
+        handleSubmit()
+      }}
+    >
+      <p className="flex items-center content-center">{title}</p>
+      <div className="flex items-center w-full gap-4">
+        {children}
+        {!activeEdit ? (
+          <common.Button
+            color="green"
+            type="button"
+            onClick={() => {
+              setActiveFields((old) => {
+                return {
+                  ...old,
+                  [title]: false
+                }
+              })
+              setActiveEdit(true)
+            }}
+          >
+            <div className="w-5 h-5">
+              <PencilIcon />
+            </div>
+          </common.Button>
+        ) : (
+          <div className="flex gap-2">
+            <common.Button
+              color="red"
+              type="button"
+              onClick={() => {
+                setActiveFields((old) => {
+                  return {
+                    ...old,
+                    [title]: true
+                  }
+                })
+                setActiveEdit(false)
+              }}
+            >
+              <div className="w-5 h-5">
+                <XIcon />
+              </div>
+            </common.Button>
+            <common.Button color="green">
+              <div className="w-5 h-5">
+                <CheckIcon />
+              </div>
+            </common.Button>
+          </div>
+        )}
+      </div>
+    </form>
   )
 }

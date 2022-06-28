@@ -14,9 +14,16 @@ type SelectProps = {
   }
   onChange?: (val: any) => void
   errors?: DeepMap<FieldValues, FieldError> & { message?: string }
+  disabled?: boolean
 }
 
-export const Select = ({ options, value, onChange, errors }: SelectProps) => {
+export const Select = ({
+  options,
+  value,
+  onChange,
+  errors,
+  disabled = false
+}: SelectProps) => {
   const [selected, setSelected] = useState(value || options[0])
 
   return (
@@ -26,10 +33,15 @@ export const Select = ({ options, value, onChange, errors }: SelectProps) => {
         setSelected(val)
         onChange && onChange(val)
       }}
+      disabled={disabled}
     >
       {({ open }) => (
-        <div className="relative mt-1">
-          <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        <div className="relative">
+          <Listbox.Button
+            className="relative w-full py-2 pl-3 pr-10 text-left transition bg-white border border-gray-300 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
+            aria-disabled={disabled}
+            disabled={disabled}
+          >
             <span className="block truncate">{selected.name}</span>
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
               <SelectorIcon

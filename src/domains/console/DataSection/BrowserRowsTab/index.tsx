@@ -4,6 +4,7 @@ import * as utils from 'utils'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
+
 type BrowserRowsProps = {
   tableFields: string[]
 }
@@ -29,7 +30,9 @@ export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
       )
       setTableData(data.data)
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      if (err.response.status !== 404) {
+        utils.notification(err.message, 'error')
+      }
     } finally {
       setLoading(false)
     }
