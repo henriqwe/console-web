@@ -4,31 +4,26 @@ import * as utils from 'utils'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-type BrowserRowsProps = {
-  tableFields: string[]
-}
-
-export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
+export function RoleTab() {
   const [loading, setLoading] = useState(true)
   const [tableData, setTableData] = useState()
   const { selectedTable } = consoleData.useData()
+
   async function loadData() {
     try {
-      const { data } = await axios.post(
-        `http://localhost:3000/api/interpreter`,
-        {
-          data: JSON.parse(
-            `{\n "action":"READ",\n "object":{\n   "classUID": "${selectedTable}",\n   "_role": "ROLE_ADMIN"\n }\n}`
-          )
-        },
+      const { data } = await axios.get(
+        `https://api.ycodify.com/api/caccount/role`,
         {
           headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
+            'X-TenantID': utils.getCookie('X-TenantID') as string,
+            Accept: 'application/json',
+            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
           }
         }
       )
-      setTableData(data.data)
+      setTableData(data)
     } catch (err: any) {
+      console.log(err)
       if (err.response.status !== 404) {
         utils.notification(err.message, 'error')
       }
@@ -60,12 +55,20 @@ export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
       ) : (
         <div className="w-full h-full bg-gray-100 overflow-y">
           <common.Table
-            tableColumns={tableFields.map((field) => {
-              return {
-                name: field,
-                displayName: field
+            tableColumns={[
+              { name: 'name', displayName: 'Name' },
+              { name: 'schema', displayName: 'Schema' },
+              {
+                name: 'defaultUse',
+                displayName: 'Default use',
+                handler: (value) => (value ? 'Yes' : 'No')
+              },
+              {
+                name: 'status',
+                displayName: 'Status',
+                handler: (value) => (value === 1 ? 'Active' : 'Not Active')
               }
-            })}
+            ]}
             values={tableData}
           />
         </div>

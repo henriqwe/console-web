@@ -1,5 +1,9 @@
 type TableProps = {
-  tableColumns: string[]
+  tableColumns: {
+    name: string
+    displayName: string
+    handler?: (value: any) => void
+  }[]
   values?: any[]
 }
 
@@ -17,9 +21,9 @@ export function Table({ tableColumns = [], values }: TableProps) {
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                        key={column}
+                        key={column.name}
                       >
-                        {column}
+                        {column.displayName}
                       </th>
                     ))}
                   </tr>
@@ -34,16 +38,21 @@ export function Table({ tableColumns = [], values }: TableProps) {
                         {tableColumns.map((column, index) => (
                           <td
                             className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6"
-                            key={value[column] || index}
+                            key={value[column.name] || index}
                           >
-                            {value[column]}
+                            {column.handler
+                              ? column.handler(value[column.name])
+                              : value[column.name]}
                           </td>
                         ))}
                       </tr>
                     ))
                   ) : (
-                    <tr className="bg-white  intro-x dark:bg-darkmode-600">
-                      <td colSpan={tableColumns.length} className="py-2 text-center">
+                    <tr className="bg-white intro-x dark:bg-darkmode-600">
+                      <td
+                        colSpan={tableColumns.length}
+                        className="py-2 text-center"
+                      >
                         Data not found!
                       </td>
                     </tr>

@@ -67,7 +67,7 @@ export function LogUser() {
             render={({ field: { onChange } }) => (
               <div className="w-full">
                 <common.Input
-                  placeholder="Nome de usuário"
+                  placeholder="User name"
                   className="w-full"
                   onChange={onChange}
                 />
@@ -85,7 +85,7 @@ export function LogUser() {
             render={({ field: { onChange } }) => (
               <div className="w-full">
                 <common.Input
-                  placeholder="Senha"
+                  placeholder="Password"
                   type="password"
                   className="w-full"
                   onChange={onChange}
@@ -99,19 +99,19 @@ export function LogUser() {
             )}
           />
           <common.Button type="submit" loading={loading} disabled={loading}>
-            Entrar
+            Log in
           </common.Button>
         </div>
       </div>
 
       <div className="w-full border" />
       <p className="py-3 text-gray-700">
-        Não possui uma conta?{' '}
+        Don&lsquo;t have an account?{' '}
         <span
           className="text-blue-500 cursor-pointer"
           onClick={() => setFormType('create')}
         >
-          Cadastre-se!
+          Sign up!
         </span>
       </p>
     </form>

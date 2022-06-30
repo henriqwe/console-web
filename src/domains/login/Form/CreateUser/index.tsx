@@ -62,7 +62,7 @@ export function CreateUser() {
           <p>Web console</p>
         </div>
 
-        <p className="text-gray-700">Faça aqui seu cadastro</p>
+        <p className="text-gray-700">Register user here</p>
         <div className="flex flex-col w-full gap-4 my-4">
           <Controller
             name="userName"
@@ -70,7 +70,7 @@ export function CreateUser() {
             render={({ field: { onChange } }) => (
               <div className="w-full">
                 <common.Input
-                  placeholder="Nome de usuário"
+                  placeholder="User name"
                   className="w-full"
                   onChange={onChange}
                 />
@@ -107,7 +107,7 @@ export function CreateUser() {
             render={({ field: { onChange } }) => (
               <div className="w-full">
                 <common.Input
-                  placeholder="Senha"
+                  placeholder="Password"
                   type="password"
                   className="w-full"
                   onChange={onChange}
@@ -122,19 +122,19 @@ export function CreateUser() {
           />
 
           <common.Button type="submit" loading={loading} disabled={loading}>
-            Cadastrar
+            Create user
           </common.Button>
         </div>
       </div>
 
       <div className="w-full border" />
       <p className="py-3 text-gray-700">
-        Possui uma conta?{' '}
+        Have an account?{' '}
         <span
           className="text-blue-500 cursor-pointer"
           onClick={() => setFormType('login')}
         >
-          Faça o login!
+          Log in!
         </span>
       </p>
     </form>

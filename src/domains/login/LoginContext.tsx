@@ -29,19 +29,19 @@ export const LoginProvider = ({ children }: ProviderProps) => {
   const logUserSchema = yup.object().shape({
     userName: yup
       .string()
-      .required('Preencha o nome de usuário para continuar'),
-    password: yup.string().required('Preencha a senha para continuar')
+      .required(),
+    password: yup.string().required()
   })
 
   const createUserSchema = yup.object().shape({
     userName: yup
       .string()
-      .required('Preencha o nome de usuário para continuar'),
+      .required(),
     email: yup
       .string()
-      .email('Digite um email válido')
-      .required('Preencha o email para continuar'),
-    password: yup.string().required('Preencha a senha para continuar')
+      .email()
+      .required(),
+    password: yup.string().required()
   })
 
   return (

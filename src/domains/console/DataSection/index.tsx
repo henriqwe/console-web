@@ -135,10 +135,12 @@ export function DataSection() {
             <p className="text-lg font-bold text-gray-700">
               {selectedTable ? selectedTable : 'Tables'}
             </p>
-            <PencilIcon
-              className="w-5 h-5 cursor-pointer"
-              onClick={() => setUpdateName(true)}
-            />
+            {selectedTable && (
+              <PencilIcon
+                className="w-5 h-5 cursor-pointer"
+                onClick={() => setUpdateName(true)}
+              />
+            )}
           </>
         )}
       </div>

@@ -9,8 +9,8 @@ import {
 import * as yup from 'yup'
 
 type DataContextProps = {
-  currentTab: 'CONSOLE' | 'DATA'
-  setCurrentTab: Dispatch<SetStateAction<'CONSOLE' | 'DATA'>>
+  currentTab: 'CONSOLE' | 'DATA' | 'USERS'
+  setCurrentTab: Dispatch<SetStateAction<'CONSOLE' | 'DATA' | 'USERS'>>
   selectedTable?: string
   setSelectedTable: Dispatch<SetStateAction<string | undefined>>
   reload: boolean
@@ -28,7 +28,7 @@ export const DataContext = createContext<DataContextProps>(
 
 export const DataProvider = ({ children }: ProviderProps) => {
   const [reload, setReload] = useState(false)
-  const [currentTab, setCurrentTab] = useState<'CONSOLE' | 'DATA'>('CONSOLE')
+  const [currentTab, setCurrentTab] = useState<'CONSOLE' | 'DATA' | 'USERS'>('CONSOLE')
   const [selectedTable, setSelectedTable] = useState<string>()
 
   const fieldSchema = yup.object().shape({
