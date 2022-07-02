@@ -5,14 +5,10 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
 
-type BrowserRowsProps = {
-  tableFields: string[]
-}
-
-export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
+export function BrowserRowsTab() {
   const [loading, setLoading] = useState(true)
   const [tableData, setTableData] = useState()
-  const { selectedTable } = consoleData.useData()
+  const { selectedTable, tableFields, reload } = consoleData.useData()
 
   async function loadData() {
     try {
@@ -43,7 +39,7 @@ export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
     setTableData(undefined)
     setLoading(true)
     loadData()
-  }, [selectedTable])
+  }, [selectedTable, reload])
 
   return (
     <div
@@ -73,6 +69,7 @@ export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
           />
         </div>
       )}
+      <consoleData.SlidePanel />
     </div>
   )
 }

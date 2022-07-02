@@ -45,7 +45,7 @@ export function ActionsRow({ actions }: ActionsRowProps) {
       </p>
       <common.Modal
         setOpen={setOpenModal}
-        title="Are you sure you wanto to delete this item?"
+        title="Are you sure you want to delete this register?"
         open={openModal}
         buttonTitle={selectedItem?.title as string}
         description="This action can't be undone!!!"

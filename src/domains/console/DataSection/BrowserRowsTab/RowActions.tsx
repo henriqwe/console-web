@@ -4,19 +4,22 @@ import * as consoleData from 'domains/console'
 import axios from 'axios'
 
 export function RowActions({ item }: { item: any }) {
-  const { setSlidePanelState, selectedTable, setReload, reload } = consoleData.useData()
+  const {
+    setOpenSlide,
+    setSelectedItemToExclude,
+    selectedTable,
+    setReload,
+    reload
+  } = consoleData.useData()
   const actions = [
     {
       title: 'Update',
       handler: async () => {
         event?.preventDefault()
-        setSlidePanelState({
-          open: true,
-          type: 'update',
-          data: item
-        })
+        setOpenSlide(true)
+        setSelectedItemToExclude(item)
       },
-      icon: <common.icons.EditIcon/>
+      icon: <common.icons.EditIcon />
     },
     {
       title: 'Delete',
@@ -44,7 +47,7 @@ export function RowActions({ item }: { item: any }) {
             utils.notification(err.message, 'error')
           })
       },
-      icon: <common.icons.DeleteIcon/>
+      icon: <common.icons.DeleteIcon />
     }
   ]
   return <common.ActionsRow actions={actions} />

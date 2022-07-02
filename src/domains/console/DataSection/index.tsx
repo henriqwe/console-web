@@ -26,7 +26,7 @@ type TableData = {
 
 export function DataSection() {
   const router = useRouter()
-  const { selectedTable, setSelectedTable, reload, setReload } =
+  const { selectedTable, setSelectedTable, reload, setReload, setTableFields } =
     consoleSection.useData()
   const {
     control,
@@ -38,7 +38,6 @@ export function DataSection() {
     name: 'Browser rows'
   })
   const [loading, setLoading] = useState(true)
-  const [tableFields, setTableFields] = useState<string[]>([])
   const [tableData, setTableData] = useState<TableData[]>()
 
   async function loadTableData() {
@@ -152,7 +151,7 @@ export function DataSection() {
             setSelectedTab={setSelectedTab}
           />
           {selectedTab.name === 'Browser rows' ? (
-            <consoleSection.BrowserRowsTab tableFields={tableFields} />
+            <consoleSection.BrowserRowsTab />
           ) : (
             <consoleSection.ModifyTab loading={loading} tableData={tableData} />
           )}
