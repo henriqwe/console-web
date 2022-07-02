@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 type TableProps = {
   tableColumns: {
     name: string
@@ -5,9 +7,10 @@ type TableProps = {
     handler?: (value: any) => void
   }[]
   values?: any[]
+  actions?: (item: { item: { title: string; fieldName: string } }) => ReactNode
 }
 
-export function Table({ tableColumns = [], values }: TableProps) {
+export function Table({ tableColumns = [], values, actions }: TableProps) {
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col mt-8">
@@ -26,6 +29,14 @@ export function Table({ tableColumns = [], values }: TableProps) {
                         {column.displayName}
                       </th>
                     ))}
+                    {actions && (
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Actions
+                      </th>
+                    )}
                   </tr>
                 </thead>
                 <tbody className="bg-white">
@@ -45,6 +56,7 @@ export function Table({ tableColumns = [], values }: TableProps) {
                               : value[column.name]}
                           </td>
                         ))}
+                        {actions && actions({ item: value })}
                       </tr>
                     ))
                   ) : (

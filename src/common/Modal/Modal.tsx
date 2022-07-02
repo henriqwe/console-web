@@ -16,6 +16,7 @@ type ModalProps = {
   description?: ReactNode
   buttonTitle: string
   handleSubmit: () => void
+  disabled?: boolean
 }
 
 export function Modal({
@@ -24,7 +25,8 @@ export function Modal({
   title,
   description,
   buttonTitle,
-  handleSubmit
+  handleSubmit,
+  disabled = false
 }: ModalProps) {
   const cancelButtonRef = useRef(null)
 
@@ -87,6 +89,7 @@ export function Modal({
                       handleSubmit()
                       setOpen(false)
                     }}
+                    disabled={disabled}
                   >
                     {buttonTitle}
                   </button>
@@ -95,6 +98,7 @@ export function Modal({
                     className="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={() => setOpen(false)}
                     ref={cancelButtonRef}
+                    disabled={disabled}
                   >
                     Cancel
                   </button>

@@ -1,0 +1,284 @@
+1. id entpoint (criar e gerenciar contas de usuários e papeis na plataforma): [
+  {
+    "use-for":"get account detail",
+    "predicate": "{GET https://api.ycodify.com/api/v0/id/account/username/{username}, produces [application/json]}"
+  },
+  {
+    "use-for":"update password for account by account username and its version",
+    "predicate": "{PUT https://api.ycodify.com/api/v0/id/account/username/{username}/version/{version}/update-password, consumes [application/json], produces [application/json]}"
+  },
+  {
+    "use-for":"delete account",
+    "predicate": "{DELETE https://api.ycodify.com/api/v0/id/account/username/{username}/version/{version}}"
+  },
+  {
+    "use-for":"get all accounts",
+    "predicate": "{GET https://api.ycodify.com/api/v0/id/account, produces [application/json]}"
+  },
+  {
+    "use-for":"update account by account username and its version",
+    "predicate": "{PUT https://api.ycodify.com/api/v0/id/account/username/{username}/version/{version}, consumes [application/json], produces [application/json]}"
+  },
+  {
+    "use-for":"create account",
+    "predicate": "{POST https://api.ycodify.com/api/v0/id/account, consumes [application/json], produces [application/json]}"
+  },
+  {
+    "use-for":"get all roles",
+    "predicate": "{GET https://api.ycodify.com/api/v0/id/role, produces [application/json]}"
+  },
+  {
+    "use-for":"get role by its name",
+    "predicate": "{GET https://api.ycodify.com/api/v0/id/role/name/{name}, produces [application/json]}"
+  },
+  {
+    "use-for":"delete role",
+    "predicate": "{DELETE https://api.ycodify.com/api/v0/id/role/{id}}"
+  },
+  {
+    "use-for":"create role",
+    "predicate": "{POST https://api.ycodify.com/api/v0/id/role, consumes [application/json], produces [application/json]}"
+  }
+]
+
+
+2. id-auth entpoint (para autenticar os usuários): [
+  {
+    "use-for":"authenticate user accounts",
+    "predicate": "{POST https://api.ycodify.com/api/v0/id-auth/oauth/token, produces [application/json]}"
+  }
+]
+
+
+3. modeler endpoints: [
+  {
+    "use-for":"create account",
+    "predicate": "{POST https://api.ycodify.com/api/v0/id/project-name/{projectName}/schema/sql/entity/{entityName}/association, consumes [application/json], produces [text/plain]}"
+  },{
+    "use-for":"create association",
+    "predicate": "{POST https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}/association, consumes [application/json], produces [text/plain]}"
+  },
+  {
+    "use-for":"update association",
+    "predicate": "{PUT https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}/association/{associationName}, consumes [application/json], produces [text/plain]}"
+  },
+  {
+    "use-for":"delete association",
+    "predicate": "{DELETE https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}/association/{associationName}/type/{associationType}, produces [application/json]}"
+  },
+  {
+    "use-for":"update attribute",
+    "predicate": "{PUT https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}/attribute/{attributeName}, consumes [application/json], produces [text/plain]}",
+  },
+  {
+    "use-for":"update attribute on nosql",
+    "predicate": "{PUT https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}/attribute/{attributeName}, consumes [application/json], produces [text/plain]}"
+  },
+  {
+    "use-for":"delete attribute",
+    "predicate": "{DELETE https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}/attribute/{attributeName}, produces [application/json]}"
+  },
+  {
+    "use-for":"update attribute on nosql",
+    "predicate": "{DELETE https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}/attribute/{attributeName}, produces [application/json]}"
+  },
+  {
+    "use-for":"create attribute",
+    "predicate": "{POST https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}/attribute, consumes [application/json], produces [text/plain]}"
+  },
+  {
+    "use-for":"update attribute on nosql",
+    "predicate": "{POST https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}/attribute, consumes [application/json], produces [text/plain]}"
+  },
+  {
+    "use-for":"create entity",
+    "predicate": "{POST https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity, consumes [application/json], produces [text/plain]}"
+  },
+  {
+    "use-for":"create entity on nosql",
+    "predicate": "{POST https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/nosql-columnar/entity, consumes [application/json], produces [text/plain]}"
+  },
+  {
+    "use-for":"update entity",
+    "predicate": "{PUT https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}, consumes [application/json], produces [text/plain]}"
+  },
+  {
+    "use-for":"update entity on nosql",
+    "predicate": "{PUT https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}, consumes [application/json], produces [text/plain]}"
+  },
+  {
+    "use-for":"delete entity",
+    "predicate": "{DELETE https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}, produces [text/plain]}"
+  },
+  {
+    "use-for":"delete entity on nosql",
+    "predicate": "{DELETE https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}, produces [text/plain]}"
+  },
+  {
+    "use-for":"get a detailed schema on YCL - both, sql and nosql entities for the same schema project",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/parser/reverse, produces [text/plain]}"
+  },
+  {
+    "use-for":"",
+    "predicate": "{POST https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/tag-with/{tag:.+}, consumes [application/json], produces [text/plain]}"
+  },
+  {
+    "use-for":"update project (status)",
+    "predicate": "{PUT https://api.ycodify.com/api/v0/modeler/project-name/{projectName}, consumes [application/json], produces [application/json]}"
+  },
+  {
+    "use-for":"delete projec (and its schema)",
+    "predicate": "{DELETE https://api.ycodify.com/api/v0/modeler/project-name/{projectName}, produces [application/json]}"
+  },
+  {
+    "use-for":"",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/tagged-by/{tag:.+}, produces [text/plain]}"
+  },
+  {
+    "use-for":"",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/taggeds, produces [application/json]}"
+  },
+  {
+    "use-for":"",
+    "predicate": "{DELETE https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/tagged-by/{tag:.+}}"
+  },
+  {
+    "use-for":"create project",
+    "predicate": "{POST https://api.ycodify.com/api/v0/modeler/project-name, consumes [application/json], produces [application/json]}"
+  },
+  {
+    "use-for":"get meta attributes for the attribute",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}/attribute/{attributeName}, produces [application/json]}"
+  },
+  {
+    "use-for":"get meta attributes for the association",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}/association/{associationName}, produces [application/json]}"
+  },
+  {
+    "use-for":"get list of projects",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name, produces [application/json]}"
+  },
+  {
+    "use-for":"get the resumed sql schema for the project",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql, produces [application/json]}"
+  },
+  {
+    "use-for":"get the sql schema for the project",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/detailed, produces [application/json]}"
+  },
+  {
+    "use-for":"get the nosql schema for the project",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/nosql-columnar/detailed, produces [application/json]}"
+  },
+  {
+    "use-for":"get the nosql entity schema for the project",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}/detailed, produces [application/json]}"
+  },
+  {
+    "use-for":"get the resumed sql entity schema for the project",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}, produces [application/json]}"
+  },
+  {
+    "use-for":"get the sql schema for the project",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/sql/entity/{entityName}/detailed, produces [application/json]}"
+  },
+  {
+    "use-for":"get the project",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}, produces [application/json]}"
+  },
+  {
+    "use-for":"create admin application backend account for the project",
+    "predicate": "{POST https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/create-admin-account, produces [application/json]}"
+  },
+  {
+    "use-for":"get yuml script for view the schema project graphically on https://yuml.me/",
+    "predicate": "{GET https://api.ycodify.com/api/v0/modeler/project-name/{projectName}/schema/for-graphical-view/show-attributes/{showAttributes}, produces [text/plain]}"
+  }
+]
+
+
+4: um objeto de metadados de uma entidade e atributos:
+{
+  "name": "aluno"
+  "_conf": {
+    "dbType":"sql"||"nosql"
+    "concurrencyControl":false,
+    "businessRule":false,
+    "uniqueKey":["matricula","nome"],
+    "indexKey":["nome"],
+    "superEntity":"pessoa",
+    "superEntityStrategy":"TablePerClass",
+    "accessControl":{
+      "read":["ADMIN","CLIENT"],
+      "write":["ADMIN"]
+    },
+    "createdat":Long,
+    "updatedat":Long
+  },
+  "nome":{
+    "type":"String",
+    "length":64
+    "nullable":false,
+    "comment":"...",
+    "createdat":Long,
+    "updatedat":Long
+  },
+  "matricula":{
+    "name":"matricula",
+    "type":"String",
+    "length":16
+    "nullable":false,
+    "comment":"...",
+    "createdat":Long,
+    "updatedat":Long
+  }
+}
+
+
+5: usar a linguagem YCL para expressar o mesmo de 4 (a linguagem não trata o aspecto de especialização de entidades):
+schema academia {
+  entity aluno (
+    sql
+    !concurrencyControl
+    !businessRule
+    uniqueKey [
+      nome
+      matricula
+    ]
+    indexKey [ ]
+    accessControl (
+      read [
+        CLIENT
+        ADMIN
+      ]
+      write [
+        ADMIN
+      ]
+    )
+  ) {
+    nome (
+      !nullable
+    )
+    matricula (
+      !nullable
+    )
+  }
+}
+
+
+6: body para um request para https://api.ycodify.com/api/v0/interpreter-p/s:
+{
+  "action":"CREATE",
+  "data": [{ 
+    "aluno": {
+      "_id":Long,
+      "_user":String,
+      "_role":String,
+      "_version":Integer,
+      "_createdat":Long,
+      "_updatedat":Long,
+      "nome":String,
+      "matricula":String
+    }
+  }]
+}

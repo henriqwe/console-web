@@ -3,6 +3,7 @@ import * as consoleData from 'domains/console'
 import * as utils from 'utils'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { RowActions } from './RowActions'
 
 type BrowserRowsProps = {
   tableFields: string[]
@@ -12,6 +13,7 @@ export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
   const [loading, setLoading] = useState(true)
   const [tableData, setTableData] = useState()
   const { selectedTable } = consoleData.useData()
+
   async function loadData() {
     try {
       const { data } = await axios.post(
@@ -67,6 +69,7 @@ export function BrowserRowsTab({ tableFields }: BrowserRowsProps) {
               }
             })}
             values={tableData}
+            actions={RowActions}
           />
         </div>
       )}

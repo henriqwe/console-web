@@ -16,6 +16,14 @@ type DataContextProps = {
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
   fieldSchema: yup.AnyObjectSchema
+  slidePanelState: SlidePanelStateType
+  setSlidePanelState: Dispatch<SetStateAction<SlidePanelStateType>>
+}
+
+type SlidePanelStateType = {
+  type: 'create' | 'update'
+  data?: any
+  open: boolean
 }
 
 type ProviderProps = {
@@ -27,8 +35,14 @@ export const DataContext = createContext<DataContextProps>(
 )
 
 export const DataProvider = ({ children }: ProviderProps) => {
+  const [slidePanelState, setSlidePanelState] = useState<SlidePanelStateType>({
+    type: 'create',
+    open: false
+  })
   const [reload, setReload] = useState(false)
-  const [currentTab, setCurrentTab] = useState<'CONSOLE' | 'DATA' | 'USERS'>('CONSOLE')
+  const [currentTab, setCurrentTab] = useState<'CONSOLE' | 'DATA' | 'USERS'>(
+    'CONSOLE'
+  )
   const [selectedTable, setSelectedTable] = useState<string>()
 
   const fieldSchema = yup.object().shape({
@@ -49,7 +63,9 @@ export const DataProvider = ({ children }: ProviderProps) => {
         setSelectedTable,
         reload,
         setReload,
-        fieldSchema
+        fieldSchema,
+        slidePanelState,
+        setSlidePanelState
       }}
     >
       {children}
