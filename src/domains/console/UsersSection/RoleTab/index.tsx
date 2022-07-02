@@ -3,11 +3,14 @@ import * as consoleData from 'domains/console'
 import * as utils from 'utils'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { RowActions } from './RowActions'
+import { PlusIcon } from '@heroicons/react/outline'
 
 export function RoleTab() {
   const [loading, setLoading] = useState(true)
   const [tableData, setTableData] = useState()
   const { selectedTable } = consoleData.useData()
+  const { reload, setSlideType, setOpenSlide } = consoleData.useUser()
 
   async function loadData() {
     try {
@@ -36,7 +39,7 @@ export function RoleTab() {
     setTableData(undefined)
     setLoading(true)
     loadData()
-  }, [selectedTable])
+  }, [selectedTable, reload])
 
   return (
     <div
@@ -53,7 +56,20 @@ export function RoleTab() {
           <p className="text-lg font-bold text-gray-700">Loading table data</p>
         </div>
       ) : (
-        <div className="w-full h-full bg-gray-100 overflow-y">
+        <div className="w-full h-full bg-gray-100 rounded-b-lg overflow-y">
+          <div className="flex items-center justify-between w-full px-8 pt-2">
+            <h2 className="text-lg">Roles</h2>
+            <common.Button
+              type="button"
+              onClick={() => {
+                setOpenSlide(true)
+                setSlideType('ROLE')
+              }}
+            >
+              <PlusIcon className="w-5 h-5" />
+            </common.Button>
+          </div>
+          <common.Separator />
           <common.Table
             tableColumns={[
               { name: 'name', displayName: 'Name' },
@@ -66,10 +82,11 @@ export function RoleTab() {
               {
                 name: 'status',
                 displayName: 'Status',
-                handler: (value) => (value === 1 ? 'Active' : 'Not Active')
+                handler: (value) => (value === 1 ? 'Active' : 'Suspended')
               }
             ]}
             values={tableData}
+            actions={RowActions}
           />
         </div>
       )}

@@ -15,7 +15,7 @@ export function UsersSection() {
         </p>
       </div>
 
-      <div>
+      <div className="rounded-b-lg">
         <common.Tabs
           tabs={[{ name: 'Accounts' }, { name: 'Roles' }]}
           selectedTab={selectedTab}
@@ -27,6 +27,7 @@ export function UsersSection() {
           <consoleData.RoleTab />
         )}
       </div>
+      <consoleData.UserSlidePanel />
     </common.Card>
   )
 }

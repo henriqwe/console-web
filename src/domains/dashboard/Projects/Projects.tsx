@@ -94,7 +94,7 @@ export function Projects() {
           </div>
         ) : (
           (showFiltered ? filteredSchemas : schemas).map((schema) => (
-            <common.Card className="p-6 bg-white shadow-lg" key={schema}>
+            <common.Card className="p-6 bg-white shadow-sm" key={schema}>
               <div className="flex items-center justify-between">
                 <p className="text-lg">{schema}</p>
                 <button

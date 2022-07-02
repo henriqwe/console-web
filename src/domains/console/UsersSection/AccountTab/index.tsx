@@ -3,11 +3,14 @@ import * as consoleData from 'domains/console'
 import * as utils from 'utils'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { RowActions } from './RowActions'
+import { PlusIcon } from '@heroicons/react/outline'
 
 export function AccountTab() {
   const [loading, setLoading] = useState(true)
   const [tableData, setTableData] = useState()
   const { selectedTable } = consoleData.useData()
+  const { reload, setOpenSlide, setSlideType } = consoleData.useUser()
 
   async function loadData() {
     try {
@@ -36,7 +39,7 @@ export function AccountTab() {
     setTableData(undefined)
     setLoading(true)
     loadData()
-  }, [selectedTable])
+  }, [selectedTable, reload])
 
   return (
     <div
@@ -53,7 +56,20 @@ export function AccountTab() {
           <p className="text-lg font-bold text-gray-700">Loading table data</p>
         </div>
       ) : (
-        <div className="w-full h-full bg-gray-100 overflow-y">
+        <div className="flex flex-col w-full h-full gap-0 bg-gray-100 rounded-b-lg overflow-y">
+          <div className="flex items-center justify-between w-full px-8 pt-2">
+            <h2 className="text-lg">Accounts</h2>
+            <common.Button
+              type="button"
+              onClick={() => {
+                setOpenSlide(true)
+                setSlideType('ACCOUNT')
+              }}
+            >
+              <PlusIcon className="w-5 h-5" />
+            </common.Button>
+          </div>
+          <common.Separator />
           <common.Table
             tableColumns={[
               { name: 'name', displayName: 'Name' },
@@ -76,6 +92,7 @@ export function AccountTab() {
               }
             ]}
             values={tableData}
+            actions={RowActions}
           />
         </div>
       )}
