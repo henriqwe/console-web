@@ -85,21 +85,30 @@ export function Projects() {
         </div>
       </section>
       <section className="flex flex-col h-full gap-4 px-4 mx-auto mt-10 max-w-7xl sm:px-6 md:px-8">
-        {(showFiltered ? filteredSchemas : schemas).map((schema) => (
-          <common.Card className="p-6 bg-white shadow-lg" key={schema}>
-            <div className="flex items-center justify-between">
-              <p className="text-lg">{schema}</p>
-              <button
-                className="px-3 py-2 text-white bg-indigo-500 rounded-lg"
-                onClick={() => {
-                  router.push(`/console/${schema}`)
-                }}
-              >
-                Launch console
-              </button>
+        {(showFiltered ? filteredSchemas : schemas).length === 0 ? (
+          <div className="mt-16 text-center">
+            <div className="max-w-sm m-auto mb-5">
+               <common.illustrations.Empty />
             </div>
-          </common.Card>
-        ))}
+           <p className="text-lg">Project not found</p>
+          </div>
+        ) : (
+          (showFiltered ? filteredSchemas : schemas).map((schema) => (
+            <common.Card className="p-6 bg-white shadow-lg" key={schema}>
+              <div className="flex items-center justify-between">
+                <p className="text-lg">{schema}</p>
+                <button
+                  className="px-3 py-2 text-white bg-indigo-500 rounded-lg"
+                  onClick={() => {
+                    router.push(`/console/${schema}`)
+                  }}
+                >
+                  Launch console
+                </button>
+              </div>
+            </common.Card>
+          ))
+        )}
       </section>
     </div>
   )
