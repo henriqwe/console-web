@@ -1,12 +1,12 @@
 import { Column } from './Column'
-import * as types from 'domains/console/types'
+import * as consoleSection from 'domains/console'
 
 type ModifyTabProps = {
   loading: boolean
-  tableData?: types.TableData[]
 }
 
-export function ModifyTab({ loading, tableData }: ModifyTabProps) {
+export function ModifyTab({ loading }: ModifyTabProps) {
+  const { tableData } = consoleSection.useData()
   return (
     <div
       className={`flex flex-col ${

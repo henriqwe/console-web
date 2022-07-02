@@ -62,7 +62,11 @@ export function Table({ tableColumns = [], values, actions }: TableProps) {
                   ) : (
                     <tr className="bg-white intro-x dark:bg-darkmode-600">
                       <td
-                        colSpan={tableColumns.length}
+                        colSpan={
+                          actions
+                            ? tableColumns.length + 1
+                            : tableColumns.length
+                        }
                         className="py-2 text-center"
                       >
                         Data not found!

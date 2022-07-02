@@ -4,6 +4,8 @@ import axios from 'axios'
 import * as consoleData from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 export function Update() {
   const [loading, setLoading] = useState(false)
@@ -13,14 +15,48 @@ export function Update() {
     reload,
     selectedTable,
     selectedItemToExclude,
-    tableFields
+    tableData
   } = consoleData.useData()
+
+  let schemaShape = {}
+
+  for (const field of tableData!.filter((field) => field.name !== 'id')) {
+    let yupValidation
+    switch (field.type) {
+      case 'String':
+        yupValidation = field.isNullable
+          ? yup.string()
+          : yup.string().required()
+        break
+      case 'Integer':
+      case 'Long':
+      case 'Double':
+      case 'Timestamp':
+        yupValidation = field.isNullable
+          ? yup.number().typeError('Value must be a number')
+          : yup.number().required().typeError('Value must be a number')
+        break
+      case 'Boolean':
+        yupValidation = field.isNullable
+          ? yup.object()
+          : yup.object().required()
+        break
+    }
+
+    schemaShape = {
+      ...schemaShape,
+      [field.name]: yupValidation
+    }
+  }
+
+  const yupSchema = yup.object().shape(schemaShape)
+
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm()
+  } = useForm({ resolver: yupResolver(yupSchema) })
 
   const onSubmit = async (formData: any) => {
     setLoading(true)
@@ -35,13 +71,15 @@ export function Update() {
                 "classUID": "${selectedTable}",\n 
                 "id": ${selectedItemToExclude.id},\n 
                 "role": "ROLE_ADMIN",\n 
-                ${tableFields
-                  .filter((field) => field !== 'id')
+                ${tableData
+                  ?.filter((field) => field.name !== 'id')
                   .map(
                     (field, index) =>
-                      `"${field}":"${formData[field]}"${
-                        index !== tableFields.length - 2 ? ',' : ''
-                      }\n`
+                      `"${field.name}":"${
+                        field.type === 'Boolean'
+                          ? formData[field.name].key
+                          : formData[field.name]
+                      }"${index !== tableData?.length - 2 ? ',' : ''}\n`
                   )
                   .join('')}
               }\n
@@ -80,22 +118,34 @@ export function Update() {
       className="flex flex-col items-end"
     >
       <div className="flex flex-col w-full gap-2 mb-2">
-        {tableFields
-          .filter((field) => field !== 'id')
+        {tableData
+          ?.filter((field) => field.name !== 'id')
           .map((field) => (
             <Controller
-              name={field}
-              key={field}
-              defaultValue={selectedItemToExclude[field]}
+              name={field.name}
+              key={field.name}
+              defaultValue={selectedItemToExclude[field.name]}
               control={control}
               render={({ field: { onChange, value } }) => (
                 <div className="flex-1">
-                  <common.Input
-                    placeholder={field}
-                    value={value}
-                    onChange={onChange}
-                    errors={errors.Name}
-                  />
+                  {field.type === 'Boolean' ? (
+                    <common.Select
+                      onChange={onChange}
+                      value={value}
+                      options={[
+                        { name: 'True', value: true },
+                        { name: 'False', value: false }
+                      ]}
+                      errors={errors[field.name]}
+                    />
+                  ) : (
+                    <common.Input
+                      placeholder={field.name}
+                      value={value}
+                      onChange={onChange}
+                      errors={errors[field.name]}
+                    />
+                  )}
                 </div>
               )}
             />

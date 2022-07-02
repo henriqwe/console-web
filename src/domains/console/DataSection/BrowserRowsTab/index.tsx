@@ -7,8 +7,8 @@ import { RowActions } from './RowActions'
 
 export function BrowserRowsTab() {
   const [loading, setLoading] = useState(true)
-  const [tableData, setTableData] = useState()
-  const { selectedTable, tableFields, reload } = consoleData.useData()
+  const [currentTableData, setCurrentTableData] = useState()
+  const { selectedTable, tableData, reload } = consoleData.useData()
 
   async function loadData() {
     try {
@@ -25,7 +25,7 @@ export function BrowserRowsTab() {
           }
         }
       )
-      setTableData(data.data)
+      setCurrentTableData(data.data)
     } catch (err: any) {
       if (err.response.status !== 404) {
         utils.notification(err.message, 'error')
@@ -36,7 +36,7 @@ export function BrowserRowsTab() {
   }
 
   useEffect(() => {
-    setTableData(undefined)
+    setCurrentTableData(undefined)
     setLoading(true)
     loadData()
   }, [selectedTable, reload])
@@ -58,13 +58,13 @@ export function BrowserRowsTab() {
       ) : (
         <div className="w-full h-full bg-gray-100 overflow-y">
           <common.Table
-            tableColumns={tableFields.map((field) => {
+            tableColumns={tableData?.map((field) => {
               return {
-                name: field,
-                displayName: field
+                name: field.name,
+                displayName: field.name
               }
-            })}
-            values={tableData}
+            }) || []}
+            values={currentTableData}
             actions={RowActions}
           />
         </div>

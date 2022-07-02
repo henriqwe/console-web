@@ -7,6 +7,7 @@ import {
   Dispatch
 } from 'react'
 import * as yup from 'yup'
+import * as types from 'domains/console/types'
 
 type DataContextProps = {
   currentTab: 'CONSOLE' | 'DATA' | 'USERS'
@@ -20,8 +21,8 @@ type DataContextProps = {
   setSelectedItemToExclude: Dispatch<SetStateAction<any>>
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
-  tableFields: string[]
-  setTableFields: Dispatch<SetStateAction<string[]>>
+  tableData?: types.TableData[]
+  setTableData: Dispatch<SetStateAction<types.TableData[] | undefined>>
 }
 
 type ProviderProps = {
@@ -40,7 +41,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
     'CONSOLE'
   )
   const [selectedTable, setSelectedTable] = useState<string>()
-  const [tableFields, setTableFields] = useState<string[]>([])
+  const [tableData, setTableData] = useState<types.TableData[]>()
 
   const fieldSchema = yup.object().shape({
     // Name: yup.string().required(),
@@ -65,8 +66,8 @@ export const DataProvider = ({ children }: ProviderProps) => {
         setOpenSlide,
         selectedItemToExclude,
         setSelectedItemToExclude,
-        tableFields,
-        setTableFields
+        tableData,
+        setTableData
       }}
     >
       {children}

@@ -1,4 +1,5 @@
 import * as common from 'common'
+import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
@@ -13,21 +14,16 @@ import {
 } from 'react-hook-form'
 import * as utils from 'utils'
 
-type TableData = {
-  name: string
-  comment: string
-  createdAt: number
-  isIndex: boolean
-  isNullable: boolean
-  isUnique: boolean
-  length: number
-  type: string
-}
-
 export function DataSection() {
   const router = useRouter()
-  const { selectedTable, setSelectedTable, reload, setReload, setTableFields } =
-    consoleSection.useData()
+  const {
+    selectedTable,
+    setSelectedTable,
+    reload,
+    setReload,
+    tableData,
+    setTableData
+  } = consoleSection.useData()
   const {
     control,
     formState: { errors },
@@ -38,7 +34,6 @@ export function DataSection() {
     name: 'Browser rows'
   })
   const [loading, setLoading] = useState(true)
-  const [tableData, setTableData] = useState<TableData[]>()
 
   async function loadTableData() {
     const { data } = await axios.get(
@@ -49,7 +44,7 @@ export function DataSection() {
         }
       }
     )
-    const tableData: TableData[] = []
+    const tableData: types.TableData[] = []
     Object.keys(data).map((key) => {
       if (key !== '_classDef') {
         tableData.push({
@@ -60,7 +55,6 @@ export function DataSection() {
     })
     const tableFields = Object.keys(data).filter((value) => value[0] !== '_')
     tableFields.unshift('id')
-    setTableFields(tableFields)
     setTableData(tableData)
     setLoading(false)
   }
@@ -153,7 +147,7 @@ export function DataSection() {
           {selectedTab.name === 'Browser rows' ? (
             <consoleSection.BrowserRowsTab />
           ) : (
-            <consoleSection.ModifyTab loading={loading} tableData={tableData} />
+            <consoleSection.ModifyTab loading={loading} />
           )}
         </div>
       ) : (
