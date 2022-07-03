@@ -23,6 +23,8 @@ type DataContextProps = {
   setOpenSlide: Dispatch<SetStateAction<boolean>>
   tableData?: types.TableData[]
   setTableData: Dispatch<SetStateAction<types.TableData[] | undefined>>
+  showCreateTableSection: boolean
+  setShowCreateTableSection: Dispatch<SetStateAction<boolean>>
 }
 
 type ProviderProps = {
@@ -37,6 +39,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
   const [openSlide, setOpenSlide] = useState(false)
   const [selectedItemToExclude, setSelectedItemToExclude] = useState()
   const [reload, setReload] = useState(false)
+  const [showCreateTableSection, setShowCreateTableSection] = useState(false)
   const [currentTab, setCurrentTab] = useState<'CONSOLE' | 'DATA' | 'USERS'>(
     'CONSOLE'
   )
@@ -67,7 +70,9 @@ export const DataProvider = ({ children }: ProviderProps) => {
         selectedItemToExclude,
         setSelectedItemToExclude,
         tableData,
-        setTableData
+        setTableData,
+        showCreateTableSection,
+        setShowCreateTableSection
       }}
     >
       {children}

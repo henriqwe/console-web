@@ -22,7 +22,8 @@ export function DataSection() {
     reload,
     setReload,
     tableData,
-    setTableData
+    setTableData,
+    showCreateTableSection
   } = consoleSection.useData()
   const {
     control,
@@ -88,6 +89,10 @@ export function DataSection() {
     }
     return () => setLoading(true)
   }, [selectedTable, reload])
+
+  if (showCreateTableSection) {
+    return <consoleSection.CreateTable />
+  }
 
   return (
     <common.Card className="flex flex-col h-full">

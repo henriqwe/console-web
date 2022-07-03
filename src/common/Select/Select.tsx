@@ -40,7 +40,7 @@ export const Select = ({
       {({ open }) => (
         <>
           {label && (
-            <Listbox.Label className="block text-sm font-medium text-gray-700">
+            <Listbox.Label className="block mb-2 text-sm font-medium text-gray-700">
               {label}
             </Listbox.Label>
           )}
