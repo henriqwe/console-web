@@ -19,6 +19,7 @@ type UserContextProps = {
   slideType: 'ACCOUNT' | 'ROLE'
   setSlideType: Dispatch<SetStateAction<'ACCOUNT' | 'ROLE'>>
   roleSchema: yup.AnyObjectSchema
+  createUserSchema: yup.AnyObjectSchema
 }
 
 type ProviderProps = {
@@ -46,6 +47,12 @@ export const UserProvider = ({ children }: ProviderProps) => {
     Default: yup.object().required()
   })
 
+  const createUserSchema = yup.object().shape({
+    Username: yup.string().required(),
+    Email: yup.string().email().required(),
+    Password: yup.string().required()
+  })
+
   return (
     <UserContext.Provider
       value={{
@@ -58,7 +65,8 @@ export const UserProvider = ({ children }: ProviderProps) => {
         setOpenSlide,
         slideType,
         setSlideType,
-        roleSchema
+        roleSchema,
+        createUserSchema
       }}
     >
       {children}

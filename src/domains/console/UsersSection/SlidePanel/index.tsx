@@ -1,6 +1,7 @@
 import * as consoleData from 'domains/console'
 import * as common from 'common'
 import { CreateRole } from './CreateRole'
+import { CreateAccount } from './CreateAccount'
 
 export function UserSlidePanel() {
   const { setOpenSlide, openSlide, slideType } = consoleData.useUser()
@@ -9,7 +10,7 @@ export function UserSlidePanel() {
       title={slideType === 'ROLE' ? 'Create Role' : 'Create Account'}
       open={openSlide}
       setOpen={setOpenSlide}
-      content={slideType === 'ROLE' ? <CreateRole /> : <div />}
+      content={slideType === 'ROLE' ? <CreateRole /> : <CreateAccount />}
     />
   )
 }

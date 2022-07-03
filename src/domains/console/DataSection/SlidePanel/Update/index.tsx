@@ -141,9 +141,18 @@ export function Update() {
                   ) : (
                     <common.Input
                       placeholder={field.name}
+                      label={field.name}
                       value={value}
                       onChange={onChange}
                       errors={errors[field.name]}
+                      type={
+                        field.type === 'Integer' ||
+                        field.type === 'Long' ||
+                        field.type === 'Double' ||
+                        field.type === 'Timestamp'
+                          ? 'number'
+                          : 'text'
+                      }
                     />
                   )}
                 </div>
