@@ -9,6 +9,7 @@ export const Button = ({
   children,
   color = 'blue',
   loading = false,
+  className,
   ...props
 }: ButtonProps) => {
   let buttonColor = ''
@@ -43,7 +44,7 @@ export const Button = ({
   }
   return (
     <button
-      className={`px-4 py-2 transition ${buttonColor} ${hoverButtonColor} ${disableButtonColor} disabled:cursor-not-allowed rounded-md text-sm flex gap-2 items-center justify-center ${textColor} ${props.className}`}
+      className={`px-4 py-2 transition ${buttonColor} ${hoverButtonColor} ${disableButtonColor} disabled:cursor-not-allowed rounded-md text-sm flex gap-2 items-center justify-center ${textColor} ${className}`}
       {...props}
     >
       {loading && <common.Spinner className="w-5 h-5" />}

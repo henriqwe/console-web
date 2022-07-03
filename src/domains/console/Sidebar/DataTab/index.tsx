@@ -8,7 +8,8 @@ import { useRouter } from 'next/router'
 
 export function DataTab() {
   const router = useRouter()
-  const { selectedTable, setSelectedTable, reload } = consoleSection.useData()
+  const { selectedTable, setSelectedTable, reload, setShowCreateTableSection } =
+    consoleSection.useData()
   const [tables, setTables] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -43,21 +44,33 @@ export function DataTab() {
           <div>Loading...</div>
         </div>
       ) : (
-        tables.map((table) => (
-          <div key={table}>
-            <div
-              className={`flex items-center gap-2 pb-2 cursor-pointer ${
-                selectedTable === `${table}` && 'text-orange-400'
-              }`}
-              onClick={() => {
-                setSelectedTable(`${table}`)
-              }}
+        <div>
+          <div className="w-full mb-2">
+            <common.Button
+              color="green"
+              className="w-full"
+              onClick={() => setShowCreateTableSection(true)}
             >
-              <Icon icon="bi:table" className="w-4 h-4" />
-              <p className="text-sm">{table}</p>
-            </div>
+              Create entity
+            </common.Button>
           </div>
-        ))
+          <common.Separator />
+          {tables.map((table) => (
+            <div key={table}>
+              <div
+                className={`flex items-center gap-2 pb-2 cursor-pointer ${
+                  selectedTable === `${table}` && 'text-orange-400'
+                }`}
+                onClick={() => {
+                  setSelectedTable(`${table}`)
+                }}
+              >
+                <Icon icon="bi:table" className="w-4 h-4" />
+                <p className="text-sm">{table}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   )

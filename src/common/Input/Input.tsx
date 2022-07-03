@@ -12,8 +12,12 @@ export const Input = ({
   errors,
   ...props
 }: InputProps) => (
-  <div>
-    <label htmlFor={label}>{label}</label>
+  <div className="flex flex-col gap-1">
+    {label && (
+      <label htmlFor={label} className="text-gray-700">
+        {label}
+      </label>
+    )}
     <input
       {...props}
       type={type}
