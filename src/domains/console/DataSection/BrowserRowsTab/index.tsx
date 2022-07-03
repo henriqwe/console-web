@@ -26,17 +26,18 @@ export function BrowserRowsTab() {
         }
       )
       setCurrentTableData(data.data)
+      setLoading(false)
     } catch (err: any) {
       if (err.response.status !== 404) {
         utils.notification(err.message, 'error')
       }
+      setCurrentTableData(undefined)
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    setCurrentTableData(undefined)
     setLoading(true)
     loadData()
   }, [selectedTable, reload])
@@ -58,12 +59,14 @@ export function BrowserRowsTab() {
       ) : (
         <div className="w-full h-full bg-gray-100 overflow-y">
           <common.Table
-            tableColumns={tableData?.map((field) => {
-              return {
-                name: field.name,
-                displayName: field.name
-              }
-            }) || []}
+            tableColumns={
+              tableData?.map((field) => {
+                return {
+                  name: field.name,
+                  displayName: field.name
+                }
+              }) || []
+            }
             values={currentTableData}
             actions={RowActions}
           />

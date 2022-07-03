@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
-import { Icon } from '@iconify/react'
-import { ArrowLeftIcon, UserIcon, DatabaseIcon } from '@heroicons/react/outline'
+import { ArrowLeftIcon, DatabaseIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 
 export function SideBar() {
@@ -44,7 +43,9 @@ export function SideBar() {
                 icon: DatabaseIcon
               }
             ]}
-            selectedTab={selectedTab}
+            selectedTab={
+              currentTab !== 'USERS' ? selectedTab : { name: 'USERS' }
+            }
             setSelectedTab={setSelectedTab}
           />
         </div>
@@ -52,8 +53,12 @@ export function SideBar() {
 
       {currentTab === 'CONSOLE' ? (
         <consoleSection.ApiTab />
-      ) : (
+      ) : currentTab === 'DATA' ? (
         <consoleSection.DataTab />
+      ) : (
+        <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto bg-gray-100 rounded-b-lg">
+          <p>Select a tab to see data or api tab</p>
+        </div>
       )}
     </div>
   )
