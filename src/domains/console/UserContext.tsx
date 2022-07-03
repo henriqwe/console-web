@@ -16,8 +16,8 @@ type UserContextProps = {
   logUserSchema: yup.AnyObjectSchema
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
-  slideType: 'ACCOUNT' | 'ROLE'
-  setSlideType: Dispatch<SetStateAction<'ACCOUNT' | 'ROLE'>>
+  slideType: 'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT'
+  setSlideType: Dispatch<SetStateAction<'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT'>>
   roleSchema: yup.AnyObjectSchema
   createUserSchema: yup.AnyObjectSchema
 }
@@ -32,7 +32,9 @@ export const UserContext = createContext<UserContextProps>(
 
 export const UserProvider = ({ children }: ProviderProps) => {
   const [openSlide, setOpenSlide] = useState(false)
-  const [slideType, setSlideType] = useState<'ACCOUNT' | 'ROLE'>('ACCOUNT')
+  const [slideType, setSlideType] = useState<
+    'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT'
+  >('ACCOUNT')
   const [reload, setReload] = useState(false)
   const [currentTab, setCurrentTab] = useState<'ACCOUNT' | 'ROLE'>('ACCOUNT')
 

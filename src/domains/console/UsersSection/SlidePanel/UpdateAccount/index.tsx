@@ -11,7 +11,7 @@ import * as common from 'common'
 import * as utils from 'utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-export function CreateAccount() {
+export function UpdateAccount() {
   const [loading, setLoading] = useState(false)
   const { roleSchema, reload, setReload, setOpenSlide } =
     consoleSection.useUser()
@@ -30,32 +30,32 @@ export function CreateAccount() {
     Username: string
     Password: string
   }) => {
-    setLoading(true)
-    await axios
-      .post(
-        'https://api.ycodify.com/api/caccount/role',
-        {
-          defaultUse: formData.Roles.value,
-          status: formData.Active.value
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-TenantID': utils.getCookie('X-TenantID') as string,
-            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
-          }
-        }
-      )
-      .then(() => {
-        reset()
-        setReload(!reload)
-        setOpenSlide(false)
-        setLoading(false)
-        utils.notification('Operation performed successfully', 'success')
-      })
-      .catch((err) => {
-        utils.notification(err.message, 'error')
-      })
+    // setLoading(true)
+    // await axios
+    //   .post(
+    //     'https://api.ycodify.com/api/caccount/role',
+    //     {
+    //       defaultUse: formData.Roles.value,
+    //       status: formData.Active.value
+    //     },
+    //     {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         'X-TenantID': utils.getCookie('X-TenantID') as string,
+    //         Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
+    //       }
+    //     }
+    //   )
+    //   .then(() => {
+    //     reset()
+    //     setReload(!reload)
+    //     setOpenSlide(false)
+    //     setLoading(false)
+    //     utils.notification('Operation performed successfully', 'success')
+    //   })
+    //   .catch((err) => {
+    //     utils.notification(err.message, 'error')
+    //   })
   }
 
   return (
@@ -118,6 +118,24 @@ export function CreateAccount() {
               <common.Select
                 onChange={onChange}
                 value={value}
+                options={[
+                  { name: 'Active', value: 1 },
+                  { name: 'Suspended', value: 0 }
+                ]}
+                errors={errors.Active}
+              />
+            </div>
+          )}
+        />
+        <Controller
+          name={'Roles'}
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <div className="flex-1">
+              <common.MultiSelect
+                onChange={onChange}
+                value={value}
+                label="Roles"
                 options={[
                   { name: 'Active', value: 1 },
                   { name: 'Suspended', value: 0 }
