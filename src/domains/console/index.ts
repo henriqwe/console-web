@@ -18,3 +18,8 @@ export {
   useConsoleEditor
 } from './ConsoleEditorContext'
 export { UserContext, UserProvider, useUser } from './UserContext'
+export {
+  SidebarContext,
+  useSidebar,
+  SidebarProvider
+} from './Sidebar/SidebarContext'

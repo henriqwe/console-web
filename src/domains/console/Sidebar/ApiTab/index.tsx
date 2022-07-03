@@ -1,10 +1,12 @@
 import { Icon } from '@iconify/react'
 import { SetStateAction, useEffect, useState } from 'react'
+import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import * as consoleEditor from '../../ConsoleEditorContext'
 import { useRouter } from 'next/router'
+import { DatabaseIcon } from '@heroicons/react/outline'
 
 export function ApiTab() {
   const router = useRouter()
@@ -82,19 +84,43 @@ function Operation({
   setActiveTable: (value: SetStateAction<string | undefined>) => void
 }) {
   const [active, setActive] = useState(false)
+
+  const { setSelectedTab } = consoleSection.useSidebar()
+  const { setCurrentTab, setSelectedTable } = consoleSection.useData()
+
   return (
     <div className="flex flex-col gap-2 px-3">
       <div
-        className={`flex items-center gap-2 pb-2 cursor-pointer`}
+        className={`flex items-center gap-2 pb-2 cursor-pointer justify-between`}
         onClick={() => {
           setActive(!active)
         }}
       >
-        <Icon
-          icon="bxs:right-arrow"
-          className={`w-4 h-4 transition ${active && 'rotate-90'}`}
-        />
-        <p className="text-sm">{schema}</p>
+        <div className="flex gap-2 items-center">
+          <Icon
+            icon="bxs:right-arrow"
+            className={`w-4 h-4 transition ${active && 'rotate-90'}`}
+          />
+          <p className="text-sm">{schema}</p>
+        </div>
+        <div>
+          {active && (
+            <button
+              className="px-2 py-1 text-sm bg-white border border-gray-300 rounded-md"
+              type="button"
+              onClick={() => {
+                setCurrentTab('DATA')
+                setSelectedTable(schema)
+                setSelectedTab({
+                  name: 'DATA',
+                  icon: DatabaseIcon
+                })
+              }}
+            >
+              Go to table
+            </button>
+          )}
+        </div>
       </div>
       {active &&
         ['insert', 'update', 'delete', 'select', 'select by pk'].map(

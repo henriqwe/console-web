@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import { ArrowLeftIcon, DatabaseIcon } from '@heroicons/react/outline'
@@ -6,16 +6,13 @@ import { useRouter } from 'next/router'
 
 export function SideBar() {
   const router = useRouter()
-  const [selectedTab, setSelectedTab] = useState<{ name: string; icon?: any }>({
-    name: 'CONSOLE',
-    icon: DatabaseIcon
-  })
+  const { selectedTab, setSelectedTab } = consoleSection.useSidebar()
+  const { setCurrentTab, currentTab } = consoleSection.useData()
 
   useEffect(() => {
     setCurrentTab(selectedTab.name as 'CONSOLE' | 'DATA')
   }, [selectedTab])
 
-  const { setCurrentTab, currentTab } = consoleSection.useData()
   return (
     <div className="text-gray-600 rounded-lg w-[30%] h-full flex flex-col">
       <div className="flex items-center justify-between w-full pt-6 pb-3 pl-6 bg-theme-1">
