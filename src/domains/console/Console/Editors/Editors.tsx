@@ -1,18 +1,24 @@
-import { javascript } from '@codemirror/lang-javascript'
-import { Icon } from '@iconify/react'
 import CodeMirror from '@uiw/react-codemirror'
-import * as common from 'common'
-import { useState } from 'react'
 
-import * as consoleEditor from '../../ConsoleEditorContext'
+import { javascript } from '@codemirror/lang-javascript'
+import { useState } from 'react'
+import { DatabaseIcon } from '@heroicons/react/outline'
+
+import * as common from 'common'
+import * as consoleSection from 'domains/console'
+import * as consoleEditor from 'domains/console/ConsoleEditorContext'
+
 export function Editors() {
   const [slideOpen, setSlideOpen] = useState(false)
+
+  const { setSelectedTab } = consoleSection.useSidebar()
+  const { setCurrentTab, setShowTableViewMode } = consoleSection.useData()
 
   const {
     consoleValue,
     globalJavaScriptCompletions,
     runOperation,
-    consoleResponse,
+    consoleResponseFormated,
     setConsoleValue,
     consoleResponseLoading,
     documentationValue
@@ -82,27 +88,42 @@ export function Editors() {
           </div>
         </div>
       </div>
-      <div className="w-[50%] h-full">
-        <div className="flex flex-col h-full">
-          <div className="flex flex-col w-full h-full ">
-            <div className="flex flex-col h-full">
-              <div className="flex items-center w-full h-16 px-4 bg-gray-200 rounded-tr-lg">
-                <p className="text-lg font-bold text-gray-700">Response</p>
-              </div>
-              <div className="flex w-full h-full overflow-x-auto rounded-br-lg">
-                <CodeMirror
-                  value={consoleResponse}
-                  className="flex w-full h-full"
-                  width="100%"
-                  onChange={(value, viewUpdate) => {
-                    console.log('value:', value)
+      <div className="w-[50%] h-full flex flex-col">
+        <div className="flex items-center w-full h-16 px-4 bg-gray-200 rounded-tr-lg">
+          <div className="flex justify-between items-center w-full">
+            <p className="text-lg font-bold text-gray-700">Response</p>
+
+            <div>
+              {consoleResponseFormated && (
+                <button
+                  className="px-2 py-1 text-sm bg-white border border-gray-300 rounded-md"
+                  type="button"
+                  onClick={() => {
+                    setCurrentTab('DATA')
+                    setSelectedTab({
+                      name: 'DATA',
+                      icon: DatabaseIcon
+                    })
+                    setShowTableViewMode(true)
                   }}
-                  editable={false}
-                  extensions={[javascript({ jsx: true })]}
-                />
-              </div>
+                >
+                  Table mode
+                </button>
+              )}
             </div>
           </div>
+        </div>
+        <div className="flex w-full h-full overflow-x-auto rounded-br-lg">
+          <CodeMirror
+            value={consoleResponseFormated}
+            className="flex w-full h-full"
+            width="100%"
+            onChange={(value, viewUpdate) => {
+              console.log('value:', value)
+            }}
+            editable={false}
+            extensions={[javascript({ jsx: true })]}
+          />
         </div>
       </div>
       <common.Slide

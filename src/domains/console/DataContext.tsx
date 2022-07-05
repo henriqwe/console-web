@@ -25,6 +25,8 @@ type DataContextProps = {
   setTableData: Dispatch<SetStateAction<types.TableData[] | undefined>>
   showCreateTableSection: boolean
   setShowCreateTableSection: Dispatch<SetStateAction<boolean>>
+  showTableViewMode: boolean
+  setShowTableViewMode: Dispatch<SetStateAction<boolean>>
 }
 
 type ProviderProps = {
@@ -40,6 +42,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
   const [selectedItemToExclude, setSelectedItemToExclude] = useState()
   const [reload, setReload] = useState(false)
   const [showCreateTableSection, setShowCreateTableSection] = useState(false)
+  const [showTableViewMode, setShowTableViewMode] = useState(false)
   const [currentTab, setCurrentTab] = useState<'CONSOLE' | 'DATA' | 'USERS'>(
     'CONSOLE'
   )
@@ -72,7 +75,9 @@ export const DataProvider = ({ children }: ProviderProps) => {
         tableData,
         setTableData,
         showCreateTableSection,
-        setShowCreateTableSection
+        setShowCreateTableSection,
+        showTableViewMode,
+        setShowTableViewMode
       }}
     >
       {children}

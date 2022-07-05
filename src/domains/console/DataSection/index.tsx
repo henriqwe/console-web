@@ -23,7 +23,8 @@ export function DataSection() {
     setReload,
     tableData,
     setTableData,
-    showCreateTableSection
+    showCreateTableSection,
+    showTableViewMode
   } = consoleSection.useData()
   const {
     control,
@@ -89,6 +90,10 @@ export function DataSection() {
     }
     return () => setLoading(true)
   }, [selectedTable, reload])
+
+  if (showTableViewMode) {
+    return <consoleSection.TableViewMode />
+  }
 
   if (showCreateTableSection) {
     return <consoleSection.CreateTable />

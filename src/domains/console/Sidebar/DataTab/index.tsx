@@ -8,8 +8,13 @@ import { useRouter } from 'next/router'
 
 export function DataTab() {
   const router = useRouter()
-  const { selectedTable, setSelectedTable, reload, setShowCreateTableSection } =
-    consoleSection.useData()
+  const {
+    selectedTable,
+    setSelectedTable,
+    reload,
+    setShowCreateTableSection,
+    setShowTableViewMode
+  } = consoleSection.useData()
   const [tables, setTables] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -49,7 +54,10 @@ export function DataTab() {
             <common.Button
               color="green"
               className="w-full"
-              onClick={() => setShowCreateTableSection(true)}
+              onClick={() => {
+                setShowCreateTableSection(true)
+                setShowTableViewMode(false)
+              }}
             >
               Create entity
             </common.Button>

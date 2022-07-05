@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import {
   createContext,
   ReactNode,
@@ -7,25 +9,27 @@ import {
   Dispatch,
   useEffect
 } from 'react'
-import axios from 'axios'
 import { javascriptLanguage } from '@codemirror/lang-javascript'
 import { getCookie } from 'utils/cookies'
 import { completeFromGlobalScope } from './Console/Editors/Autocomplete'
-import * as utils from 'utils'
 import { useRouter } from 'next/router'
+
+import * as utils from 'utils'
 
 type ConsoleEditorContextProps = {
   consoleValue: string
   setConsoleValue: Dispatch<SetStateAction<string>>
   globalJavaScriptCompletions: any
   formatQueryOrMutation(type: string, entity: string): void
-  consoleResponse: string
-  setConsoleResponse: Dispatch<SetStateAction<string>>
+  consoleResponse: any[]
+  setConsoleResponse: Dispatch<SetStateAction<never[]>>
   runOperation(): Promise<void>
   consoleResponseLoading: boolean
   setconsoleResponseLoading: Dispatch<SetStateAction<boolean>>
   documentationValue: string
   setdocumentationValue: Dispatch<SetStateAction<string>>
+  consoleResponseFormated: string
+  setConsoleResponseFormated: Dispatch<SetStateAction<string>>
 }
 
 type ProviderProps = {
@@ -39,7 +43,8 @@ export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
 export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleValue, setConsoleValue] = useState('')
   const [documentationValue, setdocumentationValue] = useState('')
-  const [consoleResponse, setConsoleResponse] = useState('')
+  const [consoleResponse, setConsoleResponse] = useState([])
+  const [consoleResponseFormated, setConsoleResponseFormated] = useState('')
   const [consoleResponseLoading, setconsoleResponseLoading] = useState(false)
   const router = useRouter()
 
@@ -101,12 +106,15 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           }
         }
       )
-      let text = ''
+      let text = '[\n'
+      setConsoleResponse(data?.data)
+
       for (const textData of data.data) {
         const formatedResponse = await formatResponse(JSON.stringify(textData))
-        text += `${formatedResponse},\n`
+        text += ` ${formatedResponse},\n`
       }
-      setConsoleResponse(text)
+      text += ']'
+      setConsoleResponseFormated(text)
       utils.notification('Operation performed successfully', 'success')
       setconsoleResponseLoading(false)
     } catch (err: any) {
@@ -146,7 +154,9 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         consoleResponseLoading,
         setconsoleResponseLoading,
         documentationValue,
-        setdocumentationValue
+        setdocumentationValue,
+        consoleResponseFormated,
+        setConsoleResponseFormated
       }}
     >
       {children}
