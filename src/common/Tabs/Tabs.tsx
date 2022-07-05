@@ -4,6 +4,7 @@ type TabsProps = {
   tabs: Tab[]
   selectedTab: Tab
   setSelectedTab: Dispatch<SetStateAction<Tab>>
+  onchange?: () => void
 }
 
 type Tab = {
@@ -14,7 +15,8 @@ type Tab = {
 export function Tabs({
   tabs,
   selectedTab = tabs[0],
-  setSelectedTab
+  setSelectedTab,
+  onchange
 }: TabsProps) {
   return (
     <div className="w-full">
@@ -52,6 +54,9 @@ export function Tabs({
                 }
                 onClick={() => {
                   setSelectedTab(tab)
+                  if (onchange) {
+                    onchange()
+                  }
                 }}
               >
                 {tab.icon && (
