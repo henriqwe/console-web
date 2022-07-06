@@ -118,9 +118,6 @@ export function Editors() {
             value={consoleResponseFormated}
             className="flex w-full h-full"
             width="100%"
-            onChange={(value, viewUpdate) => {
-              console.log('value:', value)
-            }}
             editable={false}
             extensions={[javascript({ jsx: true })]}
           />

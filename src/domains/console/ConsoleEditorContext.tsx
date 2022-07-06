@@ -19,6 +19,8 @@ import * as utils from 'utils'
 type ConsoleEditorContextProps = {
   consoleValue: string
   setConsoleValue: Dispatch<SetStateAction<string>>
+  consoleValueLastOperation: string
+  setConsoleValueLastOperation: Dispatch<SetStateAction<string>>
   globalJavaScriptCompletions: any
   formatQueryOrMutation(type: string, entity: string): void
   consoleResponse: any[]
@@ -42,6 +44,7 @@ export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
 
 export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleValue, setConsoleValue] = useState('')
+  const [consoleValueLastOperation, setConsoleValueLastOperation] = useState('')
   const [documentationValue, setdocumentationValue] = useState('')
   const [consoleResponse, setConsoleResponse] = useState([])
   const [consoleResponseFormated, setConsoleResponseFormated] = useState('')
@@ -94,6 +97,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
   async function runOperation() {
     try {
+      setConsoleValueLastOperation(consoleValue)
       setconsoleResponseLoading(true)
       const { data } = await axios.post(
         `http://localhost:3000/api/interpreter`,
@@ -108,7 +112,6 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       )
       let text = '[\n'
       setConsoleResponse(data?.data)
-
       for (const textData of data.data) {
         const formatedResponse = await formatResponse(JSON.stringify(textData))
         text += ` ${formatedResponse},\n`
@@ -156,7 +159,9 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         documentationValue,
         setdocumentationValue,
         consoleResponseFormated,
-        setConsoleResponseFormated
+        setConsoleResponseFormated,
+        consoleValueLastOperation,
+        setConsoleValueLastOperation
       }}
     >
       {children}
