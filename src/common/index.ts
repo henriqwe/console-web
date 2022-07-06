@@ -12,5 +12,7 @@ export { Dropdown } from './Dropdown'
 export { ClearModal } from './ClearModal'
 export { Separator } from './Separator'
 export { MultiSelect } from './MultiSelect'
+export { Accordion } from './Accordion '
+
 export * as illustrations from './Ilustrations'
 export * as icons from './Icons'
