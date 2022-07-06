@@ -12,6 +12,7 @@ export function Projects() {
   const [showFiltered, setShowFiltered] = useState(false)
   const [filteredSchemas, setFilteredSchemas] = useState<string[]>([])
   const [schemas, setSchemas] = useState<string[]>([])
+  const [loadingSchemas, setLoadingSchemas] = useState(true)
 
   async function loadSchemas() {
     const { data } = await axios.get(`http://localhost:3000/api/schemas`, {
@@ -20,6 +21,7 @@ export function Projects() {
       }
     })
 
+    setLoadingSchemas(false)
     setSchemas(data.data)
   }
 
@@ -43,6 +45,7 @@ export function Projects() {
   }
 
   useEffect(() => {
+    setLoadingSchemas(true)
     loadSchemas()
   }, [])
 
@@ -85,12 +88,19 @@ export function Projects() {
         </div>
       </section>
       <section className="flex flex-col h-full gap-4 px-4 mx-auto mt-10 max-w-7xl sm:px-6 md:px-8">
-        {(showFiltered ? filteredSchemas : schemas).length === 0 ? (
+        {loadingSchemas ? (
+          <div className="flex flex-col items-center justify-center gap-2 mt-32">
+            <div className="w-20 h-20">
+              <common.Spinner/>
+            </div>
+            <p>Loading projects</p>
+          </div>
+        ) : (showFiltered ? filteredSchemas : schemas).length === 0 ? (
           <div className="mt-16 text-center">
             <div className="max-w-sm m-auto mb-5">
-               <common.illustrations.Empty />
+              <common.illustrations.Empty />
             </div>
-           <p className="text-lg">Project not found</p>
+            <p className="text-lg">Project not found</p>
           </div>
         ) : (
           (showFiltered ? filteredSchemas : schemas).map((schema) => (
