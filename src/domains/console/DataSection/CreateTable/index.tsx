@@ -8,11 +8,13 @@ import { useRouter } from 'next/router'
 
 export function CreateTable() {
   const router = useRouter()
-  const { setShowCreateTableSection, setReload, reload } = consoleSection.useData()
+  const { setShowCreateTableSection, setReload, reload } =
+    consoleSection.useData()
   const {
     control,
     formState: { errors },
-    handleSubmit
+    handleSubmit,
+    watch
   } = useForm()
   const [columnsGroup, setColumnsGroup] = useState<number[]>([1])
   const [lastNumber, setLastNumber] = useState(0)
@@ -29,23 +31,34 @@ export function CreateTable() {
           return
         }
 
+        if (
+          data['Type' + column].value === 'String' &&
+          !data['Length' + column]
+        ) {
+          return null
+        }
+
         return {
           ColumnName: data['ColumnName' + column],
-          Type: data['Type' + column].key,
+          Type: data['Type' + column].value,
           Comment: data['Comment' + column],
-          Nullable: data['Nullable' + column]
+          Nullable: data['Nullable' + column],
+          Length: data['Length' + column]
         }
       })
 
       if (columnValues.includes(undefined)) {
-        throw new Error('Preencha todos os campos para continuar')
+        throw new Error('Missing required fields')
+      }
+
+      if (columnValues.includes(null)) {
+        throw new Error('String length is required')
       }
 
       await axios.post(
         `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity`,
         {
-          name: data.Name,
-          columns: columnValues
+          name: data.Name
         },
         {
           headers: {
@@ -55,13 +68,32 @@ export function CreateTable() {
         }
       )
 
+      for (const column of columnValues) {
+        await axios.post(
+          `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${data.Name}/attribute`,
+          {
+            name: column?.ColumnName,
+            comment: column?.Comment,
+            isNullable: column?.Nullable || false,
+            length: column?.Length,
+            type: column?.Type.value
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${utils.getCookie('access_token')}`
+            }
+          }
+        )
+      }
+
       setReload(!reload)
       setShowCreateTableSection(false)
       utils.notification(`Schema ${data.Name} created successfully`, 'success')
     } catch (err: any) {
       console.log(err)
       utils.notification(err.message, 'error')
-    } finally{
+    } finally {
       setLoading(false)
     }
   }
@@ -101,23 +133,21 @@ export function CreateTable() {
         {columnsGroup.map(
           (column, index) =>
             column !== 0 && (
-              <div className="grid grid-cols-12 gap-4 py-5">
-                <div className="col-span-4">
-                  <Controller
-                    name={'ColumnName' + column}
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <div>
-                        <common.Input
-                          placeholder="Column name"
-                          value={value}
-                          onChange={onChange}
-                          errors={errors.ColumnName}
-                        />
-                      </div>
-                    )}
-                  />
-                </div>
+              <div className="grid grid-cols-11 gap-4 py-5" key={column}>
+                <Controller
+                  name={'ColumnName' + column}
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <div className="col-span-3">
+                      <common.Input
+                        placeholder="Column name"
+                        value={value}
+                        onChange={onChange}
+                        errors={errors.ColumnName}
+                      />
+                    </div>
+                  )}
+                />
 
                 <Controller
                   name={'Type' + column}
@@ -141,11 +171,34 @@ export function CreateTable() {
                   )}
                 />
 
+                {watch('Type' + column)?.name === 'String' && (
+                  <Controller
+                    name={'Length' + column}
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <div className="col-span-2">
+                        <common.Input
+                          placeholder="String Length"
+                          value={value}
+                          onChange={onChange}
+                          errors={errors.Length}
+                        />
+                      </div>
+                    )}
+                  />
+                )}
+
                 <Controller
                   name={'Comment' + column}
                   control={control}
                   render={({ field: { onChange, value } }) => (
-                    <div className="col-span-4">
+                    <div
+                      className={
+                        watch('Type' + column)?.name === 'String'
+                          ? 'col-span-2'
+                          : 'col-span-4'
+                      }
+                    >
                       <common.Input
                         placeholder="Comment"
                         value={value}
@@ -156,22 +209,20 @@ export function CreateTable() {
                   )}
                 />
 
-                <div>
-                  <Controller
-                    name={'Nullable' + column}
-                    control={control}
-                    render={({ field: { onChange } }) => (
-                      <div className="flex items-center col-span-2 gap-2">
-                        <input
-                          type="checkbox"
-                          id={'Nullable' + column}
-                          onChange={onChange}
-                        />
-                        <label htmlFor={'Nullable' + column}>Nullable</label>
-                      </div>
-                    )}
-                  />
-                </div>
+                <Controller
+                  name={'Nullable' + column}
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id={'Nullable' + column}
+                        onChange={onChange}
+                      />
+                      <label htmlFor={'Nullable' + column}>Nullable</label>
+                    </div>
+                  )}
+                />
 
                 <div className="flex items-start justify-center">
                   {column !== 1 && (

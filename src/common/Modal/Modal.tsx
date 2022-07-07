@@ -1,3 +1,4 @@
+import * as common from 'common'
 import {
   Dispatch,
   Fragment,
@@ -17,6 +18,7 @@ type ModalProps = {
   buttonTitle: string
   handleSubmit: () => void
   disabled?: boolean
+  loading?: boolean
 }
 
 export function Modal({
@@ -26,7 +28,8 @@ export function Modal({
   description,
   buttonTitle,
   handleSubmit,
-  disabled = false
+  disabled = false,
+  loading = false
 }: ModalProps) {
   const cancelButtonRef = useRef(null)
 
@@ -84,13 +87,18 @@ export function Modal({
                 <div className="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button
                     type="button"
-                    className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="inline-flex items-center justify-center w-full gap-2 px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-75 disabled:cursor-not-allowed"
                     onClick={async () => {
                       await handleSubmit()
                       setOpen(false)
                     }}
                     disabled={disabled}
                   >
+                    {loading && (
+                      <div className="w-4 h-4">
+                        <common.Spinner />
+                      </div>
+                    )}
                     {buttonTitle}
                   </button>
                   <button
@@ -98,9 +106,8 @@ export function Modal({
                     className="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={() => setOpen(false)}
                     ref={cancelButtonRef}
-                    disabled={disabled}
                   >
-                    Cancel
+                    Close
                   </button>
                 </div>
               </Dialog.Panel>

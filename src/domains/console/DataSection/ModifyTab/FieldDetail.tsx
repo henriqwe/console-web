@@ -62,7 +62,7 @@ export function FieldDetail({
       }
     )
     setReload(!reload)
-    utils.notification('field updated successfully', 'success')
+    utils.notification('attribute updated successfully', 'success')
     setShowDetails(false)
   }
 
@@ -77,7 +77,7 @@ export function FieldDetail({
       }
     )
     setReload(!reload)
-    utils.notification('field updated successfully', 'success')
+    utils.notification('attribute updated successfully', 'success')
     setShowDetails(false)
   }
 
@@ -106,7 +106,7 @@ export function FieldDetail({
             render={({ field: { onChange, value } }) => (
               <div className="flex-1">
                 <common.Input
-                  placeholder="field name"
+                  placeholder="Attribute name"
                   value={value}
                   onChange={onChange}
                   errors={errors.Name}
@@ -160,7 +160,7 @@ export function FieldDetail({
                   render={({ field: { onChange, value } }) => (
                     <div className="flex-1">
                       <common.Input
-                        placeholder="field length"
+                        placeholder="String length"
                         value={value}
                         onChange={onChange}
                         errors={errors.Length}
@@ -270,7 +270,7 @@ export function FieldDetail({
             render={({ field: { onChange, value } }) => (
               <div className="flex-1">
                 <common.Input
-                  placeholder="field comment"
+                  placeholder="Attribute comment"
                   onChange={onChange}
                   value={value}
                   errors={errors.Comment}
@@ -288,25 +288,25 @@ export function FieldDetail({
             color="red"
             onClick={() => setOpenModal(true)}
           >
-            Remove
+            Remove attribute
           </common.Button>
         </div>
       </section>
       <common.Modal
         open={openModal}
         setOpen={setOpenModal}
-        title={`Remove ${data.name} field?`}
+        title={`Remove ${data.name} attribute?`}
         description={
           <>
             <p className="text-sm text-gray-600">
-              Are you sure you want to remove this field?{' '}
+              Are you sure you want to remove this attribute?{' '}
             </p>
             <p className="text-sm font-bold text-gray-600">
               this action is irreversible!!!
             </p>
           </>
         }
-        buttonTitle="Remove field"
+        buttonTitle="Remove attribute"
         handleSubmit={Remove}
       />
     </common.Card>

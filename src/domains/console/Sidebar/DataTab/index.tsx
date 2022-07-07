@@ -71,6 +71,7 @@ export function DataTab() {
                 }`}
                 onClick={() => {
                   setSelectedTable(`${table}`)
+                  setShowCreateTableSection(false)
                 }}
               >
                 <Icon icon="bi:table" className="w-4 h-4" />
