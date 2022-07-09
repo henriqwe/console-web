@@ -71,7 +71,12 @@ export function Projects() {
             Projects
           </h1>
           <div className="flex items-center gap-2">
-            <button className="px-3 py-2 rounded-lg bg-[#B1C900]">
+            <button
+              className="px-3 py-2 rounded-lg bg-[#B1C900]"
+              onClick={() => {
+                router.push('/plans')
+              }}
+            >
               <PlusIcon className="w-5 h-5 text-white" />
             </button>
             <p className="text-lg">New Project</p>
