@@ -81,11 +81,13 @@ export function CreateRole() {
         <Controller
           name={'Active'}
           control={control}
+          defaultValue={{ name: 'Active', value: 1 }}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Select
                 onChange={onChange}
                 value={value}
+                label="Status"
                 options={[
                   { name: 'Active', value: 1 },
                   { name: 'Suspended', value: 0 }
@@ -98,11 +100,13 @@ export function CreateRole() {
         <Controller
           name={'Default'}
           control={control}
+          defaultValue={{ name: 'Yes', value: true }}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Select
                 onChange={onChange}
                 value={value}
+                label="Default"
                 options={[
                   { name: 'Yes', value: true },
                   { name: 'No', value: false }

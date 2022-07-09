@@ -8,9 +8,9 @@ import { PlusIcon } from '@heroicons/react/outline'
 
 export function RoleTab() {
   const [loading, setLoading] = useState(true)
-  const [tableData, setTableData] = useState()
   const { selectedTable } = consoleData.useData()
-  const { reload, setSlideType, setOpenSlide } = consoleData.useUser()
+  const { reload, setSlideType, setOpenSlide, setRoles, roles } =
+    consoleData.useUser()
 
   async function loadData() {
     try {
@@ -24,7 +24,7 @@ export function RoleTab() {
           }
         }
       )
-      setTableData(data)
+      setRoles(data)
     } catch (err: any) {
       console.log(err)
       if (err.response.status !== 404) {
@@ -36,7 +36,7 @@ export function RoleTab() {
   }
 
   useEffect(() => {
-    setTableData(undefined)
+    setRoles(undefined)
     setLoading(true)
     loadData()
   }, [selectedTable, reload])
@@ -85,7 +85,7 @@ export function RoleTab() {
                 handler: (value) => (value === 1 ? 'Active' : 'Suspended')
               }
             ]}
-            values={tableData}
+            values={roles}
             actions={RowActions}
           />
         </div>

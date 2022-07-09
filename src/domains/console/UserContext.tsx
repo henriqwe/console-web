@@ -20,6 +20,25 @@ type UserContextProps = {
   setSlideType: Dispatch<SetStateAction<'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT'>>
   roleSchema: yup.AnyObjectSchema
   createUserSchema: yup.AnyObjectSchema
+  selectedUser?: User
+  setSelectedUser: Dispatch<SetStateAction<User | undefined>>
+  roles?: { name: string }[]
+  setRoles: Dispatch<SetStateAction<{ name: string }[] | undefined>>
+  updateUserSchema: yup.AnyObjectSchema
+}
+
+type User = {
+  createdAt: number
+  email: string
+  id: string
+  name?: string
+  oldPassword?: string
+  password: string
+  roles: { name: string }[]
+  status: 0 | 1
+  updatedAt?: number
+  username: string
+  version: number
 }
 
 type ProviderProps = {
@@ -36,6 +55,8 @@ export const UserProvider = ({ children }: ProviderProps) => {
     'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT'
   >('ACCOUNT')
   const [reload, setReload] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<User>()
+  const [roles, setRoles] = useState<{ name: string }[]>()
   const [currentTab, setCurrentTab] = useState<'ACCOUNT' | 'ROLE'>('ACCOUNT')
 
   const logUserSchema = yup.object().shape({
@@ -55,6 +76,13 @@ export const UserProvider = ({ children }: ProviderProps) => {
     Password: yup.string().required()
   })
 
+  const updateUserSchema = yup.object().shape({
+    Username: yup.string().required(),
+    Email: yup.string().email().required(),
+    Active: yup.object().required(),
+    Roles: yup.array().min(1, 'Select at least one role').required()
+  })
+
   return (
     <UserContext.Provider
       value={{
@@ -68,7 +96,12 @@ export const UserProvider = ({ children }: ProviderProps) => {
         slideType,
         setSlideType,
         roleSchema,
-        createUserSchema
+        createUserSchema,
+        selectedUser,
+        setSelectedUser,
+        roles,
+        setRoles,
+        updateUserSchema
       }}
     >
       {children}

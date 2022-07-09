@@ -4,8 +4,19 @@ import * as consoleData from 'domains/console'
 import axios from 'axios'
 
 export function RowActions({ item }: { item: any }) {
-  const { setReload, reload } = consoleData.useUser()
+  const { setReload, reload, setOpenSlide, setSlideType, setSelectedUser } =
+    consoleData.useUser()
   const actions = [
+    {
+      title: 'Update',
+      handler: async () => {
+        event?.preventDefault()
+        setOpenSlide(true)
+        setSlideType('UPDATEACCOUNT')
+        setSelectedUser(item)
+      },
+      icon: <common.icons.EditIcon />
+    },
     {
       title: 'Delete',
       handler: async () => {

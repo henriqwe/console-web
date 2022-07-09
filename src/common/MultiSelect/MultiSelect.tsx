@@ -11,11 +11,12 @@ type SelectProps = {
   value: {
     value: any
     name: any
-  }
+  }[]
   onChange?: (val: any) => void
   errors?: DeepMap<FieldValues, FieldError> & { message?: string }
   disabled?: boolean
   label?: string
+  edit: boolean
 }
 
 export const MultiSelect = ({
@@ -24,7 +25,8 @@ export const MultiSelect = ({
   onChange,
   errors,
   disabled = false,
-  label
+  label,
+  edit = false
 }: SelectProps) => {
   const [selectedItens, setSelectedItens] = useState([] as typeof options)
 
@@ -62,11 +64,21 @@ export const MultiSelect = ({
   }
 
   useEffect(() => {
+    if (edit && selectedItens.length === 0) {
+      setSelectedItens(value)
+    }
+  }, [value])
+
+  useEffect(() => {
     onChange && onChange(selectedItens)
   }, [selectedItens])
 
   return (
-    <Listbox value={value} onChange={handleSelection} disabled={disabled}>
+    <Listbox
+      value={value}
+      onChange={handleSelection as any}
+      disabled={disabled}
+    >
       {({ open }) => (
         <>
           {label && (
@@ -80,7 +92,7 @@ export const MultiSelect = ({
               aria-disabled={disabled}
               disabled={disabled}
             >
-              {selectedItens.length > 0 ? (
+              {selectedItens?.length > 0 ? (
                 <span className="block truncate">
                   {selectedItens.map((item) => item.name).join(', ')}
                 </span>

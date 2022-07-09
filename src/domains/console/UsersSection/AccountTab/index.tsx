@@ -15,7 +15,7 @@ export function AccountTab() {
   async function loadData() {
     try {
       const { data } = await axios.get(
-        `https://api.ycodify.com/api/caccount/account`,
+        `https://api.ycodify.com/api/account/account`,
         {
           headers: {
             'X-TenantID': utils.getCookie('X-TenantID') as string,
@@ -72,7 +72,6 @@ export function AccountTab() {
           <common.Separator />
           <common.Table
             tableColumns={[
-              { name: 'name', displayName: 'Name' },
               { name: 'username', displayName: 'Username' },
               {
                 name: 'email',
@@ -88,7 +87,10 @@ export function AccountTab() {
                 name: 'roles',
                 displayName: 'Roles',
                 handler: (roles: { name: string }[]) =>
-                  roles.map((role) => role.name)
+                  roles.map(
+                    (role, index) =>
+                      `${role.name}${index + 1 === roles.length ? '' : ', '}`
+                  )
               }
             ]}
             values={tableData}

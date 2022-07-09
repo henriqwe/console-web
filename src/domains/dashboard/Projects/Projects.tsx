@@ -15,14 +15,20 @@ export function Projects() {
   const [loadingSchemas, setLoadingSchemas] = useState(true)
 
   async function loadSchemas() {
-    const { data } = await axios.get(`http://localhost:3000/api/schemas`, {
-      headers: {
-        Authorization: `Bearer ${utils.getCookie('access_token')}`
+    try {
+      const { data } = await axios.get(`http://localhost:3000/api/schemas`, {
+        headers: {
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
+        }
+      })
+      setSchemas(data.data)
+    } catch (err: any) {
+      if (err.response.status !== 404) {
+        utils.notification(err.message, 'error')
       }
-    })
-
-    setLoadingSchemas(false)
-    setSchemas(data.data)
+    } finally {
+      setLoadingSchemas(false)
+    }
   }
 
   const match = (value: string) => {
@@ -91,7 +97,7 @@ export function Projects() {
         {loadingSchemas ? (
           <div className="flex flex-col items-center justify-center gap-2 mt-32">
             <div className="w-20 h-20">
-              <common.Spinner/>
+              <common.Spinner />
             </div>
             <p>Loading projects</p>
           </div>
@@ -100,7 +106,7 @@ export function Projects() {
             <div className="max-w-sm m-auto mb-5">
               <common.illustrations.Empty />
             </div>
-            <p className="text-lg">Project not found</p>
+            <p className="text-lg">Projects not found</p>
           </div>
         ) : (
           (showFiltered ? filteredSchemas : schemas).map((schema) => (
