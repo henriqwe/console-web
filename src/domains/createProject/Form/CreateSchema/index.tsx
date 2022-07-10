@@ -22,15 +22,28 @@ export function CreateSchema() {
     formState: { errors }
   } = useForm({ resolver: yupResolver(createProjectSchema) })
 
-  function Submit(data: { ProjectName: string }) {
+  async function Submit(data: { ProjectName: string }) {
     try {
       setLoading(true)
       if (!provider) {
         throw new Error('Select a provider to create a new project')
       }
 
+      await utils.api.post(
+        '/modeler/schema',
+        {
+          name: data.ProjectName
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
       setCurrentPage('USER')
       setCreatedSchemaName(data.ProjectName)
+      utils.notification(`Project ${data.ProjectName} created successfully`,'success')
     } catch (err: any) {
       utils.notification(err.message, 'error')
     } finally {

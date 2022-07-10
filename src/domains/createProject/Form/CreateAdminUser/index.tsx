@@ -29,12 +29,31 @@ export function CreateAdminUser() {
     formState: { errors }
   } = useForm({ resolver: yupResolver(createUserSchema) })
 
-  function Submit(data: FormData) {
+  async function Submit(data: FormData) {
     try {
       setLoading(true)
 
+      await utils.api.post(
+        '/caccount/account',
+        {
+          username: data.UserName,
+          email: data.Email,
+          password: data.Password
+        },
+        {
+          headers: {
+            'X-TenantID': utils.getCookie('X-TenantID') as string,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
+
+      utils.notification(`Admin user created successfully`, 'success')
       router.push(routes.console + '/' + createdSchemaName)
     } catch (err: any) {
+      console.log(err)
       utils.notification(err.message, 'error')
     } finally {
       setLoading(false)
@@ -43,7 +62,10 @@ export function CreateAdminUser() {
 
   return (
     <common.Card className="p-6 bg-white">
-      <form onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)} className="flex flex-col gap-4">
+      <form
+        onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
+        className="flex flex-col gap-4"
+      >
         <Controller
           name={'UserName'}
           control={control}
