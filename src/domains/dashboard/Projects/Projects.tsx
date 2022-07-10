@@ -5,6 +5,7 @@ import { PlusIcon, SearchIcon } from '@heroicons/react/outline'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
+import { routes } from 'domains/routes'
 
 export function Projects() {
   const router = useRouter()
@@ -74,7 +75,7 @@ export function Projects() {
             <button
               className="px-3 py-2 rounded-lg bg-[#B1C900]"
               onClick={() => {
-                router.push('/plans')
+                router.push(routes.createProject)
               }}
             >
               <PlusIcon className="w-5 h-5 text-white" />
@@ -121,7 +122,7 @@ export function Projects() {
                 <button
                   className="px-3 py-2 text-white bg-indigo-500 rounded-lg"
                   onClick={() => {
-                    router.push(`/console/${schema}`)
+                    router.push(`${routes.console}/${schema}`)
                   }}
                 >
                   Launch console

@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react'
 import { useEffect, useState } from 'react'
 import * as common from 'common'
+import * as utils from 'utils'
 import * as consoleSection from 'domains/console'
 import axios from 'axios'
 import { getCookie } from 'utils/cookies'
@@ -19,18 +20,25 @@ export function DataTab() {
   const [loading, setLoading] = useState(false)
 
   async function loadTables() {
-    setLoading(true)
+    try {
+      setLoading(true)
 
-    const { data } = await axios.get(
-      `http://localhost:3000/api/schema?schemaName=${router.query.name}`,
-      {
-        headers: {
-          Authorization: `Bearer ${getCookie('access_token')}`
+      const { data } = await axios.get(
+        `http://localhost:3000/api/schema?schemaName=${router.query.name}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getCookie('access_token')}`
+          }
         }
+      )
+      setTables(Object.keys(data.data) as string[])
+    } catch (err: any) {
+      if (err.response.status !== 404) {
+        utils.notification(err.message, 'error')
       }
-    )
-    setTables(Object.keys(data.data) as string[])
-    setLoading(false)
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -41,29 +49,33 @@ export function DataTab() {
 
   return (
     <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto bg-gray-100 rounded-b-lg">
-      {loading ? (
-        <div className="flex items-center justify-center w-full h-full">
-          <div className="w-8 h-8 mr-8">
-            <common.Spinner />
-          </div>
-          <div>Loading...</div>
+      <div>
+        <div className="w-full mb-2">
+          <common.Button
+            color="green"
+            className="w-full"
+            onClick={() => {
+              setShowCreateTableSection(true)
+              setShowTableViewMode(false)
+            }}
+          >
+            Create entity
+          </common.Button>
         </div>
-      ) : (
-        <div>
-          <div className="w-full mb-2">
-            <common.Button
-              color="green"
-              className="w-full"
-              onClick={() => {
-                setShowCreateTableSection(true)
-                setShowTableViewMode(false)
-              }}
-            >
-              Create entity
-            </common.Button>
+        <common.Separator />
+        {loading ? (
+          <div className="flex items-center justify-center w-full h-full">
+            <div className="w-8 h-8 mr-8">
+              <common.Spinner />
+            </div>
+            <div>Loading...</div>
           </div>
-          <common.Separator />
-          {tables.map((table) => (
+        ) : tables.length === 0 ? (
+          <div>
+            <p>Entities not found</p>
+          </div>
+        ) : (
+          tables.map((table) => (
             <div key={table}>
               <div
                 className={`flex items-center gap-2 pb-2 cursor-pointer ${
@@ -78,9 +90,9 @@ export function DataTab() {
                 <p className="text-sm">{table}</p>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
     </div>
   )
 }

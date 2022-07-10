@@ -11,6 +11,7 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { routes } from 'domains/routes'
 
 export function CreateUser() {
   const [loading, setLoading] = useState(false)
@@ -39,7 +40,7 @@ export function CreateUser() {
       )
       utils.setCookie('access_token', data.data.access_token)
       utils.notification('User created successfully', 'success')
-      router.push('/')
+      router.push(routes.dashboard)
     } catch (err: any) {
       utils.notification(err.message, 'error')
     } finally {

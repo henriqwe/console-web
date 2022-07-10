@@ -43,8 +43,7 @@ export function UpdateAccount() {
         {
           status: formData.Active.value,
           email: formData.Email,
-          roles: formData.Roles,
-          username: formData.Username
+          roles: formData.Roles
         },
         {
           headers: {
@@ -99,22 +98,6 @@ export function UpdateAccount() {
       className="flex flex-col items-end"
     >
       <div className="flex flex-col w-full gap-2 mb-2">
-        <Controller
-          name={'Username'}
-          control={control}
-          defaultValue={selectedUser?.username}
-          render={({ field: { onChange, value } }) => (
-            <div className="flex-1">
-              <common.Input
-                placeholder={'User name'}
-                value={value}
-                onChange={onChange}
-                errors={errors.Username}
-              />
-            </div>
-          )}
-        />
-
         <Controller
           name={'Email'}
           control={control}

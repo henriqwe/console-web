@@ -2,6 +2,7 @@ import { Icon } from '@iconify/react'
 import { SetStateAction, useEffect, useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
+import * as utils from 'utils'
 import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import * as consoleEditor from '../../ConsoleEditorContext'
@@ -16,30 +17,37 @@ export function ApiTab() {
   const { formatQueryOrMutation } = consoleEditor.useConsoleEditor()
 
   async function loadOperations() {
-    const operations = []
-    setLoading(true)
-    const { data } = await axios.get('http://localhost:3000/api/schemas', {
-      headers: {
-        Authorization: `Bearer ${getCookie('access_token')}`
-      }
-    })
-    for (const schema of data.data) {
-      if (schema === 'academia') {
-        const { data: tables } = await axios.get(
-          `http://localhost:3000/api/schema?schemaName=${router.query.name}`,
-          {
-            headers: {
-              Authorization: `Bearer ${getCookie('access_token')}`
+    try {
+      const operations = []
+      setLoading(true)
+      const { data } = await axios.get('http://localhost:3000/api/schemas', {
+        headers: {
+          Authorization: `Bearer ${getCookie('access_token')}`
+        }
+      })
+      for (const schema of data.data) {
+        if (schema === 'academia') {
+          const { data: tables } = await axios.get(
+            `http://localhost:3000/api/schema?schemaName=${router.query.name}`,
+            {
+              headers: {
+                Authorization: `Bearer ${getCookie('access_token')}`
+              }
             }
+          )
+          for (const table of Object.keys(tables.data)) {
+            operations.push(`${table}`)
           }
-        )
-        for (const table of Object.keys(tables.data)) {
-          operations.push(`${table}`)
         }
       }
+      setOperations(operations)
+    } catch (err: any) {
+      if (err.response.status !== 404) {
+        utils.notification(err.message, 'error')
+      }
+    } finally {
+      setLoading(false)
     }
-    setOperations(operations)
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -56,6 +64,10 @@ export function ApiTab() {
             <common.Spinner />
           </div>
           <div>Loading...</div>
+        </div>
+      ) : operations.length === 0 ? (
+        <div>
+          <p>Operations not found</p>
         </div>
       ) : (
         operations.map((schema) => (
@@ -96,7 +108,7 @@ function Operation({
           setActive(!active)
         }}
       >
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <Icon
             icon="bxs:right-arrow"
             className={`w-4 h-4 transition ${active && 'rotate-90'}`}

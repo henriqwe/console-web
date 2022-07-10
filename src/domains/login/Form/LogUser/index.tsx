@@ -11,6 +11,7 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { routes } from 'domains/routes'
 
 export function LogUser() {
   const [loading, setLoading] = useState(false)
@@ -31,7 +32,7 @@ export function LogUser() {
       })
       utils.setCookie('access_token', data.data.access_token)
       utils.notification('Login successfully', 'success')
-      router.push('/')
+      router.push(routes.dashboard)
     } catch (err: any) {
       if (err.response.status === 401) {
         return utils.notification(
