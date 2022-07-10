@@ -34,7 +34,7 @@ export function CreateAdminUser() {
       setLoading(true)
 
       await utils.api.post(
-        '/caccount/account',
+        `/modeler/schema/${createdSchemaName}/create-admin-account`,
         {
           username: data.UserName,
           email: data.Email,
@@ -42,7 +42,6 @@ export function CreateAdminUser() {
         },
         {
           headers: {
-            'X-TenantID': utils.getCookie('X-TenantID') as string,
             'Content-Type': 'application/json',
             Accept: 'application/json',
             Authorization: `Bearer ${utils.getCookie('access_token')}`
