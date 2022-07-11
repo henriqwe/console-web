@@ -1,12 +1,27 @@
 import * as common from 'common'
 import * as createProject from 'domains/createProject'
 import { CheckCircleIcon } from '@heroicons/react/outline'
+import { routes } from 'domains/routes'
+import { useRouter } from 'next/router'
 
 export function Plans() {
   const { setSelectedPlan, setCurrentPage } = createProject.useCreateProject()
+  const router = useRouter()
+
   return (
     <section className="flex flex-col w-1/2 h-full gap-4 pt-6 pb-10">
-      <p className="text-xl font-bold">Create a project</p>
+      <div className="flex justify-between items-center">
+        <p className="text-xl font-bold">Create a project</p>
+        <common.Button
+          type="button"
+          onClick={() => {
+            router.push(routes.dashboard)
+          }}
+          color="red-outline"
+        >
+          <p>Cancel</p>
+        </common.Button>
+      </div>
       <div className="grid h-full grid-cols-2 gap-4">
         <common.Card className="flex flex-col justify-between h-full p-6 bg-white shadow-sm">
           <div>
