@@ -24,7 +24,7 @@ export function DataTab() {
       setLoading(true)
 
       const { data } = await axios.get(
-        `http://localhost:3000/api/schema?schemaName=${router.query.name}`,
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
         {
           headers: {
             Authorization: `Bearer ${getCookie('access_token')}`

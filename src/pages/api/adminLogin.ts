@@ -9,7 +9,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       const password = req.body.password
 
       const { data } = await axios.post(
-        'https://api.ycodify.com/api/csecurity/oauth/token',
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/csecurity/oauth/token`,
         stringify({
           username,
           password,

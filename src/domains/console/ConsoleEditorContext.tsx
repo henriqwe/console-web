@@ -57,7 +57,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
   async function loadParser() {
     const { data } = await axios.get(
-      `http://localhost:3000/api/parser?parserName=${router.query.name}`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/parser?parserName=${router.query.name}`,
       {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`
@@ -100,7 +100,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       setConsoleValueLastOperation(consoleValue)
       setconsoleResponseLoading(true)
       const { data } = await axios.post(
-        `http://localhost:3000/api/interpreter`,
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
         {
           data: JSON.parse(consoleValue)
         },

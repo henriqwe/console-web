@@ -23,7 +23,7 @@ export function RowActions({ item }: { item: any }) {
         event?.preventDefault()
         await axios
           .delete(
-            `https://api.ycodify.com/api/caccount/account/username/${item.username}/version/${item.version}`,
+            `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/account/username/${item.username}/version/${item.version}`,
             {
               headers: {
                 Authorization: `Bearer ${utils.getCookie(

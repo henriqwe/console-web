@@ -56,7 +56,7 @@ export function CreateTable() {
       }
 
       await axios.post(
-        `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity`,
         {
           name: data.Name
         },
@@ -70,7 +70,7 @@ export function CreateTable() {
 
       for (const column of columnValues) {
         await axios.post(
-          `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${data.Name}/attribute`,
+          `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${data.Name}/attribute`,
           {
             name: column?.ColumnName,
             comment: column?.Comment,

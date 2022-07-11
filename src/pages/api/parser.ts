@@ -8,7 +8,7 @@ export default async function schemas(
   if (req.method === 'GET') {
     try {
       const { data } = await axios.get(
-        `https://api.ycodify.com/api/modeler/parser/reverse/${req.query.parserName}`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/parser/reverse/${req.query.parserName}`,
         {
           headers: {
             'Content-Type': 'text/plain;charset=ISO-8859-1',

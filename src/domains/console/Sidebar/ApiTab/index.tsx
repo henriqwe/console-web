@@ -20,15 +20,18 @@ export function ApiTab() {
     try {
       const operations = []
       setLoading(true)
-      const { data } = await axios.get('http://localhost:3000/api/schemas', {
-        headers: {
-          Authorization: `Bearer ${getCookie('access_token')}`
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/schemas`,
+        {
+          headers: {
+            Authorization: `Bearer ${getCookie('access_token')}`
+          }
         }
-      })
+      )
       for (const schema of data.data) {
         if (schema === 'academia') {
           const { data: tables } = await axios.get(
-            `http://localhost:3000/api/schema?schemaName=${router.query.name}`,
+            `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
             {
               headers: {
                 Authorization: `Bearer ${getCookie('access_token')}`

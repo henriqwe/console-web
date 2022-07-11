@@ -62,7 +62,7 @@ export function Update() {
     setLoading(true)
     await axios
       .post(
-        `http://localhost:3000/api/interpreter`,
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
         {
           data: JSON.parse(
             `{\n 

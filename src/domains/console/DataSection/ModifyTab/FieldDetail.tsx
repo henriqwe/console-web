@@ -52,7 +52,7 @@ export function FieldDetail({
 
   async function Save(formData: FormData) {
     await axios.put(
-      `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
+      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
       formData,
       {
         headers: {
@@ -68,7 +68,7 @@ export function FieldDetail({
 
   async function Remove() {
     await axios.delete(
-      `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
+      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
       {
         headers: {
           'Content-Type': 'application/json',

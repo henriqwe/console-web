@@ -39,7 +39,7 @@ export function DataSection() {
 
   async function loadTableData() {
     const { data } = await axios.get(
-      `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
+      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
       {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`
@@ -64,7 +64,7 @@ export function DataSection() {
   async function updateTableName(formData: { Name: string }) {
     try {
       await axios.put(
-        `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
         {
           name: formData.Name
         },

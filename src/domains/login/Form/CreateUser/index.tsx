@@ -31,7 +31,7 @@ export function CreateUser() {
     setLoading(true)
     try {
       const { data } = await axios.post(
-        'http://localhost:3000/api/createAccount',
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/createAccount`,
         {
           username: formData.userName,
           password: formData.password,

@@ -1,14 +1,11 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://api.ycodify.com/api'
+  baseURL: `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api`
 })
 
 const localApi = axios.create({
-  baseURL: 'http://localhost:3000/api'
+  baseURL: `${process.env.NEXT_PUBLIC_APP_URL}/api`
 })
 
-export {
-  api,
-  localApi
-}
+export { api, localApi }

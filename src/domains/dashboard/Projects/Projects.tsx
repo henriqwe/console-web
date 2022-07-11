@@ -17,11 +17,14 @@ export function Projects() {
 
   async function loadSchemas() {
     try {
-      const { data } = await axios.get(`http://localhost:3000/api/schemas`, {
-        headers: {
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/schemas`,
+        {
+          headers: {
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
         }
-      })
+      )
       setSchemas(data.data)
     } catch (err: any) {
       if (err.response.status !== 404) {

@@ -13,7 +13,7 @@ export function BrowserRowsTab() {
   async function loadData() {
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/api/interpreter`,
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
         {
           data: JSON.parse(
             `{\n "action":"READ",\n "object":{\n   "classUID": "${selectedTable}",\n   "_role": "ROLE_ADMIN"\n }\n}`

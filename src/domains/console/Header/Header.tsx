@@ -30,7 +30,7 @@ export function Header() {
     setLoading(true)
     try {
       const { data } = await axios.post(
-        'http://localhost:3000/api/adminLogin',
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/adminLogin`,
         {
           username: formData.userName,
           password: formData.password

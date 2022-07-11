@@ -10,7 +10,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       const email = req.body.email
 
       await axios.post(
-        'https://api.ycodify.com/api/account/account',
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/account/account`,
         {
           username,
           password,
@@ -29,7 +29,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       )
 
       const { data } = await axios.post(
-        'https://api.ycodify.com/api/security/oauth/token',
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/security/oauth/token`,
         stringify({
           username,
           password,

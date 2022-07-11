@@ -24,7 +24,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
     try {
       setSubmitLoading(true)
       await axios.delete(
-        `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ function AttributeForm({
       }
 
       await axios.post(
-        `https://api.ycodify.com/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute`,
         {
           name: data.ColumnName,
           comment: data.Comment,

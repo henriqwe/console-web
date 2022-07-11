@@ -11,7 +11,7 @@ export default async function interpreter(
       const username = 'tester@academia'
       const password = '1234567'
       const { data: tokenData } = await axios.post(
-        `https://api.ycodify.com/api/csecurity/oauth/token`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/csecurity/oauth/token`,
         stringify({
           username,
           password,
@@ -30,7 +30,7 @@ export default async function interpreter(
       )
 
       const { data } = await axios.post(
-        `https://api.ycodify.com/api/interpreter-p/s`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/interpreter-p/s`,
         req.body.data,
         {
           headers: {

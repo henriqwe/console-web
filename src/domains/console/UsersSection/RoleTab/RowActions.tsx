@@ -13,7 +13,7 @@ export function RowActions({ item }: { item: any }) {
 
         await axios
           .delete(
-            `https://api.ycodify.com/api/caccount/role/name/${item.name}`,
+            `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/role/name/${item.name}`,
             {
               headers: {
                 Authorization: `Bearer ${utils.getCookie(

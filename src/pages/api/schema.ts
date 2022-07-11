@@ -1,27 +1,27 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
+import { NextApiRequest, NextApiResponse } from 'next'
+import axios from 'axios'
 
 export default async function schemas(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "GET") {
+  if (req.method === 'GET') {
     try {
       const { data } = await axios.get(
-        `https://api.ycodify.com/api/modeler/schema/${req.query.schemaName}`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${req.query.schemaName}`,
         {
           headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `${req.headers.authorization}`,
-          },
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `${req.headers.authorization}`
+          }
         }
-      );
-      return res.status(200).json({ data });
+      )
+      return res.status(200).json({ data })
     } catch (err) {
-      console.log(err);
-      return res.status(404).json({ err: err });
+      console.log(err)
+      return res.status(404).json({ err: err })
     }
   }
-  return res.status(404).json({ message: "Not found! :(" });
+  return res.status(404).json({ message: 'Not found! :(' })
 }

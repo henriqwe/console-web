@@ -30,7 +30,7 @@ export function CreateAccount() {
   }) => {
     setLoading(true)
     try {
-      await axios.post('http://localhost:3000/api/createAccount', {
+      await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/createAccount`, {
         username: formData.Username,
         password: formData.Password,
         email: formData.Email

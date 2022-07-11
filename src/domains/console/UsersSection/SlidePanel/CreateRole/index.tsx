@@ -31,7 +31,7 @@ export function CreateRole() {
     setLoading(true)
     await axios
       .post(
-        'https://api.ycodify.com/api/caccount/role',
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/role`,
         {
           name: formData.Name,
           defaultUse: formData.Default.value,

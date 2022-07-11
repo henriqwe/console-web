@@ -39,7 +39,7 @@ export function UpdateAccount() {
     setLoading(true)
     await axios
       .put(
-        `https://api.ycodify.com/api/account/account/username/${selectedUser?.username}/version/${selectedUser?.version}`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/account/account/username/${selectedUser?.username}/version/${selectedUser?.version}`,
         {
           status: formData.Active.value,
           email: formData.Email,
@@ -69,7 +69,7 @@ export function UpdateAccount() {
   async function loadData() {
     try {
       const { data } = await axios.get(
-        `https://api.ycodify.com/api/caccount/role`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/role`,
         {
           headers: {
             'X-TenantID': utils.getCookie('X-TenantID') as string,

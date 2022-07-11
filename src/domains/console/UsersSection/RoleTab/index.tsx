@@ -15,7 +15,7 @@ export function RoleTab() {
   async function loadData() {
     try {
       const { data } = await axios.get(
-        `https://api.ycodify.com/api/caccount/role`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/role`,
         {
           headers: {
             'X-TenantID': utils.getCookie('X-TenantID') as string,

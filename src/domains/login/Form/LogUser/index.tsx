@@ -26,10 +26,13 @@ export function LogUser() {
   async function Submit(formData: { userName: string; password: string }) {
     setLoading(true)
     try {
-      const { data } = await axios.post('http://localhost:3000/api/login', {
-        username: formData.userName,
-        password: formData.password
-      })
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/login`,
+        {
+          username: formData.userName,
+          password: formData.password
+        }
+      )
       utils.setCookie('access_token', data.data.access_token)
       utils.notification('Login successfully', 'success')
       router.push(routes.dashboard)

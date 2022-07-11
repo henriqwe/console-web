@@ -15,7 +15,7 @@ export function AccountTab() {
   async function loadData() {
     try {
       const { data } = await axios.get(
-        `https://api.ycodify.com/api/account/account`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/account/account`,
         {
           headers: {
             'X-TenantID': utils.getCookie('X-TenantID') as string,
