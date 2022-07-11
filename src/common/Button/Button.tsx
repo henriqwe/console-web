@@ -1,7 +1,15 @@
 import * as common from 'common'
 type ButtonProps = {
   children: React.ReactNode
-  color?: 'green' | 'blue' | 'yellow' | 'red'
+  color?:
+    | 'green'
+    | 'blue'
+    | 'yellow'
+    | 'red'
+    | 'green-outline'
+    | 'blue-outline'
+    | 'yellow-outline'
+    | 'red-outline'
   loading?: boolean
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
@@ -38,8 +46,32 @@ export const Button = ({
     case 'red':
       buttonColor = 'bg-red-500'
       hoverButtonColor = 'hover:bg-red-600'
-      disableButtonColor = 'disabled:bg-red-400'
+      disableButtonColor = 'disabled:bg-red-400 '
       textColor = 'text-white'
+      break
+    case 'blue-outline':
+      buttonColor = 'ring-2 ring-blue-500'
+      hoverButtonColor = 'hover:bg-blue-600  hover:text-white'
+      disableButtonColor = 'disabled:bg-blue-400'
+      textColor = 'text-blue-500 '
+      break
+    case 'green-outline':
+      buttonColor = 'ring-2 ring-lime-500'
+      hoverButtonColor = 'hover:bg-lime-600  hover:text-white'
+      disableButtonColor = 'disabled:bg-lime-400'
+      textColor = 'text-lime-500'
+      break
+    case 'yellow-outline':
+      buttonColor = 'ring-2 ring-yellow-500'
+      hoverButtonColor = 'hover:bg-yellow-600  hover:text-white'
+      disableButtonColor = 'disabled:bg-yellow-400'
+      textColor = 'text-yellow-500 '
+      break
+    case 'red-outline':
+      buttonColor = 'ring-2 ring-red-500'
+      hoverButtonColor = 'hover:bg-red-600  hover:text-white'
+      disableButtonColor = 'disabled:bg-red-400'
+      textColor = 'text-red-500 '
       break
   }
   return (
