@@ -48,7 +48,7 @@ export function DataTab() {
   }, [router.query.name, reload])
 
   return (
-    <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto bg-gray-100 rounded-b-lg">
+    <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto rounded-b-lg">
       <div>
         <div className="w-full mb-2">
           <common.Button

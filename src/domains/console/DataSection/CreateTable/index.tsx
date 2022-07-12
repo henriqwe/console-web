@@ -133,21 +133,34 @@ export function CreateTable() {
         {columnsGroup.map(
           (column, index) =>
             column !== 0 && (
-              <div className="grid grid-cols-11 gap-4 py-5" key={column}>
-                <Controller
-                  name={'ColumnName' + column}
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <div className="col-span-3">
-                      <common.Input
-                        placeholder="Column name"
-                        value={value}
-                        onChange={onChange}
-                        errors={errors.ColumnName}
+              <div className="grid grid-cols-12 gap-4 py-5" key={column}>
+                <div className="flex gap-2 col-span-3  items-center">
+                  <div className="w-5 h-5">
+                    {column !== 1 && (
+                      <common.icons.XIcon
+                        className="text-red-500 hover:cursor-pointer"
+                        onClick={() => {
+                          columnsGroup[index] = 0
+                          setReloadFields(!reloadFields)
+                        }}
                       />
-                    </div>
-                  )}
-                />
+                    )}
+                  </div>
+                  <Controller
+                    name={'ColumnName' + column}
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <div className="flex-1">
+                        <common.Input
+                          placeholder="Column name"
+                          value={value}
+                          onChange={onChange}
+                          errors={errors.ColumnName}
+                        />
+                      </div>
+                    )}
+                  />
+                </div>
 
                 <Controller
                   name={'Type' + column}
@@ -223,22 +236,6 @@ export function CreateTable() {
                     </div>
                   )}
                 />
-
-                <div className="flex items-start justify-center">
-                  {column !== 1 && (
-                    <common.Button
-                      onClick={() => {
-                        columnsGroup[index] = 0
-                        setReloadFields(!reloadFields)
-                      }}
-                      type="button"
-                      color={'red'}
-                      className="h-full"
-                    >
-                      <common.icons.DeleteIcon className={`w-5 h-5`} />
-                    </common.Button>
-                  )}
-                </div>
               </div>
             )
         )}
