@@ -3,7 +3,7 @@ import * as utils from 'utils'
 import axios from 'axios'
 import { Icon } from '@iconify/react'
 import { PlusIcon, SearchIcon } from '@heroicons/react/outline'
-import { PlayIcon, CogIcon } from '@heroicons/react/solid'
+import { PlayIcon, CogIcon, DownloadIcon } from '@heroicons/react/solid'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
@@ -64,6 +64,31 @@ export function Projects() {
     } finally {
       setSubmitLoading(false)
     }
+  }
+
+  async function downloadSchema(schema: string) {
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/parserToJSON?parserName=${schema}`,
+      {
+        headers: {
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
+        }
+      }
+    )
+    console.log(data.data)
+  }
+
+  async function formatResponse(value: string) {
+    let text = value
+    const operations = [
+      { searchValue: ',', replaceValue: ',\n  ' },
+      { searchValue: '{', replaceValue: '{\n  ' },
+      { searchValue: '}', replaceValue: '\n}' }
+    ]
+    operations.forEach((op) => {
+      text = text.replaceAll(op.searchValue, op.replaceValue)
+    })
+    return text
   }
 
   const match = (value: string) => {
@@ -193,6 +218,14 @@ export function Projects() {
                       <CogIcon className="w-10 h-10 text-white" />
                     </button>
                   </common.Dropdown>
+                  <button
+                    className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
+                    onClick={() => {
+                      downloadSchema(schema)
+                    }}
+                  >
+                    <DownloadIcon className="w-10 h-10 text-white" />
+                  </button>
                 </div>
               </div>
             </common.Card>
