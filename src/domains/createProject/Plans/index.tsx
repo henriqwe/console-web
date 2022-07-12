@@ -10,7 +10,7 @@ export function Plans() {
 
   return (
     <section className="flex flex-col w-1/2 h-full gap-4 pt-6 pb-10">
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <p className="text-xl font-bold">Create a project</p>
         <common.Button
           type="button"
@@ -111,6 +111,7 @@ export function Plans() {
           <common.Button
             className="w-full"
             type="button"
+            disabled
             onClick={() => {
               setSelectedPlan('Dedicated')
               setCurrentPage('FORM')

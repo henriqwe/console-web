@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction, useState, ReactNode } from 'react'
 
 type ListRadioGroupProps = {
   options: { value: string; content: ReactNode }[]
-  setSelectedOption: Dispatch<SetStateAction<string | undefined>>
+  setSelectedOption: Dispatch<SetStateAction<string>>
   horizontal?: boolean
   selectedValue?: { value: string; content: ReactNode }
   disabled?: boolean
@@ -55,21 +55,27 @@ export function ListRadioGroup({
                 value={opcao}
                 className={({ active }) =>
                   `${
-                    disabled && opcao.value === selected?.value
+                    disabled && !(opcao.value === selected?.value)
                       ? '!bg-gray-400 dark:!bg-gray-800 dark:!text-gray-200'
                       : disabled
-                      ? '!bg-gray-200 dark:!bg-gray-600 dark:!text-gray-200'
+                      ? 'bg-gray-200 dark:bg-gray-600 dark:text-gray-200'
                       : ''
                   } 
+
+                  ${
+                    disabled && opcao.value === selected?.value
+                      ? ''
+                      : 'cursor-not-allowed'
+                  }
                   
                   ${
                     active
-                      ? 'ring ring-offset ring-offset-sky-300 ring-blue-400 ring-opacity-40'
+                      ? 'ring ring-offset !ring-offset-sky-300 !ring-blue-400 ring-opacity-40'
                       : ''
                   }
                 ${
                   opcao.value === selected?.value
-                    ? 'bg-blue-200 bg-opacity-50 text-gray-800 dark:text-gray-300'
+                    ? '!bg-blue-200 bg-opacity-50 !text-gray-800 dark:!text-gray-300'
                     : 'bg-gray-100 dark:text-gray-800'
                 } 
                 ${horizontal ? 'flex-1 mt-0' : ''}  

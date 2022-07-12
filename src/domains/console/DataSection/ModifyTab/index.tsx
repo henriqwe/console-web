@@ -70,7 +70,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           type="button"
           loading={submitLoading}
           disabled={submitLoading}
-          color="red"
+          color="red-outline"
           onClick={() => setOpenModal(true)}
         >
           Remove table

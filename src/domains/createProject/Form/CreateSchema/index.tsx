@@ -13,7 +13,7 @@ import { useState } from 'react'
 
 export function CreateSchema() {
   const [loading, setLoading] = useState(false)
-  const [provider, setProvider] = useState<string>()
+  const [provider, setProvider] = useState<string>('aws')
   const { setCurrentPage, createProjectSchema, setCreatedSchemaName } =
     createProject.useCreateProject()
   const {
@@ -43,7 +43,10 @@ export function CreateSchema() {
       )
       setCurrentPage('USER')
       setCreatedSchemaName(data.ProjectName)
-      utils.notification(`Project ${data.ProjectName} created successfully`,'success')
+      utils.notification(
+        `Project ${data.ProjectName} created successfully`,
+        'success'
+      )
     } catch (err: any) {
       utils.notification(err.message, 'error')
     } finally {
@@ -112,8 +115,20 @@ export function CreateSchema() {
               }
             ]}
             horizontal
+            selectedValue={{
+              value: 'aws',
+              content: (
+                <div className="inline-flex items-center gap-4">
+                  <Icon icon="logos:aws" className="w-6 h-6" />
+                  <div className="text-left">
+                    <p className="text-sm">AWS</p>
+                    <span className="text-tiny">Amazon Web Service</span>
+                  </div>
+                </div>
+              )
+            }}
             setSelectedOption={setProvider}
-            disabled={loading}
+            disabled={true}
           />
         </div>
 

@@ -13,6 +13,7 @@ import { javascriptLanguage } from '@codemirror/lang-javascript'
 import { getCookie } from 'utils/cookies'
 import { completeFromGlobalScope } from './Console/Editors/Autocomplete'
 import { useRouter } from 'next/router'
+import * as data from 'domains/console'
 
 import * as utils from 'utils'
 
@@ -50,6 +51,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleResponseFormated, setConsoleResponseFormated] = useState('')
   const [consoleResponseLoading, setconsoleResponseLoading] = useState(false)
   const router = useRouter()
+  const { reload } = data.useData()
 
   const globalJavaScriptCompletions = javascriptLanguage.data.of({
     autocomplete: completeFromGlobalScope
@@ -142,7 +144,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     if (router.query.name) {
       loadParser()
     }
-  }, [router.query.name])
+  }, [router.query.name, reload])
 
   return (
     <ConsoleEditorContext.Provider
