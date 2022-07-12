@@ -2,6 +2,7 @@ import * as common from 'common'
 import * as utils from 'utils'
 import axios from 'axios'
 import { PlusIcon, SearchIcon } from '@heroicons/react/outline'
+import { PlayIcon, CogIcon } from '@heroicons/react/solid'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
@@ -14,6 +15,10 @@ export function Projects() {
   const [filteredSchemas, setFilteredSchemas] = useState<string[]>([])
   const [schemas, setSchemas] = useState<string[]>([])
   const [loadingSchemas, setLoadingSchemas] = useState(true)
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
+  const [selectedSchema, setSelectedSchema] = useState<string>()
+  const [reload, setReload] = useState(false)
 
   async function loadSchemas() {
     try {
@@ -32,6 +37,31 @@ export function Projects() {
       }
     } finally {
       setLoadingSchemas(false)
+    }
+  }
+
+  async function DeleteProject() {
+    try {
+      setSubmitLoading(true)
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${selectedSchema}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
+      setReload(!reload)
+      setSelectedSchema(undefined)
+      utils.notification(
+        `Project ${selectedSchema} deleted successfully`,
+        'success'
+      )
+    } catch (err: any) {
+      utils.notification(err.message, 'error')
+    } finally {
+      setSubmitLoading(false)
     }
   }
 
@@ -57,7 +87,7 @@ export function Projects() {
   useEffect(() => {
     setLoadingSchemas(true)
     loadSchemas()
-  }, [])
+  }, [reload])
 
   useEffect(() => {
     if (watch('search')) {
@@ -122,19 +152,55 @@ export function Projects() {
             <common.Card className="p-6 bg-white shadow-sm" key={schema}>
               <div className="flex items-center justify-between">
                 <p className="text-lg">{schema}</p>
-                <button
-                  className="px-3 py-2 text-white bg-indigo-500 rounded-lg"
-                  onClick={() => {
-                    router.push(`${routes.console}/${schema}`)
-                  }}
-                >
-                  Launch console
-                </button>
+                <div className="flex gap-4">
+                  <button
+                    className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
+                    onClick={() => {
+                      router.push(`${routes.console}/${schema}`)
+                    }}
+                  >
+                    <PlayIcon className="w-10 h-10 text-white" />
+                  </button>
+                  <common.Dropdown
+                    actions={[
+                      {
+                        title: 'Delete project',
+                        onClick: () => {
+                          setSelectedSchema(schema)
+                          setOpenModal(true)
+                        }
+                      }
+                    ]}
+                  >
+                    <button className="px-1 py-1 text-white bg-indigo-500 rounded-lg">
+                      <CogIcon className="w-10 h-10 text-white" />
+                    </button>
+                  </common.Dropdown>
+                </div>
               </div>
             </common.Card>
           ))
         )}
       </section>
+      <common.Modal
+        open={openModal}
+        setOpen={setOpenModal}
+        loading={submitLoading}
+        disabled={submitLoading}
+        title={`Remove ${selectedSchema} project?`}
+        description={
+          <>
+            <p className="text-sm text-gray-600">
+              Are you sure you want to remove this project?{' '}
+            </p>
+            <p className="text-sm font-bold text-gray-600">
+              this action is irreversible!!!
+            </p>
+          </>
+        }
+        buttonTitle="Remove project"
+        handleSubmit={DeleteProject}
+      />
     </div>
   )
 }
