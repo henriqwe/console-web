@@ -1,6 +1,7 @@
 import * as common from 'common'
 import * as utils from 'utils'
 import axios from 'axios'
+import { Icon } from '@iconify/react'
 import { PlusIcon, SearchIcon } from '@heroicons/react/outline'
 import { PlayIcon, CogIcon } from '@heroicons/react/solid'
 import { useEffect, useState } from 'react'
@@ -149,10 +150,26 @@ export function Projects() {
           </div>
         ) : (
           (showFiltered ? filteredSchemas : schemas).map((schema) => (
-            <common.Card className="p-6 bg-white shadow-sm" key={schema}>
-              <div className="flex items-center justify-between">
-                <p className="text-lg">{schema}</p>
-                <div className="flex gap-4">
+            <common.Card className="flex p-6 bg-white shadow-sm" key={schema}>
+              <div className="grid items-center justify-between flex-1 grid-cols-4 gap-4">
+                <div>
+                  <p className="text-lg">{schema}</p>
+                  <p className="text-sm text-gray-600">Standard</p>
+                </div>
+                <div className="flex items-center justify-around flex-1 col-span-2">
+                  <div className="p-2">
+                    <p>Traffic: </p>
+                    <p className="text-sm text-gray-600">
+                      50.000 requests per day
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-4 p-2 border rounded-lg">
+                    <Icon icon="logos:aws" className="w-10 h-10" />
+                    <p className="text-sm text-gray-600">Amazon Web Service</p>
+                  </div>
+                </div>
+
+                <div className="flex items-end justify-end gap-4">
                   <button
                     className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
                     onClick={() => {
