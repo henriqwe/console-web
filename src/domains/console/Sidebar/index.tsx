@@ -17,7 +17,7 @@ export function SideBar() {
 
   return (
     <div className="text-gray-600 rounded-lg w-[30%] h-full flex flex-col">
-      <div className="flex items-center justify-between w-full pt-6 pb-3 pl-6 bg-theme-1">
+      <div className="flex items-center justify-between w-full pt-6 pb-3  bg-theme-1">
         <div>
           <img
             src="/assets/images/logoTextDark.png"
@@ -34,7 +34,7 @@ export function SideBar() {
         </button>
       </div>
       <div className="mt-4">
-        <div className="flex items-center justify-between w-full px-8 py-4 rounded-t-lg bg-theme-1">
+        <div className="flex items-center justify-between w-full py-4 rounded-t-lg bg-theme-1">
           <common.Tabs
             tabs={[
               {
