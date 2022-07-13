@@ -1,11 +1,7 @@
-import * as common from 'common'
-import * as dataContext from 'domains/console'
-import { UserIcon } from '@heroicons/react/outline'
-import { Icon } from '@iconify/react'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
 import axios from 'axios'
+import * as common from 'common'
 import * as utils from 'utils'
+import * as dataContext from 'domains/console'
 import {
   useForm,
   FieldValues,
@@ -13,12 +9,13 @@ import {
   Controller
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import {routes} from 'domains/routes'
 
-export function Header() {
+export function AdminLogin() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
-  const { setCurrentTab } = dataContext.useData()
   const { logUserSchema } = dataContext.useUser()
   const {
     formState: { errors },
@@ -36,11 +33,10 @@ export function Header() {
           password: formData.password
         }
       )
+      utils.notification('Login successfully', 'success')
       utils.setCookie('admin_access_token', data.data.access_token)
       utils.setCookie('X-TenantID', data.data.username)
-      utils.notification('Login successfully', 'success')
-      setOpenModal(false)
-      setCurrentTab('USERS')
+      router.push(routes.console + '/' + router.query.name)
     } catch (err: any) {
       if (err.response.status === 401) {
         return utils.notification(
@@ -55,35 +51,23 @@ export function Header() {
   }
 
   return (
-    <div className="flex items-center justify-between w-full h-24">
-      <p className="text-3xl font-bold text-gray-700">{router.query.name}</p>
+    <div className="w-full h-[100vh] flex items-center justify-center bg-gray-100">
+      <form
+        className="flex flex-col items-center w-1/3 bg-white rounded-lg"
+        onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
+      >
+        <div className="flex flex-col items-center w-full px-6 pt-6 bg-white rounded-lg">
+          <div className="flex flex-col items-center mb-10">
+            <img
+              src="/assets/images/logoTextDark.png"
+              alt="Logo"
+              className="w-80"
+            />
+            <p>Web console</p>
+          </div>
 
-      {/* <div className="flex gap-2">
-        <button
-          className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded-[0.65rem] text-gray-400 hover:bg-gray-200 hover:text-blue-400 transition"
-          title="Manage Application Accounts and Roles"
-          onClick={() => {
-            if (!utils.getCookie('admin_access_token')) {
-              setOpenModal(true)
-              return
-            }
-            setCurrentTab('USERS')
-          }}
-        >
-          <UserIcon className="w-5 h-5 " />
-        </button>
-        <button className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded-[0.65rem] text-gray-400 hover:bg-gray-200 hover:text-blue-400 transition">
-          <Icon icon="vscode-icons:file-type-config" className={`w-5 h-5`} />
-        </button>
-      </div> */}
-      {/* <common.ClearModal open={openModal} setOpen={setOpenModal}>
-        <form
-          onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
-          className="p-6"
-        >
-          <p className="text-center">
-            This section requires the admin account to be enabled.
-          </p>
+          <p className="text-sm text-center">You need to log in to the admin account to access the web console!</p>
+
           <div className="flex flex-col w-full gap-4 my-4">
             <Controller
               name="userName"
@@ -94,12 +78,8 @@ export function Header() {
                     placeholder="User name"
                     className="w-full"
                     onChange={onChange}
+                    errors={errors.username}
                   />
-                  {errors.userName && (
-                    <p className="text-sm text-red-500">
-                      {errors.userName.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
@@ -113,21 +93,17 @@ export function Header() {
                     type="password"
                     className="w-full"
                     onChange={onChange}
+                    errors={errors.password}
                   />
-                  {errors.password && (
-                    <p className="text-sm text-red-500">
-                      {errors.password.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
             <common.Button type="submit" loading={loading} disabled={loading}>
-              Entrar
+              Log in
             </common.Button>
           </div>
-        </form>
-      </common.ClearModal> */}
+        </div>
+      </form>
     </div>
   )
 }

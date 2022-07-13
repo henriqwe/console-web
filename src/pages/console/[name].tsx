@@ -1,13 +1,24 @@
 import * as consoleSection from 'domains/console'
+import cookie from 'cookie'
+import * as utils from 'utils'
 import { Header } from 'domains/console/Header'
+import { GetServerSideProps } from 'next'
 
-export default function Home() {
+export default function Home({
+  cookie
+}: {
+  cookie: { admin_access_token?: string }
+}) {
   return (
     <consoleSection.DataProvider>
       <consoleSection.ConsoleEditorProvider>
         <consoleSection.SidebarProvider>
           <consoleSection.UserProvider>
-            <Page />
+            {!cookie.admin_access_token ? (
+              <consoleSection.AdminLogin />
+            ) : (
+              <Page />
+            )}
           </consoleSection.UserProvider>
         </consoleSection.SidebarProvider>
       </consoleSection.ConsoleEditorProvider>
@@ -38,4 +49,13 @@ function Page() {
       </div>
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (props) => {
+  const cookies = cookie.parse(props.req.headers.cookie as string)
+  return {
+    props: {
+      cookie: cookies
+    }
+  }
 }
