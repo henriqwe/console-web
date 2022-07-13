@@ -4,6 +4,7 @@ import * as utils from 'utils'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
+import { getCookie } from 'utils/cookies'
 
 export function BrowserRowsTab() {
   const [loading, setLoading] = useState(true)
@@ -17,7 +18,8 @@ export function BrowserRowsTab() {
         {
           data: JSON.parse(
             `{\n "action":"READ",\n "object":{\n   "classUID": "${selectedTable}",\n   "_role": "ROLE_ADMIN"\n }\n}`
-          )
+          ),
+          access_token: getCookie('admin_access_token')
         },
         {
           headers: {

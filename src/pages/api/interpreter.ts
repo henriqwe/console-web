@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { stringify } from 'qs'
 import axios from 'axios'
 
 export default async function interpreter(
@@ -8,27 +7,6 @@ export default async function interpreter(
 ) {
   if (req.method === 'POST') {
     try {
-      const username = 'tester@academia'
-      const password = '1234567'
-      const { data: tokenData } = await axios.post(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/csecurity/oauth/token`,
-        stringify({
-          username,
-          password,
-          grant_type: 'password'
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: 'Basic '.concat(
-              Buffer.from('yc:c547d72d-607c-429c-81e2-0baec7dd068b').toString(
-                'base64'
-              )
-            )
-          }
-        }
-      )
-
       const sendDate = new Date().getTime()
 
       const { data } = await axios.post(
@@ -38,7 +16,7 @@ export default async function interpreter(
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: `${tokenData.access_token}`,
+            Authorization: `${req.body.access_token}`,
             'X-TenantID': 'tester@academia'
           }
         }

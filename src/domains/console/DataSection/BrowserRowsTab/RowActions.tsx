@@ -2,6 +2,7 @@ import * as utils from 'utils'
 import * as common from 'common'
 import * as consoleData from 'domains/console'
 import axios from 'axios'
+import { getCookie } from 'utils/cookies'
 
 export function RowActions({ item }: { item: any }) {
   const {
@@ -31,7 +32,8 @@ export function RowActions({ item }: { item: any }) {
             {
               data: JSON.parse(
                 `{\n "action":"DELETE",\n "object":{\n "classUID": "${selectedTable}",\n "id": ${item.id},\n "role": "ROLE_ADMIN"\n }\n}`
-              )
+              ),
+              access_token: getCookie('admin_access_token')
             },
             {
               headers: {

@@ -6,6 +6,7 @@ import * as common from 'common'
 import * as utils from 'utils'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { getCookie } from 'utils/cookies'
 
 export function Update() {
   const [loading, setLoading] = useState(false)
@@ -84,7 +85,8 @@ export function Update() {
                   .join('')}
               }\n
             }`
-          )
+          ),
+          access_token: getCookie('admin_access_token')
         },
         {
           headers: {

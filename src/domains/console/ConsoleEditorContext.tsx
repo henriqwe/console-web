@@ -106,7 +106,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
         {
-          data: JSON.parse(consoleValue)
+          data: JSON.parse(consoleValue),
+          access_token: getCookie('admin_access_token')
         },
         {
           headers: {
