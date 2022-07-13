@@ -13,7 +13,7 @@ import {
   DocumentTextIcon
 } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
-import { setCookie } from 'utils'
+import { removeCookie } from 'utils'
 import { routes } from 'domains/routes'
 
 const navigation = [
@@ -190,10 +190,12 @@ export function Template({ children }: TemplateProps) {
                   </a>
                 ))}
               </nav>
-              <a
+              <div
                 className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-red-700 hover:text-white cursor-pointer mx-2 transition`}
                 onClick={() => {
-                  // setCookie('access_token')
+                  removeCookie('X-TenantID')
+                  removeCookie('admin_access_token')
+                  removeCookie('access_token')
                   router.push(routes.login)
                 }}
               >
@@ -202,7 +204,7 @@ export function Template({ children }: TemplateProps) {
                   aria-hidden="true"
                 />
                 Logout
-              </a>
+              </div>
             </div>
           </div>
         </div>
