@@ -31,7 +31,7 @@ export function SideBar() {
             tabs={[
               {
                 name: 'CONSOLE',
-                icon: DatabaseIcon
+                icon: common.icons.ConsoleIcon
               },
               {
                 name: 'DATA',
