@@ -3,7 +3,6 @@ import CodeMirror from '@uiw/react-codemirror'
 import { Icon } from '@iconify/react'
 import { javascript } from '@codemirror/lang-javascript'
 import { useState } from 'react'
-import { DatabaseIcon } from '@heroicons/react/outline'
 
 import * as common from 'common'
 import * as consoleSection from 'domains/console'
@@ -12,8 +11,7 @@ import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 export function Editors() {
   const [slideOpen, setSlideOpen] = useState(false)
 
-  const { setSelectedTab } = consoleSection.useSidebar()
-  const { setCurrentTab, setShowTableViewMode } = consoleSection.useData()
+  const { setShowTableViewMode, showTableViewMode } = consoleSection.useData()
 
   const {
     consoleValue,
@@ -27,8 +25,12 @@ export function Editors() {
   } = consoleEditor.useConsoleEditor()
 
   return (
-    <div className="flex w-full h-full rounded-lg">
-      <div className="w-[50%] rounded-lg h-full">
+    <div className="grid grid-cols-12 w-full h-full rounded-lg">
+      <div
+        className={`${
+          showTableViewMode ? 'col-span-4' : 'col-span-6'
+        } rounded-lg h-full`}
+      >
         <div className="flex flex-col bg-gray-200 rounded-tl-lg h-full">
           <div className="flex items-center justify-between w-full pl-4 border-r h-9 border-r-gray-300">
             <p className="text-base  text-gray-900">YCodi Console</p>
@@ -75,7 +77,11 @@ export function Editors() {
           </div>
         </div>
       </div>
-      <div className="w-[50%] h-full flex flex-col">
+      <div
+        className={`${
+          showTableViewMode ? 'col-span-8' : 'col-span-6'
+        }  h-full flex flex-col`}
+      >
         <div className="flex items-center w-full h-9 px-4 bg-gray-200 rounded-tr-lg">
           <div className="flex justify-between items-center w-full">
             <p className="text-base  text-gray-900">Response</p>
@@ -83,16 +89,21 @@ export function Editors() {
               {responseTime && (
                 <div className="text-xs">Response time: {responseTime} ms</div>
               )}
-              {consoleResponseFormated && (
+              {showTableViewMode ? (
                 <button
                   className="px-2 py-1 text-sm bg-white border border-gray-300 rounded-md"
                   type="button"
                   onClick={() => {
-                    setCurrentTab('DATA')
-                    setSelectedTab({
-                      name: 'DATA',
-                      icon: DatabaseIcon
-                    })
+                    setShowTableViewMode(false)
+                  }}
+                >
+                  JSON mode
+                </button>
+              ) : (
+                <button
+                  className="px-2 py-1 text-sm bg-white border border-gray-300 rounded-md"
+                  type="button"
+                  onClick={() => {
                     setShowTableViewMode(true)
                   }}
                 >
@@ -110,6 +121,8 @@ export function Editors() {
                 <common.Spinner className="w-5 h-5" />
               </div>
             </div>
+          ) : showTableViewMode ? (
+            <consoleSection.TableViewMode />
           ) : (
             <CodeMirror
               value={consoleResponseFormated}

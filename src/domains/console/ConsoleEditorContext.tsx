@@ -131,6 +131,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       setconsoleResponseLoading(false)
       setResponseTime(undefined)
       setConsoleResponseFormated('')
+      setConsoleResponse([])
+
       if (err?.request?.status === 404) {
         utils.notification('object or objects not found.', 'error')
         return

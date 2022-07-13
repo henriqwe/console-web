@@ -7,8 +7,7 @@ import { useRouter } from 'next/router'
 export function SideBar() {
   const router = useRouter()
   const { selectedTab, setSelectedTab } = consoleSection.useSidebar()
-  const { setCurrentTab, currentTab, setShowTableViewMode } =
-    consoleSection.useData()
+  const { setCurrentTab, currentTab } = consoleSection.useData()
 
   useEffect(() => {
     setCurrentTab(selectedTab.name as 'CONSOLE' | 'DATA')
@@ -42,7 +41,6 @@ export function SideBar() {
               currentTab !== 'USERS' ? selectedTab : { name: 'USERS' }
             }
             setSelectedTab={setSelectedTab}
-            onchange={() => setShowTableViewMode(false)}
           />
         </div>
       </div>

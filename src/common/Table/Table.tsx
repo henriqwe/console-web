@@ -23,7 +23,7 @@ export function Table({ tableColumns = [], values, actions }: TableProps) {
                     {tableColumns.map((column) => (
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                        className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                         key={column.name}
                       >
                         {column.displayName}
@@ -32,7 +32,7 @@ export function Table({ tableColumns = [], values, actions }: TableProps) {
                     {actions && (
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                        className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                       >
                         Actions
                       </th>
@@ -48,7 +48,7 @@ export function Table({ tableColumns = [], values, actions }: TableProps) {
                       >
                         {tableColumns.map((column, index) => (
                           <td
-                            className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6"
+                            className="py-4 pl-4 pr-3 text-xs font-medium text-gray-900 whitespace-nowrap sm:pl-6"
                             key={value[column.name] || index}
                           >
                             {column.handler

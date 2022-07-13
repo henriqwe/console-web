@@ -1,7 +1,4 @@
-import CodeMirror from '@uiw/react-codemirror'
-
 import { useEffect, useState } from 'react'
-import { javascript } from '@codemirror/lang-javascript'
 
 import * as common from 'common'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
@@ -14,13 +11,16 @@ type tableColumnType = {
 }
 
 export function TableViewMode() {
-  const { consoleResponse, consoleValueLastOperation } =
-    consoleEditor.useConsoleEditor()
+  const { consoleResponse } = consoleEditor.useConsoleEditor()
   const [tableColumns, setTableColumns] = useState<tableColumnType[]>([])
 
   function handleTableColumns() {
+    if (consoleResponse.length === 0) {
+      setTableColumns([])
+      return
+    }
     let columns: tableColumnType[] = []
-    Object.keys(consoleResponse[0]).map((key) => {
+    Object?.keys(consoleResponse[0]).map((key) => {
       if (
         key !== '_classDef' &&
         key !== 'role' &&
@@ -76,35 +76,19 @@ export function TableViewMode() {
     setTableColumns(columnsSorted)
   }
   useEffect(() => {
-    if (consoleResponse) {
-      handleTableColumns()
-    }
+    handleTableColumns()
   }, [consoleResponse])
 
-  return (
-    <common.Card className="flex flex-col h-full">
-      <div className="flex items-center w-full px-4 bg-gray-200 border-gray-300 rounded-t-lg min-h-[4rem] border-x gap-2">
-        <p className="text-lg font-bold text-gray-700">Table view mode</p>
-      </div>
-      <div className={`flex flex-col h-full px-6 pt-5 bg-white rounded-b-lg`}>
-        <div className="w-full h-full bg-gray-100 overflow-y">
-          <div className="flex px-8 mt-4">
-            <common.Accordion
-              titles="Operation"
-              content={
-                <CodeMirror
-                  value={consoleValueLastOperation}
-                  className="flex w-full h-full"
-                  width="100%"
-                  editable={false}
-                  extensions={[javascript({ jsx: true })]}
-                />
-              }
-            />
-          </div>
-          <common.Table tableColumns={tableColumns} values={consoleResponse} />
+  return tableColumns.length === 0 ? (
+    <div className="flex items-center justify-center w-full ">
+      <div className=" flex flex-col items-center">
+        <div className="mb-5 w-72">
+          <common.illustrations.Empty />
         </div>
+        <div className="text-lg">No data to list</div>
       </div>
-    </common.Card>
+    </div>
+  ) : (
+    <common.Table tableColumns={tableColumns} values={consoleResponse} />
   )
 }
