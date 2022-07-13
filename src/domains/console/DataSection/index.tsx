@@ -101,7 +101,7 @@ export function DataSection() {
 
   return (
     <common.Card className="flex flex-col h-full">
-      <div className="flex items-center w-full px-4 bg-gray-200 border-gray-300 rounded-t-lg min-h-[4rem] border-x gap-2">
+      <div className="flex items-center w-full px-4 bg-gray-200 border-gray-300 rounded-t-lg  h-9 border-x gap-2">
         {updateName ? (
           <form
             className="flex gap-2"
@@ -135,7 +135,7 @@ export function DataSection() {
           </form>
         ) : (
           <>
-            <p className="text-lg font-bold text-gray-700">
+            <p className="text-base  text-gray-900">
               {selectedTable ? selectedTable : 'Tables'}
             </p>
             {selectedTable && (

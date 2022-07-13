@@ -106,8 +106,8 @@ export function CreateTable() {
 
   return (
     <common.Card className="flex flex-col h-full">
-      <div className="flex items-center w-full px-4 bg-gray-200 border-gray-300 rounded-t-lg min-h-[4rem] border-x gap-2">
-        <p className="text-lg font-bold text-gray-700">Create a new table</p>
+      <div className="flex items-center w-full px-4 bg-gray-200 border-gray-300 rounded-t-lg h-9  border-x gap-2">
+        <p className="text-base  text-gray-900">Create a new table</p>
       </div>
 
       <div className={`flex flex-col h-full px-6 pt-5 bg-white rounded-b-lg`}>
