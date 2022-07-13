@@ -143,7 +143,7 @@ export function DataSection() {
         )}
       </div>
       {selectedTable ? (
-        <div>
+        <div className="pt-4">
           <common.Tabs
             tabs={[{ name: 'Browser rows' }, { name: 'Modify' }]}
             selectedTab={selectedTab}
@@ -156,11 +156,19 @@ export function DataSection() {
           )}
         </div>
       ) : (
-        <div className={`flex h-full px-6 pt-10 bg-white rounded-b-lg`}>
-          <p className="text-lg text-gray-700">
-            Select a table to see all data
-          </p>
+        <div className="flex items-center justify-center w-full h-full">
+          <div className=" flex flex-col items-center">
+            <div className="mb-5 w-72">
+              <common.illustrations.Empty />
+            </div>
+            <div className="text-lg">Select a table to see all data</div>
+          </div>
         </div>
+        // <div className={`flex h-full px-6  bg-white rounded-b-lg`}>
+        //   <p className="text-lg text-gray-700">
+
+        //   </p>
+        // </div>
       )}
     </common.Card>
   )
