@@ -12,6 +12,7 @@ import { Icon } from '@iconify/react'
 import { useState } from 'react'
 import { routes } from 'domains/routes'
 import { useRouter } from 'next/router'
+import axios from 'axios'
 
 export function CreateSchema() {
   const [loading, setLoading] = useState(false)
@@ -30,6 +31,17 @@ export function CreateSchema() {
       setLoading(true)
       if (!provider) {
         throw new Error('Select a provider to create a new project')
+      }
+
+      const response = await utils.localApi.get(`/schemas`, {
+        headers: {
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
+        }
+      })
+      const schemas = response.data.data
+
+      if (schemas.includes(data.ProjectName.toLowerCase())) {
+        throw new Error(`Project ${data.ProjectName} already exists`)
       }
 
       await utils.api.post(
@@ -135,9 +147,9 @@ export function CreateSchema() {
           />
         </div>
 
-        <div className="flex justify-between w-full items-center">
+        <div className="flex items-center justify-between w-full">
           <div
-            className="flex text-gray-900 cursor-pointer py-3 text-sm items-center gap-2 hover:text-blue-500"
+            className="flex items-center gap-2 py-3 text-sm text-gray-900 cursor-pointer hover:text-blue-500"
             onClick={() => {
               router.push(routes.dashboard)
             }}
@@ -145,7 +157,7 @@ export function CreateSchema() {
             <common.icons.ReturnIcon />
             Back to dashboard
           </div>
-          <div className="flex   gap-4">
+          <div className="flex gap-4">
             <common.Button
               type="button"
               onClick={() => {

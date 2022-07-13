@@ -106,7 +106,7 @@ export function AdminLogin() {
           </div>
           <div className="w-full border" />
           <div
-            className="flex text-gray-900 cursor-pointer py-3 text-sm items-center gap-2 hover:text-blue-500"
+            className="flex items-center gap-2 py-3 text-sm text-gray-900 cursor-pointer hover:text-blue-500"
             onClick={() => {
               router.push(routes.dashboard)
             }}

@@ -25,34 +25,48 @@ export function CreateTable() {
     try {
       setLoading(true)
 
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
+        {
+          headers: {
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
+      const tables = Object.keys(response.data.data)
+      if (tables.includes(data.Name.toLowerCase())) {
+        throw new Error(`Entity ${data.Name} already exists`)
+      }
+
       const filteredData = columnsGroup.filter((column) => column !== 0)
-      const columnValues = filteredData.map((column) => {
+      const names: string[] = []
+
+      const columnValues = []
+      for (const column of filteredData) {
         if (!data['ColumnName' + column] || !data['Type' + column]) {
-          return
+          throw new Error('Missing required fields')
         }
 
         if (
           data['Type' + column].value === 'String' &&
           !data['Length' + column]
         ) {
-          return null
+          throw new Error('String length is required')
         }
 
-        return {
+        if (names.includes(data['ColumnName' + column].toLowerCase())) {
+          throw new Error('Cannot create entity with duplicated column name')
+        }
+
+        names.push(data['ColumnName' + column])
+
+        columnValues.push({
           ColumnName: data['ColumnName' + column],
           Type: data['Type' + column].value,
           Comment: data['Comment' + column],
           Nullable: data['Nullable' + column],
           Length: data['Length' + column]
-        }
-      })
-
-      if (columnValues.includes(undefined)) {
-        throw new Error('Missing required fields')
-      }
-
-      if (columnValues.includes(null)) {
-        throw new Error('String length is required')
+        })
       }
 
       await axios.post(
@@ -106,8 +120,8 @@ export function CreateTable() {
 
   return (
     <common.Card className="flex flex-col h-full">
-      <div className="flex items-center w-full px-4 bg-gray-200 border-gray-300 rounded-t-lg h-9  border-x gap-2">
-        <p className="text-base  text-gray-900">Create a new table</p>
+      <div className="flex items-center w-full gap-2 px-4 bg-gray-200 border-gray-300 rounded-t-lg h-9 border-x">
+        <p className="text-base text-gray-900">Create a new table</p>
       </div>
 
       <div className={`flex flex-col h-full px-6 pt-5 bg-white rounded-b-lg`}>
@@ -134,7 +148,7 @@ export function CreateTable() {
           (column, index) =>
             column !== 0 && (
               <div className="grid grid-cols-12 gap-4 py-5" key={column}>
-                <div className="flex gap-2 col-span-3  items-center">
+                <div className="flex items-center col-span-3 gap-2">
                   <div className="w-5 h-5">
                     {column !== 1 && (
                       <common.icons.XIcon
