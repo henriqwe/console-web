@@ -18,8 +18,12 @@ export function SideBar() {
   return (
     <div className="text-gray-600 rounded-lg w-[30%] h-full flex flex-col">
       <div className="flex items-center justify-between w-full pt-6 pb-3 pl-6 bg-theme-1">
-        <div className="w-40">
-          <img src="/assets/images/logoTextDark.png" alt="Logo" />
+        <div>
+          <img
+            src="/assets/images/logoTextDark.png"
+            alt="Logo"
+            className="w-auto h-8"
+          />
         </div>
         <button
           className="flex items-center justify-center w-10 h-10 bg-gray-200 border border-gray-400 rounded-[0.65rem] hover:bg-red-400 hover:text-white hover:border-red-400 transition"
