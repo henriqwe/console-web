@@ -25,15 +25,15 @@ export function Editors() {
   } = consoleEditor.useConsoleEditor()
 
   return (
-    <div className="grid grid-cols-12 w-full h-full rounded-lg">
+    <div className="grid w-full h-full grid-cols-12 rounded-lg">
       <div
         className={`${
           showTableViewMode ? 'col-span-4' : 'col-span-6'
         } rounded-lg h-full`}
       >
-        <div className="flex flex-col bg-gray-200 rounded-tl-lg h-full">
+        <div className="flex flex-col h-full bg-gray-200 rounded-tl-lg">
           <div className="flex items-center justify-between w-full pl-4 border-r h-9 border-r-gray-300">
-            <p className="text-base  text-gray-900">YCodi Console</p>
+            <p className="text-base text-gray-900">YCodi Console</p>
             <div className="flex h-full">
               <button
                 className="flex items-center h-full gap-2 p-2 "
@@ -42,12 +42,12 @@ export function Editors() {
                 disabled={consoleResponseLoading}
               >
                 <div
-                  className="flex items-center justify-center rounded-full border-2 border-gray-400 w-9 h-9"
+                  className="flex items-center justify-center w-8 h-8 border-2 border-gray-400 rounded-full"
                   title="Run"
                 >
                   <Icon
                     icon="fa-solid:play"
-                    className={`ml-1 w-4 h-4 text-gray-700`}
+                    className={`ml-1 w-3 h-3 text-gray-700`}
                   />
                 </div>
               </button>
@@ -82,10 +82,10 @@ export function Editors() {
           showTableViewMode ? 'col-span-8' : 'col-span-6'
         }  h-full flex flex-col`}
       >
-        <div className="flex items-center w-full h-9 px-4 bg-gray-200 rounded-tr-lg">
-          <div className="flex justify-between items-center w-full">
-            <p className="text-base  text-gray-900">Response</p>
-            <div className="flex gap-2 items-center">
+        <div className="flex items-center w-full px-4 bg-gray-200 rounded-tr-lg h-9">
+          <div className="flex items-center justify-between w-full">
+            <p className="text-base text-gray-900">Response</p>
+            <div className="flex items-center gap-2">
               {responseTime && (
                 <div className="text-xs">Response time: {responseTime} ms</div>
               )}
@@ -115,8 +115,8 @@ export function Editors() {
         </div>
         <div className="flex w-full h-full overflow-x-auto rounded-br-lg">
           {consoleResponseLoading ? (
-            <div className="flex justify-center items-center w-full h-full">
-              <div className="flex gap-2 items-center">
+            <div className="flex items-center justify-center w-full h-full">
+              <div className="flex items-center gap-2">
                 <div>Loading</div>
                 <common.Spinner className="w-5 h-5" />
               </div>

@@ -10,7 +10,8 @@ export function RowActions({ item }: { item: any }) {
     setSelectedItemToExclude,
     selectedTable,
     setReload,
-    reload
+    reload,
+    setSlideType
   } = consoleData.useData()
   const actions = [
     {
@@ -19,6 +20,7 @@ export function RowActions({ item }: { item: any }) {
         event?.preventDefault()
         setOpenSlide(true)
         setSelectedItemToExclude(item)
+        setSlideType('UPDATE')
       },
       icon: <common.icons.EditIcon />
     },

@@ -5,32 +5,19 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
-import { PencilIcon, XIcon, CheckIcon } from '@heroicons/react/outline'
-import {
-  useForm,
-  Controller,
-  SubmitHandler,
-  FieldValues
-} from 'react-hook-form'
+import { PencilIcon } from '@heroicons/react/outline'
 import * as utils from 'utils'
 
 export function DataSection() {
   const router = useRouter()
   const {
     selectedTable,
-    setSelectedTable,
+    setOpenSlide,
     reload,
-    setReload,
-    tableData,
     setTableData,
-    showCreateTableSection
+    showCreateTableSection,
+    setSlideType
   } = consoleSection.useData()
-  const {
-    control,
-    formState: { errors },
-    handleSubmit
-  } = useForm()
-  const [updateName, setUpdateName] = useState(false)
   const [selectedTab, setSelectedTab] = useState({
     name: 'Browser rows'
   })
@@ -60,29 +47,6 @@ export function DataSection() {
     setLoading(false)
   }
 
-  async function updateTableName(formData: { Name: string }) {
-    try {
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
-        {
-          name: formData.Name
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
-      utils.notification('Table name updated successfully', 'success')
-      setSelectedTable(formData.Name)
-      setUpdateName(false)
-      setReload(!reload)
-    } catch (err: any) {
-      utils.notification(err.message, 'error')
-    }
-  }
-
   useEffect(() => {
     if (selectedTable) {
       loadTableData()
@@ -96,50 +60,18 @@ export function DataSection() {
 
   return (
     <common.Card className="flex flex-col h-full">
-      <div className="flex items-center w-full px-4 bg-gray-200 border-gray-300 rounded-t-lg  h-9 border-x gap-2">
-        {updateName ? (
-          <form
-            className="flex gap-2"
-            onSubmit={handleSubmit(
-              updateTableName as SubmitHandler<FieldValues>
-            )}
-          >
-            <Controller
-              name="Name"
-              defaultValue={selectedTable}
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <common.Input
-                  placeholder="field name"
-                  value={value}
-                  onChange={onChange}
-                  errors={errors.Name}
-                />
-              )}
-            />
-            <common.Button
-              type="button"
-              color="red"
-              onClick={() => setUpdateName(false)}
-            >
-              <XIcon className="w-5 h-5" />
-            </common.Button>
-            <common.Button type="submit" color="green">
-              <CheckIcon className="w-5 h-5" />
-            </common.Button>
-          </form>
-        ) : (
-          <>
-            <p className="text-base  text-gray-900">
-              {selectedTable ? selectedTable : 'Tables'}
-            </p>
-            {selectedTable && (
-              <PencilIcon
-                className="w-5 h-5 cursor-pointer"
-                onClick={() => setUpdateName(true)}
-              />
-            )}
-          </>
+      <div className="flex items-center w-full gap-2 px-4 bg-gray-200 border-gray-300 rounded-t-lg h-9 border-x">
+        <p className="text-base text-gray-900">
+          {selectedTable ? selectedTable : 'Tables'}
+        </p>
+        {selectedTable && (
+          <PencilIcon
+            className="w-5 h-5 cursor-pointer"
+            onClick={() => {
+              setOpenSlide(true)
+              setSlideType('UPDATE TABLE')
+            }}
+          />
         )}
       </div>
       {selectedTable ? (
@@ -157,7 +89,7 @@ export function DataSection() {
         </div>
       ) : (
         <div className="flex items-center justify-center w-full h-full">
-          <div className=" flex flex-col items-center">
+          <div className="flex flex-col items-center ">
             <div className="mb-5 w-72">
               <common.illustrations.Empty />
             </div>

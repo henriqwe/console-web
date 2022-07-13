@@ -218,14 +218,14 @@ export function Projects() {
                       <CogIcon className="w-10 h-10 text-white" />
                     </button>
                   </common.Dropdown>
-                  <button
+                  {/* <button
                     className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
                     onClick={() => {
                       downloadSchema(schema)
                     }}
                   >
                     <DownloadIcon className="w-10 h-10 text-white" />
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </common.Card>

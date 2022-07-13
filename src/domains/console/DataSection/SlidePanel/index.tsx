@@ -1,15 +1,16 @@
 import * as consoleData from 'domains/console'
 import * as common from 'common'
 import { Update } from './Update'
+import { UpdateTableName } from './UpdateTableName'
 
 export function SlidePanel() {
-  const { setOpenSlide, openSlide } = consoleData.useData()
+  const { setOpenSlide, openSlide, slideType } = consoleData.useData()
   return (
     <common.Slide
-      title={'Update register'}
+      title={slideType === 'UPDATE' ? 'Update register' : 'Update table name'}
       open={openSlide}
       setOpen={setOpenSlide}
-      content={<Update />}
+      content={slideType === 'UPDATE' ? <Update /> : <UpdateTableName />}
     />
   )
 }

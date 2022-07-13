@@ -27,6 +27,8 @@ type DataContextProps = {
   setShowCreateTableSection: Dispatch<SetStateAction<boolean>>
   showTableViewMode: boolean
   setShowTableViewMode: Dispatch<SetStateAction<boolean>>
+  slideType: 'UPDATE' | 'UPDATE TABLE'
+  setSlideType: Dispatch<SetStateAction<'UPDATE' | 'UPDATE TABLE'>>
 }
 
 type ProviderProps = {
@@ -39,6 +41,9 @@ export const DataContext = createContext<DataContextProps>(
 
 export const DataProvider = ({ children }: ProviderProps) => {
   const [openSlide, setOpenSlide] = useState(false)
+  const [slideType, setSlideType] = useState<'UPDATE' | 'UPDATE TABLE'>(
+    'UPDATE'
+  )
   const [selectedItemToExclude, setSelectedItemToExclude] = useState()
   const [reload, setReload] = useState(false)
   const [showCreateTableSection, setShowCreateTableSection] = useState(false)
@@ -77,7 +82,9 @@ export const DataProvider = ({ children }: ProviderProps) => {
         showCreateTableSection,
         setShowCreateTableSection,
         showTableViewMode,
-        setShowTableViewMode
+        setShowTableViewMode,
+        slideType,
+        setSlideType
       }}
     >
       {children}
