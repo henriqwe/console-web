@@ -33,6 +33,7 @@ type ConsoleEditorContextProps = {
   setdocumentationValue: Dispatch<SetStateAction<string>>
   consoleResponseFormated: string
   setConsoleResponseFormated: Dispatch<SetStateAction<string>>
+  responseTime: number | undefined
 }
 
 type ProviderProps = {
@@ -51,6 +52,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleResponseFormated, setConsoleResponseFormated] = useState('')
   const [consoleResponseLoading, setconsoleResponseLoading] = useState(false)
   const router = useRouter()
+  const [responseTime, setResponseTime] = useState<number>()
   const { reload } = data.useData()
 
   const globalJavaScriptCompletions = javascriptLanguage.data.of({
@@ -122,9 +124,11 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       setConsoleResponseFormated(text)
       utils.notification('Operation performed successfully', 'success')
       setconsoleResponseLoading(false)
+      setResponseTime(data.responseTimeMs)
     } catch (err: any) {
       utils.notification(err.message, 'error')
       setconsoleResponseLoading(false)
+      setResponseTime(undefined)
     }
   }
 
@@ -163,7 +167,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         consoleResponseFormated,
         setConsoleResponseFormated,
         consoleValueLastOperation,
-        setConsoleValueLastOperation
+        setConsoleValueLastOperation,
+        responseTime
       }}
     >
       {children}

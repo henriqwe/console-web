@@ -29,6 +29,8 @@ export default async function interpreter(
         }
       )
 
+      const sendDate = new Date().getTime()
+
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/interpreter-p/s`,
         req.body.data,
@@ -42,7 +44,10 @@ export default async function interpreter(
         }
       )
 
-      return res.status(200).json({ data: data.data })
+      const receiveDate = new Date().getTime()
+      const responseTimeMs = receiveDate - sendDate
+
+      return res.status(200).json({ data: data.data, responseTimeMs })
     } catch (err) {
       console.log(err)
       return res.status(404).json({ err: err })
