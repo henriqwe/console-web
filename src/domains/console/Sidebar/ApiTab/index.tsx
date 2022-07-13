@@ -118,24 +118,6 @@ function Operation({
           />
           <p className="text-sm">{schema}</p>
         </div>
-        <div>
-          {active && (
-            <button
-              className="px-2 py-1 text-sm bg-white border border-gray-300 rounded-md"
-              type="button"
-              onClick={() => {
-                setCurrentTab('DATA')
-                setSelectedTable(schema)
-                setSelectedTab({
-                  name: 'DATA',
-                  icon: DatabaseIcon
-                })
-              }}
-            >
-              Go to table
-            </button>
-          )}
-        </div>
       </div>
       {active &&
         ['insert', 'update', 'delete', 'select', 'select by pk'].map(
