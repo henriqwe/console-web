@@ -10,9 +10,12 @@ import * as createProject from 'domains/createProject'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Icon } from '@iconify/react'
 import { useState } from 'react'
+import { routes } from 'domains/routes'
+import { useRouter } from 'next/router'
 
 export function CreateSchema() {
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
   const [provider, setProvider] = useState<string>('aws')
   const { setCurrentPage, createProjectSchema, setCreatedSchemaName } =
     createProject.useCreateProject()
@@ -132,10 +135,30 @@ export function CreateSchema() {
           />
         </div>
 
-        <div className="flex justify-end w-full">
-          <common.Button loading={loading} disabled={loading}>
-            Create project
-          </common.Button>
+        <div className="flex justify-between w-full items-center">
+          <div
+            className="flex text-gray-900 cursor-pointer py-3 text-sm items-center gap-2 hover:text-blue-500"
+            onClick={() => {
+              router.push(routes.dashboard)
+            }}
+          >
+            <common.icons.ReturnIcon />
+            Back to dashboard
+          </div>
+          <div className="flex   gap-4">
+            <common.Button
+              type="button"
+              onClick={() => {
+                router.push(routes.dashboard)
+              }}
+              color="red-outline"
+            >
+              <p>Cancel</p>
+            </common.Button>
+            <common.Button loading={loading} disabled={loading}>
+              Create project
+            </common.Button>
+          </div>
         </div>
       </form>
     </common.Card>

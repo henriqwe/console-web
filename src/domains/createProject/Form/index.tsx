@@ -1,11 +1,8 @@
 import * as common from 'common'
 import * as createProject from 'domains/createProject'
-import { routes } from 'domains/routes'
-import { useRouter } from 'next/router'
 
 export function Form() {
   const { selectedPlan, currentPage } = createProject.useCreateProject()
-  const router = useRouter()
 
   return (
     <section className="flex flex-col w-full gap-5 p-10 px-20">
@@ -14,7 +11,7 @@ export function Form() {
         <p className="text-lg font-bold">{selectedPlan}</p>
       </div>
 
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center ">
         <common.Breadcrumb
           pages={[
             { name: 'Create project', current: currentPage === 'FORM' },
@@ -22,15 +19,6 @@ export function Form() {
           ]}
           showNumber
         />
-        <common.Button
-          type="button"
-          onClick={() => {
-            router.push(routes.dashboard)
-          }}
-          color="red-outline"
-        >
-          <p>Cancel</p>
-        </common.Button>
       </div>
 
       {currentPage === 'FORM' ? (

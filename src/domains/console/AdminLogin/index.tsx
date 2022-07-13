@@ -105,14 +105,15 @@ export function AdminLogin() {
             </common.Button>
           </div>
           <div className="w-full border" />
-          <span
-            className="text-blue-500 cursor-pointer py-3 text-sm"
+          <div
+            className="flex text-gray-900 cursor-pointer py-3 text-sm items-center gap-2 hover:text-blue-500"
             onClick={() => {
               router.push(routes.dashboard)
             }}
           >
-            Back to dashboard
-          </span>
+            <common.icons.ReturnIcon />
+            <span>Back to dashboard</span>
+          </div>
         </div>
       </form>
     </div>

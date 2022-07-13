@@ -11,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
+import { Icon } from '@iconify/react'
 
 type FormData = {
   UserName: string
@@ -114,11 +115,30 @@ export function CreateAdminUser() {
             </div>
           )}
         />
-
-        <div className="flex justify-end w-full">
-          <common.Button loading={loading} disabled={loading}>
-            Create admin user
-          </common.Button>
+        <div className="flex justify-between w-full items-center">
+          <div
+            className="flex text-gray-900 cursor-pointer py-3 text-sm items-center gap-2 hover:text-blue-500"
+            onClick={() => {
+              router.push(routes.dashboard)
+            }}
+          >
+            <common.icons.ReturnIcon />
+            Back to dashboard
+          </div>
+          <div className="flex   gap-4">
+            <common.Button
+              type="button"
+              onClick={() => {
+                router.push(routes.dashboard)
+              }}
+              color="red-outline"
+            >
+              <p>Cancel</p>
+            </common.Button>
+            <common.Button loading={loading} disabled={loading}>
+              Create admin user
+            </common.Button>
+          </div>
         </div>
       </form>
     </common.Card>

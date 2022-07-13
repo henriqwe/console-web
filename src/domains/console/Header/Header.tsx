@@ -13,6 +13,7 @@ import {
   Controller
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { routes } from 'domains/routes'
 
 export function Header() {
   const router = useRouter()
@@ -56,8 +57,18 @@ export function Header() {
 
   return (
     <div className="flex items-center justify-between w-full h-24">
-      <p className="text-3xl font-bold text-gray-700">{router.query.name}</p>
-
+      <div>
+        <p className="text-3xl font-bold text-gray-700">{router.query.name}</p>
+        <div
+          className="flex text-gray-900 cursor-pointer text-xs items-center gap-2 hover:text-blue-500"
+          onClick={() => {
+            router.push(routes.dashboard)
+          }}
+        >
+          <common.icons.ReturnIcon />
+          Dashboard
+        </div>
+      </div>
       {/* <div className="flex gap-2">
         <button
           className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded-[0.65rem] text-gray-400 hover:bg-gray-200 hover:text-blue-400 transition"

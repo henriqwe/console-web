@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
-import { ArrowLeftIcon, DatabaseIcon } from '@heroicons/react/outline'
+import { DatabaseIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
-import { routes } from 'domains/routes'
 
 export function SideBar() {
   const router = useRouter()
@@ -17,7 +16,7 @@ export function SideBar() {
 
   return (
     <div className="text-gray-600 rounded-lg w-[30%] h-full flex flex-col">
-      <div className="flex items-center justify-between w-full pt-6 pb-3  bg-theme-1">
+      <div className="flex items-center justify-between w-full pt-7 pb-2  bg-theme-1">
         <div>
           <img
             src="/assets/images/logoTextDark.png"
@@ -25,13 +24,6 @@ export function SideBar() {
             className="w-auto h-8"
           />
         </div>
-        <button
-          className="flex items-center justify-center w-10 h-10 bg-gray-200 border border-gray-400 rounded-[0.65rem] hover:bg-red-400 hover:text-white hover:border-red-400 transition"
-          onClick={() => router.push(routes.dashboard)}
-          type="button"
-        >
-          <ArrowLeftIcon className="w-8 h-8" />
-        </button>
       </div>
       <div className="mt-4">
         <div className="flex items-center justify-between w-full py-4 rounded-t-lg bg-theme-1">
