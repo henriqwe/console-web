@@ -11,7 +11,7 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import {routes} from 'domains/routes'
+import { routes } from 'domains/routes'
 
 export function AdminLogin() {
   const router = useRouter()
@@ -66,7 +66,9 @@ export function AdminLogin() {
             <p>Web console</p>
           </div>
 
-          <p className="text-sm text-center">You need to log in to the admin account to access the web console!</p>
+          <p className="text-sm text-center">
+            You need to log in to the admin account to access the web console!
+          </p>
 
           <div className="flex flex-col w-full gap-4 my-4">
             <Controller
@@ -102,6 +104,15 @@ export function AdminLogin() {
               Log in
             </common.Button>
           </div>
+          <div className="w-full border" />
+          <span
+            className="text-blue-500 cursor-pointer py-3 text-sm"
+            onClick={() => {
+              router.push(routes.dashboard)
+            }}
+          >
+            Back to dashboard
+          </span>
         </div>
       </form>
     </div>
