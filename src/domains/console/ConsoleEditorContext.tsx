@@ -126,9 +126,15 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       setconsoleResponseLoading(false)
       setResponseTime(data.responseTimeMs)
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      console.log(typeof err)
       setconsoleResponseLoading(false)
       setResponseTime(undefined)
+      setConsoleResponseFormated('')
+      if (err?.request?.status === 404) {
+        utils.notification('object or objects not found.', 'error')
+        return
+      }
+      utils.notification(err.message, 'error')
     }
   }
 
