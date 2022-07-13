@@ -7,7 +7,7 @@ import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import * as consoleEditor from '../../ConsoleEditorContext'
 import { useRouter } from 'next/router'
-import { DatabaseIcon } from '@heroicons/react/outline'
+import { CheckIcon, DatabaseIcon } from '@heroicons/react/outline'
 
 export function ApiTab() {
   const router = useRouter()
@@ -104,16 +104,16 @@ function Operation({
   const { setCurrentTab, setSelectedTable } = consoleSection.useData()
 
   return (
-    <div className="flex flex-col gap-2 px-3">
+    <div className="flex flex-col gap-2 px-3 mb-2">
       <div
-        className={`flex items-center gap-2 pb-2 cursor-pointer justify-between`}
+        className={`flex items-center gap-2 cursor-pointer justify-between`}
         onClick={() => {
           setActive(!active)
         }}
       >
         <div className="flex items-center gap-2">
           <Icon
-            icon="bxs:right-arrow"
+            icon="bx:chevron-right"
             className={`w-4 h-4 transition ${active && 'rotate-90'}`}
           />
           <p className="text-sm">{schema}</p>
@@ -124,7 +124,7 @@ function Operation({
           (table) => (
             <div key={table}>
               <div
-                className={`flex items-center gap-2 pb-2 ml-8 cursor-pointer ${
+                className={`flex items-center gap-2  ml-4 cursor-pointer ${
                   activeTable === `${schema}${table}` && 'text-orange-400'
                 }`}
                 onClick={() => {
@@ -132,6 +132,10 @@ function Operation({
                   formatQueryOrMutation(table, schema)
                 }}
               >
+                <div className="w-4 h-4">
+                  {activeTable === `${schema}${table}` && <CheckIcon />}
+                </div>
+
                 <p className="text-sm">{table}</p>
               </div>
             </div>
