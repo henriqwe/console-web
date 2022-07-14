@@ -60,7 +60,7 @@ export function Table({ tableColumns = [], values, actions }: TableProps) {
                       </tr>
                     ))
                   ) : (
-                    <tr className="bg-white intro-x dark:bg-darkmode-600">
+                    <tr className="bg-white intro-x ">
                       <td
                         colSpan={
                           actions

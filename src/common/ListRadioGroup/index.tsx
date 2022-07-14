@@ -56,9 +56,9 @@ export function ListRadioGroup({
                 className={({ active }) =>
                   `${
                     disabled && !(opcao.value === selected?.value)
-                      ? '!bg-gray-400 dark:!bg-gray-800 dark:!text-gray-200'
+                      ? '!bg-gray-400 '
                       : disabled
-                      ? 'bg-gray-200 dark:bg-gray-600 dark:text-gray-200'
+                      ? 'bg-gray-200  '
                       : ''
                   } 
 
@@ -75,8 +75,8 @@ export function ListRadioGroup({
                   }
                 ${
                   opcao.value === selected?.value
-                    ? '!bg-blue-200 bg-opacity-50 !text-gray-800 dark:!text-gray-300'
-                    : 'bg-gray-100 dark:text-gray-800'
+                    ? '!bg-blue-200 bg-opacity-50 !text-gray-800 '
+                    : 'bg-gray-100 '
                 } 
                 ${horizontal ? 'flex-1 mt-0' : ''}  
                   relative rounded-lg shadow-md ${
