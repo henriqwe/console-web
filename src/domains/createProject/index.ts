@@ -3,7 +3,7 @@ export { Plans } from './Plans'
 export { Template } from './Template'
 export { Form } from './Form'
 export { CreateSchema } from './Form/CreateSchema'
-export { CreateAdminUser } from './Form/CreateAdminUser'
+export { ViewAdminUser } from './Form/ViewAdminUser'
 export {
   CreateProjectContext,
   CreateProjectProvider,

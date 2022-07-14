@@ -18,8 +18,12 @@ export function CreateSchema() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const [provider, setProvider] = useState<string>('aws')
-  const { setCurrentPage, createProjectSchema, setCreatedSchemaName } =
-    createProject.useCreateProject()
+  const {
+    setCurrentPage,
+    createProjectSchema,
+    setCreatedSchemaName,
+    setAdminUser
+  } = createProject.useCreateProject()
   const {
     control,
     handleSubmit,
@@ -56,6 +60,20 @@ export function CreateSchema() {
           }
         }
       )
+
+      const AdminAccount = await utils.api.post(
+        `/modeler/schema/${data.ProjectName}/create-admin-account`,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
+
+      setAdminUser(AdminAccount.data) 
       setCurrentPage('USER')
       setCreatedSchemaName(data.ProjectName)
       utils.notification(

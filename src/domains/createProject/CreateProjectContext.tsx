@@ -16,16 +16,22 @@ type CreateProjectContextProps = {
   setSelectedPlan: Dispatch<SetStateAction<'Sandbox' | 'Dedicated' | undefined>>
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
-  createUserSchema: yup.AnyObjectSchema
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
   createProjectSchema: yup.AnyObjectSchema
   createdSchemaName?: string
   setCreatedSchemaName: Dispatch<SetStateAction<string | undefined>>
+  adminUser?: AdminUser
+  setAdminUser: Dispatch<SetStateAction<AdminUser | undefined>>
 }
 
 type ProviderProps = {
   children: ReactNode
+}
+
+type AdminUser = {
+  password: string
+  username: string
 }
 
 export const CreateProjectContext = createContext<CreateProjectContextProps>(
@@ -35,6 +41,7 @@ export const CreateProjectContext = createContext<CreateProjectContextProps>(
 export const CreateProjectProvider = ({ children }: ProviderProps) => {
   const [openSlide, setOpenSlide] = useState(false)
   const [reload, setReload] = useState(false)
+  const [adminUser, setAdminUser] = useState<AdminUser>()
   const [currentPage, setCurrentPage] = useState<'PLANS' | 'FORM' | 'USER'>(
     'PLANS'
   )
@@ -45,11 +52,6 @@ export const CreateProjectProvider = ({ children }: ProviderProps) => {
     ProjectName: yup.string().required('Project name is a required field')
   })
 
-  const createUserSchema = yup.object().shape({
-    UserName: yup.string().required(),
-    Email: yup.string().email().required(),
-    Password: yup.string().required()
-  })
 
   return (
     <CreateProjectContext.Provider
@@ -60,12 +62,13 @@ export const CreateProjectProvider = ({ children }: ProviderProps) => {
         setSelectedPlan,
         reload,
         setReload,
-        createUserSchema,
         openSlide,
         setOpenSlide,
         createProjectSchema,
         createdSchemaName,
-        setCreatedSchemaName
+        setCreatedSchemaName,
+        adminUser,
+        setAdminUser
       }}
     >
       {children}

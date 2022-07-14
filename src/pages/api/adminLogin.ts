@@ -28,6 +28,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       )
       return res.status(200).json({ data })
     } catch (err: any) {
+      console.log(err)
       if (err.response.data.error_description === 'Bad credentials') {
         return res.status(401).json({ err })
       }

@@ -11,11 +11,11 @@ export function Form() {
         <p className="text-lg font-bold">{selectedPlan}</p>
       </div>
 
-      <div className="flex w-full items-center ">
+      <div className="flex items-center w-full ">
         <common.Breadcrumb
           pages={[
             { name: 'Create project', current: currentPage === 'FORM' },
-            { name: 'Set up admin user', current: currentPage === 'USER' }
+            { name: 'View admin user', current: currentPage === 'USER' }
           ]}
           showNumber
         />
@@ -24,7 +24,7 @@ export function Form() {
       {currentPage === 'FORM' ? (
         <createProject.CreateSchema />
       ) : (
-        <createProject.CreateAdminUser />
+        <createProject.ViewAdminUser />
       )}
     </section>
   )
