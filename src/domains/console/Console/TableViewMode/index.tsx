@@ -31,9 +31,11 @@ export function TableViewMode() {
           name: key,
           displayName: [key][0]
         }
+        data.handler = (key) => key ?? 'null'
+
         if (key === 'createdat' || key === 'updatedat') {
           data.handler = (key) =>
-            key ? utils.ptBRtimeStamp(new Date(key)) : '-'
+            key ? utils.ptBRtimeStamp(new Date(key)) : 'null'
         }
         columns.push(data)
       }
@@ -77,6 +79,7 @@ export function TableViewMode() {
   }
   useEffect(() => {
     handleTableColumns()
+    console.log('consoleResponse', consoleResponse)
   }, [consoleResponse])
 
   return tableColumns.length === 0 ? (

@@ -65,7 +65,8 @@ export function BrowserRowsTab() {
               tableData?.map((field) => {
                 return {
                   name: field.name,
-                  displayName: field.name
+                  displayName: field.name,
+                  handler: (field) => field ?? 'null'
                 }
               }) || []
             }
