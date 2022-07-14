@@ -199,7 +199,7 @@ export function Projects() {
                     className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
                     onClick={() => {
                       if (
-                        utils.getCookie('X-TenantID')?.split('@')[1] === schema
+                        utils.getCookie('X-TenantID')?.split('@')[1] !== schema
                       ) {
                         utils.removeCookie('X-TenantID')
                         utils.removeCookie('admin_access_token')
