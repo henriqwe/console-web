@@ -10,7 +10,6 @@ import {
   useEffect
 } from 'react'
 import { javascriptLanguage } from '@codemirror/lang-javascript'
-import { getCookie } from 'utils/cookies'
 import { completeFromGlobalScope } from './Console/Editors/Autocomplete'
 import { useRouter } from 'next/router'
 import * as data from 'domains/console'
@@ -64,7 +63,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       `${process.env.NEXT_PUBLIC_APP_URL}/api/parser?parserName=${router.query.name}`,
       {
         headers: {
-          Authorization: `Bearer ${getCookie('access_token')}`
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
         }
       }
     )
@@ -109,12 +108,12 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
         {
           data: JSON.parse(consoleValue),
-          access_token: getCookie('admin_access_token'),
-          'X-TenantID': getCookie('X-TenantID')
+          access_token: utils.getCookie('admin_access_token'),
+          'X-TenantID': utils.getCookie('X-TenantID')
         },
         {
           headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
         }
       )

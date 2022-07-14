@@ -143,7 +143,6 @@ export function UpdateAccount() {
             return { name: role.name, value: role.name }
           })}
           render={({ field: { onChange, value } }) => {
-            console.log('value', value)
             return (
               <div className="flex-1">
                 <common.MultiSelect
