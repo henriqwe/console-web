@@ -37,12 +37,14 @@ export function CreateSchema() {
         throw new Error('Select a provider to create a new project')
       }
 
-      const response = await utils.localApi.get(`/schemas`, {
-        headers: {
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
-        }
-      })
-      const schemas = response.data.data
+      const response = await utils.localApi
+        .get(`/schemas`, {
+          headers: {
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        })
+        .catch(() => null)
+      const schemas = response ? response.data.data : []
 
       if (schemas.includes(data.ProjectName.toLowerCase())) {
         throw new Error(`Project ${data.ProjectName} already exists`)
@@ -73,7 +75,7 @@ export function CreateSchema() {
         }
       )
 
-      setAdminUser(AdminAccount.data) 
+      setAdminUser(AdminAccount.data)
       setCurrentPage('USER')
       setCreatedSchemaName(data.ProjectName)
       utils.notification(

@@ -25,15 +25,17 @@ export function CreateTable() {
     try {
       setLoading(true)
 
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
+      const response = await axios
+        .get(
+          `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
+          {
+            headers: {
+              Authorization: `Bearer ${utils.getCookie('access_token')}`
+            }
           }
-        }
-      )
-      const tables = Object.keys(response.data.data)
+        )
+        .catch(() => null)
+      const tables = Object.keys(response ? response.data.data : {})
       if (tables.includes(data.Name.toLowerCase())) {
         throw new Error(`Entity ${data.Name} already exists`)
       }
