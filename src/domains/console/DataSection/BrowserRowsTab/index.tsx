@@ -19,7 +19,8 @@ export function BrowserRowsTab() {
           data: JSON.parse(
             `{\n "action":"READ",\n "object":{\n   "classUID": "${selectedTable}",\n   "_role": "ROLE_ADMIN"\n }\n}`
           ),
-          access_token: getCookie('admin_access_token')
+          access_token: getCookie('admin_access_token'),
+          'X-TenantID': getCookie('X-TenantID')
         },
         {
           headers: {

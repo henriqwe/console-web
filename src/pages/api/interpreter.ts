@@ -8,7 +8,6 @@ export default async function interpreter(
   if (req.method === 'POST') {
     try {
       const sendDate = new Date().getTime()
-
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/interpreter-p/s`,
         req.body.data,
@@ -17,7 +16,7 @@ export default async function interpreter(
             'Content-Type': 'application/json',
             Accept: 'application/json',
             Authorization: `${req.body.access_token}`,
-            'X-TenantID': 'tester@academia'
+            'X-TenantID': `${req.body['X-TenantID']}`
           }
         }
       )

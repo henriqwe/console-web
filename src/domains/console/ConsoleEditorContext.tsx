@@ -95,7 +95,9 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     }
 
     setConsoleValue(
-      `{\n "action":"${action}",\n "object":{\n   "classUID": "${entity}",\n   "_role": "ROLE_ADMIN"\n }\n}`
+      `{\n "action":"${action}",\n "object":{\n   "classUID": "${entity}",\n   "${
+        type === 'insert' ? 'role' : '_role'
+      }": "ROLE_ADMIN"\n }\n}`
     )
   }
 
@@ -107,7 +109,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
         {
           data: JSON.parse(consoleValue),
-          access_token: getCookie('admin_access_token')
+          access_token: getCookie('admin_access_token'),
+          'X-TenantID': getCookie('X-TenantID')
         },
         {
           headers: {
@@ -115,17 +118,24 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           }
         }
       )
-      let text = '[\n'
-      setConsoleResponse(data?.data)
-      for (const textData of data.data) {
-        const formatedResponse = await formatResponse(JSON.stringify(textData))
-        text += ` ${formatedResponse},\n`
+      let text = ''
+      if (data?.data) {
+        text = '[\n'
+        setConsoleResponse(data?.data)
+        for (const textData of data.data) {
+          const formatedResponse = await formatResponse(
+            JSON.stringify(textData)
+          )
+          text += ` ${formatedResponse},\n`
+        }
+        text += ']'
       }
-      text += ']'
+
       setConsoleResponseFormated(text)
-      utils.notification('Operation performed successfully', 'success')
-      setconsoleResponseLoading(false)
       setResponseTime(data.responseTimeMs)
+      setconsoleResponseLoading(false)
+
+      utils.notification('Operation performed successfully', 'success')
     } catch (err: any) {
       console.log(typeof err)
       setconsoleResponseLoading(false)

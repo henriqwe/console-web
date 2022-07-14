@@ -86,7 +86,8 @@ export function Update() {
               }\n
             }`
           ),
-          access_token: getCookie('admin_access_token')
+          access_token: getCookie('admin_access_token'),
+          'X-TenantID': getCookie('X-TenantID')
         },
         {
           headers: {

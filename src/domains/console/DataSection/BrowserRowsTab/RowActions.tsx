@@ -35,7 +35,8 @@ export function RowActions({ item }: { item: any }) {
               data: JSON.parse(
                 `{\n "action":"DELETE",\n "object":{\n "classUID": "${selectedTable}",\n "id": ${item.id},\n "role": "ROLE_ADMIN"\n }\n}`
               ),
-              access_token: getCookie('admin_access_token')
+              access_token: getCookie('admin_access_token'),
+              'X-TenantID': getCookie('X-TenantID')
             },
             {
               headers: {
