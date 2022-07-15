@@ -59,15 +59,21 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   })
 
   async function loadParser() {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/parser?parserName=${router.query.name}`,
-      {
-        headers: {
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/parser?parserName=${router.query.name}`,
+        {
+          headers: {
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
         }
+      )
+      setdocumentationValue(data.data)
+    } catch (err: any) {
+      if (err.response.status !== 404) {
+        utils.notification(err.message, 'error')
       }
-    )
-    setdocumentationValue(data.data)
+    }
   }
 
   function formatQueryOrMutation(type: string, entity: string) {
@@ -108,15 +114,17 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
         {
           data: JSON.parse(consoleValue),
-          access_token: utils.getCookie('admin_access_token'),
+          schema: router.query.name,
+          access_token: `${utils.getCookie('access_token')}`,
           'X-TenantID': utils.getCookie('X-TenantID')
         },
         {
           headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
+            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
           }
         }
       )
+      // jQknfsS74G8MsDnF
       let text = ''
       if (data?.data) {
         text = '[\n'
