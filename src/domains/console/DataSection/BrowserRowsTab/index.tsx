@@ -23,7 +23,7 @@ export function BrowserRowsTab() {
         },
         {
           headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
+            Authorization: `${utils.getCookie('access_token')}`
           }
         }
       )
