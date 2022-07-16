@@ -8,16 +8,19 @@ export default async function interpreter(
   if (req.method === 'POST') {
     try {
       const sendDate = new Date().getTime()
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${req.body.schema}`,
-        { status: 2 },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${req.body.access_token}`
+      if (req.body.schema) {
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${req.body.schema}`,
+          { status: 2 },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `${req.headers.authorization}`
+            }
           }
-        }
-      )
+        )
+      }
+
       // g0voBnPhLWq2pRMv
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/interpreter-p/s`,
@@ -26,7 +29,7 @@ export default async function interpreter(
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: `${req.headers.authorization}`,
+            Authorization: `Bearer ${req.body.access_token}`,
             'X-TenantID': `${req.body['X-TenantID']}`
           }
         }

@@ -115,12 +115,12 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         {
           data: JSON.parse(consoleValue),
           schema: router.query.name,
-          access_token: `${utils.getCookie('access_token')}`,
+          access_token: `${utils.getCookie('admin_access_token')}`,
           'X-TenantID': utils.getCookie('X-TenantID')
         },
         {
           headers: {
-            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
         }
       )
