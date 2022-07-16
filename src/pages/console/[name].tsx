@@ -1,6 +1,5 @@
 import * as consoleSection from 'domains/console'
 import cookie from 'cookie'
-import * as utils from 'utils'
 import { Header } from 'domains/console/Header'
 import { GetServerSideProps } from 'next'
 
@@ -39,13 +38,13 @@ function Page() {
       break
   }
   return (
-    <div className="flex h-[100vh] gap-4 p-6 bg-theme-1 max-h-[100vh]">
-      <consoleSection.SideBar />
-      <div className="flex flex-col w-full">
-        <div>
+    <div className='bg-theme-1 h-[100vh]'>
+      <div className="flex h-[100vh] gap-4 px-6 max-h-[97vh]">
+        <consoleSection.SideBar />
+        <div className="flex flex-col w-full">
           <Header />
+          <div className="flex w-full h-full">{tab}</div>
         </div>
-        <div className="flex w-full h-full">{tab}</div>
       </div>
     </div>
   )

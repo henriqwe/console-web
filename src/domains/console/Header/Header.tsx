@@ -56,18 +56,9 @@ export function Header() {
   }
 
   return (
-    <div className="flex items-center justify-between w-full h-24">
-      <div>
-        <p className="text-3xl font-bold text-gray-700">{router.query.name}</p>
-        <div
-          className="flex text-gray-900 cursor-pointer text-xs items-center gap-2 hover:text-blue-500"
-          onClick={() => {
-            router.push(routes.dashboard)
-          }}
-        >
-          <common.icons.ReturnIcon />
-          Dashboard
-        </div>
+    <div className="flex items-center justify-between w-full">
+      <div className='flex my-0 gap-4 items-end py-4'>
+        <p className="text-3xl font-semi-bold text-gray-900">{router.query.name}</p>
       </div>
       {/* <div className="flex gap-2">
         <button

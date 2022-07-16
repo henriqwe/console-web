@@ -3,6 +3,7 @@ import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import { DatabaseIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
+import { routes } from 'domains/routes'
 
 export function SideBar() {
   const router = useRouter()
@@ -14,18 +15,24 @@ export function SideBar() {
   }, [selectedTab])
 
   return (
-    <div className="text-gray-600 rounded-lg w-[30%] h-full flex flex-col">
-      <div className="flex items-center justify-between w-full pt-7 pb-2  bg-theme-1">
-        <div>
-          <img
-            src="/assets/images/logoTextDark.png"
-            alt="Logo"
-            className="w-auto h-8"
-          />
+    <div className="text-gray-600 rounded-lg w-[25%] h-full flex flex-col">
+      <div className="flex items-center gap-2 w-full my-6 bg-theme-1">
+        <img
+          src="/assets/images/logoTextDark.png"
+          alt="Logo"
+          className="w-auto h-6"
+        />
+        <div
+          className="flex text-gray-600 cursor-pointer hover:text-blue-500"
+          onClick={() => {
+            router.push(routes.dashboard)
+          }}
+        >
+          <common.icons.ReturnIcon  className='h-5 w-5'/>
         </div>
       </div>
-      <div className="mt-4">
-        <div className="flex items-center justify-between w-full py-4 rounded-t-lg bg-theme-1">
+      <div className="">
+        <div className="flex items-center justify-between w-full rounded-t-lg bg-theme-1">
           <common.Tabs
             tabs={[
               {
