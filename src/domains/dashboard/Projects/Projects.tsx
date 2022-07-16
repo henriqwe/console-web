@@ -127,23 +127,25 @@ export function Projects() {
     <div className="py-6 bg-gray-100 min-h-[100vh]">
       <section className="flex justify-between px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex">
-          <h1 className="pr-4 mr-4 text-2xl font-semibold text-gray-900 border-r border-r-gray-300">
+          <h1 className="pr-4 mr-1 text-2xl font-semibold text-gray-900 border-r border-r-gray-300">
             Projects
           </h1>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             <button
-              className="px-3 py-2 rounded-lg bg-[#B1C900]"
+              className="px-2 py-2"
               onClick={() => {
                 router.push(routes.createProject)
               }}
             >
-              <PlusIcon className="w-5 h-5 text-white" />
+              <div className='flex gap-2 items-center'>
+                <p className="text-xs">New Project</p>
+                <PlusIcon className="w-3 h-3" />
+              </div>
             </button>
-            <p className="text-lg">New Project</p>
           </div>
         </div>
         <div className="relative flex items-center">
-          <SearchIcon className="absolute w-5 h-5 text-gray-400 left-2" />
+          <SearchIcon className="absolute w-4 h-4 text-gray-400 left-2" />
           <Controller
             name="search"
             control={control}
@@ -178,25 +180,25 @@ export function Projects() {
             <common.Card className="flex p-6 bg-white shadow-sm" key={schema}>
               <div className="grid items-center justify-between flex-1 grid-cols-4 gap-4">
                 <div>
-                  <p className="text-lg">{schema}</p>
-                  <p className="text-sm text-gray-600">Standard</p>
+                  <p className="text-2xl">{schema}</p>
+                  <p className="text-xs text-gray-600">Standard</p>
                 </div>
                 <div className="flex items-center justify-around flex-1 col-span-2">
                   <div className="p-2">
-                    <p>Traffic: </p>
-                    <p className="text-sm text-gray-600">
+                    <p className='text-sm'>Traffic: </p>
+                    <p className="text-xs text-gray-600">
                       50.000 requests per day
                     </p>
                   </div>
-                  <div className="flex items-center gap-4 p-2 border rounded-lg">
-                    <Icon icon="logos:aws" className="w-10 h-10" />
-                    <p className="text-sm text-gray-600">Amazon Web Service</p>
+                  <div className="flex items-center gap-2 px-4 py-2 border rounded-lg">
+                    <Icon icon="logos:aws" className="w-6 h-6" />
+                    <p className="text-xs text-gray-600">AWS</p>
                   </div>
                 </div>
 
-                <div className="flex items-end justify-end gap-4">
+                <div className="flex items-end justify-end">
                   <button
-                    className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
+                    className="px-1 py-1"
                     onClick={() => {
                       if (
                         utils.getCookie('X-TenantID')?.split('@')[1] !== schema
@@ -207,7 +209,7 @@ export function Projects() {
                       router.push(`${routes.console}/${schema}`)
                     }}
                   >
-                    <PlayIcon className="w-10 h-10 text-white" />
+                    <PlayIcon className="w-6 h-6 text-green-700" />
                   </button>
                   <common.Dropdown
                     actions={[
@@ -220,8 +222,8 @@ export function Projects() {
                       }
                     ]}
                   >
-                    <button className="px-1 py-1 text-white bg-indigo-500 rounded-lg">
-                      <CogIcon className="w-10 h-10 text-white" />
+                    <button className="px-1 py-1">
+                      <CogIcon className="w-6 h-6 text-gray-600" />
                     </button>
                   </common.Dropdown>
                   {/* <button
@@ -230,7 +232,7 @@ export function Projects() {
                       downloadSchema(schema)
                     }}
                   >
-                    <DownloadIcon className="w-10 h-10 text-white" />
+                    <DownloadIcon className="w-6 h-6 text-white" />
                   </button> */}
                 </div>
               </div>
