@@ -79,7 +79,6 @@ export function TableViewMode() {
   }
   useEffect(() => {
     handleTableColumns()
-    console.log('consoleResponse', consoleResponse)
   }, [consoleResponse])
 
   return tableColumns.length === 0 ? (

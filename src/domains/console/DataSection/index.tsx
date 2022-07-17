@@ -96,11 +96,6 @@ export function DataSection() {
             <div className="text-lg">Select a table to see all data</div>
           </div>
         </div>
-        // <div className={`flex h-full px-6  bg-white rounded-b-lg`}>
-        //   <p className="text-lg text-gray-700">
-
-        //   </p>
-        // </div>
       )}
     </common.Card>
   )

@@ -142,7 +142,6 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
       utils.notification('Operation performed successfully', 'success')
     } catch (err: any) {
-      console.log(typeof err)
       setconsoleResponseLoading(false)
       setResponseTime(undefined)
       setConsoleResponseFormated('')

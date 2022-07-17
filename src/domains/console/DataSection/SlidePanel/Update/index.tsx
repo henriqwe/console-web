@@ -107,13 +107,6 @@ export function Update() {
       })
   }
 
-  // useEffect(() => {
-  //   reset({
-  //     Nome: slidePanelState.data?.Nome || '',
-  //     Descricao: slidePanelState.data?.Descricao || ''
-  //   })
-  // }, [slidePanelState.data, reset])
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

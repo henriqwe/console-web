@@ -75,7 +75,6 @@ export function Projects() {
         }
       }
     )
-    console.log(data.data)
   }
 
   async function formatResponse(value: string) {
@@ -137,7 +136,7 @@ export function Projects() {
                 router.push(routes.createProject)
               }}
             >
-              <div className='flex gap-2 items-center'>
+              <div className="flex gap-2 items-center">
                 <p className="text-xs">New Project</p>
                 <PlusIcon className="w-3 h-3" />
               </div>
@@ -185,7 +184,7 @@ export function Projects() {
                 </div>
                 <div className="flex items-center justify-around flex-1 col-span-2">
                   <div className="p-2">
-                    <p className='text-sm'>Traffic: </p>
+                    <p className="text-sm">Traffic: </p>
                     <p className="text-xs text-gray-600">
                       50.000 requests per day
                     </p>
