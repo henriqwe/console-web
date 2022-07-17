@@ -59,7 +59,7 @@ export function AccountTab() {
         <div className="flex flex-col w-full h-full gap-0 bg-gray-100 rounded-b-lg overflow-y">
           <div className="flex items-center justify-between w-full px-8 pt-2">
             <h2 className="text-lg">Accounts</h2>
-            <common.Button
+            <common.Buttons.Blue
               type="button"
               onClick={() => {
                 setOpenSlide(true)
@@ -67,7 +67,7 @@ export function AccountTab() {
               }}
             >
               <PlusIcon className="w-5 h-5" />
-            </common.Button>
+            </common.Buttons.Blue>
           </div>
           <div className="my-2">
             <common.Separator />

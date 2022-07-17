@@ -168,9 +168,9 @@ export function UpdateAccount() {
       <div className="my-2">
         <common.Separator />
       </div>
-      <common.Button disabled={loading} loading={loading}>
+      <common.Buttons.Blue disabled={loading} loading={loading}>
         <div className="flex">Update</div>
-      </common.Button>
+      </common.Buttons.Blue>
     </form>
   )
 }

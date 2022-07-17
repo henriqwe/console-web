@@ -25,64 +25,29 @@ export function Editors() {
   } = consoleEditor.useConsoleEditor()
 
   return (
-    <div className="grid w-full grid-cols-12 rounded-lg">
-      <div
-        className={`${
-          showTableViewMode ? 'col-span-4' : 'col-span-6'
-        } rounded-lg h-full`}
-      >
-        <div className="flex flex-col h-full bg-gray-200 rounded-tl-lg">
-          <div className="flex items-center justify-between w-full pl-4 h-12">
+    <div className="flex w-full h-full flex-col">
+      <common.ContentSection
+        title={
+          <>
             <p className="text-sm text-gray-900">YCodi Console</p>
-            <div className="flex h-full">
-              <button
-                className="flex items-center h-full gap-2 p-2"
-                title="Run"
-                onClick={runOperation}
-                disabled={consoleResponseLoading}
-              >
-                <div
-                  className="flex items-center justify-center pr-2"
-                  title="Run"
-                >
-                  <Icon
-                    icon="fa-solid:play"
-                    className={`w-4 h-4 text-gray-700`}
-                  />
-                </div>
-              </button>
-            </div>
-          </div>
-          <div className="flex w-full h-full overflow-x-auto ">
-            <CodeMirror
-              value={consoleValue}
-              className="flex w-full h-full"
-              width="100%"
-              onChange={(value, viewUpdate) => {
-                setConsoleValue(value)
-              }}
-              extensions={[
-                javascript({ jsx: true }),
-                globalJavaScriptCompletions
-              ]}
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        className={`${
-          showTableViewMode ? 'col-span-8' : 'col-span-6'
-        }  h-full flex flex-col`}
-      >
-        <div className="flex items-center w-full px-4 bg-gray-200 rounded-tr-lg h-12">
-          <div className="flex items-center justify-end w-full">
-            {/* <p className="text-sm text-gray-900">Response</p> */}
+            <button
+              title="Run"
+              onClick={runOperation}
+              disabled={consoleResponseLoading}
+            >
+              <div className="flex items-center justify-center" title="Run">
+                <Icon
+                  icon="fa-solid:play"
+                  className={`w-4 h-4 text-gray-700`}
+                />
+              </div>
+            </button>
             <div className="flex items-center gap-2">
               {responseTime && (
                 <div className="text-xs">Response time: {responseTime} ms</div>
               )}
               {showTableViewMode ? (
-                <button
+                <common.Buttons.White
                   className="px-2 py-1 text-xs bg-white border border-gray-300 rounded-md"
                   type="button"
                   onClick={() => {
@@ -90,10 +55,10 @@ export function Editors() {
                   }}
                 >
                   JSON mode
-                </button>
+                </common.Buttons.White>
               ) : (
                 <button
-                  className="px-2 py-1 text-xs bg-white border border-gray-300 rounded-md"
+                  className="px-2.5 py-1.5 text-xs bg-white rounded-md"
                   type="button"
                   onClick={() => {
                     setShowTableViewMode(true)
@@ -103,39 +68,68 @@ export function Editors() {
                 </button>
               )}
             </div>
-          </div>
-        </div>
-        <div className="flex w-full h-full overflow-x-auto rounded-br-lg">
-          {consoleResponseLoading ? (
-            <div className="flex items-center justify-center w-full h-full">
-              <div className="flex items-center gap-2">
-                <div>Loading</div>
-                <common.Spinner className="w-5 h-5" />
-              </div>
-            </div>
-          ) : showTableViewMode ? (
-            <consoleSection.TableViewMode />
-          ) : (
-            <CodeMirror
-              value={consoleResponseFormated}
-              className="flex w-full h-full"
-              width="100%"
-              editable={false}
-              extensions={[javascript({ jsx: true })]}
-            />
-          )}
-        </div>
-      </div>
-      <common.Slide
-        open={slideOpen}
-        setOpen={setSlideOpen}
-        title={'Documentation'}
-        content={
-          <div>
-            <span className="whitespace-pre-wrap">{`${documentationValue}`}</span>
-          </div>
+          </>
         }
-      />
+      >
+        <div className="grid w-full grid-cols-12 rounded-lg h-full">
+          <div
+            className={`${
+              showTableViewMode ? 'col-span-4' : 'col-span-6'
+            } h-full rounded-bl-lg`}
+          >
+            <div className="flex w-full h-full overflow-x-auto ">
+              <CodeMirror
+                value={consoleValue}
+                className="flex w-full h-full"
+                width="100%"
+                onChange={(value, viewUpdate) => {
+                  setConsoleValue(value)
+                }}
+                extensions={[
+                  javascript({ jsx: true }),
+                  globalJavaScriptCompletions
+                ]}
+              />
+            </div>
+          </div>
+          <div
+            className={`${
+              showTableViewMode ? 'col-span-8' : 'col-span-6'
+            }  h-full flex flex-col`}
+          >
+            <div className="flex w-full h-full overflow-x-auto rounded-br-lg">
+              {consoleResponseLoading ? (
+                <div className="flex items-center justify-center w-full h-full">
+                  <div className="flex items-center gap-2">
+                    <div>Loading</div>
+                    <common.Spinner className="w-5 h-5" />
+                  </div>
+                </div>
+              ) : showTableViewMode ? (
+                <consoleSection.TableViewMode />
+              ) : (
+                <CodeMirror
+                  value={consoleResponseFormated}
+                  className="flex w-full h-full"
+                  width="100%"
+                  editable={false}
+                  extensions={[javascript({ jsx: true })]}
+                />
+              )}
+            </div>
+          </div>
+          <common.Slide
+            open={slideOpen}
+            setOpen={setSlideOpen}
+            title={'Documentation'}
+            content={
+              <div>
+                <span className="whitespace-pre-wrap">{`${documentationValue}`}</span>
+              </div>
+            }
+          />
+        </div>
+      </common.ContentSection>
     </div>
   )
 }

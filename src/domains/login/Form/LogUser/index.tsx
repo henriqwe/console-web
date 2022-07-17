@@ -102,9 +102,13 @@ export function LogUser() {
               </div>
             )}
           />
-          <common.Button type="submit" loading={loading} disabled={loading}>
+          <common.Buttons.Blue
+            type="submit"
+            loading={loading}
+            disabled={loading}
+          >
             Log in
-          </common.Button>
+          </common.Buttons.Blue>
         </div>
       </div>
 

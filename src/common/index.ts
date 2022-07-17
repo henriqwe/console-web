@@ -1,4 +1,4 @@
-export { Button } from './Button'
+export * as Buttons from './Button'
 export { Spinner } from './Spinner'
 export { Input } from './Input'
 export { Select } from './Select'
@@ -15,6 +15,7 @@ export { MultiSelect } from './MultiSelect'
 export { Accordion } from './Accordion'
 export { Breadcrumb } from './BreadCrumb'
 export { ListRadioGroup } from './ListRadioGroup'
+export { ContentSection } from './ContentSection'
 
 export * as illustrations from './Ilustrations'
 export * as icons from './Icons'

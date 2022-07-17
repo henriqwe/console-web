@@ -121,170 +121,168 @@ export function CreateTable() {
   }, [columnsGroup, lastNumber])
 
   return (
-    <common.Card className="flex flex-col h-full">
-      <div className="flex items-center w-full gap-2 px-4 bg-gray-200 border-gray-300 rounded-t-lg h-9 border-x">
-        <p className="text-base text-gray-900">Create a new table</p>
-      </div>
+    <common.Card className="flex flex-col h-full w-full">
+      <common.ContentSection
+        title={<p className="text-base text-gray-900">Create a new table</p>}
+      >
+        <div className={`flex flex-col h-full px-6 pt-5 bg-white rounded-b-lg`}>
+          <Controller
+            name="Name"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <div className="mb-2">
+                <common.Input
+                  placeholder="Table name"
+                  label="Table name"
+                  value={value}
+                  onChange={onChange}
+                  errors={errors.Name}
+                />
+              </div>
+            )}
+          />
+          <div className="my-2">
+            <common.Separator />
+          </div>
 
-      <div className={`flex flex-col h-full px-6 pt-5 bg-white rounded-b-lg`}>
-        <Controller
-          name="Name"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <div className="mb-2">
-              <common.Input
-                placeholder="Table name"
-                label="Table name"
-                value={value}
-                onChange={onChange}
-                errors={errors.Name}
-              />
-            </div>
-          )}
-        />
-        <div className="my-2">
-          <common.Separator />
-        </div>
+          <p>Columns</p>
 
-        <p>Columns</p>
-
-        {columnsGroup.map(
-          (column, index) =>
-            column !== 0 && (
-              <div className="grid grid-cols-12 gap-4 py-5" key={column}>
-                <div className="flex items-center col-span-3 gap-2">
-                  <div className="w-5 h-5">
-                    {column !== 1 && (
-                      <common.icons.XIcon
-                        className="text-red-500 hover:cursor-pointer"
-                        onClick={() => {
-                          columnsGroup[index] = 0
-                          setReloadFields(!reloadFields)
-                        }}
-                      />
-                    )}
+          {columnsGroup.map(
+            (column, index) =>
+              column !== 0 && (
+                <div className="grid grid-cols-12 gap-4 py-2" key={column}>
+                  <div className="flex items-center col-span-3 gap-2">
+                    <div className="w-5 h-5">
+                      {column !== 1 && (
+                        <common.icons.XIcon
+                          className="text-red-500 hover:cursor-pointer"
+                          onClick={() => {
+                            columnsGroup[index] = 0
+                            setReloadFields(!reloadFields)
+                          }}
+                        />
+                      )}
+                    </div>
+                    <Controller
+                      name={'ColumnName' + column}
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <div className="flex-1">
+                          <common.Input
+                            placeholder="Column name"
+                            value={value}
+                            onChange={onChange}
+                            errors={errors.ColumnName}
+                          />
+                        </div>
+                      )}
+                    />
                   </div>
+
                   <Controller
-                    name={'ColumnName' + column}
+                    name={'Type' + column}
+                    defaultValue={{ name: 'String', value: 'String' }}
                     control={control}
                     render={({ field: { onChange, value } }) => (
-                      <div className="flex-1">
-                        <common.Input
-                          placeholder="Column name"
+                      <div className="col-span-2">
+                        <common.Select
+                          options={[
+                            { name: 'String', value: 'String' },
+                            { name: 'Integer', value: 'Integer' },
+                            { name: 'Long', value: 'Long' },
+                            { name: 'Boolean', value: 'Boolean' },
+                            { name: 'Double', value: 'Double' },
+                            { name: 'Timestamp', value: 'Timestamp' }
+                          ]}
                           value={value}
                           onChange={onChange}
-                          errors={errors.ColumnName}
                         />
+                      </div>
+                    )}
+                  />
+
+                  {watch('Type' + column)?.name === 'String' && (
+                    <Controller
+                      name={'Length' + column}
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <div className="col-span-2">
+                          <common.Input
+                            placeholder="String Length"
+                            value={value}
+                            onChange={onChange}
+                            errors={errors.Length}
+                          />
+                        </div>
+                      )}
+                    />
+                  )}
+
+                  <Controller
+                    name={'Comment' + column}
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <div
+                        className={
+                          watch('Type' + column)?.name === 'String'
+                            ? 'col-span-2'
+                            : 'col-span-4'
+                        }
+                      >
+                        <common.Input
+                          placeholder="Comment"
+                          value={value}
+                          onChange={onChange}
+                          errors={errors.Comment}
+                        />
+                      </div>
+                    )}
+                  />
+
+                  <Controller
+                    name={'Nullable' + column}
+                    control={control}
+                    render={({ field: { onChange } }) => (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          id={'Nullable' + column}
+                          onChange={onChange}
+                        />
+                        <label htmlFor={'Nullable' + column}>Nullable</label>
                       </div>
                     )}
                   />
                 </div>
+              )
+          )}
 
-                <Controller
-                  name={'Type' + column}
-                  defaultValue={{ name: 'String', value: 'String' }}
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <div className="col-span-2">
-                      <common.Select
-                        options={[
-                          { name: 'String', value: 'String' },
-                          { name: 'Integer', value: 'Integer' },
-                          { name: 'Long', value: 'Long' },
-                          { name: 'Boolean', value: 'Boolean' },
-                          { name: 'Double', value: 'Double' },
-                          { name: 'Timestamp', value: 'Timestamp' }
-                        ]}
-                        value={value}
-                        onChange={onChange}
-                      />
-                    </div>
-                  )}
-                />
+          {!loading && (
+            <div className="mt-4">
+              <common.Buttons.Blue
+                onClick={() => {
+                  setColumnsGroup([...columnsGroup, lastNumber + 1])
+                }}
+              >
+                Add another column
+              </common.Buttons.Blue>
+            </div>
+          )}
 
-                {watch('Type' + column)?.name === 'String' && (
-                  <Controller
-                    name={'Length' + column}
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <div className="col-span-2">
-                        <common.Input
-                          placeholder="String Length"
-                          value={value}
-                          onChange={onChange}
-                          errors={errors.Length}
-                        />
-                      </div>
-                    )}
-                  />
-                )}
-
-                <Controller
-                  name={'Comment' + column}
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <div
-                      className={
-                        watch('Type' + column)?.name === 'String'
-                          ? 'col-span-2'
-                          : 'col-span-4'
-                      }
-                    >
-                      <common.Input
-                        placeholder="Comment"
-                        value={value}
-                        onChange={onChange}
-                        errors={errors.Comment}
-                      />
-                    </div>
-                  )}
-                />
-
-                <Controller
-                  name={'Nullable' + column}
-                  control={control}
-                  render={({ field: { onChange } }) => (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        id={'Nullable' + column}
-                        onChange={onChange}
-                      />
-                      <label htmlFor={'Nullable' + column}>Nullable</label>
-                    </div>
-                  )}
-                />
-              </div>
-            )
-        )}
-
-        {!loading && (
-          <div className="mt-4">
-            <common.Button
-              className="py-2 cursor-pointer"
-              onClick={() => {
-                setColumnsGroup([...columnsGroup, lastNumber + 1])
-              }}
-            >
-              Add another column
-            </common.Button>
+          <div className="my-2">
+            <common.Separator />
           </div>
-        )}
-
-        <div className="my-2">
-          <common.Separator />
+          <div className="flex items-end justify-end w-full">
+            <common.Buttons.Blue
+              onClick={handleSubmit(Submit)}
+              loading={loading}
+              disabled={loading}
+            >
+              Create table
+            </common.Buttons.Blue>
+          </div>
         </div>
-        <div className="flex items-end justify-end w-full">
-          <common.Button
-            className="py-2 cursor-pointer"
-            onClick={handleSubmit(Submit)}
-            loading={loading}
-            disabled={loading}
-          >
-            Create table
-          </common.Button>
-        </div>
-      </div>
+      </common.ContentSection>
     </common.Card>
   )
 }

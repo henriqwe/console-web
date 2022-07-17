@@ -57,8 +57,10 @@ export function Header() {
 
   return (
     <div className="flex items-center justify-between w-full">
-      <div className='flex my-0 gap-4 items-end py-4'>
-        <p className="text-3xl font-semi-bold text-gray-900">{router.query.name}</p>
+      <div className="flex my-0 gap-4 items-end py-4">
+        <p className="text-3xl font-semi-bold text-gray-900">
+          {router.query.name}
+        </p>
       </div>
       {/* <div className="flex gap-2">
         <button
@@ -124,9 +126,9 @@ export function Header() {
                 </div>
               )}
             />
-            <common.Button type="submit" loading={loading} disabled={loading}>
+            <common.Buttons.Blue type="submit" loading={loading} disabled={loading}>
               Entrar
-            </common.Button>
+            </common.Buttons.Blue>
           </div>
         </form>
       </common.ClearModal> */}

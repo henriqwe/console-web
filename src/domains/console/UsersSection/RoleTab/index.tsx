@@ -59,7 +59,7 @@ export function RoleTab() {
         <div className="w-full h-full bg-gray-100 rounded-b-lg overflow-y">
           <div className="flex items-center justify-between w-full px-8 pt-2">
             <h2 className="text-lg">Roles</h2>
-            <common.Button
+            <common.Buttons.Blue
               type="button"
               onClick={() => {
                 setOpenSlide(true)
@@ -67,7 +67,7 @@ export function RoleTab() {
               }}
             >
               <PlusIcon className="w-5 h-5" />
-            </common.Button>
+            </common.Buttons.Blue>
           </div>
           <div className="my-2">
             <common.Separator />

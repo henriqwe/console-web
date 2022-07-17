@@ -122,9 +122,13 @@ export function CreateUser() {
             )}
           />
 
-          <common.Button type="submit" loading={loading} disabled={loading}>
+          <common.Buttons.Blue
+            type="submit"
+            loading={loading}
+            disabled={loading}
+          >
             Create user
-          </common.Button>
+          </common.Buttons.Blue>
         </div>
       </div>
 

@@ -120,9 +120,9 @@ export function CreateRole() {
       <div className="my-2">
         <common.Separator />
       </div>
-      <common.Button disabled={loading} loading={loading}>
+      <common.Buttons.Blue disabled={loading} loading={loading}>
         <div className="flex">Create</div>
-      </common.Button>
+      </common.Buttons.Blue>
     </form>
   )
 }

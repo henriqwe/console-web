@@ -68,25 +68,24 @@ export function ModifyTab({ loading }: ModifyTabProps) {
         <common.Separator />
       </div>
       <div className="flex justify-between w-full gap-4 mt-4">
-        <common.Button
+        <common.Buttons.RedOutline
           type="button"
           loading={submitLoading}
           disabled={submitLoading}
-          color="red-outline"
           onClick={() => setOpenModal(true)}
         >
           Remove table
-        </common.Button>
+        </common.Buttons.RedOutline>
 
         {!openForm && (
-          <common.Button
+          <common.Buttons.Blue
             type="button"
             loading={false}
             disabled={false}
             onClick={() => setOpenForm(true)}
           >
             Add attribute
-          </common.Button>
+          </common.Buttons.Blue>
         )}
       </div>
       <common.Modal
@@ -263,24 +262,22 @@ function AttributeForm({
       />
 
       <div className="flex items-center justify-around w-full col-span-2">
-        <common.Button
+        <common.Buttons.Red
           type="button"
           disabled={loading}
-          color="red"
           onClick={() => setOpenForm(false)}
         >
           <XIcon className="w-5 h-5 text-white" />
-        </common.Button>
+        </common.Buttons.Red>
 
-        <common.Button
+        <common.Buttons.Green
           type="submit"
-          color="green"
           loading={loading}
           disabled={loading}
           onClick={() => setOpenForm(true)}
         >
           <PlusIcon className="w-5 h-5 text-white" />
-        </common.Button>
+        </common.Buttons.Green>
       </div>
     </form>
   )

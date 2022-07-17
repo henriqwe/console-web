@@ -60,43 +60,48 @@ export function DataSection() {
 
   return (
     <common.Card className="flex flex-col h-full">
-      <div className="flex items-center w-full gap-2 px-4 bg-gray-200 border-gray-300 rounded-t-lg h-9 border-x">
-        <p className="text-base text-gray-900">
-          {selectedTable ? selectedTable : 'Tables'}
-        </p>
-        {selectedTable && (
-          <PencilIcon
-            className="w-5 h-5 cursor-pointer"
-            onClick={() => {
-              setOpenSlide(true)
-              setSlideType('UPDATE TABLE')
-            }}
-          />
-        )}
-      </div>
-      {selectedTable ? (
-        <div className="pt-4">
-          <common.Tabs
-            tabs={[{ name: 'Browser rows' }, { name: 'Modify' }]}
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-          />
-          {selectedTab.name === 'Browser rows' ? (
-            <consoleSection.BrowserRowsTab />
-          ) : (
-            <consoleSection.ModifyTab loading={loading} />
-          )}
-        </div>
-      ) : (
-        <div className="flex items-center justify-center w-full h-full">
-          <div className="flex flex-col items-center ">
-            <div className="mb-5 w-72">
-              <common.illustrations.Empty />
-            </div>
-            <div className="text-lg">Select a table to see all data</div>
+      <common.ContentSection
+        title={
+          <>
+            <p className="text-base text-gray-900">
+              {selectedTable ? selectedTable : 'Tables'}
+            </p>
+            {selectedTable && (
+              <PencilIcon
+                className="w-5 h-5 cursor-pointer"
+                onClick={() => {
+                  setOpenSlide(true)
+                  setSlideType('UPDATE TABLE')
+                }}
+              />
+            )}
+          </>
+        }
+      >
+        {selectedTable ? (
+          <div className="pt-4">
+            <common.Tabs
+              tabs={[{ name: 'Browser rows' }, { name: 'Modify' }]}
+              selectedTab={selectedTab}
+              setSelectedTab={setSelectedTab}
+            />
+            {selectedTab.name === 'Browser rows' ? (
+              <consoleSection.BrowserRowsTab />
+            ) : (
+              <consoleSection.ModifyTab loading={loading} />
+            )}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="flex items-center justify-center w-full h-full">
+            <div className="flex flex-col items-center ">
+              <div className="mb-5 w-72">
+                <common.illustrations.Empty />
+              </div>
+              <div className="text-lg">Select a table to see all data</div>
+            </div>
+          </div>
+        )}
+      </common.ContentSection>
     </common.Card>
   )
 }

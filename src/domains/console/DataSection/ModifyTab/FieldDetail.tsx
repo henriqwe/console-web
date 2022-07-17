@@ -281,15 +281,14 @@ export function FieldDetail({
           />
         </FormField>
         <div className="flex gap-4 mt-4">
-          <common.Button
+          <common.Buttons.Red
             type="button"
             loading={false}
             disabled={false}
-            color="red"
             onClick={() => setOpenModal(true)}
           >
             Remove attribute
-          </common.Button>
+          </common.Buttons.Red>
         </div>
       </section>
       <common.Modal
@@ -346,8 +345,7 @@ function FormField({
       <div className="flex items-center w-full gap-4">
         {children}
         {!activeEdit ? (
-          <common.Button
-            color="green"
+          <common.Buttons.Green
             type="button"
             onClick={() => {
               setActiveFields((old) => {
@@ -362,11 +360,10 @@ function FormField({
             <div className="w-5 h-5">
               <PencilIcon />
             </div>
-          </common.Button>
+          </common.Buttons.Green>
         ) : (
           <div className="flex gap-2">
-            <common.Button
-              color="red"
+            <common.Buttons.Red
               type="button"
               onClick={() => {
                 setActiveFields((old) => {
@@ -381,12 +378,12 @@ function FormField({
               <div className="w-5 h-5">
                 <XIcon />
               </div>
-            </common.Button>
-            <common.Button color="green">
+            </common.Buttons.Red>
+            <common.Buttons.Green>
               <div className="w-5 h-5">
                 <CheckIcon />
               </div>
-            </common.Button>
+            </common.Buttons.Green>
           </div>
         )}
       </div>

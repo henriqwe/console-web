@@ -45,16 +45,14 @@ export function DataTab() {
   return (
     <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto rounded-b-lg">
       <div>
-        <div className="w-full mb-2">
-          <common.Button
-            color="green"
-            className="w-full"
+        <div className="w-full mb-2 flex flex-col">
+          <common.Buttons.Green
             onClick={() => {
               setShowCreateTableSection(true)
             }}
           >
             Create entity
-          </common.Button>
+          </common.Buttons.Green>
         </div>
         <div className="my-2">
           <common.Separator />
