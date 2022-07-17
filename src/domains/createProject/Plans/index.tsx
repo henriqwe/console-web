@@ -26,18 +26,24 @@ export function Plans() {
         <common.Card className="flex flex-col justify-between h-full p-6 bg-white shadow-sm">
           <div>
             <p className="font-bold">Sandbox</p>
-            <common.Separator />
+            <div className="my-2">
+              <common.Separator />
+            </div>
             <p className="text-sm">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
               perferendis possimus ipsam harum alias quidem recusandae iusto
               quis cupiditate maiores fugiat, optio
             </p>
-            <common.Separator />
+            <div className="my-2">
+              <common.Separator />
+            </div>
             <p className="text-sm">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
               perferendis possimus ipsam harum alias
             </p>
-            <common.Separator />
+            <div className="my-2">
+              <common.Separator />
+            </div>
 
             <div>
               <p className="font-bold">Features</p>
@@ -68,18 +74,24 @@ export function Plans() {
         <common.Card className="flex flex-col justify-between h-full p-6 bg-white shadow-sm">
           <div>
             <p className="font-bold">Dedicated</p>
-            <common.Separator />
+            <div className="my-2">
+              <common.Separator />
+            </div>
             <p className="text-sm">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
               perferendis possimus ipsam harum alias quidem recusandae iusto
               quis cupiditate maiores fugiat, optio
             </p>
-            <common.Separator />
+            <div className="my-2">
+              <common.Separator />
+            </div>
             <p className="text-sm">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
               perferendis possimus ipsam harum alias
             </p>
-            <common.Separator />
+            <div className="my-2">
+              <common.Separator />
+            </div>
 
             <div>
               <p className="font-bold">Features</p>

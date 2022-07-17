@@ -56,7 +56,9 @@ export function DataTab() {
             Create entity
           </common.Button>
         </div>
-        <common.Separator />
+        <div className="my-2">
+          <common.Separator />
+        </div>
         {loading ? (
           <div className="flex items-center justify-center w-full h-full">
             <div className="w-8 h-8 mr-8">

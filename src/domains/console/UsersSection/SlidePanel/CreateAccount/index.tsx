@@ -103,7 +103,9 @@ export function CreateAccount() {
           )}
         />
       </div>
-      <common.Separator />
+      <div className="my-2">
+        <common.Separator />
+      </div>
       <common.Button disabled={loading} loading={loading}>
         <div className="flex">Create</div>
       </common.Button>

@@ -64,7 +64,9 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           selectedTable={selectedTable}
         />
       )}
-      <common.Separator />
+      <div className="my-2">
+        <common.Separator />
+      </div>
       <div className="flex justify-between w-full gap-4 mt-4">
         <common.Button
           type="button"

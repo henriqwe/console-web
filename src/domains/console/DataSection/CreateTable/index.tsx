@@ -142,7 +142,9 @@ export function CreateTable() {
             </div>
           )}
         />
-        <common.Separator />
+        <div className="my-2">
+          <common.Separator />
+        </div>
 
         <p>Columns</p>
 
@@ -269,7 +271,9 @@ export function CreateTable() {
           </div>
         )}
 
-        <common.Separator />
+        <div className="my-2">
+          <common.Separator />
+        </div>
         <div className="flex items-end justify-end w-full">
           <common.Button
             className="py-2 cursor-pointer"
