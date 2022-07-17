@@ -7,6 +7,7 @@ import { useState } from 'react'
 import * as common from 'common'
 import * as consoleSection from 'domains/console'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
+import { consoleTheme, responseTheme } from './Themes'
 
 export function Editors() {
   const [slideOpen, setSlideOpen] = useState(false)
@@ -78,13 +79,13 @@ export function Editors() {
             </button>
           </div>
         </div>
-        <div className="grid w-full grid-cols-12 rounded-lg h-full">
+        <div className="grid w-full grid-cols-12 h-full ">
           <div
             className={`${
               showTableViewMode ? 'col-span-4' : 'col-span-6'
             } h-full rounded-bl-lg`}
           >
-            <div className="flex w-full h-full overflow-x-auto ">
+            <div className="flex w-full h-full overflow-x-auto rounded-bl-lg">
               <CodeMirror
                 value={consoleValue}
                 className="flex w-full h-full"
@@ -92,6 +93,7 @@ export function Editors() {
                 onChange={(value, viewUpdate) => {
                   setConsoleValue(value)
                 }}
+                theme={consoleTheme}
                 extensions={[
                   javascript({ jsx: true }),
                   globalJavaScriptCompletions
@@ -104,7 +106,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-8' : 'col-span-6'
             }  h-full flex flex-col`}
           >
-            <div className="flex w-full h-full overflow-x-auto rounded-br-lg">
+            <div className="flex w-full h-full overflow-x-auto rounded-br-lg border-l-2 border-l-gray-100">
               {consoleResponseLoading ? (
                 <div className="flex items-center justify-center w-full h-full">
                   <div className="flex items-center gap-2">
@@ -119,6 +121,7 @@ export function Editors() {
                   value={consoleResponseFormated}
                   className="flex w-full h-full"
                   width="100%"
+                  theme={responseTheme}
                   editable={false}
                   extensions={[javascript({ jsx: true })]}
                 />
