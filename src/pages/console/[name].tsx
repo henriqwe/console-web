@@ -38,7 +38,7 @@ function Page() {
       break
   }
   return (
-    <div className='bg-theme-1 h-[100vh]'>
+    <div className="bg-theme-primary h-[100vh]">
       <div className="flex h-[100vh] gap-4 px-6 max-h-[97vh]">
         <consoleSection.SideBar />
         <div className="flex flex-col w-full">
