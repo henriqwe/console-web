@@ -100,9 +100,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     }
 
     setConsoleValue(
-      `{\n "action":"${action}",\n "object":{\n   "classUID": "${entity}",\n   "${
-        type === 'insert' ? 'role' : '_role'
-      }": "ROLE_ADMIN"\n }\n}`
+      `{\n "action":"${action}",\n "object":{\n   "classUID": "${entity}",\n   "role": "ROLE_ADMIN"\n }\n}`
     )
   }
 
