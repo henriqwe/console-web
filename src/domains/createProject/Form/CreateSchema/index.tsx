@@ -178,18 +178,17 @@ export function CreateSchema() {
             Back to dashboard
           </div>
           <div className="flex gap-4">
-            <common.Button
+            <common.Buttons.RedOutline
               type="button"
               onClick={() => {
                 router.push(routes.dashboard)
               }}
-              color="red-outline"
             >
               <p>Cancel</p>
-            </common.Button>
-            <common.Button loading={loading} disabled={loading}>
+            </common.Buttons.RedOutline>
+            <common.Buttons.Blue loading={loading} disabled={loading}>
               Create project
-            </common.Button>
+            </common.Buttons.Blue>
           </div>
         </div>
       </form>

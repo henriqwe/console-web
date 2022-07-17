@@ -57,13 +57,13 @@ export function ViewAdminUser() {
 
         <div className="flex items-center justify-end w-full">
           <div className="flex gap-4">
-            <common.Button
+            <common.Buttons.Blue
               loading={loading}
               disabled={loading}
               onClick={Submit}
             >
               Conclude
-            </common.Button>
+            </common.Buttons.Blue>
           </div>
         </div>
       </div>

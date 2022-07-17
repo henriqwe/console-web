@@ -12,15 +12,14 @@ export function Plans() {
     <section className="flex flex-col w-1/2 h-full gap-4 pt-6 pb-10">
       <div className="flex items-center justify-between">
         <p className="text-xl font-bold">Create a project</p>
-        <common.Button
+        <common.Buttons.RedOutline
           type="button"
           onClick={() => {
             router.push(routes.dashboard)
           }}
-          color="red-outline"
         >
           <p>Cancel</p>
-        </common.Button>
+        </common.Buttons.RedOutline>
       </div>
       <div className="grid h-full grid-cols-2 gap-4">
         <common.Card className="flex flex-col justify-between h-full p-6 bg-white shadow-sm">
@@ -60,7 +59,7 @@ export function Plans() {
             </div>
           </div>
 
-          <common.Button
+          <common.Buttons.Blue
             className="w-full"
             type="button"
             onClick={() => {
@@ -69,7 +68,7 @@ export function Plans() {
             }}
           >
             <p>Choose</p>
-          </common.Button>
+          </common.Buttons.Blue>
         </common.Card>
         <common.Card className="flex flex-col justify-between h-full p-6 bg-white shadow-sm">
           <div>
@@ -120,7 +119,7 @@ export function Plans() {
             </div>
           </div>
 
-          <common.Button
+          <common.Buttons.Blue
             className="w-full"
             type="button"
             disabled
@@ -130,7 +129,7 @@ export function Plans() {
             }}
           >
             <p>Choose</p>
-          </common.Button>
+          </common.Buttons.Blue>
         </common.Card>
       </div>
     </section>

@@ -30,18 +30,6 @@ export function Editors() {
         title={
           <>
             <p className="text-sm text-gray-900">YCodi Console</p>
-            <button
-              title="Run"
-              onClick={runOperation}
-              disabled={consoleResponseLoading}
-            >
-              <div className="flex items-center justify-center" title="Run">
-                <Icon
-                  icon="fa-solid:play"
-                  className={`w-4 h-4 text-gray-700`}
-                />
-              </div>
-            </button>
             <div className="flex items-center gap-2">
               {responseTime && (
                 <div className="text-xs">Response time: {responseTime} ms</div>
@@ -71,6 +59,25 @@ export function Editors() {
           </>
         }
       >
+        <div>
+          <div className="relative items-center justify-center">
+            <button
+              title="Run"
+              className={`absolute items-center justify-center mt-10 ${
+                showTableViewMode ? 'left-1/3' : 'left-2/4'
+              } -translate-x-1/2 -translate-y-1/2 z-50 bg-gray-200 h-14 w-14 border-4 border-white rounded-full`}
+              onClick={runOperation}
+              disabled={consoleResponseLoading}
+            >
+              <div className="flex items-center justify-center">
+                <Icon
+                  icon="fa-solid:play"
+                  className={`w-4 h-4 text-gray-700`}
+                />
+              </div>
+            </button>
+          </div>
+        </div>
         <div className="grid w-full grid-cols-12 rounded-lg h-full">
           <div
             className={`${
