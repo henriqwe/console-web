@@ -6,7 +6,6 @@ import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
-import * as utils from 'utils'
 
 export function DataSection() {
   const router = useRouter()
@@ -18,9 +17,6 @@ export function DataSection() {
     showCreateTableSection,
     setSlideType
   } = consoleSection.useData()
-  const [selectedTab, setSelectedTab] = useState({
-    name: 'Browser rows'
-  })
   const [loading, setLoading] = useState(true)
 
   async function loadTableData() {
@@ -60,6 +56,7 @@ export function DataSection() {
 
   return (
     <common.Card className="flex flex-col h-full">
+      <consoleSection.SlidePanel />
       <common.ContentSection
         title={
           <>
@@ -80,16 +77,7 @@ export function DataSection() {
       >
         {selectedTable ? (
           <div className="pt-4">
-            <common.Tabs
-              tabs={[{ name: 'Browser rows' }, { name: 'Modify' }]}
-              selectedTab={selectedTab}
-              setSelectedTab={setSelectedTab}
-            />
-            {selectedTab.name === 'Browser rows' ? (
-              <consoleSection.BrowserRowsTab />
-            ) : (
-              <consoleSection.ModifyTab loading={loading} />
-            )}
+            <consoleSection.ModifyTab loading={loading} />
           </div>
         ) : (
           <div className="flex items-center justify-center w-full h-full">

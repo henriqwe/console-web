@@ -45,6 +45,17 @@ export function ModifyTab({ loading }: ModifyTabProps) {
     }
   }
 
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full mt-10">
+        <div className="w-10 h-10">
+          <common.Spinner />
+        </div>
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
   return (
     <div
       className={`flex flex-col ${
