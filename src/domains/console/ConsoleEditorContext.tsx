@@ -33,6 +33,8 @@ type ConsoleEditorContextProps = {
   consoleResponseFormated: string
   setConsoleResponseFormated: Dispatch<SetStateAction<string>>
   responseTime: number | undefined
+  openModalCodeExporter: boolean
+  setOpenModalCodeExporter: Dispatch<SetStateAction<boolean>>
 }
 
 type ProviderProps = {
@@ -45,6 +47,7 @@ export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
 
 export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleValue, setConsoleValue] = useState('')
+  const [openModalCodeExporter, setOpenModalCodeExporter] = useState(false)
   const [consoleValueLastOperation, setConsoleValueLastOperation] = useState('')
   const [documentationValue, setdocumentationValue] = useState('')
   const [consoleResponse, setConsoleResponse] = useState([])
@@ -191,7 +194,9 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         setConsoleResponseFormated,
         consoleValueLastOperation,
         setConsoleValueLastOperation,
-        responseTime
+        responseTime,
+        openModalCodeExporter,
+        setOpenModalCodeExporter
       }}
     >
       {children}

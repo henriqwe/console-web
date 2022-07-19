@@ -8,10 +8,10 @@ import * as common from 'common'
 import * as consoleSection from 'domains/console'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { consoleTheme, responseTheme } from './Themes'
+import { CodeExporter } from '../CodeExporter'
 
 export function Editors() {
   const [slideOpen, setSlideOpen] = useState(false)
-
   const { setShowTableViewMode, showTableViewMode } = consoleSection.useData()
 
   const {
@@ -22,16 +22,32 @@ export function Editors() {
     setConsoleValue,
     consoleResponseLoading,
     documentationValue,
-    responseTime
+    responseTime,
+    consoleValueLastOperation,
+    setOpenModalCodeExporter,
+    openModalCodeExporter
   } = consoleEditor.useConsoleEditor()
 
   return (
     <div className="flex w-full h-full flex-col">
       <common.ContentSection
         title={
-          <>
-            <p className="text-sm text-gray-900">YCodi Console</p>
-            <div className="flex items-center gap-2">
+          <div className="grid  grid-cols-3 w-full">
+            <p className="text-sm text-gray-900 col-span-1">YCodi Console</p>
+            <div className="flex items-center justify-center col-span-1">
+              {consoleValueLastOperation && (
+                <common.Buttons.White
+                  className="px-2 py-1 text-xs bg-white border border-gray-300 rounded-md"
+                  type="button"
+                  onClick={() => {
+                    setOpenModalCodeExporter(true)
+                  }}
+                >
+                  Code exporter
+                </common.Buttons.White>
+              )}
+            </div>
+            <div className="flex items-center gap-2 col-span-1 justify-end">
               {responseTime && (
                 <div className="text-xs">Response time: {responseTime} ms</div>
               )}
@@ -57,7 +73,7 @@ export function Editors() {
                 </button>
               )}
             </div>
-          </>
+          </div>
         }
       >
         <div>
@@ -66,7 +82,7 @@ export function Editors() {
               title="Run"
               className={`absolute items-center justify-center mt-10 ${
                 showTableViewMode ? 'left-1/3' : 'left-2/4'
-              } -translate-x-1/2 -translate-y-1/2 z-50 bg-gray-200 h-14 w-14 border-4 border-white rounded-full`}
+              } -translate-x-1/2 -translate-y-1/2 z-10 bg-gray-200 h-14 w-14 border-4 border-white rounded-full`}
               onClick={runOperation}
               disabled={consoleResponseLoading}
             >
@@ -119,7 +135,7 @@ export function Editors() {
               ) : (
                 <CodeMirror
                   value={consoleResponseFormated}
-                  className="flex w-full h-full"
+                  className="flex w-full h-full -ml-4"
                   width="100%"
                   theme={responseTheme}
                   editable={false}
@@ -140,6 +156,12 @@ export function Editors() {
           />
         </div>
       </common.ContentSection>
+      <common.ClearModal
+        open={openModalCodeExporter}
+        setOpen={setOpenModalCodeExporter}
+      >
+        <CodeExporter />
+      </common.ClearModal>
     </div>
   )
 }
