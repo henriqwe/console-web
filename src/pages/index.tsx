@@ -1,7 +1,11 @@
 import * as dashboard from 'domains/dashboard'
 
 export default function Dashboard() {
-  return <Page />
+  return (
+    <dashboard.DataProvider>
+      <Page />
+    </dashboard.DataProvider>
+  )
 }
 
 function Page() {

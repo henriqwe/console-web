@@ -10,6 +10,7 @@ type ListRadioGroupProps = {
   disabled?: boolean
   compact?: boolean
   disabledCheckBoxIcon?: boolean
+  showCheckIcon?: boolean
 }
 
 export function ListRadioGroup({
@@ -19,6 +20,7 @@ export function ListRadioGroup({
   selectedValue,
   disabled = false,
   disabledCheckBoxIcon = false,
+  showCheckIcon = true,
   compact
 }: ListRadioGroupProps) {
   const [selected, setSelected] = useState<{
@@ -58,15 +60,11 @@ export function ListRadioGroup({
                     disabled && !(opcao.value === selected?.value)
                       ? '!bg-gray-400 '
                       : disabled
-                      ? 'bg-gray-200  '
+                      ? 'bg-gray-200 cursor-not-allowed '
                       : ''
                   } 
 
-                  ${
-                    disabled && opcao.value === selected?.value
-                      ? ''
-                      : 'cursor-not-allowed'
-                  }
+                  ${disabled && opcao.value === selected?.value && ''}
                   
                   ${
                     active
@@ -87,11 +85,13 @@ export function ListRadioGroup({
               >
                 <div className="flex items-center justify-between w-full">
                   {opcao.content}
-                  {opcao.value === selected?.value && !disabledCheckBoxIcon && (
-                    <div className="flex-shrink-0 text-blue-700">
-                      <CheckCircleIcon className="w-6 h-6" />
-                    </div>
-                  )}
+                  {opcao.value === selected?.value &&
+                    !disabledCheckBoxIcon &&
+                    showCheckIcon && (
+                      <div className="flex-shrink-0 text-blue-700">
+                        <CheckCircleIcon className="w-6 h-6" />
+                      </div>
+                    )}
                 </div>
               </RadioGroup.Option>
             ))}
