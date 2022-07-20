@@ -29,10 +29,16 @@ type DataContextProps = {
   setShowTableViewMode: Dispatch<SetStateAction<boolean>>
   slideType: 'UPDATE' | 'UPDATE TABLE'
   setSlideType: Dispatch<SetStateAction<'UPDATE' | 'UPDATE TABLE'>>
+  slideState: slideState
+  setSlideState: Dispatch<SetStateAction<slideState>>
 }
 
 type ProviderProps = {
   children: ReactNode
+}
+type slideState = {
+  open: boolean
+  type: 'CodeExporterView'
 }
 
 export const DataContext = createContext<DataContextProps>(
@@ -53,6 +59,10 @@ export const DataProvider = ({ children }: ProviderProps) => {
   )
   const [selectedTable, setSelectedTable] = useState<string>()
   const [tableData, setTableData] = useState<types.TableData[]>()
+  const [slideState, setSlideState] = useState<slideState>({
+    open: false,
+    type: 'CodeExporterView'
+  })
 
   const fieldSchema = yup.object().shape({
     // Name: yup.string().required(),
@@ -84,7 +94,9 @@ export const DataProvider = ({ children }: ProviderProps) => {
         showTableViewMode,
         setShowTableViewMode,
         slideType,
-        setSlideType
+        setSlideType,
+        slideState,
+        setSlideState
       }}
     >
       {children}

@@ -2,17 +2,16 @@ import CodeMirror from '@uiw/react-codemirror'
 
 import { Icon } from '@iconify/react'
 import { javascript } from '@codemirror/lang-javascript'
-import { useState } from 'react'
 
 import * as common from 'common'
 import * as consoleSection from 'domains/console'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { consoleTheme, responseTheme } from './Themes'
-import { CodeExporter } from '../CodeExporter'
+import { Slide } from '../Slide'
 
 export function Editors() {
-  const [slideOpen, setSlideOpen] = useState(false)
-  const { setShowTableViewMode, showTableViewMode } = consoleSection.useData()
+  const { setShowTableViewMode, showTableViewMode, setSlideState } =
+    consoleSection.useData()
 
   const {
     consoleValue,
@@ -21,18 +20,15 @@ export function Editors() {
     consoleResponseFormated,
     setConsoleValue,
     consoleResponseLoading,
-    documentationValue,
     responseTime,
-    consoleValueLastOperation,
-    setOpenModalCodeExporter,
-    openModalCodeExporter
+    consoleValueLastOperation
   } = consoleEditor.useConsoleEditor()
 
   return (
     <div className="flex w-full h-full flex-col">
       <common.ContentSection
         title={
-          <div className="grid  grid-cols-3 w-full">
+          <div className="grid  grid-cols-3 w-full items-center">
             <p className="text-sm text-gray-900 col-span-1">YCodi Console</p>
             <div className="flex items-center justify-center col-span-1">
               {consoleValueLastOperation && (
@@ -40,7 +36,7 @@ export function Editors() {
                   className="px-2 py-1 text-xs bg-white border border-gray-300 rounded-md"
                   type="button"
                   onClick={() => {
-                    setOpenModalCodeExporter(true)
+                    setSlideState({ open: true, type: 'CodeExporterView' })
                   }}
                 >
                   Code exporter
@@ -144,24 +140,9 @@ export function Editors() {
               )}
             </div>
           </div>
-          <common.Slide
-            open={slideOpen}
-            setOpen={setSlideOpen}
-            title={'Documentation'}
-            content={
-              <div>
-                <span className="whitespace-pre-wrap">{`${documentationValue}`}</span>
-              </div>
-            }
-          />
+          <Slide />
         </div>
       </common.ContentSection>
-      <common.ClearModal
-        open={openModalCodeExporter}
-        setOpen={setOpenModalCodeExporter}
-      >
-        <CodeExporter />
-      </common.ClearModal>
     </div>
   )
 }

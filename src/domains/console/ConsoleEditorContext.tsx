@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getCookie } from 'utils'
 
 import {
   createContext,
@@ -33,8 +34,12 @@ type ConsoleEditorContextProps = {
   consoleResponseFormated: string
   setConsoleResponseFormated: Dispatch<SetStateAction<string>>
   responseTime: number | undefined
-  openModalCodeExporter: boolean
-  setOpenModalCodeExporter: Dispatch<SetStateAction<boolean>>
+  codeExporterValue: string
+  setCodeExporterValue: Dispatch<SetStateAction<string>>
+  variablesValue: string
+  setVariablesValue: Dispatch<SetStateAction<string>>
+  formaterCodeExporterValue(): void
+  formaterVariables(): void
 }
 
 type ProviderProps = {
@@ -47,7 +52,6 @@ export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
 
 export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleValue, setConsoleValue] = useState('')
-  const [openModalCodeExporter, setOpenModalCodeExporter] = useState(false)
   const [consoleValueLastOperation, setConsoleValueLastOperation] = useState('')
   const [documentationValue, setdocumentationValue] = useState('')
   const [consoleResponse, setConsoleResponse] = useState([])
@@ -56,6 +60,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const router = useRouter()
   const [responseTime, setResponseTime] = useState<number>()
   const { reload } = data.useData()
+  const [codeExporterValue, setCodeExporterValue] = useState('')
+  const [variablesValue, setVariablesValue] = useState('')
 
   const globalJavaScriptCompletions = javascriptLanguage.data.of({
     autocomplete: completeFromGlobalScope
@@ -170,6 +176,36 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     })
     return text
   }
+
+  function formaterCodeExporterValue() {
+    const text = `  async function yc_persistence_service(jwt, tenantID, BODY) {
+    const result = await fetch('https://api.ycodify.com/api/interpreter-p/s', 
+    {
+      method: 'POST',
+      body: BODY,
+      headers: {
+        Authorization: 'Bearer '.concat(jwt),
+        'X-TenantID': tenantID,
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    })
+    return await result.json()
+  }
+  `
+    setCodeExporterValue(text)
+  }
+
+  function formaterVariables() {
+    const text = ` const jwt = '${getCookie('admin_access_token')}'
+ const tenantID = '${getCookie('X-TenantID')}'
+ const BODY = ${consoleValueLastOperation}
+
+ yc_persistence_service(jwt, tenantID, BODY) 
+  `
+    setVariablesValue(text)
+  }
+
   useEffect(() => {
     if (router.query.name) {
       loadParser()
@@ -195,8 +231,12 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         consoleValueLastOperation,
         setConsoleValueLastOperation,
         responseTime,
-        openModalCodeExporter,
-        setOpenModalCodeExporter
+        codeExporterValue,
+        setCodeExporterValue,
+        variablesValue,
+        setVariablesValue,
+        formaterCodeExporterValue,
+        formaterVariables
       }}
     >
       {children}
