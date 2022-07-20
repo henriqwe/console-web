@@ -61,23 +61,22 @@ export function Slide({
                       <Dialog.Title className="text-lg font-medium text-gray-900">
                         {title}
                       </Dialog.Title>
-                      
+
                       <div className="flex items-center ml-3 h-7">
                         <button
                           type="button"
                           className="text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                           onClick={() => setOpen(false)}
+                          title="Close"
                         >
                           <span className="sr-only">Close panel</span>
                           <XIcon className="w-6 h-6" aria-hidden="true" />
                         </button>
                       </div>
-                    </div>  
+                    </div>
                   </div>
                   <common.Separator />
-                  <div className="relative flex-1 px-4 mt-6 sm:px-6">
-                    {content}
-                  </div>
+                  <div className="relative flex-1  mt-6 ">{content}</div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
