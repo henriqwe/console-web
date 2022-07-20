@@ -1,9 +1,10 @@
 import * as common from 'common'
 import * as utils from 'utils'
+import * as dashboard from 'domains/dashboard'
 import axios from 'axios'
 import { Icon } from '@iconify/react'
 import { PlusIcon, SearchIcon } from '@heroicons/react/outline'
-import { PlayIcon, CogIcon, DownloadIcon } from '@heroicons/react/solid'
+import { PlayIcon, CogIcon } from '@heroicons/react/solid'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
@@ -12,14 +13,17 @@ import { routes } from 'domains/routes'
 export function Projects() {
   const router = useRouter()
   const { control, watch } = useForm()
+  const {
+    setOpenSlide,
+    setSlideType,
+    setSlideSize,
+    setSelectedSchema,
+    reload
+  } = dashboard.useData()
   const [showFiltered, setShowFiltered] = useState(false)
   const [filteredSchemas, setFilteredSchemas] = useState<string[]>([])
   const [schemas, setSchemas] = useState<string[]>([])
   const [loadingSchemas, setLoadingSchemas] = useState(true)
-  const [submitLoading, setSubmitLoading] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
-  const [selectedSchema, setSelectedSchema] = useState<string>()
-  const [reload, setReload] = useState(false)
 
   async function loadSchemas() {
     try {
@@ -38,31 +42,6 @@ export function Projects() {
       }
     } finally {
       setLoadingSchemas(false)
-    }
-  }
-
-  async function DeleteProject() {
-    try {
-      setSubmitLoading(true)
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${selectedSchema}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
-      setReload(!reload)
-      setSelectedSchema(undefined)
-      utils.notification(
-        `Project ${selectedSchema} deleted successfully`,
-        'success'
-      )
-    } catch (err: any) {
-      utils.notification(err.message, 'error')
-    } finally {
-      setSubmitLoading(false)
     }
   }
 
@@ -133,10 +112,13 @@ export function Projects() {
             <button
               className="px-2 py-2"
               onClick={() => {
-                router.push(routes.createProject)
+                setOpenSlide(true)
+                setSlideType('CREATE')
+                setSlideSize('halfPage')
+                // router.push(routes.createProject)
               }}
             >
-              <div className="flex gap-2 items-center">
+              <div className="flex items-center gap-2">
                 <p className="text-xs">New Project</p>
                 <PlusIcon className="w-3 h-3" />
               </div>
@@ -210,21 +192,18 @@ export function Projects() {
                   >
                     <PlayIcon className="w-6 h-6 text-green-700" />
                   </button>
-                  <common.Dropdown
-                    actions={[
-                      {
-                        title: 'Delete project',
-                        onClick: () => {
-                          setSelectedSchema(schema)
-                          setOpenModal(true)
-                        }
-                      }
-                    ]}
+
+                  <button
+                    className="px-1 py-1"
+                    onClick={() => {
+                      setOpenSlide(true)
+                      setSlideType('VIEW')
+                      setSlideSize('normal')
+                      setSelectedSchema(schema)
+                    }}
                   >
-                    <button className="px-1 py-1">
-                      <CogIcon className="w-6 h-6 text-gray-600" />
-                    </button>
-                  </common.Dropdown>
+                    <CogIcon className="w-6 h-6 text-gray-600" />
+                  </button>
                   {/* <button
                     className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
                     onClick={() => {
@@ -239,25 +218,8 @@ export function Projects() {
           ))
         )}
       </section>
-      <common.Modal
-        open={openModal}
-        setOpen={setOpenModal}
-        loading={submitLoading}
-        disabled={submitLoading}
-        title={`Remove ${selectedSchema} project?`}
-        description={
-          <>
-            <p className="text-sm text-gray-600">
-              Are you sure you want to remove this project?{' '}
-            </p>
-            <p className="text-sm font-bold text-gray-600">
-              this action is irreversible!!!
-            </p>
-          </>
-        }
-        buttonTitle="Remove project"
-        handleSubmit={DeleteProject}
-      />
+
+      <dashboard.SlidePanel />
     </div>
   )
 }

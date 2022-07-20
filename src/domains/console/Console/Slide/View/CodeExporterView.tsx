@@ -38,14 +38,15 @@ export function CodeExporterView() {
 
 function EditorView({ value }: { value: string }) {
   return (
-    <div>
+    <div className="border-b border-b-gray-200">
       <CodeMirror
         value={value}
-        className="flex w-full h-full -ml-10 text-xs"
-        width="30rem"
+        className="flex w-full h-full -ml-10 text-xs "
+        width="40rem"
         editable={false}
         extensions={[javascript({ jsx: true })]}
       />
+
       <div className="flex  justify-end w-full">
         <div className="relative bg-red-400">
           <div

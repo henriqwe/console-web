@@ -1,15 +1,37 @@
 import { Dispatch, Fragment, ReactNode, SetStateAction } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
+import * as common from 'common'
 
 type SlideProps = {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   title: string
   content: ReactNode
+  slideSize?: 'normal' | 'halfPage' | 'fullPage'
 }
 
-export function Slide({ open, setOpen, title, content }: SlideProps) {
+export function Slide({
+  open,
+  setOpen,
+  title,
+  content,
+  slideSize = 'normal'
+}: SlideProps) {
+  let slidePanelWidth
+  switch (slideSize) {
+    case 'normal':
+      slidePanelWidth = 'max-w-[30%]'
+      break
+    case 'halfPage':
+      slidePanelWidth = 'max-w-[50%]'
+      break
+    case 'fullPage':
+      slidePanelWidth = 'max-w-[80%]'
+      break
+    default:
+      break
+  }
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -18,7 +40,7 @@ export function Slide({ open, setOpen, title, content }: SlideProps) {
         onClose={() => null}
       >
         <div className="absolute inset-0 overflow-hidden">
-          <div className="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none">
+          <div className="fixed inset-y-0 right-0 flex justify-end max-w-full pl-10 pointer-events-none">
             <Transition.Child
               as={Fragment}
               enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -28,13 +50,18 @@ export function Slide({ open, setOpen, title, content }: SlideProps) {
               leaveFrom="translate-x-0"
               leaveTo="translate-x-full"
             >
-              <Dialog.Panel className="w-screen max-w-md pointer-events-auto">
-                <div className="flex flex-col h-full pt-6 overflow-y-scroll bg-white shadow-xl">
-                  <div className="px-4 sm:px-6">
-                    <div className="flex items-center justify-between">
-                      <Dialog.Title className="text-lg font-medium text-gray-900 w-full">
+              <Dialog.Panel
+                className={`w-screen pointer-events-auto ${slidePanelWidth}`}
+              >
+                <div
+                  className={`flex flex-col h-full py-6 overflow-y-scroll bg-white shadow-xl`}
+                >
+                  <div className="px-4 mb-4 sm:px-6">
+                    <div className="flex items-start justify-between">
+                      <Dialog.Title className="text-lg font-medium text-gray-900">
                         {title}
                       </Dialog.Title>
+
                       <div className="flex items-center ml-3 h-7">
                         <button
                           type="button"
@@ -48,6 +75,7 @@ export function Slide({ open, setOpen, title, content }: SlideProps) {
                       </div>
                     </div>
                   </div>
+                  <common.Separator />
                   <div className="relative flex-1  mt-6 ">{content}</div>
                 </div>
               </Dialog.Panel>
