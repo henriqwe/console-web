@@ -11,6 +11,7 @@ export function Slide() {
       setOpen={() => setSlideState({ ...slideState, open: false })}
       title={'Code exporter'}
       content={<View.CodeExporterView />}
+      noPadding
     />
   )
 }

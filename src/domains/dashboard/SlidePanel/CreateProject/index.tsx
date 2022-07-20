@@ -38,6 +38,11 @@ export function Update() {
         throw new Error('Select a plan to create a new project')
       }
 
+      const spaceValidation = new RegExp(/\s/g)
+      if (spaceValidation.test(data.ProjectName)) {
+        throw new Error('Project name cannot contain spaces')
+      }
+
       const response = await utils.localApi
         .get(`/schemas`, {
           headers: {
@@ -54,7 +59,7 @@ export function Update() {
       await utils.api.post(
         '/modeler/schema',
         {
-          name: data.ProjectName.split(' ').join('_')
+          name: data.ProjectName
         },
         {
           headers: {
@@ -158,6 +163,23 @@ export function Update() {
       data-testid="editForm"
       className="flex flex-col items-end"
     >
+      <div className="flex flex-col w-full gap-2 mb-2">
+        <Controller
+          name={'ProjectName'}
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <div className="col-span-3">
+              <common.Input
+                placeholder="Project name"
+                label="Project name"
+                value={value}
+                onChange={onChange}
+                errors={errors.ProjectName}
+              />
+            </div>
+          )}
+        />
+      </div>
       <p className="w-full">Select a plan</p>
       <common.ListRadioGroup
         options={[
@@ -283,24 +305,7 @@ export function Update() {
         horizontal
         setSelectedOption={setPlan as Dispatch<SetStateAction<string>>}
       />
-      <div className="grid h-full grid-cols-2 gap-4"></div>
-      <div className="flex flex-col w-full gap-2 mb-2">
-        <Controller
-          name={'ProjectName'}
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <div className="col-span-3">
-              <common.Input
-                placeholder="Project name"
-                label="Project name"
-                value={value}
-                onChange={onChange}
-                errors={errors.ProjectName}
-              />
-            </div>
-          )}
-        />
-      </div>
+
       <div className="my-2">
         <common.Separator />
       </div>
