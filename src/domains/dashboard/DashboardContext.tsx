@@ -40,7 +40,10 @@ export const DataProvider = ({ children }: ProviderProps) => {
   const [selectedSchema, setSelectedSchema] = useState<string>()
 
   const createProjectSchema = yup.object().shape({
-    ProjectName: yup.string().required('Project name is a required field')
+    ProjectName: yup
+      .string()
+      .matches(/^[A-Za-z ]*$/, 'Please enter valid name')
+      .required('Project name is a required field')
   })
 
   return (

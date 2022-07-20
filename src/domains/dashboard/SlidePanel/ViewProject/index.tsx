@@ -99,14 +99,14 @@ export function ViewSchema() {
       className="flex flex-col items-end"
     >
       <div className="w-full">
-        <p className="text-sm text-gray-600">Plano do schema</p>
+        <p className="text-sm text-gray-600">Projetc plan</p>
         <p className="text-lg font-bold">Sandbox</p>
       </div>
 
       <div className="w-full my-2">
         <common.Separator />
       </div>
-      <div className="flex justify-between w-full">
+      <div className="flex justify-end w-full">
         <common.Buttons.RedOutline
           disabled={loading}
           loading={loading}

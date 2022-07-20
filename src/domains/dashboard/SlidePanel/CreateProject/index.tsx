@@ -54,7 +54,7 @@ export function Update() {
       await utils.api.post(
         '/modeler/schema',
         {
-          name: data.ProjectName
+          name: data.ProjectName.split(' ').join('_')
         },
         {
           headers: {
@@ -121,7 +121,9 @@ export function Update() {
               <UserCircleIcon />
             </div>
             <p className="text-lg">Schema {createdSchemaName} created!</p>
-            <p className="text-sm">Save the admin user data to access the schema</p>
+            <p className="text-sm">
+              Save the admin user data to access the schema
+            </p>
             <div>
               <p className="text-sm text-gray-600">
                 Admin user name:{' '}
