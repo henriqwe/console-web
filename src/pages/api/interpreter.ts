@@ -38,7 +38,9 @@ export default async function interpreter(
       const receiveDate = new Date().getTime()
       const responseTimeMs = receiveDate - sendDate
 
-      return res.status(200).json({ data: data.data, responseTimeMs })
+      return res
+        .status(200)
+        .json({ data: data.data ? data.data : data, responseTimeMs })
     } catch (err) {
       console.log(err)
       return res.status(404).json({ err: err })

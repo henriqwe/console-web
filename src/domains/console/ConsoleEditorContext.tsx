@@ -130,18 +130,25 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           }
         }
       )
-      // jQknfsS74G8MsDnF
       let text = ''
       if (data?.data) {
-        text = '[\n'
         setConsoleResponse(data?.data)
-        for (const textData of data.data) {
+        if (Array.isArray(data.data)) {
+          text = '[\n'
+          for (const textData of data.data) {
+            const formatedResponse = await formatResponse(
+              JSON.stringify(textData)
+            )
+            text += ` ${formatedResponse},\n`
+          }
+          text += ']'
+        }
+        if (!Array.isArray(data.data)) {
           const formatedResponse = await formatResponse(
-            JSON.stringify(textData)
+            JSON.stringify(data.data)
           )
           text += ` ${formatedResponse},\n`
         }
-        text += ']'
       }
 
       setConsoleResponseFormated(text)
