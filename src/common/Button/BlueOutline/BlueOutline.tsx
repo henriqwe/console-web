@@ -1,17 +1,14 @@
 import { BaseButton } from '../BaseButton'
-
-type BlueOutlineProps = {
-  children: React.ReactNode
-  loading?: boolean
-  onClick?: () => void
-} & React.ButtonHTMLAttributes<HTMLButtonElement>
+import { ButtonProps } from '../type'
 
 export const BlueOutline = ({
   loading = false,
   onClick,
   children,
+  iconPosition,
+  icon,
   ...props
-}: BlueOutlineProps) => {
+}: ButtonProps) => {
   return (
     <BaseButton
       onClick={onClick}
@@ -20,7 +17,9 @@ export const BlueOutline = ({
       buttonColor="border-2 border-blue-500"
       hoverButtonColor="hover:bg-blue-600  hover:text-white"
       disableButtonColor="disabled:bg-blue-400"
-      textColor="text-blue-500 "
+      textColor="text-blue-500"
+      iconPosition={iconPosition}
+      icon={icon}
       {...props}
     >
       {children}

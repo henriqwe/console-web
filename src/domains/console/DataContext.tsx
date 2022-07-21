@@ -10,8 +10,8 @@ import * as yup from 'yup'
 import * as types from 'domains/console/types'
 
 type DataContextProps = {
-  currentTab: 'CONSOLE' | 'DATA' | 'USERS'
-  setCurrentTab: Dispatch<SetStateAction<'CONSOLE' | 'DATA' | 'USERS'>>
+  currentTab: 'API' | 'DATA' | 'USERS'
+  setCurrentTab: Dispatch<SetStateAction<'API' | 'DATA' | 'USERS'>>
   selectedTable?: string
   setSelectedTable: Dispatch<SetStateAction<string | undefined>>
   reload: boolean
@@ -54,9 +54,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
   const [reload, setReload] = useState(false)
   const [showCreateTableSection, setShowCreateTableSection] = useState(false)
   const [showTableViewMode, setShowTableViewMode] = useState(false)
-  const [currentTab, setCurrentTab] = useState<'CONSOLE' | 'DATA' | 'USERS'>(
-    'CONSOLE'
-  )
+  const [currentTab, setCurrentTab] = useState<'API' | 'DATA' | 'USERS'>('API')
   const [selectedTable, setSelectedTable] = useState<string>()
   const [tableData, setTableData] = useState<types.TableData[]>()
   const [slideState, setSlideState] = useState<slideState>({

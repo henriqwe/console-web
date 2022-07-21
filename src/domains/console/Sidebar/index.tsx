@@ -11,7 +11,7 @@ export function SideBar() {
   const { setCurrentTab, currentTab } = consoleSection.useData()
 
   useEffect(() => {
-    setCurrentTab(selectedTab.name as 'CONSOLE' | 'DATA')
+    setCurrentTab(selectedTab.name as 'API' | 'DATA')
   }, [selectedTab])
 
   return (
@@ -36,7 +36,7 @@ export function SideBar() {
           <common.Tabs
             tabs={[
               {
-                name: 'CONSOLE',
+                name: 'API',
                 icon: common.icons.ConsoleIcon
               },
               {
@@ -52,7 +52,7 @@ export function SideBar() {
         </div>
       </div>
 
-      {currentTab === 'CONSOLE' ? (
+      {currentTab === 'API' ? (
         <consoleSection.ApiTab />
       ) : currentTab === 'DATA' ? (
         <consoleSection.DataTab />

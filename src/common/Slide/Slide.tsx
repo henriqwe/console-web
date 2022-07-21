@@ -76,7 +76,7 @@ export function Slide({
                     </div>
                   </div>
                   <common.Separator />
-                  <div className="relative flex-1  mt-6 ">{content}</div>
+                  <div className="relative flex-1  mt-6 px-4">{content}</div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

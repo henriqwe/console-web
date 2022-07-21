@@ -32,7 +32,7 @@ export const SidebarContext = createContext<SidebarContextProps>(
 
 export const SidebarProvider = ({ children }: ProviderProps) => {
   const [selectedTab, setSelectedTab] = useState<{ name: string; icon?: any }>({
-    name: 'CONSOLE',
+    name: 'API',
     icon: DatabaseIcon
   })
 

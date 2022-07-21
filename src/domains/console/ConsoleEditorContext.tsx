@@ -39,7 +39,6 @@ type ConsoleEditorContextProps = {
   variablesValue: string
   setVariablesValue: Dispatch<SetStateAction<string>>
   formaterCodeExporterValue(): void
-  formaterVariables(): void
 }
 
 type ProviderProps = {
@@ -192,18 +191,15 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     })
     return await result.json()
   }
+  
+  const jwt = '${getCookie('admin_access_token')}'
+  const tenantID = '${getCookie('X-TenantID')}'
+  const BODY = ${consoleValueLastOperation}
+ 
+  yc_persistence_service(jwt, tenantID, BODY) 
+   
   `
     setCodeExporterValue(text)
-  }
-
-  function formaterVariables() {
-    const text = ` const jwt = '${getCookie('admin_access_token')}'
- const tenantID = '${getCookie('X-TenantID')}'
- const BODY = ${consoleValueLastOperation}
-
- yc_persistence_service(jwt, tenantID, BODY) 
-  `
-    setVariablesValue(text)
   }
 
   useEffect(() => {
@@ -235,8 +231,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         setCodeExporterValue,
         variablesValue,
         setVariablesValue,
-        formaterCodeExporterValue,
-        formaterVariables
+        formaterCodeExporterValue
       }}
     >
       {children}

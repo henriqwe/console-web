@@ -59,26 +59,24 @@ export function DataSection() {
       <consoleSection.SlidePanel />
       <common.ContentSection
         title={
-          <>
+          <div className="flex gap-2">
             <p className="text-base text-gray-900">
               {selectedTable ? selectedTable : 'Tables'}
             </p>
             {selectedTable && (
               <PencilIcon
-                className="w-5 h-5 cursor-pointer"
+                className="w-4 h-4 cursor-pointer"
                 onClick={() => {
                   setOpenSlide(true)
                   setSlideType('UPDATE TABLE')
                 }}
               />
             )}
-          </>
+          </div>
         }
       >
         {selectedTable ? (
-          <div className="pt-4">
-            <consoleSection.ModifyTab loading={loading} />
-          </div>
+          <consoleSection.ModifyTab loading={loading} />
         ) : (
           <div className="flex items-center justify-center w-full h-full">
             <div className="flex flex-col items-center ">

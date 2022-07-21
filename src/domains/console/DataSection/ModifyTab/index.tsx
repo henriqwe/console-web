@@ -2,7 +2,7 @@ import { Column } from './Column'
 import * as utils from 'utils'
 import * as common from 'common'
 import * as consoleSection from 'domains/console'
-import { XIcon, PlusIcon } from '@heroicons/react/outline'
+import { XIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline'
 import { SetStateAction, useState, Dispatch } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
@@ -60,7 +60,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
     <div
       className={`flex flex-col ${
         loading ? 'items-center justify-center' : 'items-start'
-      } h-full bg-gray-100 p-6 rounded-b-lg gap-2`}
+      } rounded-b-md bg-white p-6 gap-2`}
     >
       <h3 className="text-lg">Columns:</h3>
       {tableData?.map((data) => (
@@ -75,28 +75,28 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           selectedTable={selectedTable}
         />
       )}
-      <div className="my-2">
-        <common.Separator />
-      </div>
-      <div className="flex justify-between w-full gap-4 mt-4">
-        <common.Buttons.RedOutline
+      <common.Separator />
+      <div className="flex justify-between w-full gap-4 ">
+        <common.Buttons.Clean
           type="button"
           loading={submitLoading}
           disabled={submitLoading}
           onClick={() => setOpenModal(true)}
+          icon={<TrashIcon className="w-4 h-4" />}
         >
-          Remove table
-        </common.Buttons.RedOutline>
+          Remove entity
+        </common.Buttons.Clean>
 
         {!openForm && (
-          <common.Buttons.Blue
+          <common.Buttons.Clean
             type="button"
             loading={false}
             disabled={false}
             onClick={() => setOpenForm(true)}
+            icon={<PlusIcon className="w-3 h-3" />}
           >
             Add attribute
-          </common.Buttons.Blue>
+          </common.Buttons.Clean>
         )}
       </div>
       <common.Modal
@@ -104,18 +104,18 @@ export function ModifyTab({ loading }: ModifyTabProps) {
         setOpen={setOpenModal}
         loading={submitLoading}
         disabled={submitLoading}
-        title={`Remove ${selectedTable} table?`}
+        title={`Remove ${selectedTable} entity?`}
         description={
           <>
             <p className="text-sm text-gray-600">
-              Are you sure you want to remove this table?{' '}
+              Are you sure you want to remove this entity?{' '}
             </p>
             <p className="text-sm font-bold text-gray-600">
               this action is irreversible!!!
             </p>
           </>
         }
-        buttonTitle="Remove table"
+        buttonTitle="Remove entity"
         handleSubmit={RemoveTable}
       />
     </div>

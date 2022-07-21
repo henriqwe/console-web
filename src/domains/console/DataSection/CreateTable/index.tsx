@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form'
 import * as consoleSection from 'domains/console'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import { PlusIcon, CheckIcon } from '@heroicons/react/outline'
 
 export function CreateTable() {
   const router = useRouter()
@@ -105,7 +106,7 @@ export function CreateTable() {
 
       setReload(!reload)
       setShowCreateTableSection(false)
-      utils.notification(`Schema ${data.Name} created successfully`, 'success')
+      utils.notification(`Entity ${data.Name} created successfully`, 'success')
     } catch (err: any) {
       console.log(err)
       utils.notification(err.message, 'error')
@@ -123,7 +124,7 @@ export function CreateTable() {
   return (
     <common.Card className="flex flex-col h-full w-full">
       <common.ContentSection
-        title={<p className="text-base text-gray-900">Create a new table</p>}
+        title={<p className="text-base text-gray-900">Create a new entity</p>}
       >
         <div className={`flex flex-col h-full px-6 pt-5 bg-white rounded-b-lg`}>
           <Controller
@@ -141,9 +142,8 @@ export function CreateTable() {
               </div>
             )}
           />
-          <div className="my-2">
-            <common.Separator />
-          </div>
+
+          <common.Separator />
 
           <p>Columns</p>
 
@@ -256,30 +256,30 @@ export function CreateTable() {
                 </div>
               )
           )}
-
-          {!loading && (
-            <div className="mt-4">
-              <common.Buttons.Blue
-                onClick={() => {
-                  setColumnsGroup([...columnsGroup, lastNumber + 1])
-                }}
-              >
-                Add another column
-              </common.Buttons.Blue>
+          <common.Separator />
+          <div className="flex items-end justify-between w-full">
+            <div>
+              {!loading && (
+                <common.Buttons.Clean
+                  onClick={() => {
+                    setColumnsGroup([...columnsGroup, lastNumber + 1])
+                  }}
+                  loading={loading}
+                  disabled={loading}
+                  icon={<PlusIcon className="w-3 h-3" />}
+                >
+                  Add column
+                </common.Buttons.Clean>
+              )}
             </div>
-          )}
-
-          <div className="my-2">
-            <common.Separator />
-          </div>
-          <div className="flex items-end justify-end w-full">
-            <common.Buttons.Blue
+            <common.Buttons.Clean
               onClick={handleSubmit(Submit)}
               loading={loading}
               disabled={loading}
+              icon={<CheckIcon className="w-3 h-3" />}
             >
-              Create table
-            </common.Buttons.Blue>
+              Create entity
+            </common.Buttons.Clean>
           </div>
         </div>
       </common.ContentSection>

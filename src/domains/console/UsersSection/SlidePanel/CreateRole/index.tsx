@@ -117,9 +117,7 @@ export function CreateRole() {
           )}
         />
       </div>
-      <div className="my-2">
-        <common.Separator />
-      </div>
+      <common.Separator />
       <common.Buttons.Blue disabled={loading} loading={loading}>
         <div className="flex">Create</div>
       </common.Buttons.Blue>

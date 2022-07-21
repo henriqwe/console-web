@@ -5,7 +5,11 @@ import {
   useForm
 } from 'react-hook-form'
 import { Dispatch, SetStateAction, useState } from 'react'
-import { CheckCircleIcon } from '@heroicons/react/outline'
+import {
+  CheckCircleIcon,
+  CheckIcon,
+  ChevronRightIcon
+} from '@heroicons/react/outline'
 import { UserCircleIcon } from '@heroicons/react/solid'
 import * as common from 'common'
 import * as utils from 'utils'
@@ -138,13 +142,14 @@ export function Update() {
 
           <div className="flex items-center justify-end w-full">
             <div className="flex gap-4">
-              <common.Buttons.Blue
+              <common.Buttons.Clean
                 loading={loading}
                 disabled={loading}
                 onClick={AccessSchema}
+                icon={<ChevronRightIcon className="w-3 h-3" />}
               >
                 Access schema
-              </common.Buttons.Blue>
+              </common.Buttons.Clean>
             </div>
           </div>
         </div>
@@ -158,6 +163,26 @@ export function Update() {
       data-testid="editForm"
       className="flex flex-col items-end"
     >
+      <div className="flex flex-col w-full gap-2 mb-2">
+        <Controller
+          name={'ProjectName'}
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <div className="col-span-3">
+              <common.Input
+                placeholder="Project name"
+                label="Project name"
+                value={value}
+                onChange={onChange}
+                errors={errors.ProjectName}
+              />
+            </div>
+          )}
+        />
+      </div>
+      <div className="my-2">
+        <common.Separator />
+      </div>
       <p className="w-full">Select a plan</p>
       <common.ListRadioGroup
         options={[
@@ -283,30 +308,18 @@ export function Update() {
         horizontal
         setSelectedOption={setPlan as Dispatch<SetStateAction<string>>}
       />
-      <div className="grid h-full grid-cols-2 gap-4"></div>
-      <div className="flex flex-col w-full gap-2 mb-2">
-        <Controller
-          name={'ProjectName'}
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <div className="col-span-3">
-              <common.Input
-                placeholder="Project name"
-                label="Project name"
-                value={value}
-                onChange={onChange}
-                errors={errors.ProjectName}
-              />
-            </div>
-          )}
-        />
-      </div>
+      <div className="grid h-full grid-cols-2 gap-4" />
+
       <div className="my-2">
         <common.Separator />
       </div>
-      <common.Buttons.Blue disabled={loading} loading={loading}>
+      <common.Buttons.Clean
+        disabled={loading}
+        loading={loading}
+        icon={<CheckIcon className="w-3 h-3" />}
+      >
         Create project
-      </common.Buttons.Blue>
+      </common.Buttons.Clean>
     </form>
   )
 }

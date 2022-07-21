@@ -10,14 +10,13 @@ export function Column({ data }: { data: types.TableData }) {
     return <FieldDetail setShowDetails={setShowDetails} data={data} />
   }
   return (
-    <div className="flex gap-4">
-      <common.Buttons.White
-        className="px-2 py-1 text-sm bg-white border border-gray-300 rounded-md"
+    <div className="flex gap-4 items-center">
+      <common.Buttons.WhiteOutline
         type="button"
         onClick={() => setShowDetails(true)}
       >
         Edit
-      </common.Buttons.White>
+      </common.Buttons.WhiteOutline>
       <p className="font-bold">
         {data.name} -{' '}
         <span className="font-normal text-gray-700">

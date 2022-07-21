@@ -1,7 +1,7 @@
 import { BaseButton } from '../BaseButton'
 import { ButtonProps } from '../type'
 
-export const White = ({
+export const Clean = ({
   loading = false,
   onClick,
   children,
@@ -14,10 +14,10 @@ export const White = ({
       onClick={onClick}
       loading={loading}
       disabled={loading}
-      buttonColor="bg-white"
-      hoverButtonColor="hover:bg-gray-50"
-      disableButtonColor="disabled:bg-gray-200"
-      textColor="text-gray-800"
+      buttonColor=""
+      hoverButtonColor=""
+      disableButtonColor=""
+      textColor=""
       iconPosition={iconPosition}
       icon={icon}
       {...props}

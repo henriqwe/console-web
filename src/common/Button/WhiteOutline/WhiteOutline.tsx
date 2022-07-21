@@ -1,7 +1,7 @@
 import { BaseButton } from '../BaseButton'
 import { ButtonProps } from '../type'
 
-export const White = ({
+export const WhiteOutline = ({
   loading = false,
   onClick,
   children,
@@ -14,7 +14,7 @@ export const White = ({
       onClick={onClick}
       loading={loading}
       disabled={loading}
-      buttonColor="bg-white"
+      buttonColor="bg-white border-2 border-gray-300"
       hoverButtonColor="hover:bg-gray-50"
       disableButtonColor="disabled:bg-gray-200"
       textColor="text-gray-800"

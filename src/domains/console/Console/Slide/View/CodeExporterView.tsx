@@ -9,39 +9,32 @@ import * as utils from 'utils'
 export function CodeExporterView() {
   const {
     consoleValueLastOperation,
-    formaterVariables,
     formaterCodeExporterValue,
-    codeExporterValue,
-    variablesValue
+    codeExporterValue
   } = consoleEditor.useConsoleEditor()
 
-  const sections = {
-    [`JS Function`]: {
-      content: <EditorView value={codeExporterValue} />,
-      contentEditor: codeExporterValue,
-      icon: <common.icons.JavaScriptIcon />
-    },
-    ['Variables']: {
-      content: <EditorView value={variablesValue} />,
-      contentEditor: variablesValue,
-      icon: <common.icons.CodeSquareIcon />
-    }
-  }
+  // const sections = {
+  //   [`JS Function`]: {
+  //     content: <EditorView value={codeExporterValue} />,
+  //     contentEditor: codeExporterValue,
+  //     icon: <common.icons.JavaScriptIcon />
+  //   },
+  //   ['Variables']: {
+  //     content: <EditorView value={variablesValue} />,
+  //     contentEditor: variablesValue,
+  //     icon: <common.icons.CodeSquareIcon />
+  //   }
+  // }
 
   useEffect(() => {
     formaterCodeExporterValue()
-    formaterVariables()
   }, [consoleValueLastOperation])
 
-  return <Tabs categories={sections} />
-}
-
-function EditorView({ value }: { value: string }) {
   return (
     <div className="border-b border-b-gray-200">
       <CodeMirror
-        value={value}
-        className="flex w-full h-full -ml-10 text-xs "
+        value={codeExporterValue}
+        className="flex w-full h-full -ml-12 text-xs "
         width="40rem"
         editable={false}
         extensions={[javascript({ jsx: true })]}
@@ -51,7 +44,7 @@ function EditorView({ value }: { value: string }) {
         <div className="relative bg-red-400">
           <div
             onClick={() => {
-              navigator.clipboard.writeText(value)
+              navigator.clipboard.writeText(codeExporterValue)
               utils.notification('Copied to clipboard', 'success')
             }}
             className="absolute -mt-8 -ml-6 hover:cursor-pointer text-gray-600  hover:text-gray-700"

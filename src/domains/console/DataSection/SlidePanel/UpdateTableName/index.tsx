@@ -7,6 +7,7 @@ import * as utils from 'utils'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
+import { CheckIcon } from '@heroicons/react/outline'
 
 export function UpdateTableName() {
   const router = useRouter()
@@ -73,12 +74,14 @@ export function UpdateTableName() {
           )}
         />
       </div>
-      <div className="my-2">
-        <common.Separator />
-      </div>
-      <common.Buttons.Blue disabled={loading} loading={loading}>
-        <div className="flex">Update</div>
-      </common.Buttons.Blue>
+      <common.Separator />
+      <common.Buttons.Clean
+        disabled={loading}
+        loading={loading}
+        icon={<CheckIcon className="w-3 h-3" />}
+      >
+        Update
+      </common.Buttons.Clean>
     </form>
   )
 }

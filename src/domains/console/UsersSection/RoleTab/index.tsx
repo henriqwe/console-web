@@ -69,9 +69,7 @@ export function RoleTab() {
               <PlusIcon className="w-5 h-5" />
             </common.Buttons.Blue>
           </div>
-          <div className="my-2">
-            <common.Separator />
-          </div>
+          <common.Separator />
           <common.Table
             tableColumns={[
               { name: 'name', displayName: 'Name' },

@@ -1,17 +1,14 @@
 import { BaseButton } from '../BaseButton'
-
-type BlueProps = {
-  children: React.ReactNode
-  loading?: boolean
-  onClick?: () => void
-} & React.ButtonHTMLAttributes<HTMLButtonElement>
+import { ButtonProps } from '../type'
 
 export const Blue = ({
   loading = false,
   onClick,
   children,
+  iconPosition,
+  icon,
   ...props
-}: BlueProps) => {
+}: ButtonProps) => {
   return (
     <BaseButton
       onClick={onClick}
@@ -21,6 +18,8 @@ export const Blue = ({
       hoverButtonColor="hover:bg-blue-600"
       disableButtonColor="disabled:bg-blue-400"
       textColor="text-white"
+      iconPosition={iconPosition}
+      icon={icon}
       {...props}
     >
       {children}

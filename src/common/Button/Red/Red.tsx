@@ -1,17 +1,14 @@
 import { BaseButton } from '../BaseButton'
-
-type RedProps = {
-  children: React.ReactNode
-  loading?: boolean
-  onClick?: () => void
-} & React.ButtonHTMLAttributes<HTMLButtonElement>
+import { ButtonProps } from '../type'
 
 export const Red = ({
   loading = false,
   onClick,
   children,
+  iconPosition,
+  icon,
   ...props
-}: RedProps) => {
+}: ButtonProps) => {
   return (
     <BaseButton
       onClick={onClick}
@@ -21,6 +18,8 @@ export const Red = ({
       hoverButtonColor="hover:bg-red-600"
       disableButtonColor="disabled:bg-red-400 "
       textColor="text-white"
+      iconPosition={iconPosition}
+      icon={icon}
       {...props}
     >
       {children}

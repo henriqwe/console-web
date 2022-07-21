@@ -7,7 +7,7 @@ export function SlidePanel() {
   const { setOpenSlide, openSlide, slideType } = consoleData.useData()
   return (
     <common.Slide
-      title={slideType === 'UPDATE' ? 'Update register' : 'Update table name'}
+      title={slideType === 'UPDATE' ? 'Update register' : 'Update entity name'}
       open={openSlide}
       setOpen={setOpenSlide}
       content={slideType === 'UPDATE' ? <Update /> : <UpdateTableName />}
