@@ -9,6 +9,7 @@ type SlideProps = {
   title: string
   content: ReactNode
   slideSize?: 'normal' | 'halfPage' | 'fullPage'
+  noPadding?: boolean
 }
 
 export function Slide({
@@ -16,7 +17,8 @@ export function Slide({
   setOpen,
   title,
   content,
-  slideSize = 'normal'
+  slideSize = 'normal',
+  noPadding = false
 }: SlideProps) {
   let slidePanelWidth
   switch (slideSize) {
@@ -76,7 +78,13 @@ export function Slide({
                     </div>
                   </div>
                   <common.Separator />
-                  <div className="relative flex-1  mt-6 px-4">{content}</div>
+                  <div
+                    className={`relative flex-1 mt-6 ${
+                      noPadding ? '' : 'px-4 sm:px-6'
+                    }`}
+                  >
+                    {content}
+                  </div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

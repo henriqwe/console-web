@@ -25,6 +25,15 @@ export function CreateTable() {
   async function Submit(data: any) {
     try {
       setLoading(true)
+      const validation = new RegExp(/^[A-Za-z ]*$/)
+      if (!validation.test(data.Name)) {
+        throw new Error('Entity name must contain only letters')
+      }
+
+      const spaceValidation = new RegExp(/\s/g)
+      if (spaceValidation.test(data.Name)) {
+        throw new Error('Entity cannot contain spaces')
+      }
 
       const response = await axios
         .get(
@@ -48,6 +57,13 @@ export function CreateTable() {
       for (const column of filteredData) {
         if (!data['ColumnName' + column] || !data['Type' + column]) {
           throw new Error('Missing required fields')
+        }
+        if (!validation.test(data['ColumnName' + column])) {
+          throw new Error('Column name must contain only letters')
+        }
+
+        if (spaceValidation.test(data['ColumnName' + column])) {
+          throw new Error('Column cannot contain spaces')
         }
 
         if (
@@ -122,7 +138,7 @@ export function CreateTable() {
   }, [columnsGroup, lastNumber])
 
   return (
-    <common.Card className="flex flex-col h-full w-full">
+    <common.Card className="flex flex-col w-full h-full">
       <common.ContentSection
         title={<p className="text-base text-gray-900">Create a new entity</p>}
       >
@@ -133,8 +149,8 @@ export function CreateTable() {
             render={({ field: { onChange, value } }) => (
               <div className="mb-2">
                 <common.Input
-                  placeholder="Table name"
-                  label="Table name"
+                  placeholder="Entity name"
+                  label="Entity name"
                   value={value}
                   onChange={onChange}
                   errors={errors.Name}

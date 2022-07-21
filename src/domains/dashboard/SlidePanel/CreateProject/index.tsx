@@ -42,6 +42,11 @@ export function Update() {
         throw new Error('Select a plan to create a new project')
       }
 
+      const spaceValidation = new RegExp(/\s/g)
+      if (spaceValidation.test(data.ProjectName)) {
+        throw new Error('Project name cannot contain spaces')
+      }
+
       const response = await utils.localApi
         .get(`/schemas`, {
           headers: {
@@ -58,7 +63,7 @@ export function Update() {
       await utils.api.post(
         '/modeler/schema',
         {
-          name: data.ProjectName.split(' ').join('_')
+          name: data.ProjectName
         },
         {
           headers: {
@@ -179,9 +184,6 @@ export function Update() {
             </div>
           )}
         />
-      </div>
-      <div className="my-2">
-        <common.Separator />
       </div>
       <p className="w-full">Select a plan</p>
       <common.ListRadioGroup
@@ -308,11 +310,9 @@ export function Update() {
         horizontal
         setSelectedOption={setPlan as Dispatch<SetStateAction<string>>}
       />
-      <div className="grid h-full grid-cols-2 gap-4" />
 
-      <div className="my-2">
-        <common.Separator />
-      </div>
+      <common.Separator />
+
       <common.Buttons.Clean
         disabled={loading}
         loading={loading}

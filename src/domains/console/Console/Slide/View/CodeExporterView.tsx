@@ -34,7 +34,7 @@ export function CodeExporterView() {
     <div className="border-b border-b-gray-200">
       <CodeMirror
         value={codeExporterValue}
-        className="flex w-full h-full -ml-12 text-xs "
+        className="flex w-full h-full -ml-14 text-xs "
         width="40rem"
         editable={false}
         extensions={[javascript({ jsx: true })]}
