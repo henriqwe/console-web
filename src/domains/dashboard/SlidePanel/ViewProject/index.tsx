@@ -1,5 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import * as dashboard from 'domains/dashboard'
 import * as common from 'common'
@@ -8,22 +8,20 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 
+type AdminUser = {
+  name: string
+  roles: []
+  status: number
+  username: string
+  version: number
+}
+
 export function ViewSchema() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const {
-    setOpenSlide,
-    setSlideType,
-    setSlideSize,
-    selectedSchema,
-    setSelectedSchema,
-    reload,
-    setReload
-  } = dashboard.useData()
-  const [showFiltered, setShowFiltered] = useState(false)
-  const [filteredSchemas, setFilteredSchemas] = useState<string[]>([])
-  const [schemas, setSchemas] = useState<string[]>([])
-  const [loadingSchemas, setLoadingSchemas] = useState(true)
+  const { setOpenSlide, selectedSchema, setSelectedSchema, reload, setReload } =
+    dashboard.useData()
+  const [adminUser, setAdminUser] = useState<AdminUser>()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
 
@@ -92,15 +90,45 @@ export function ViewSchema() {
     }
   }
 
+  async function loadAdminUser() {
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/account`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`,
+            'X-TenantID': utils.getCookie('X-TenantID') as string
+          }
+        }
+      )
+      setAdminUser(data[0])
+    } catch (err: any) {
+      utils.notification(err.message, 'error')
+    }
+  }
+
+  useEffect(() => {
+    loadAdminUser()
+  }, [])
+
   return (
     <div
       onSubmit={handleSubmit(onSubmit)}
       data-testid="editForm"
       className="flex flex-col items-end"
     >
-      <div className="w-full">
-        <p className="text-sm text-gray-600">Projetc plan</p>
-        <p className="text-lg font-bold">Sandbox</p>
+      <div className="flex justify-between w-full">
+        <div>
+          <p className="text-sm text-gray-600">Projetc plan</p>
+          <p className="font-bold">Sandbox</p>
+        </div>
+        <div className="text-right">
+          <p className="text-sm text-gray-600">Admin user</p>
+          <p className="font-bold">
+            {adminUser ? adminUser.username : `tester@$${selectedSchema}`}
+          </p>
+        </div>
       </div>
 
       <div className="w-full my-2">
