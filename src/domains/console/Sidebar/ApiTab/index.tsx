@@ -29,7 +29,7 @@ export function ApiTab() {
         }
       )
       for (const schema of data.data) {
-        if (schema === 'academia') {
+        if (schema === router.query.name) {
           const { data: tables } = await axios.get(
             `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
             {
