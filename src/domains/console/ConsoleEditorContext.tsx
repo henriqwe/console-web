@@ -147,7 +147,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           const formatedResponse = await formatResponse(
             JSON.stringify(data.data)
           )
-          text += ` ${formatedResponse},\n`
+          text = `${formatedResponse}`
         }
       }
 

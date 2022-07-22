@@ -20,28 +20,17 @@ export function ApiTab() {
     try {
       const operations = []
       setLoading(true)
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/schemas`,
+
+      const { data: tables } = await axios.get(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
         {
           headers: {
             Authorization: `Bearer ${getCookie('access_token')}`
           }
         }
       )
-      for (const schema of data.data) {
-        if (schema === router.query.name) {
-          const { data: tables } = await axios.get(
-            `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
-            {
-              headers: {
-                Authorization: `Bearer ${getCookie('access_token')}`
-              }
-            }
-          )
-          for (const table of Object.keys(tables.data)) {
-            operations.push(`${table}`)
-          }
-        }
+      for (const table of Object.keys(tables.data)) {
+        operations.push(`${table}`)
       }
       setOperations(operations)
     } catch (err: any) {

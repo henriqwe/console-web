@@ -15,12 +15,15 @@ export function TableViewMode() {
   const [tableColumns, setTableColumns] = useState<tableColumnType[]>([])
 
   function handleTableColumns() {
-    if (consoleResponse.length === 0) {
+    if (consoleResponse?.length === 0) {
       setTableColumns([])
       return
     }
-    let columns: tableColumnType[] = []
-    Object?.keys(consoleResponse[0]).map((key) => {
+    const value = Array.isArray(consoleResponse)
+      ? consoleResponse
+      : [consoleResponse]
+    const columns: tableColumnType[] = []
+    Object?.keys(value[0]).map((key) => {
       if (
         key !== '_classDef' &&
         key !== 'role' &&
@@ -91,6 +94,11 @@ export function TableViewMode() {
       </div>
     </div>
   ) : (
-    <common.Table tableColumns={tableColumns} values={consoleResponse} />
+    <common.Table
+      tableColumns={tableColumns}
+      values={
+        Array.isArray(consoleResponse) ? consoleResponse : [consoleResponse]
+      }
+    />
   )
 }
