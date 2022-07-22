@@ -16,6 +16,7 @@ export { Accordion } from './Accordion'
 export { Breadcrumb } from './BreadCrumb'
 export { ListRadioGroup } from './ListRadioGroup'
 export { ContentSection } from './ContentSection'
+export { SlideWithTabs } from './SlideWithTabs'
 
 export * as illustrations from './Ilustrations'
 export * as icons from './Icons'

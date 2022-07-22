@@ -26,6 +26,8 @@ export function Editors() {
 
   return (
     <div className="flex w-full h-full flex-col">
+      <common.SlideWithTabs />
+
       <common.ContentSection
         title={
           <div className="flex  justify-between w-full items-center">

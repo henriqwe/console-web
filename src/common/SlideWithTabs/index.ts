@@ -1,0 +1,1 @@
+export { SlideWithTabs } from './SlideWithTabs'

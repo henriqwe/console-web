@@ -7,7 +7,6 @@ export default async function interpreter(
 ) {
   if (req.method === 'POST') {
     try {
-      const sendDate = new Date().getTime()
       if (req.body.schema) {
         await axios.put(
           `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${req.body.schema}`,
@@ -20,6 +19,7 @@ export default async function interpreter(
           }
         )
       }
+      const sendDate = new Date().getTime()
 
       // g0voBnPhLWq2pRMv
       const { data } = await axios.post(
