@@ -6,11 +6,17 @@ import * as common from 'common'
 type SlideWithTabsProps = {
   slideSize?: 'normal' | 'halfPage' | 'fullPage'
   noPadding?: boolean
+  tabsData: {
+    title: string
+    color: 'blue' | 'red'
+    content: JSX.Element
+  }[]
 }
 
 export function SlideWithTabs({
   slideSize = 'normal',
-  noPadding = false
+  noPadding = false,
+  tabsData
 }: SlideWithTabsProps) {
   let slidePanelWidth
   switch (slideSize) {
@@ -45,36 +51,25 @@ export function SlideWithTabs({
           leaveTo="translate-x-full"
         >
           <div
-            className={`absolute  inset-y-0 right-0  z-50 ${slidePanelWidth} items-center justify-stat space-y-10  my-36`}
+            className={`absolute  inset-y-0 right-0  z-10 ${slidePanelWidth} items-center justify-stat space-y-10  my-36`}
           >
-            <div className="-rotate-90 translate-x-4">
-              <Button
-                onClick={() => {
-                  setSlideData({
-                    open: true,
-                    content: <div>Docs</div>,
-                    title: 'Docs'
-                  })
-                }}
-                color={'blue'}
-              >
-                Docs
-              </Button>
-            </div>
-            <div className="-rotate-90 translate-x-4">
-              <Button
-                onClick={() => {
-                  setSlideData({
-                    open: true,
-                    content: <div>Schema</div>,
-                    title: 'Schema'
-                  })
-                }}
-                color={'red'}
-              >
-                Schema
-              </Button>
-            </div>
+            {tabsData?.map((tab, idx) => {
+              return (
+                <Button
+                  onClick={() => {
+                    setSlideData({
+                      open: true,
+                      content: tab.content,
+                      title: tab.title
+                    })
+                  }}
+                  color={tab.color}
+                  key={idx}
+                >
+                  {tab.title}
+                </Button>
+              )
+            })}
           </div>
         </Transition.Child>
       </Transition.Root>
@@ -102,34 +97,23 @@ export function SlideWithTabs({
                   <div
                     className={`sticky   inset-y-0 right-0  z-50 ${slidePanelWidth} items-center justify-stat space-y-10  my-36`}
                   >
-                    <div className="-rotate-90 translate-x-4">
-                      <Button
-                        onClick={() => {
-                          setSlideData({
-                            open: true,
-                            content: <div>Docs</div>,
-                            title: 'Docs'
-                          })
-                        }}
-                        color={'blue'}
-                      >
-                        Docs
-                      </Button>
-                    </div>
-                    <div className="-rotate-90 translate-x-4">
-                      <Button
-                        onClick={() => {
-                          setSlideData({
-                            open: true,
-                            content: <div>Schema</div>,
-                            title: 'Schema'
-                          })
-                        }}
-                        color={'red'}
-                      >
-                        Schema
-                      </Button>
-                    </div>
+                    {tabsData?.map((tab, idx) => {
+                      return (
+                        <Button
+                          onClick={() => {
+                            setSlideData({
+                              open: true,
+                              content: tab.content,
+                              title: tab.title
+                            })
+                          }}
+                          color={tab.color}
+                          key={idx}
+                        >
+                          {tab.title}
+                        </Button>
+                      )
+                    })}
                   </div>
                   <div
                     className={`flex border-l flex-col h-full w-full py-6 overflow-y-scroll bg-white shadow-xl`}
@@ -193,11 +177,13 @@ function Button({ onClick, children, color }: ButtonType) {
       break
   }
   return (
-    <button
-      onClick={onClick}
-      className={`bg-white border-x-2 border-t-2 p-2 rounded-t-md ${btnColor}`}
-    >
-      {children}
-    </button>
+    <div className="-rotate-90 translate-x-4">
+      <button
+        onClick={onClick}
+        className={`bg-white border-x-2 border-t-2 p-2 rounded-t-md ${btnColor}`}
+      >
+        {children}
+      </button>
+    </div>
   )
 }

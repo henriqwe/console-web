@@ -39,11 +39,21 @@ type ConsoleEditorContextProps = {
   variablesValue: string
   setVariablesValue: Dispatch<SetStateAction<string>>
   formaterCodeExporterValue(): void
+  tabsData: tabsDataType
+  setTabsData: Dispatch<SetStateAction<tabsDataType>>
+  schemaTabData: JSX.Element | undefined
+  setSchemaTabData: Dispatch<SetStateAction<JSX.Element | undefined>>
 }
 
 type ProviderProps = {
   children: ReactNode
 }
+
+type tabsDataType = {
+  title: string
+  color: 'blue' | 'red'
+  content: JSX.Element
+}[]
 
 export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
   {} as ConsoleEditorContextProps
@@ -62,6 +72,20 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [codeExporterValue, setCodeExporterValue] = useState('')
   const [variablesValue, setVariablesValue] = useState('')
 
+  const [schemaTabData, setSchemaTabData] = useState<JSX.Element>()
+  const [tabsData, setTabsData] = useState<tabsDataType>([
+    {
+      title: 'Docs',
+      color: 'blue',
+      content: <div>Docs</div>
+    },
+    {
+      title: 'Schema',
+      color: 'red',
+      content: <div>{schemaTabData}</div>
+    }
+  ])
+
   const globalJavaScriptCompletions = javascriptLanguage.data.of({
     autocomplete: completeFromGlobalScope
   })
@@ -76,6 +100,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           }
         }
       )
+      console.log('data.data', data.data)
       setdocumentationValue(data.data)
     } catch (err: any) {
       if (err.response.status !== 404) {
@@ -190,10 +215,10 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       method: 'POST',
       body: BODY,
       headers: {
-        Authorization: 'Bearer '.concat(jwt),
-        'X-TenantID': tenantID,
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
+      Authorization: 'Bearer '.concat(jwt),
+      'X-TenantID': tenantID,
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
       }
     })
     return await result.json()
@@ -214,6 +239,23 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       loadParser()
     }
   }, [router.query.name, reload])
+
+  useEffect(() => {
+    if (schemaTabData) {
+      setTabsData([
+        {
+          title: 'Docs',
+          color: 'blue',
+          content: <div>Docs</div>
+        },
+        {
+          title: 'Schema',
+          color: 'red',
+          content: <div>{schemaTabData}</div>
+        }
+      ])
+    }
+  }, [schemaTabData])
 
   return (
     <ConsoleEditorContext.Provider
@@ -238,7 +280,11 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         setCodeExporterValue,
         variablesValue,
         setVariablesValue,
-        formaterCodeExporterValue
+        formaterCodeExporterValue,
+        tabsData,
+        setTabsData,
+        schemaTabData,
+        setSchemaTabData
       }}
     >
       {children}

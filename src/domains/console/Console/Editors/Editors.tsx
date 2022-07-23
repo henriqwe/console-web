@@ -2,12 +2,13 @@ import CodeMirror from '@uiw/react-codemirror'
 
 import { Icon } from '@iconify/react'
 import { javascript } from '@codemirror/lang-javascript'
-
 import * as common from 'common'
 import * as consoleSection from 'domains/console'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { consoleTheme, responseTheme } from './Themes'
 import { Slide } from '../Slide'
+import { useEffect } from 'react'
+import { SchemaFormater } from './SchemaFormater'
 
 export function Editors() {
   const { setShowTableViewMode, showTableViewMode, setSlideState } =
@@ -21,12 +22,21 @@ export function Editors() {
     setConsoleValue,
     consoleResponseLoading,
     responseTime,
-    consoleValueLastOperation
+    consoleValueLastOperation,
+    tabsData,
+    documentationValue,
+    setSchemaTabData
   } = consoleEditor.useConsoleEditor()
 
+  useEffect(() => {
+    if (documentationValue) {
+      setSchemaTabData(<SchemaFormater />)
+    }
+  }, [documentationValue])
+
   return (
-    <div className="flex flex-col w-full h-full" data-tour="step-4">
-      <common.SlideWithTabs />
+    <div className="flex flex-col w-full h-full">
+      <common.SlideWithTabs tabsData={tabsData} />
 
       <common.ContentSection
         title={
