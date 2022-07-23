@@ -44,48 +44,38 @@ export function SlideWithTabs({
           leaveFrom="translate-x-0"
           leaveTo="translate-x-full"
         >
-          <Dialog
-            as="div"
-            className="fixed inset-0 z-10 overflow-hidden"
-            onClose={() => null}
+          <div
+            className={`absolute  inset-y-0 right-0  z-50 ${slidePanelWidth} items-center justify-stat space-y-10  my-36`}
           >
-            <Dialog.Panel
-              className={`w-screen flex pointer-events-auto ${slidePanelWidth} `}
-            >
-              <div
-                className={`absolute  inset-y-0 right-0  z-50 ${slidePanelWidth} items-center justify-stat space-y-10  my-36`}
+            <div className="-rotate-90 translate-x-4">
+              <Button
+                onClick={() => {
+                  setSlideData({
+                    open: true,
+                    content: <div>Docs</div>,
+                    title: 'Docs'
+                  })
+                }}
+                color={'blue'}
               >
-                <div className="-rotate-90 translate-x-4">
-                  <Button
-                    onClick={() => {
-                      setSlideData({
-                        open: true,
-                        content: <div>Docs</div>,
-                        title: 'Docs'
-                      })
-                    }}
-                    color={'blue'}
-                  >
-                    Docs
-                  </Button>
-                </div>
-                <div className="-rotate-90 translate-x-4">
-                  <Button
-                    onClick={() => {
-                      setSlideData({
-                        open: true,
-                        content: <div>Schema</div>,
-                        title: 'Schema'
-                      })
-                    }}
-                    color={'red'}
-                  >
-                    Schema
-                  </Button>
-                </div>
-              </div>
-            </Dialog.Panel>
-          </Dialog>
+                Docs
+              </Button>
+            </div>
+            <div className="-rotate-90 translate-x-4">
+              <Button
+                onClick={() => {
+                  setSlideData({
+                    open: true,
+                    content: <div>Schema</div>,
+                    title: 'Schema'
+                  })
+                }}
+                color={'red'}
+              >
+                Schema
+              </Button>
+            </div>
+          </div>
         </Transition.Child>
       </Transition.Root>
 
