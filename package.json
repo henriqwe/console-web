@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.0.0",
+    "@emotion/react": "^11.9.3",
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
     "@hookform/resolvers": "^2.9.1",
     "@iconify/react": "^3.2.2",
+    "@reactour/tour": "^2.13.0",
     "@uiw/codemirror-themes": "^4.11.4",
     "@uiw/react-codemirror": "^4.11.4",
     "axios": "^0.27.2",

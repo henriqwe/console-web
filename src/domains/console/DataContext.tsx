@@ -54,7 +54,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
   const [reload, setReload] = useState(false)
   const [showCreateTableSection, setShowCreateTableSection] = useState(false)
   const [showTableViewMode, setShowTableViewMode] = useState(false)
-  const [currentTab, setCurrentTab] = useState<'API' | 'DATA' | 'USERS'>('API')
+  const [currentTab, setCurrentTab] = useState<'API' | 'DATA' | 'USERS'>('DATA')
   const [selectedTable, setSelectedTable] = useState<string>()
   const [tableData, setTableData] = useState<types.TableData[]>()
   const [slideState, setSlideState] = useState<slideState>({

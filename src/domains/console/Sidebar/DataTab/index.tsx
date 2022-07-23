@@ -46,9 +46,10 @@ export function DataTab() {
   return (
     <div className="flex flex-col h-full px-6 pt-4 overflow-y-auto rounded-b-lg">
       <div>
-        <div className="w-full flex items-center justify-center">
+        <div className="flex items-center justify-center w-full">
           <button
             className="px-2 py-2"
+            data-tour="step-2"
             onClick={() => {
               setShowCreateTableSection(true)
             }}

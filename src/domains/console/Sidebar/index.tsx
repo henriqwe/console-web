@@ -16,7 +16,7 @@ export function SideBar() {
 
   return (
     <div className="text-gray-600 rounded-lg w-[25%] h-full flex flex-col">
-      <div className="flex items-center gap-2 w-full my-6 bg-theme-primary">
+      <div className="flex items-center w-full gap-2 my-6 bg-theme-primary">
         <img
           src="/assets/images/logoTextDark.png"
           alt="Logo"
@@ -28,20 +28,20 @@ export function SideBar() {
             router.push(routes.dashboard)
           }}
         >
-          <common.icons.ReturnIcon className="h-5 w-5" />
+          <common.icons.ReturnIcon className="w-5 h-5" />
         </div>
       </div>
-      <div className="">
+      <div className="" data-tour="step-3">
         <div className="flex items-center justify-between w-full rounded-t-lg bg-theme-primary">
           <common.Tabs
             tabs={[
               {
-                name: 'API',
-                icon: common.icons.ConsoleIcon
-              },
-              {
                 name: 'DATA',
                 icon: DatabaseIcon
+              },
+              {
+                name: 'API',
+                icon: common.icons.ConsoleIcon
               }
             ]}
             selectedTab={

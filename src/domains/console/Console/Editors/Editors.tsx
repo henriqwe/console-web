@@ -25,14 +25,14 @@ export function Editors() {
   } = consoleEditor.useConsoleEditor()
 
   return (
-    <div className="flex w-full h-full flex-col">
+    <div className="flex flex-col w-full h-full" data-tour="step-4">
       <common.SlideWithTabs />
 
       <common.ContentSection
         title={
-          <div className="flex  justify-between w-full items-center">
+          <div className="flex items-center justify-between w-full">
             <p className="text-sm text-gray-900">YCodi Console</p>
-            <div className="flex items-center gap-4 justify-end">
+            <div className="flex items-center justify-end gap-4">
               {consoleValueLastOperation && (
                 <common.Buttons.White
                   type="button"
@@ -80,7 +80,7 @@ export function Editors() {
             </div>
           </button>
         </div>
-        <div className="grid w-full grid-cols-12 h-full border border-gray-200">
+        <div className="grid w-full h-full grid-cols-12 border border-gray-200">
           <div
             className={`${
               showTableViewMode ? 'col-span-4' : 'col-span-6'
@@ -127,7 +127,7 @@ export function Editors() {
                     editable={false}
                     extensions={[javascript({ jsx: true })]}
                   />
-                  <div className=" flex justify-end h-6 items-center px-4">
+                  <div className="flex items-center justify-end h-6 px-4 ">
                     {responseTime && (
                       <div className="text-xs">
                         Response time: {responseTime} ms
