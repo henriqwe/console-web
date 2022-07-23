@@ -35,7 +35,7 @@ export function Editors() {
   }, [documentationValue])
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-full" data-tour="step-4">
       <common.SlideWithTabs tabsData={tabsData} />
 
       <common.ContentSection
