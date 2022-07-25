@@ -145,7 +145,6 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
         {
           data: JSON.parse(consoleValue),
-          schema: router.query.name,
           access_token: `${utils.getCookie('admin_access_token')}`,
           'X-TenantID': utils.getCookie('X-TenantID')
         },

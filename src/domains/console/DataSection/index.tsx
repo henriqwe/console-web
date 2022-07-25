@@ -79,14 +79,7 @@ export function DataSection() {
           {selectedTable ? (
             <consoleSection.ModifyTab loading={loading} />
           ) : (
-            <div className="flex items-center justify-center w-full h-full">
-              <div className="flex flex-col items-center ">
-                <div className="mb-5 w-72">
-                  <common.illustrations.Empty />
-                </div>
-                <div className="text-lg">Select an entity to see all data</div>
-              </div>
-            </div>
+            <consoleSection.DefaultPage />
           )}
         </common.ContentSection>
       </common.Card>

@@ -7,18 +7,6 @@ export default async function interpreter(
 ) {
   if (req.method === 'POST') {
     try {
-      if (req.body.schema) {
-        await axios.put(
-          `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${req.body.schema}`,
-          { status: 2 },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `${req.headers.authorization}`
-            }
-          }
-        )
-      }
       const sendDate = new Date().getTime()
 
       // g0voBnPhLWq2pRMv
