@@ -11,7 +11,10 @@ export default {
 const Template: ComponentStory<typeof Input> = (args) => <Input {...args} />
 
 export const Default = Template.bind({})
-Default.args = {}
+Default.args = {
+  label: 'Text input',
+  type: 'text'
+}
 
 export const Email = Template.bind({})
 Email.args = {

@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { JavaScriptIcon } from '.'
 
 export default {
-  title: 'Components/Icons/JavaScriptIcon',
+  title: 'Components/Icons/JavaScript',
   component: JavaScriptIcon
 } as ComponentMeta<typeof JavaScriptIcon>
 

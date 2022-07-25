@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { ConsoleIcon } from '.'
 
 export default {
-  title: 'Components/Icons/ConsoleIcon',
+  title: 'Components/Icons/Console',
   component: ConsoleIcon
 } as ComponentMeta<typeof ConsoleIcon>
 

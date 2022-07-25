@@ -28,4 +28,16 @@ const Template: ComponentStory<typeof Separator> = (args) => (
 )
 
 export const Default = Template.bind({})
-Default.args = {}
+Default.args = {
+  className: ''
+}
+
+export const RedExample = Template.bind({})
+RedExample.args = {
+  className: 'border-red-500'
+}
+
+export const OpacityExample = Template.bind({})
+OpacityExample.args = {
+  className: 'border-purple-600/40'
+}

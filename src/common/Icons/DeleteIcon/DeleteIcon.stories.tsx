@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { DeleteIcon } from '.'
 
 export default {
-  title: 'Components/Icons/DeleteIcon',
+  title: 'Components/Icons/Delete',
   component: DeleteIcon
 } as ComponentMeta<typeof DeleteIcon>
 

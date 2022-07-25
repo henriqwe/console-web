@@ -4,12 +4,12 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { ClearModal } from '.'
 
 export default {
-  title: 'Components/ClearMoal',
+  title: 'Components/ClearModal',
   component: ClearModal
 } as ComponentMeta<typeof ClearModal>
 
 const Template: ComponentStory<typeof ClearModal> = (args) => (
-  <ClearModal {...args}>children placeholder</ClearModal>
+  <ClearModal {...args}>Children Placeholder</ClearModal>
 )
 
 export const Default = Template.bind({})

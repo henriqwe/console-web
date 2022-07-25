@@ -9,8 +9,13 @@ export default {
 } as ComponentMeta<typeof YellowOutline>
 
 const Template: ComponentStory<typeof YellowOutline> = (args) => (
-  <YellowOutline {...args}>Children placeholder</YellowOutline>
+  <YellowOutline {...args}>Button</YellowOutline>
 )
 
 export const Default = Template.bind({})
 Default.args = {}
+
+export const Loading = Template.bind({})
+Loading.args = {
+  loading: true
+}

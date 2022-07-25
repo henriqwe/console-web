@@ -21,7 +21,8 @@ const Template: ComponentStory<typeof Breadcrumb> = (args) => (
 
 export const Default = Template.bind({})
 Default.args = {
-  pages
+  pages,
+  showNumber: false
 }
 
 export const showNumber = Template.bind({})

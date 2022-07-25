@@ -21,35 +21,60 @@ const Template: ComponentStory<typeof ListRadioGroup> = (args) => (
 
 export const Default = Template.bind({})
 Default.args = {
-  options: options
+  options: options,
+  horizontal: false,
+  disabled: false,
+  disabledCheckBoxIcon: false,
+  showCheckIcon: true,
+  compact: false
 }
 
 export const Horizontal = Template.bind({})
 Horizontal.args = {
   options: options,
-  horizontal: true
+  horizontal: true,
+  disabled: false,
+  disabledCheckBoxIcon: false,
+  showCheckIcon: true,
+  compact: false
 }
 
 export const Disabled = Template.bind({})
 Disabled.args = {
   options: options,
-  disabled: true
+  horizontal: false,
+  disabled: true,
+  disabledCheckBoxIcon: false,
+  showCheckIcon: true,
+  compact: false
 }
 
 export const Compact = Template.bind({})
 Compact.args = {
   options: options,
+  horizontal: false,
+  disabled: false,
+  disabledCheckBoxIcon: false,
+  showCheckIcon: true,
   compact: true
 }
 
 export const NoCheckboxIcon = Template.bind({})
 NoCheckboxIcon.args = {
   options: options,
-  disabledCheckBoxIcon: true
+  horizontal: false,
+  disabled: false,
+  disabledCheckBoxIcon: true,
+  showCheckIcon: true,
+  compact: false
 }
 
 export const NoCheckIcon = Template.bind({})
 NoCheckIcon.args = {
   options: options,
-  showCheckIcon: false
+  horizontal: false,
+  disabled: false,
+  disabledCheckBoxIcon: false,
+  showCheckIcon: false,
+  compact: false
 }

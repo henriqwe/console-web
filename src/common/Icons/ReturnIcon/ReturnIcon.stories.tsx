@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { ReturnIcon } from '.'
 
 export default {
-  title: 'Components/Icons/ReturnIcon',
+  title: 'Components/Icons/Return',
   component: ReturnIcon
 } as ComponentMeta<typeof ReturnIcon>
 

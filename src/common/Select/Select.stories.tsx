@@ -19,13 +19,7 @@ const Template: ComponentStory<typeof Select> = (args) => <Select {...args} />
 
 export const Default = Template.bind({})
 Default.args = {
+  disabled: false,
   options,
-  label: 'Default Multi Select'
-}
-
-export const Disabled = Template.bind({})
-Disabled.args = {
-  options,
-  label: 'Disabled Multi Select',
-  disabled: true
+  label: 'Select Label'
 }

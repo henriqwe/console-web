@@ -1,25 +1,48 @@
-// import React from 'react'
-// import { ComponentStory, ComponentMeta } from '@storybook/react'
+import React, { ReactNode } from 'react'
+import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-// import { SlideWithTabs } from '.'
+import { SlideWithTabs } from '.'
 
-// const options = [
-//   { value: 1, name: 'Select 1' },
-//   { value: 2, name: 'Select 2' },
-//   { value: 3, name: 'Select 3' },
-//   { value: 4, name: 'Select 4' }
-// ]
+const content = (
+  <ul>
+    <li>Content placeholder</li>
+    <li>Content placeholder</li>
+    <li>Content placeholder</li>
+    <li>Content placeholder</li>
+  </ul>
+)
 
-// export default {
-//   title: 'Components/SlideWithTabs',
-//   component: SlideWithTabs
-// } as ComponentMeta<typeof SlideWithTabs>
+type data = {
+  title: string
+  color: 'blue' | 'red'
+  content: ReactNode
+}[]
 
-// const Template: ComponentStory<typeof SlideWithTabs> = (args) => (
-//   <SlideWithTabs {...args} />
-// )
+const tabsData: data = [
+  { title: 'Tab 1', color: 'blue', content },
+  { title: 'Tab 2', color: 'red', content },
+  { title: 'Tab 3', color: 'blue', content }
+]
 
-// export const Default = Template.bind({})
-// Default.args = {}
+const options = [
+  { value: 1, name: 'Select 1' },
+  { value: 2, name: 'Select 2' },
+  { value: 3, name: 'Select 3' },
+  { value: 4, name: 'Select 4' }
+]
 
-// NÃO TA FUNCIONANDO, NÃO SEI PORQUÊ
+export default {
+  title: 'Components/SlideWithTabs',
+  component: SlideWithTabs
+} as ComponentMeta<typeof SlideWithTabs>
+
+const Template: ComponentStory<typeof SlideWithTabs> = (args) => (
+  <SlideWithTabs {...args} />
+)
+
+export const Default = Template.bind({})
+Default.args = {
+  noPadding: false,
+  tabsData,
+  slideSize: 'normal'
+}

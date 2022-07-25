@@ -9,7 +9,7 @@ export default {
 } as ComponentMeta<typeof BaseButton>
 
 const Template: ComponentStory<typeof BaseButton> = (args) => (
-  <BaseButton {...args}>Children placeholder</BaseButton>
+  <BaseButton {...args}>Button</BaseButton>
 )
 
 export const Default = Template.bind({})

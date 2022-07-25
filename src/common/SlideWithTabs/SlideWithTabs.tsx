@@ -9,7 +9,7 @@ type SlideWithTabsProps = {
   tabsData: {
     title: string
     color: 'blue' | 'red'
-    content: JSX.Element
+    content: ReactNode
   }[]
 }
 

@@ -1,22 +1,29 @@
-// import React from 'react'
-// import { ComponentStory, ComponentMeta } from '@storybook/react'
+import React, { ReactNode } from 'react'
+import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-// import { Table } from '.'
+import { Table } from '.'
 
-// const tableColumns = [
-//   { name: 'a', displayName: 'aa', handler: () => {} },
-//   { name: 'b', displayName: 'bb', handler: () => {} },
-//   { name: 'c', displayName: 'cc', handler: () => {} }
-// ]
+const tableColumns = [
+  { name: '1', displayName: 'Column 1', handler: () => {} },
+  { name: '1', displayName: 'Column 2', handler: () => {} },
+  { name: '1', displayName: 'Column 3', handler: () => {} },
+  { name: '1', displayName: 'Column 4', handler: () => {} }
+]
 
-// export default {
-//   title: 'Components/Table',
-//   component: Table
-// } as ComponentMeta<typeof Table>
+const values = ['1', '2', '3', '4']
 
-// const Template: ComponentStory<typeof Table> = (args) => <Table {...args} />
+const node = <p>This is a node</p>
 
-// export const Default = Template.bind({})
-// Default.args = { tableColumns }
+const actions = (item: {
+  item: { title: string; fieldName: string }
+}): ReactNode => node
 
-// NÃO TA FUNCIONANDO, NÃO SEI PORQUÊ
+export default {
+  title: 'Components/Table',
+  component: Table
+} as ComponentMeta<typeof Table>
+
+const Template: ComponentStory<typeof Table> = (args) => <Table {...args} />
+
+export const Default = Template.bind({})
+Default.args = { rounded: false, tableColumns, values, actions }

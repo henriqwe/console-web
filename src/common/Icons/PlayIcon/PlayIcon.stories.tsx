@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { PlayIcon } from '.'
 
 export default {
-  title: 'Components/Icons/PlayIcon',
+  title: 'Components/Icons/Play',
   component: PlayIcon
 } as ComponentMeta<typeof PlayIcon>
 

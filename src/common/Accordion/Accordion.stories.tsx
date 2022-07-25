@@ -5,10 +5,10 @@ import { Accordion } from '.'
 
 const content = (
   <ul>
-    <li>Content placeholder 1</li>
-    <li>Content placeholder 2</li>
-    <li>Content placeholder 3</li>
-    <li>Content placeholder 4</li>
+    <li className="mb-2">Content placeholder 1</li>
+    <li className="mb-2">Content placeholder 2</li>
+    <li className="mb-2">Content placeholder 3</li>
+    <li className="mb-2">Content placeholder 4</li>
   </ul>
 )
 
