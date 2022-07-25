@@ -36,9 +36,9 @@ export default function Home({
         }),
         maskArea: (base) => ({ ...base, rx: 10 }),
         maskWrapper: (base) => ({ ...base, color: '#6366F1' }),
-        badge: (base) => ({ ...base,  }),
+        badge: (base) => ({ ...base }),
         controls: (base) => ({ ...base, marginTop: 50 }),
-        close: (base) => ({ ...base,  right: 8, top: 8 })
+        close: (base) => ({ ...base, right: 8, top: 8 })
       }}
     >
       <consoleSection.DataProvider>
@@ -73,34 +73,37 @@ function Page() {
       break
   }
 
-  console.log(currentStep)
+  // useEffect(() => {
+  //   setIsOpen(true)
+  // }, [])
 
-  useEffect(() => {
-    setIsOpen(true)
-  }, [])
+  // useEffect(() => {
+  //   if (currentTab === 'API') {
+  //     setSteps([
+  //       {
+  //         selector: '[data-tour="step-4"]',
+  //         content: <p>consectetur adipiscing elit</p>
+  //       }
+  //     ])
+  //     setCurrentStep(0)
+  //     setIsOpen(true)
+  //   }
+  // }, [currentTab])
 
-  useEffect(() => {
-    if (currentTab === 'API') {
-      setSteps([
-        {
-          selector: '[data-tour="step-4"]',
-          content: <p>consectetur adipiscing elit</p>
-        }
-      ])
-      setCurrentStep(0)
-      setIsOpen(true)
-    }
-  }, [currentTab])
-
+  // return (
+  //   <div className="bg-theme-primary h-[100vh]">
+  //     <div className="flex h-[100vh] gap-4 px-6 max-h-[97vh]">
+  //       <consoleSection.SideBar />
+  //       <div className="flex flex-col w-full">
+  //         <Header />
+  //         <div className="flex w-full h-full">{tab}</div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // )
   return (
     <div className="bg-theme-primary h-[100vh]">
-      <div className="flex h-[100vh] gap-4 px-6 max-h-[97vh]">
-        <consoleSection.SideBar />
-        <div className="flex flex-col w-full">
-          <Header />
-          <div className="flex w-full h-full">{tab}</div>
-        </div>
-      </div>
+      <Header />
     </div>
   )
 }
