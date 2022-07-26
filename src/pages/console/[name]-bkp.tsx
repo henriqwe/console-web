@@ -4,8 +4,6 @@ import { Header } from 'domains/console/Header'
 import { GetServerSideProps } from 'next'
 import { TourProvider, useTour } from '@reactour/tour'
 import { useEffect } from 'react'
-import * as common from 'common'
-import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 
 export default function Home({
   cookie
@@ -63,7 +61,6 @@ export default function Home({
 function Page() {
   const { currentTab, setCurrentTab } = consoleSection.useData()
   const { setIsOpen, currentStep, setSteps, isOpen, setCurrentStep } = useTour()
-  const { tabsData } = consoleEditor.useConsoleEditor()
 
   let tab = <consoleSection.ApiSection />
   switch (currentTab) {
@@ -76,13 +73,33 @@ function Page() {
       break
   }
 
+  console.log(currentStep)
+
+  useEffect(() => {
+    setIsOpen(true)
+  }, [])
+
+  useEffect(() => {
+    if (currentTab === 'API') {
+      setSteps([
+        {
+          selector: '[data-tour="step-4"]',
+          content: <p>consectetur adipiscing elit</p>
+        }
+      ])
+      setCurrentStep(0)
+      setIsOpen(true)
+    }
+  }, [currentTab])
+
   return (
-    <div className="bg-[#EDEDEC] h-[100vh] max-h-[100vh] flex flex-col">
-      <common.SlideWithTabs tabsData={tabsData} />
-      <Header />
-      <div className="flex h-full w-full ">
+    <div className="bg-theme-primary h-[100vh]">
+      <div className="flex h-[100vh] gap-4 px-6 max-h-[97vh]">
         <consoleSection.SideBar />
-        <div className="flex flex-1 h-full ">{tab}</div>
+        <div className="flex flex-col w-full">
+          <Header />
+          <div className="flex w-full h-full">{tab}</div>
+        </div>
       </div>
     </div>
   )

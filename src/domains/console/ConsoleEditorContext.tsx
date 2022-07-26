@@ -80,8 +80,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       content: <div>Docs</div>
     },
     {
-      title: 'Schema',
-      color: 'red',
+      title: 'Spec',
+      color: 'blue',
       content: <div>{schemaTabData}</div>
     }
   ])
@@ -249,8 +249,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           content: <div>Docs</div>
         },
         {
-          title: 'Schema',
-          color: 'red',
+          title: 'Spec',
+          color: 'blue',
           content: <div>{schemaTabData}</div>
         }
       ])

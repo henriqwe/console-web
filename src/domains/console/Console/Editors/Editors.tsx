@@ -36,8 +36,6 @@ export function Editors() {
 
   return (
     <div className="flex flex-col w-full h-full" data-tour="step-4">
-      <common.SlideWithTabs tabsData={tabsData} />
-
       <common.ContentSection
         title={
           <div className="flex items-center justify-between w-full">

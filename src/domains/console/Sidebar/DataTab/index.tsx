@@ -7,6 +7,7 @@ import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PlusIcon } from '@heroicons/react/outline'
+import { CheckCircleIcon } from '@heroicons/react/solid'
 
 export function DataTab() {
   const router = useRouter()
@@ -44,53 +45,55 @@ export function DataTab() {
   }, [router.query.name, reload])
 
   return (
-    <div className="flex flex-col h-full px-6 pt-4 overflow-y-auto rounded-b-lg">
-      <div>
-        <div className="flex items-center justify-center w-full">
-          <button
-            className="px-2 py-2"
-            data-tour="step-2"
-            onClick={() => {
-              setShowCreateTableSection(true)
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <p className="text-xs">Create entity</p>
-              <PlusIcon className="w-3 h-3" />
-            </div>
-          </button>
+    <div className="flex flex-col h-full px-4 overflow-y-auto pt-1 ">
+      <div className="flex items-center justify-between w-full">
+        <div className="font-semibold flex items-center gap-2">
+          Entities &#40; {tables.length} &#41;{' '}
+          <CheckCircleIcon className="text-green-600 w-4 h-4" />
         </div>
-        <common.Separator />
-        {loading ? (
-          <div className="flex items-center justify-center w-full h-full">
-            <div className="w-8 h-8 mr-8">
-              <common.Spinner />
-            </div>
-            <div>Loading...</div>
+        <button
+          className="px-2 py-2"
+          data-tour="step-2"
+          onClick={() => {
+            setShowCreateTableSection(true)
+          }}
+        >
+          <div className="flex items-center gap-2">
+            <p className="text-xs">Create entity</p>
+            <PlusIcon className="w-3 h-3" />
           </div>
-        ) : tables.length === 0 ? (
-          <div>
-            <p>Entities not found</p>
-          </div>
-        ) : (
-          tables.map((table) => (
-            <div key={table}>
-              <div
-                className={`flex items-center gap-2 pb-2 cursor-pointer ${
-                  selectedTable === `${table}` && 'text-orange-400'
-                }`}
-                onClick={() => {
-                  setSelectedTable(`${table}`)
-                  setShowCreateTableSection(false)
-                }}
-              >
-                <Icon icon="bi:table" className="w-4 h-4" />
-                <p className="text-sm">{table}</p>
-              </div>
-            </div>
-          ))
-        )}
+        </button>
       </div>
+      <common.Separator />
+      {loading ? (
+        <div className="flex items-center justify-center w-full h-full">
+          <div className="w-8 h-8 mr-8">
+            <common.Spinner />
+          </div>
+          <div>Loading...</div>
+        </div>
+      ) : tables.length === 0 ? (
+        <div>
+          <p>Entities not found</p>
+        </div>
+      ) : (
+        tables.map((table) => (
+          <div key={table}>
+            <div
+              className={`flex items-center gap-2 pb-2 cursor-pointer ${
+                selectedTable === `${table}` && 'text-orange-400'
+              }`}
+              onClick={() => {
+                setSelectedTable(`${table}`)
+                setShowCreateTableSection(false)
+              }}
+            >
+              <Icon icon="bi:table" className="w-4 h-4" />
+              <p className="text-sm">{table}</p>
+            </div>
+          </div>
+        ))
+      )}
     </div>
   )
 }

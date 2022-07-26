@@ -55,7 +55,7 @@ export function DataSection() {
   }
 
   return (
-    <div data-tour="step-1" className="w-full h-full">
+    <div data-tour="step-1" className="w-full h-full p-4">
       <common.Card className="flex flex-col h-full">
         <consoleSection.SlidePanel />
         <common.ContentSection
