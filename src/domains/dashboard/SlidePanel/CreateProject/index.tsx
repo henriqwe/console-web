@@ -27,7 +27,7 @@ export function Update() {
   const [createdSchemaName, setCreatedSchemaName] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [plan, setPlan] = useState<'Sandbox' | 'Dedicated'>()
-  const { createProjectSchema } = dashboard.useData()
+  const { createProjectSchema, setReload, reload } = dashboard.useData()
 
   const {
     control,
@@ -91,6 +91,7 @@ export function Update() {
       )
       setAdminUser(AdminAccount.data)
       setCreatedSchemaName(data.ProjectName)
+      setReload(!reload)
       utils.notification(
         `Project ${data.ProjectName} created successfully`,
         'success'
@@ -106,7 +107,7 @@ export function Update() {
     try {
       setLoading(true)
 
-      const { data } = await utils.localApi.post(utils.apiRoutes.adminLogin, {
+      const { data } = await utils.localApi.post(utils.apiRoutes.local.adminLogin, {
         username: adminUser?.username,
         password: adminUser?.password
       })
