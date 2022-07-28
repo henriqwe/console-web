@@ -142,7 +142,7 @@ export function CreateTable() {
       <common.ContentSection
         title={<p className="text-base text-gray-900">Create a new entity</p>}
       >
-        <div className={`flex flex-col h-full px-6 pt-5 bg-white rounded-b-lg`}>
+        <div className={`flex flex-col h-auto p-6  bg-white rounded-b-lg`}>
           <Controller
             name="Name"
             control={control}

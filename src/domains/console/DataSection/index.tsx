@@ -51,7 +51,11 @@ export function DataSection() {
   }, [selectedTable, reload])
 
   if (showCreateTableSection) {
-    return <consoleSection.CreateTable />
+    return (
+      <div className="w-full h-full p-4">
+        <consoleSection.CreateTable />
+      </div>
+    )
   }
 
   return (
@@ -79,7 +83,7 @@ export function DataSection() {
           {selectedTable ? (
             <consoleSection.ModifyTab loading={loading} />
           ) : (
-            <div className="flex items-center justify-center w-full h-full">
+            <div className="flex items-center justify-center w-full h-full bg-white rounded-b-lg">
               <div className="flex flex-col items-center ">
                 <div className="mb-5 w-72">
                   <common.illustrations.Empty />

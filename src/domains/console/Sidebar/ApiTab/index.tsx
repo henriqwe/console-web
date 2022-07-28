@@ -49,7 +49,7 @@ export function ApiTab() {
   }, [router.query.name])
 
   return (
-    <div className="flex-1 h-full pt-4 overflow-y-auto rounded-b-lg">
+    <div className="flex-1 h-full pt-2  px-4 overflow-y-auto rounded-b-lg">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <div className="w-8 h-8 mr-8">

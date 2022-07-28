@@ -92,7 +92,7 @@ export function Editors() {
           <div
             className={`${
               showTableViewMode ? 'col-span-4' : 'col-span-6'
-            } h-full rounded-bl-lg`}
+            } h-full rounded-bl-lg flex`}
           >
             <div className="flex w-full h-full overflow-x-auto rounded-bl-lg">
               <CodeMirror
