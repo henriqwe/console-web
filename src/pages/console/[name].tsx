@@ -67,10 +67,12 @@ function Page() {
 
   let tab = <consoleSection.ApiSection />
   switch (currentTab) {
-    case 'DATA':
+    case 'Schema Manager':
       tab = <consoleSection.DataSection />
       break
-
+    case 'Schema Manager':
+      tab = <consoleSection.ApiSection />
+      break
     case 'USERS':
       tab = <consoleSection.UsersSection />
       break

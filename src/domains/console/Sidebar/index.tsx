@@ -9,18 +9,25 @@ export function SideBar() {
   const { setCurrentTab, currentTab } = consoleSection.useData()
 
   useEffect(() => {
-    setCurrentTab(selectedTab.name as 'API' | 'DATA')
+    setCurrentTab(selectedTab.name as 'Data Manager' | 'Schema Manager')
   }, [selectedTab])
 
   const teste = [
-    { titles: 'Schema Manager', content: <consoleSection.DataTab /> },
-    { titles: 'Data Manager', content: <consoleSection.ApiTab /> }
+    { title: 'Schema Manager', content: <consoleSection.DataTab /> },
+    { title: 'Data Manager', content: <consoleSection.ApiTab /> }
   ]
   return (
     <div className="text-gray-600  w-[20%] h-full flex flex-col bg-theme-primary">
       {teste.map((t, idx) => {
         return (
-          <common.Accordion titles={t.titles} content={t.content} key={idx} />
+          <div
+            onClick={() => {
+              setCurrentTab(t.title)
+            }}
+            key={idx}
+          >
+            <common.Accordion titles={t.title} content={t.content} />
+          </div>
         )
       })}
     </div>
