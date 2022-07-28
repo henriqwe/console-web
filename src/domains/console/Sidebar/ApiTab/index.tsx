@@ -3,7 +3,6 @@ import { SetStateAction, useEffect, useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
-import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import * as consoleEditor from '../../ConsoleEditorContext'
 import { useRouter } from 'next/router'
@@ -21,8 +20,8 @@ export function ApiTab() {
       const operations = []
       setLoading(true)
 
-      const { data: tables } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
+      const { data: tables } = await utils.localApi.get(
+        utils.apiRoutes.local.schema(router.query.name as string),
         {
           headers: {
             Authorization: `Bearer ${getCookie('access_token')}`

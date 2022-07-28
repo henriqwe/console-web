@@ -1,4 +1,3 @@
-import axios from 'axios'
 import * as utils from 'utils'
 import * as common from 'common'
 import * as types from 'domains/console/types'
@@ -51,7 +50,7 @@ export function FieldDetail({
   } = useForm({ resolver: yupResolver(fieldSchema) })
 
   async function Save(formData: FormData) {
-    await axios.put(
+    await utils.api.put(
       `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
       formData,
       {
@@ -67,8 +66,11 @@ export function FieldDetail({
   }
 
   async function Remove() {
-    await axios.delete(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
+    await utils.api.delete(
+      `${utils.apiRoutes.attribute({
+        projectName: router.query.name as string,
+        entityName: selectedTable as string
+      })}/${data.name}`,
       {
         headers: {
           'Content-Type': 'application/json',

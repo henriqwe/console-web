@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { getCookie } from 'utils'
 
 import {
@@ -92,8 +91,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
   async function loadParser() {
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/parser?parserName=${router.query.name}`,
+      const { data } = await utils.localApi.get(
+        utils.apiRoutes.local.parser(router.query.name as string),
         {
           headers: {
             Authorization: `Bearer ${utils.getCookie('access_token')}`
@@ -141,8 +140,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     try {
       setConsoleValueLastOperation(consoleValue)
       setconsoleResponseLoading(true)
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
+      const { data } = await utils.localApi.post(
+        utils.apiRoutes.local.interpreter,
         {
           data: JSON.parse(consoleValue),
           access_token: `${utils.getCookie('admin_access_token')}`,

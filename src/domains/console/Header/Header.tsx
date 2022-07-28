@@ -4,7 +4,6 @@ import { UserIcon } from '@heroicons/react/outline'
 import { Icon } from '@iconify/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import axios from 'axios'
 import * as utils from 'utils'
 import {
   useForm,
@@ -30,8 +29,8 @@ export function Header() {
   async function Submit(formData: { userName: string; password: string }) {
     setLoading(true)
     try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/adminLogin`,
+      const { data } = await utils.localApi.post(
+        utils.apiRoutes.local.adminLogin,
         {
           username: formData.userName,
           password: formData.password
@@ -57,8 +56,8 @@ export function Header() {
 
   return (
     <div className="flex items-center justify-between w-full">
-      <div className="flex my-0 gap-4 items-end py-4">
-        <p className="text-3xl font-semi-bold text-gray-900">
+      <div className="flex items-end gap-4 py-4 my-0">
+        <p className="text-3xl text-gray-900 font-semi-bold">
           {router.query.name}
         </p>
       </div>

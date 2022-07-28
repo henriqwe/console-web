@@ -10,6 +10,14 @@ import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
 
+type Schemas = {
+  createdat: number
+  name: string
+  status: string
+  tenantAc: string
+  tenantId: string
+}
+
 export function Projects() {
   const router = useRouter()
   const { control, watch } = useForm()
@@ -21,21 +29,23 @@ export function Projects() {
     reload
   } = dashboard.useData()
   const [showFiltered, setShowFiltered] = useState(false)
-  const [filteredSchemas, setFilteredSchemas] = useState<string[]>([])
-  const [schemas, setSchemas] = useState<string[]>([])
+  const [filteredSchemas, setFilteredSchemas] = useState<Schemas[]>([])
+  const [schemas, setSchemas] = useState<Schemas[]>([])
   const [loadingSchemas, setLoadingSchemas] = useState(true)
 
   async function loadSchemas() {
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/schemas`,
+      const { data } = await utils.api.get(
+        utils.apiRoutes.schemas,
         {
           headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
             Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
         }
       )
-      setSchemas(data.data)
+      setSchemas(data)
     } catch (err: any) {
       if (err.response.status !== 404) {
         utils.notification(err.message, 'error')
@@ -76,7 +86,7 @@ export function Projects() {
     )
     const re = RegExp(p)
 
-    return schemas.filter((v) => v.match(re))
+    return schemas.filter((v) => v.name.match(re))
   }
 
   function filterSchemas() {
@@ -158,10 +168,13 @@ export function Projects() {
           </div>
         ) : (
           (showFiltered ? filteredSchemas : schemas).map((schema) => (
-            <common.Card className="flex p-6 bg-white shadow-sm" key={schema}>
+            <common.Card
+              className="flex p-6 bg-white shadow-sm"
+              key={schema.createdat}
+            >
               <div className="grid items-center justify-between flex-1 grid-cols-4 gap-4">
                 <div>
-                  <p className="text-2xl">{schema}</p>
+                  <p className="text-2xl">{schema.name}</p>
                   <p className="text-xs text-gray-600">Standard</p>
                 </div>
                 <div className="flex items-center justify-around flex-1 col-span-2">
@@ -182,12 +195,13 @@ export function Projects() {
                     className="px-1 py-1"
                     onClick={() => {
                       if (
-                        utils.getCookie('X-TenantID')?.split('@')[1] !== schema
+                        utils.getCookie('X-TenantID')?.split('@')[1] !==
+                        schema.name
                       ) {
                         utils.removeCookie('X-TenantID')
                         utils.removeCookie('admin_access_token')
                       }
-                      router.push(`${routes.console}/${schema}`)
+                      router.push(`${routes.console}/${schema.name}`)
                     }}
                   >
                     <PlayIcon className="w-6 h-6 text-green-700" />

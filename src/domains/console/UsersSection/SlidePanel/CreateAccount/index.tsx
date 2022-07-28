@@ -5,7 +5,6 @@ import {
   useForm
 } from 'react-hook-form'
 import { useState } from 'react'
-import axios from 'axios'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
@@ -30,7 +29,7 @@ export function CreateAccount() {
   }) => {
     setLoading(true)
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/createAccount`, {
+      await utils.localApi.post(utils.apiRoutes.local.createAccount, {
         username: formData.Username,
         password: formData.Password,
         email: formData.Email

@@ -9,8 +9,8 @@ import {
 import * as yup from 'yup'
 
 type DataContextProps = {
-  selectedSchema?: string
-  setSelectedSchema: Dispatch<SetStateAction<string | undefined>>
+  selectedSchema?: Schemas
+  setSelectedSchema: Dispatch<SetStateAction<Schemas | undefined>>
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
   createProjectSchema: yup.AnyObjectSchema
@@ -21,6 +21,15 @@ type DataContextProps = {
   slideSize: 'normal' | 'halfPage' | 'fullPage'
   setSlideSize: Dispatch<SetStateAction<'normal' | 'halfPage' | 'fullPage'>>
 }
+
+type Schemas = {
+  createdat: number
+  name: string
+  status: string
+  tenantAc: string
+  tenantId: string
+}
+
 
 type ProviderProps = {
   children: ReactNode
@@ -37,7 +46,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
     'normal' | 'halfPage' | 'fullPage'
   >('normal')
   const [reload, setReload] = useState(false)
-  const [selectedSchema, setSelectedSchema] = useState<string>()
+  const [selectedSchema, setSelectedSchema] = useState<Schemas>()
 
   const createProjectSchema = yup.object().shape({
     ProjectName: yup

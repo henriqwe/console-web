@@ -1,7 +1,6 @@
 import * as common from 'common'
 import * as consoleData from 'domains/console'
 import * as utils from 'utils'
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
 import { PlusIcon } from '@heroicons/react/outline'
@@ -14,16 +13,13 @@ export function RoleTab() {
 
   async function loadData() {
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/role`,
-        {
-          headers: {
-            'X-TenantID': utils.getCookie('X-TenantID') as string,
-            Accept: 'application/json',
-            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
-          }
+      const { data } = await utils.api.get(utils.apiRoutes.roles, {
+        headers: {
+          'X-TenantID': utils.getCookie('X-TenantID') as string,
+          Accept: 'application/json',
+          Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
         }
-      )
+      })
       setRoles(data)
     } catch (err: any) {
       console.log(err)

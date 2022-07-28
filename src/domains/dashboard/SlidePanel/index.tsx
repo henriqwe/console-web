@@ -9,7 +9,9 @@ export function SlidePanel() {
   return (
     <common.Slide
       title={
-        slideType === 'CREATE' ? 'Create schema' : (selectedSchema as string)
+        slideType === 'CREATE'
+          ? 'Create schema'
+          : (selectedSchema?.name as string)
       }
       open={openSlide}
       slideSize={slideSize}

@@ -1,6 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import * as consoleData from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
@@ -61,9 +60,9 @@ export function Update() {
 
   const onSubmit = async (formData: any) => {
     setLoading(true)
-    await axios
+    await utils.localApi
       .post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
+        utils.apiRoutes.local.interpreter,
         {
           data: JSON.parse(
             `{\n 

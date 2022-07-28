@@ -66,15 +66,12 @@ export function ViewSchema() {
   async function DeleteProject() {
     try {
       setSubmitLoading(true)
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${selectedSchema}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
+      await utils.api.delete(`${utils.apiRoutes.schemas}/${selectedSchema}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
         }
-      )
+      })
       setReload(!reload)
       setSelectedSchema(undefined)
       setOpenSlide(false)
@@ -92,16 +89,13 @@ export function ViewSchema() {
 
   async function loadAdminUser() {
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/account`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`,
-            'X-TenantID': utils.getCookie('X-TenantID') as string
-          }
+      const { data } = await utils.api.get(utils.apiRoutes.adminData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${utils.getCookie('admin_access_token')}`,
+          'X-TenantID': utils.getCookie('X-TenantID') as string
         }
-      )
+      })
       setAdminUser(data[0])
     } catch (err: any) {
       utils.notification(err.message, 'error')

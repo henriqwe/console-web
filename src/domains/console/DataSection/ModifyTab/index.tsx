@@ -4,7 +4,6 @@ import * as common from 'common'
 import * as consoleSection from 'domains/console'
 import { XIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline'
 import { SetStateAction, useState, Dispatch } from 'react'
-import axios from 'axios'
 import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -23,8 +22,10 @@ export function ModifyTab({ loading }: ModifyTabProps) {
   async function RemoveTable() {
     try {
       setSubmitLoading(true)
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
+      await utils.api.delete(
+        `${utils.apiRoutes.entity(
+          router.query.name as string
+        )}/${selectedTable}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -153,8 +154,11 @@ function AttributeForm({
         throw new Error('String length is required')
       }
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute`,
+      await utils.api.post(
+        utils.apiRoutes.attribute({
+          projectName: router.query.name as string,
+          entityName: selectedTable as string
+        }),
         {
           name: data.ColumnName,
           comment: data.Comment,

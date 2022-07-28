@@ -3,7 +3,6 @@ import * as common from 'common'
 import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import * as consoleSection from 'domains/console'
-import axios from 'axios'
 import { useRouter } from 'next/router'
 import { PlusIcon, CheckIcon } from '@heroicons/react/outline'
 
@@ -35,15 +34,12 @@ export function CreateTable() {
         throw new Error('Entity cannot contain spaces')
       }
 
-      const response = await axios
-        .get(
-          `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
-          {
-            headers: {
-              Authorization: `Bearer ${utils.getCookie('access_token')}`
-            }
+      const response = await utils.localApi
+        .get(utils.apiRoutes.local.schema(router.query.name as string), {
+          headers: {
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
-        )
+        })
         .catch(() => null)
       const tables = Object.keys(response ? response.data.data : {})
       if (tables.includes(data.Name.toLowerCase())) {
@@ -88,10 +84,11 @@ export function CreateTable() {
         })
       }
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity`,
+      await utils.api.post(
+        utils.apiRoutes.entity(router.query.name as string),
         {
-          name: data.Name
+          name: data.Name,
+          dbType: 'sql'
         },
         {
           headers: {
@@ -102,8 +99,11 @@ export function CreateTable() {
       )
 
       for (const column of columnValues) {
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${data.Name}/attribute`,
+        await utils.api.post(
+          utils.apiRoutes.attribute({
+            entityName: data.Name,
+            projectName: router.query.name as string
+          }),
           {
             name: column?.ColumnName,
             comment: column?.Comment,

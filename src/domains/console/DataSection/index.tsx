@@ -2,7 +2,7 @@ import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import * as utils from 'utils'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
@@ -20,8 +20,8 @@ export function DataSection() {
   const [loading, setLoading] = useState(true)
 
   async function loadTableData() {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
+    const { data } = await utils.api.get(
+      `${utils.apiRoutes.entity(router.query.name as string)}/${selectedTable}`,
       {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`

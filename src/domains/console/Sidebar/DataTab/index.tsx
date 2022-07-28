@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as consoleSection from 'domains/console'
-import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PlusIcon } from '@heroicons/react/outline'
@@ -19,8 +18,8 @@ export function DataTab() {
     try {
       setLoading(true)
 
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
+      const { data } = await utils.localApi.get(
+        utils.apiRoutes.local.schema(router.query.name as string),
         {
           headers: {
             Authorization: `Bearer ${getCookie('access_token')}`

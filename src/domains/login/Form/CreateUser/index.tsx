@@ -1,4 +1,3 @@
-import axios from 'axios'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as login from 'domains/login'
@@ -30,8 +29,8 @@ export function CreateUser() {
   }) {
     setLoading(true)
     try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/createAccount`,
+      const { data } = await utils.localApi.post(
+        utils.apiRoutes.local.createAccount,
         {
           username: formData.userName,
           password: formData.password,

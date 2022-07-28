@@ -1,4 +1,3 @@
-import axios from 'axios'
 import * as utils from 'utils'
 import * as common from 'common'
 import * as consoleSection from 'domains/console'
@@ -41,8 +40,8 @@ export function DefaultPage() {
   ]
 
   async function publishSchema() {
-    await axios.put(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}`,
+    await utils.api.put(
+      `${utils.apiRoutes.schemas}/${router.query.name}`,
       { status: 2 },
       {
         headers: {
