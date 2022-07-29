@@ -7,7 +7,7 @@ import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
 
-export function DataSection() {
+export function SchemaManagerSection() {
   const router = useRouter()
   const {
     selectedEntity,

@@ -65,13 +65,13 @@ function Page() {
   const { setIsOpen, currentStep, setSteps, isOpen, setCurrentStep } = useTour()
   const { tabsData } = consoleEditor.useConsoleEditor()
 
-  let tab = <consoleSection.ApiSection />
+  let tab = <consoleSection.DataManagerSection />
   switch (currentTab) {
     case 'Schema Manager':
-      tab = <consoleSection.DataSection />
+      tab = <consoleSection.SchemaManagerSection />
       break
     case 'Schema Manager':
-      tab = <consoleSection.ApiSection />
+      tab = <consoleSection.DataManagerSection />
       break
     case 'USERS':
       tab = <consoleSection.UsersSection />
