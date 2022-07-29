@@ -1,35 +1,41 @@
 import { useEffect } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
-import { useRouter } from 'next/router'
+type accordionsDatatype = {
+  id: number
+  title: 'Data Manager' | 'Schema Manager' | 'USERS'
+  content: JSX.Element
+  defaultOpen: boolean
+  action: () => void
+}[]
 
 export function SideBar() {
-  const router = useRouter()
-  const { selectedTab, setSelectedTab } = consoleSection.useSidebar()
-  const { setCurrentTab, currentTab } = consoleSection.useData()
+  const { selectedTab } = consoleSection.useSidebar()
+  const { setCurrentTab } = consoleSection.useData()
 
   useEffect(() => {
     setCurrentTab(selectedTab.name as 'Data Manager' | 'Schema Manager')
   }, [selectedTab])
 
-  const teste = [
-    { title: 'Schema Manager', content: <consoleSection.DataTab /> },
-    { title: 'Data Manager', content: <consoleSection.ApiTab /> }
+  const accordionsData: accordionsDatatype = [
+    {
+      id: 1,
+      title: 'Schema Manager',
+      content: <consoleSection.DataTab />,
+      defaultOpen: true,
+      action: () => setCurrentTab('Schema Manager')
+    },
+    {
+      id: 2,
+      title: 'Data Manager',
+      content: <consoleSection.ApiTab />,
+      defaultOpen: false,
+      action: () => setCurrentTab('Data Manager')
+    }
   ]
   return (
     <div className="text-gray-600  w-[20%] h-full flex flex-col bg-theme-primary">
-      {teste.map((t, idx) => {
-        return (
-          <div
-            onClick={() => {
-              setCurrentTab(t.title)
-            }}
-            key={idx}
-          >
-            <common.Accordion titles={t.title} content={t.content} />
-          </div>
-        )
-      })}
+      <common.AccordionGroup accordionsData={accordionsData} />
     </div>
   )
 }

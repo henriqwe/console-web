@@ -3,22 +3,33 @@ import { ChevronUpIcon } from '@heroicons/react/solid'
 import { ReactNode } from 'react'
 
 type AccordionProps = {
-  titles: string
+  id?: number
+  title: string
   content: ReactNode
+  defaultOpen?: boolean
+  elementRef: any
 }
 
-export function Accordion({ titles, content }: AccordionProps) {
+export function Accordion({
+  id,
+  title,
+  content,
+  defaultOpen = false,
+  elementRef
+}: AccordionProps) {
   return (
     <div className={`w-full`}>
-      <Disclosure>
+      <Disclosure defaultOpen={defaultOpen}>
         {({ open }) => (
           <>
             <Disclosure.Button
               className={`flex w-full items-center justify-between px-6 py-2 text-left font-semibold text-gray-700 ${
                 open ? 'bg-[#FFF3D5]' : 'hover:bg-[#FFF3D5] bg-gray-200 '
               }`}
+              ref={elementRef}
+              data-id={id}
             >
-              <span className="text-xl">{titles}</span>
+              <span className="text-xl">{title}</span>
               <ChevronUpIcon
                 className={`${
                   open ? 'rotate-180 transform' : ''
