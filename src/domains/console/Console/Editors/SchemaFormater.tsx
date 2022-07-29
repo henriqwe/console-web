@@ -8,7 +8,6 @@ export function SchemaFormater() {
 
   const documentationValueParsed =
     utils.ycl_transpiler.parse(documentationValue)
-  console.log('documentationValueParsed', documentationValueParsed)
   return (
     <div>
       {/* Schema namne */}
