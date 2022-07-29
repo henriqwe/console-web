@@ -23,6 +23,9 @@ const Template: ComponentStory<typeof Accordion> = (args) => (
 
 export const Default = Template.bind({})
 Default.args = {
-  titles: 'Accordion',
-  content
+  title: 'Accordion',
+  defaultOpen: false,
+  action: () => {},
+  content,
+  id: 0
 }
