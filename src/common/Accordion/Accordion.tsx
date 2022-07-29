@@ -8,6 +8,7 @@ type AccordionProps = {
   content: ReactNode
   defaultOpen?: boolean
   elementRef: any
+  action?: () => void
 }
 
 export function Accordion({
@@ -15,7 +16,8 @@ export function Accordion({
   title,
   content,
   defaultOpen = false,
-  elementRef
+  elementRef,
+  action
 }: AccordionProps) {
   return (
     <div className={`w-full`}>
@@ -28,6 +30,11 @@ export function Accordion({
               }`}
               ref={elementRef}
               data-id={id}
+              onClick={() => {
+                if (action) {
+                  action()
+                }
+              }}
             >
               <span className="text-xl">{title}</span>
               <ChevronUpIcon

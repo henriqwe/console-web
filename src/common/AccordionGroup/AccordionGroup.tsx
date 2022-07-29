@@ -46,8 +46,7 @@ export function AccordionGroup({ accordionsData }: AccordionGroupProps) {
       {accordionsData.map((accordionData, idx) => {
         return (
           <div
-            onClick={async () => {
-              await hideOther(accordionData.id)
+            onClick={() => {
               accordionData.action()
             }}
             key={idx}
@@ -58,6 +57,7 @@ export function AccordionGroup({ accordionsData }: AccordionGroupProps) {
               defaultOpen={accordionData.defaultOpen}
               elementRef={elementsRef.current[idx]}
               id={accordionData.id}
+              action={() => hideOther(accordionData.id)}
             />
           </div>
         )
