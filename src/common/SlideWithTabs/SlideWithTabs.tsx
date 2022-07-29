@@ -95,7 +95,7 @@ export function SlideWithTabs({
                   className={`w-screen flex pointer-events-auto ${slidePanelWidth} `}
                 >
                   <div
-                    className={`sticky   inset-y-0 right-0  z-50 ${slidePanelWidth} items-center justify-stat space-y-10  my-36`}
+                    className={`sticky inset-y-0 right-0 z-50 ${slidePanelWidth} items-center space-y-10 my-36`}
                   >
                     {tabsData?.map((tab, idx) => {
                       return (
@@ -144,8 +144,8 @@ export function SlideWithTabs({
                     </div>
                     <common.Separator />
                     <div
-                      className={`relative flex-1 mt-6 ${
-                        noPadding ? '' : 'px-4 sm:px-6'
+                      className={`relative flex-1 ${
+                        noPadding ? '' : 'mx-4 sm:mx-10 my-5'
                       }`}
                     >
                       {slideData.content}
@@ -177,10 +177,10 @@ function Button({ onClick, children, color }: ButtonType) {
       break
   }
   return (
-    <div className="-rotate-90 translate-x-4">
+    <div className="-rotate-90 translate-x-2">
       <button
         onClick={onClick}
-        className={`bg-white border-x-2 border-t-2 p-2 rounded-t-md ${btnColor}`}
+        className={`bg-white border-x-2 border-t-2 py-1 px-2 rounded-t-md ${btnColor}`}
       >
         {children}
       </button>

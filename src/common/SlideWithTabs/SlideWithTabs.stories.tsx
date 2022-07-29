@@ -5,10 +5,10 @@ import { SlideWithTabs } from '.'
 
 const content = (
   <ul>
-    <li>Content placeholder</li>
-    <li>Content placeholder</li>
-    <li>Content placeholder</li>
-    <li>Content placeholder</li>
+    <li>Content placeholder 1</li>
+    <li>Content placeholder 1</li>
+    <li>Content placeholder 1</li>
+    <li>Content placeholder 1</li>
   </ul>
 )
 
@@ -19,9 +19,9 @@ type data = {
 }[]
 
 const tabsData: data = [
-  { title: 'Tab 1', color: 'blue', content },
-  { title: 'Tab 2', color: 'red', content },
-  { title: 'Tab 3', color: 'blue', content }
+  { title: 'Tab', color: 'blue', content },
+  { title: 'Tab', color: 'red', content },
+  { title: 'Tab', color: 'blue', content }
 ]
 
 const options = [
