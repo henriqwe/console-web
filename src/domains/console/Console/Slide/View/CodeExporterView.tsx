@@ -3,7 +3,6 @@ import CodeMirror from '@uiw/react-codemirror'
 import { javascript } from '@codemirror/lang-javascript'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { useEffect } from 'react'
-import { Tabs } from './Tabs'
 import * as utils from 'utils'
 
 export function CodeExporterView() {
@@ -12,19 +11,6 @@ export function CodeExporterView() {
     formaterCodeExporterValue,
     codeExporterValue
   } = consoleEditor.useConsoleEditor()
-
-  // const sections = {
-  //   [`JS Function`]: {
-  //     content: <EditorView value={codeExporterValue} />,
-  //     contentEditor: codeExporterValue,
-  //     icon: <common.icons.JavaScriptIcon />
-  //   },
-  //   ['Variables']: {
-  //     content: <EditorView value={variablesValue} />,
-  //     contentEditor: variablesValue,
-  //     icon: <common.icons.CodeSquareIcon />
-  //   }
-  // }
 
   useEffect(() => {
     formaterCodeExporterValue()

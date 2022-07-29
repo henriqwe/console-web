@@ -8,8 +8,8 @@ import { PlusIcon } from '@heroicons/react/outline'
 
 export function AccountTab() {
   const [loading, setLoading] = useState(true)
-  const [tableData, setTableData] = useState()
-  const { selectedTable } = consoleData.useData()
+  const [entityData, setEntityData] = useState()
+  const { selectedEntity } = consoleData.useData()
   const { reload, setOpenSlide, setSlideType } = consoleData.useUser()
 
   async function loadData() {
@@ -24,7 +24,7 @@ export function AccountTab() {
           }
         }
       )
-      setTableData(data)
+      setEntityData(data)
     } catch (err: any) {
       console.log(err)
       if (err.response.status !== 404) {
@@ -36,10 +36,10 @@ export function AccountTab() {
   }
 
   useEffect(() => {
-    setTableData(undefined)
+    setEntityData(undefined)
     setLoading(true)
     loadData()
-  }, [selectedTable, reload])
+  }, [selectedEntity, reload])
 
   return (
     <div
@@ -53,7 +53,7 @@ export function AccountTab() {
             <common.Spinner />
           </div>
 
-          <p className="text-lg font-bold text-gray-700">Loading table data</p>
+          <p className="text-lg font-bold text-gray-700">Loading entity data</p>
         </div>
       ) : (
         <div className="flex flex-col w-full h-full gap-0 bg-gray-100 rounded-b-lg overflow-y">
@@ -93,7 +93,7 @@ export function AccountTab() {
                   )
               }
             ]}
-            values={tableData}
+            values={entityData}
             actions={RowActions}
           />
         </div>

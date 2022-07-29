@@ -10,12 +10,16 @@ import { PlusIcon } from '@heroicons/react/outline'
 
 export function DataTab() {
   const router = useRouter()
-  const { selectedTable, setSelectedTable, reload, setShowCreateTableSection } =
-    consoleSection.useData()
-  const [tables, setTables] = useState<string[]>([])
+  const {
+    selectedEntity,
+    setSelectedEntity,
+    reload,
+    setShowCreateEntitySection
+  } = consoleSection.useData()
+  const [entities, setEntities] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
-  async function loadTables() {
+  async function loadEntities() {
     try {
       setLoading(true)
 
@@ -27,7 +31,7 @@ export function DataTab() {
           }
         }
       )
-      setTables(Object.keys(data.data) as string[])
+      setEntities(Object.keys(data.data) as string[])
     } catch (err: any) {
       if (err.response.status !== 404) {
         utils.notification(err.message, 'error')
@@ -39,7 +43,7 @@ export function DataTab() {
 
   useEffect(() => {
     if (router.query.name) {
-      loadTables()
+      loadEntities()
     }
   }, [router.query.name, reload])
 
@@ -51,7 +55,7 @@ export function DataTab() {
             className="px-2 py-2"
             data-tour="step-2"
             onClick={() => {
-              setShowCreateTableSection(true)
+              setShowCreateEntitySection(true)
             }}
           >
             <div className="flex items-center gap-2">
@@ -68,24 +72,24 @@ export function DataTab() {
             </div>
             <div>Loading...</div>
           </div>
-        ) : tables.length === 0 ? (
+        ) : entities.length === 0 ? (
           <div>
             <p>Entities not found</p>
           </div>
         ) : (
-          tables.map((table) => (
-            <div key={table}>
+          entities.map((entity) => (
+            <div key={entity}>
               <div
                 className={`flex items-center gap-2 pb-2 cursor-pointer ${
-                  selectedTable === `${table}` && 'text-orange-400'
+                  selectedEntity === `${entity}` && 'text-orange-400'
                 }`}
                 onClick={() => {
-                  setSelectedTable(`${table}`)
-                  setShowCreateTableSection(false)
+                  setSelectedEntity(`${entity}`)
+                  setShowCreateEntitySection(false)
                 }}
               >
-                <Icon icon="bi:table" className="w-4 h-4" />
-                <p className="text-sm">{table}</p>
+                <Icon icon="bi:entity" className="w-4 h-4" />
+                <p className="text-sm">{entity}</p>
               </div>
             </div>
           ))

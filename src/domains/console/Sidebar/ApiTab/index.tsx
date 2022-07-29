@@ -13,7 +13,7 @@ export function ApiTab() {
   const router = useRouter()
   const [operations, setOperations] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
-  const [activeTable, setActiveTable] = useState<string>()
+  const [activeEntity, setActiveEntity] = useState<string>()
   const { formatQueryOrMutation } = consoleEditor.useConsoleEditor()
 
   async function loadOperations() {
@@ -21,7 +21,7 @@ export function ApiTab() {
       const operations = []
       setLoading(true)
 
-      const { data: tables } = await axios.get(
+      const { data: entities } = await axios.get(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
         {
           headers: {
@@ -29,8 +29,8 @@ export function ApiTab() {
           }
         }
       )
-      for (const table of Object.keys(tables.data)) {
-        operations.push(`${table}`)
+      for (const entity of Object.keys(entities.data)) {
+        operations.push(`${entity}`)
       }
       setOperations(operations)
     } catch (err: any) {
@@ -66,9 +66,9 @@ export function ApiTab() {
           <Operation
             key={schema}
             schema={schema}
-            activeTable={activeTable}
+            activeEntity={activeEntity}
             formatQueryOrMutation={formatQueryOrMutation}
-            setActiveTable={setActiveTable}
+            setActiveEntity={setActiveEntity}
           />
         ))
       )}
@@ -78,19 +78,19 @@ export function ApiTab() {
 
 function Operation({
   schema,
-  activeTable,
+  activeEntity,
   formatQueryOrMutation,
-  setActiveTable
+  setActiveEntity
 }: {
   schema: string
-  activeTable: string | undefined
+  activeEntity: string | undefined
   formatQueryOrMutation: (type: string, entity: string) => void
-  setActiveTable: (value: SetStateAction<string | undefined>) => void
+  setActiveEntity: (value: SetStateAction<string | undefined>) => void
 }) {
   const [active, setActive] = useState(false)
 
   const { setSelectedTab } = consoleSection.useSidebar()
-  const { setCurrentTab, setSelectedTable } = consoleSection.useData()
+  const { setCurrentTab, setSelectedEntity } = consoleSection.useData()
 
   return (
     <div className="flex flex-col gap-2 px-3 mb-2">
@@ -110,22 +110,22 @@ function Operation({
       </div>
       {active &&
         ['insert', 'update', 'delete', 'select', 'select by pk'].map(
-          (table) => (
-            <div key={table}>
+          (entity) => (
+            <div key={entity}>
               <div
                 className={`flex items-center gap-2  ml-4 cursor-pointer ${
-                  activeTable === `${schema}${table}` && 'text-orange-400'
+                  activeEntity === `${schema}${entity}` && 'text-orange-400'
                 }`}
                 onClick={() => {
-                  setActiveTable(`${schema}${table}`)
-                  formatQueryOrMutation(table, schema)
+                  setActiveEntity(`${schema}${entity}`)
+                  formatQueryOrMutation(entity, schema)
                 }}
               >
                 <div className="w-4 h-4">
-                  {activeTable === `${schema}${table}` && <CheckIcon />}
+                  {activeEntity === `${schema}${entity}` && <CheckIcon />}
                 </div>
 
-                <p className="text-sm">{table}</p>
+                <p className="text-sm">{entity}</p>
               </div>
             </div>
           )

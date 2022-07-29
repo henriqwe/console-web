@@ -17,14 +17,14 @@ export function ModifyTab({ loading }: ModifyTabProps) {
   const [submitLoading, setSubmitLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [openForm, setOpenForm] = useState(false)
-  const { tableData, selectedTable, setReload, reload, setSelectedTable } =
+  const { entityData, selectedEntity, setReload, reload, setSelectedEntity } =
     consoleSection.useData()
 
-  async function RemoveTable() {
+  async function RemoveEntity() {
     try {
       setSubmitLoading(true)
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -33,9 +33,9 @@ export function ModifyTab({ loading }: ModifyTabProps) {
         }
       )
       setReload(!reload)
-      setSelectedTable(undefined)
+      setSelectedEntity(undefined)
       utils.notification(
-        `Table ${selectedTable} deleted successfully`,
+        `Entity ${selectedEntity} deleted successfully`,
         'success'
       )
     } catch (err: any) {
@@ -63,7 +63,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
       } rounded-b-md bg-white p-6 gap-2`}
     >
       <h3 className="text-lg">Columns:</h3>
-      {tableData?.map((data) => (
+      {entityData?.map((data) => (
         <Column key={data.name} data={data} />
       ))}
 
@@ -72,7 +72,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           setOpenForm={setOpenForm}
           setReload={setReload}
           reload={reload}
-          selectedTable={selectedTable}
+          selectedEntity={selectedEntity}
         />
       )}
       <common.Separator />
@@ -104,7 +104,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
         setOpen={setOpenModal}
         loading={submitLoading}
         disabled={submitLoading}
-        title={`Remove ${selectedTable} entity?`}
+        title={`Remove ${selectedEntity} entity?`}
         description={
           <>
             <p className="text-sm text-gray-600">
@@ -116,7 +116,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           </>
         }
         buttonTitle="Remove entity"
-        handleSubmit={RemoveTable}
+        handleSubmit={RemoveEntity}
       />
     </div>
   )
@@ -126,12 +126,12 @@ function AttributeForm({
   setOpenForm,
   setReload,
   reload,
-  selectedTable
+  selectedEntity
 }: {
   setOpenForm: Dispatch<SetStateAction<boolean>>
   setReload: Dispatch<SetStateAction<boolean>>
   reload: boolean
-  selectedTable?: string
+  selectedEntity?: string
 }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -154,7 +154,7 @@ function AttributeForm({
       }
 
       await axios.post(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute`,
+        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}/attribute`,
         {
           name: data.ColumnName,
           comment: data.Comment,

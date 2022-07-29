@@ -1,7 +1,7 @@
 import * as consoleData from 'domains/console'
 import * as common from 'common'
 import { Update } from './Update'
-import { UpdateTableName } from './UpdateTableName'
+import { UpdateEntityName } from './UpdateEntityName'
 
 export function SlidePanel() {
   const { setOpenSlide, openSlide, slideType } = consoleData.useData()
@@ -10,7 +10,7 @@ export function SlidePanel() {
       title={slideType === 'UPDATE' ? 'Update register' : 'Update entity name'}
       open={openSlide}
       setOpen={setOpenSlide}
-      content={slideType === 'UPDATE' ? <Update /> : <UpdateTableName />}
+      content={slideType === 'UPDATE' ? <Update /> : <UpdateEntityName />}
     />
   )
 }

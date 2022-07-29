@@ -251,7 +251,11 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         {
           title: 'Spec',
           color: 'blue',
-          content: <div>{schemaTabData}</div>
+          content: (
+            <div className="leading-5 bg-gray-50 p-4 rounded-lg">
+              {schemaTabData}
+            </div>
+          )
         }
       ])
     }

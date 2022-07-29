@@ -14,8 +14,8 @@ type DataContextProps = {
   setCurrentTab: Dispatch<
     SetStateAction<'Data Manager' | 'Schema Manager' | 'USERS'>
   >
-  selectedTable?: string
-  setSelectedTable: Dispatch<SetStateAction<string | undefined>>
+  selectedEntity?: string
+  setSelectedEntity: Dispatch<SetStateAction<string | undefined>>
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
   fieldSchema: yup.AnyObjectSchema
@@ -23,14 +23,14 @@ type DataContextProps = {
   setSelectedItemToExclude: Dispatch<SetStateAction<any>>
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
-  tableData?: types.TableData[]
-  setTableData: Dispatch<SetStateAction<types.TableData[] | undefined>>
-  showCreateTableSection: boolean
-  setShowCreateTableSection: Dispatch<SetStateAction<boolean>>
-  showTableViewMode: boolean
-  setShowTableViewMode: Dispatch<SetStateAction<boolean>>
-  slideType: 'UPDATE' | 'UPDATE TABLE'
-  setSlideType: Dispatch<SetStateAction<'UPDATE' | 'UPDATE TABLE'>>
+  entityData?: types.EntityData[]
+  setEntityData: Dispatch<SetStateAction<types.EntityData[] | undefined>>
+  showCreateEntitySection: boolean
+  setShowCreateEntitySection: Dispatch<SetStateAction<boolean>>
+  showEntityViewMode: boolean
+  setShowEntityViewMode: Dispatch<SetStateAction<boolean>>
+  slideType: 'UPDATE' | 'UPDATE ENTITY'
+  setSlideType: Dispatch<SetStateAction<'UPDATE' | 'UPDATE ENTITY'>>
   slideState: slideState
   setSlideState: Dispatch<SetStateAction<slideState>>
 }
@@ -49,18 +49,18 @@ export const DataContext = createContext<DataContextProps>(
 
 export const DataProvider = ({ children }: ProviderProps) => {
   const [openSlide, setOpenSlide] = useState(false)
-  const [slideType, setSlideType] = useState<'UPDATE' | 'UPDATE TABLE'>(
+  const [slideType, setSlideType] = useState<'UPDATE' | 'UPDATE ENTITY'>(
     'UPDATE'
   )
   const [selectedItemToExclude, setSelectedItemToExclude] = useState()
   const [reload, setReload] = useState(false)
-  const [showCreateTableSection, setShowCreateTableSection] = useState(false)
-  const [showTableViewMode, setShowTableViewMode] = useState(false)
+  const [showCreateEntitySection, setShowCreateEntitySection] = useState(false)
+  const [showEntityViewMode, setShowEntityViewMode] = useState(false)
   const [currentTab, setCurrentTab] = useState<
     'Data Manager' | 'Schema Manager' | 'USERS'
   >('Schema Manager')
-  const [selectedTable, setSelectedTable] = useState<string>()
-  const [tableData, setTableData] = useState<types.TableData[]>()
+  const [selectedEntity, setSelectedEntity] = useState<string>()
+  const [entityData, setEntityData] = useState<types.EntityData[]>()
   const [slideState, setSlideState] = useState<slideState>({
     open: false,
     type: 'CodeExporterView'
@@ -80,8 +80,8 @@ export const DataProvider = ({ children }: ProviderProps) => {
       value={{
         currentTab,
         setCurrentTab,
-        selectedTable,
-        setSelectedTable,
+        selectedEntity,
+        setSelectedEntity,
         reload,
         setReload,
         fieldSchema,
@@ -89,12 +89,12 @@ export const DataProvider = ({ children }: ProviderProps) => {
         setOpenSlide,
         selectedItemToExclude,
         setSelectedItemToExclude,
-        tableData,
-        setTableData,
-        showCreateTableSection,
-        setShowCreateTableSection,
-        showTableViewMode,
-        setShowTableViewMode,
+        entityData,
+        setEntityData,
+        showCreateEntitySection,
+        setShowCreateEntitySection,
+        showEntityViewMode,
+        setShowEntityViewMode,
         slideType,
         setSlideType,
         slideState,

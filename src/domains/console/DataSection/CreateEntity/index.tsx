@@ -7,9 +7,9 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import { PlusIcon, CheckIcon } from '@heroicons/react/outline'
 
-export function CreateTable() {
+export function CreateEntity() {
   const router = useRouter()
-  const { setShowCreateTableSection, setReload, reload } =
+  const { setShowCreateEntitySection, setReload, reload } =
     consoleSection.useData()
   const {
     control,
@@ -45,8 +45,8 @@ export function CreateTable() {
           }
         )
         .catch(() => null)
-      const tables = Object.keys(response ? response.data.data : {})
-      if (tables.includes(data.Name.toLowerCase())) {
+      const entities = Object.keys(response ? response.data.data : {})
+      if (entities.includes(data.Name.toLowerCase())) {
         throw new Error(`Entity ${data.Name} already exists`)
       }
 
@@ -121,7 +121,7 @@ export function CreateTable() {
       }
 
       setReload(!reload)
-      setShowCreateTableSection(false)
+      setShowCreateEntitySection(false)
       utils.notification(`Entity ${data.Name} created successfully`, 'success')
     } catch (err: any) {
       console.log(err)

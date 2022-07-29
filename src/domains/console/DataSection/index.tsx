@@ -10,50 +10,50 @@ import { PencilIcon } from '@heroicons/react/outline'
 export function DataSection() {
   const router = useRouter()
   const {
-    selectedTable,
+    selectedEntity,
     setOpenSlide,
     reload,
-    setTableData,
-    showCreateTableSection,
+    setEntityData,
+    showCreateEntitySection,
     setSlideType
   } = consoleSection.useData()
   const [loading, setLoading] = useState(true)
 
-  async function loadTableData() {
+  async function loadEntityData() {
     const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
+      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}`,
       {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`
         }
       }
     )
-    const tableData: types.TableData[] = []
+    const entityData: types.EntityData[] = []
     Object.keys(data).map((key) => {
       if (key !== '_classDef') {
-        tableData.push({
+        entityData.push({
           name: key,
           ...data[key]
         })
       }
     })
-    const tableFields = Object.keys(data).filter((value) => value[0] !== '_')
-    tableFields.unshift('id')
-    setTableData(tableData)
+    const entityFields = Object.keys(data).filter((value) => value[0] !== '_')
+    entityFields.unshift('id')
+    setEntityData(entityData)
     setLoading(false)
   }
 
   useEffect(() => {
-    if (selectedTable) {
-      loadTableData()
+    if (selectedEntity) {
+      loadEntityData()
     }
     return () => setLoading(true)
-  }, [selectedTable, reload])
+  }, [selectedEntity, reload])
 
-  if (showCreateTableSection) {
+  if (showCreateEntitySection) {
     return (
       <div className="w-full h-full p-4">
-        <consoleSection.CreateTable />
+        <consoleSection.CreateEntity />
       </div>
     )
   }
@@ -66,21 +66,21 @@ export function DataSection() {
           title={
             <div className="flex gap-2">
               <p className="text-base text-gray-900">
-                {selectedTable ? selectedTable : 'Entities'}
+                {selectedEntity ? selectedEntity : 'Entities'}
               </p>
-              {selectedTable && (
+              {selectedEntity && (
                 <PencilIcon
                   className="w-4 h-4 cursor-pointer"
                   onClick={() => {
                     setOpenSlide(true)
-                    setSlideType('UPDATE TABLE')
+                    setSlideType('UPDATE ENTITY')
                   }}
                 />
               )}
             </div>
           }
         >
-          {selectedTable ? (
+          {selectedEntity ? (
             <consoleSection.ModifyTab loading={loading} />
           ) : (
             <div className="flex items-center justify-center w-full h-full bg-white rounded-b-lg">

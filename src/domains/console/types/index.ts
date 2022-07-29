@@ -1,1 +1,1 @@
-export type { TableData } from './TableData'
+export type { EntityData } from './EntityData'

@@ -28,7 +28,7 @@ export function FieldDetail({
   data,
   setShowDetails
 }: {
-  data: types.TableData
+  data: types.EntityData
   setShowDetails: Dispatch<SetStateAction<boolean>>
 }) {
   const router = useRouter()
@@ -41,7 +41,7 @@ export function FieldDetail({
     Index: true,
     Comment: true
   })
-  const { fieldSchema, selectedTable, setReload, reload } =
+  const { fieldSchema, selectedEntity, setReload, reload } =
     consoleData.useData()
 
   const {
@@ -52,7 +52,7 @@ export function FieldDetail({
 
   async function Save(formData: FormData) {
     await axios.put(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
+      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}/attribute/${data.name}`,
       formData,
       {
         headers: {
@@ -68,7 +68,7 @@ export function FieldDetail({
 
   async function Remove() {
     await axios.delete(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
+      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}/attribute/${data.name}`,
       {
         headers: {
           'Content-Type': 'application/json',
