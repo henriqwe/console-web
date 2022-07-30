@@ -21,14 +21,14 @@ export function SideBar() {
     {
       id: 1,
       title: 'Schema Manager',
-      content: <consoleSection.DataTab />,
+      content: <consoleSection.SchemaManagerTab />,
       defaultOpen: true,
       action: () => setCurrentTab('Schema Manager')
     },
     {
       id: 2,
       title: 'Data Manager',
-      content: <consoleSection.ApiTab />,
+      content: <consoleSection.DataManagerTab />,
       defaultOpen: false,
       action: () => setCurrentTab('Data Manager')
     }

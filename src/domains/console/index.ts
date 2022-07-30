@@ -1,6 +1,6 @@
 export { SideBar } from './Sidebar'
-export { ApiTab } from './Sidebar/ApiTab'
-export { DataTab } from './Sidebar/DataTab'
+export { DataManagerTab } from './Sidebar/DataManagerTab'
+export { SchemaManagerTab } from './Sidebar/SchemaManagerTab'
 export { DataManagerSection } from './DataManagerSection'
 export { SchemaManagerSection } from './SchemaManagerSection'
 export { CreateEntity } from './SchemaManagerSection/CreateEntity'
@@ -25,3 +25,4 @@ export {
   useSidebar,
   SidebarProvider
 } from './Sidebar/SidebarContext'
+export { ViewConsole } from './ViewConsole'

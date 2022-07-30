@@ -7,9 +7,9 @@ import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import * as consoleEditor from '../../ConsoleEditorContext'
 import { useRouter } from 'next/router'
-import { CheckIcon, DatabaseIcon } from '@heroicons/react/outline'
+import { CheckIcon } from '@heroicons/react/outline'
 
-export function ApiTab() {
+export function DataManagerTab() {
   const router = useRouter()
   const [operations, setOperations] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
@@ -89,11 +89,8 @@ function Operation({
 }) {
   const [active, setActive] = useState(false)
 
-  const { setSelectedTab } = consoleSection.useSidebar()
-  const { setCurrentTab, setSelectedEntity } = consoleSection.useData()
-
   return (
-    <div className="flex flex-col gap-2 px-3 mb-2">
+    <div className="flex flex-col gap-2 mb-2 ">
       <div
         className={`flex items-center gap-2 cursor-pointer justify-between`}
         onClick={() => {
@@ -113,7 +110,7 @@ function Operation({
           (entity) => (
             <div key={entity}>
               <div
-                className={`flex items-center gap-2  ml-4 cursor-pointer ${
+                className={`flex items-center gap-2  ml-2 cursor-pointer ${
                   activeEntity === `${schema}${entity}` && 'text-orange-400'
                 }`}
                 onClick={() => {

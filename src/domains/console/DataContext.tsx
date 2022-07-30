@@ -27,8 +27,8 @@ type DataContextProps = {
   setEntityData: Dispatch<SetStateAction<types.EntityData[] | undefined>>
   showCreateEntitySection: boolean
   setShowCreateEntitySection: Dispatch<SetStateAction<boolean>>
-  showEntityViewMode: boolean
-  setShowEntityViewMode: Dispatch<SetStateAction<boolean>>
+  showTableViewMode: boolean
+  setShowTableViewMode: Dispatch<SetStateAction<boolean>>
   slideType: 'UPDATE' | 'UPDATE ENTITY'
   setSlideType: Dispatch<SetStateAction<'UPDATE' | 'UPDATE ENTITY'>>
   slideState: slideState
@@ -55,7 +55,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
   const [selectedItemToExclude, setSelectedItemToExclude] = useState()
   const [reload, setReload] = useState(false)
   const [showCreateEntitySection, setShowCreateEntitySection] = useState(false)
-  const [showEntityViewMode, setShowEntityViewMode] = useState(false)
+  const [showTableViewMode, setShowTableViewMode] = useState(false)
   const [currentTab, setCurrentTab] = useState<
     'Data Manager' | 'Schema Manager' | 'USERS'
   >('Schema Manager')
@@ -93,8 +93,8 @@ export const DataProvider = ({ children }: ProviderProps) => {
         setEntityData,
         showCreateEntitySection,
         setShowCreateEntitySection,
-        showEntityViewMode,
-        setShowEntityViewMode,
+        showTableViewMode,
+        setShowTableViewMode,
         slideType,
         setSlideType,
         slideState,

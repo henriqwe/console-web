@@ -36,7 +36,7 @@ export function Accordion({
                 }
               }}
             >
-              <span className="text-xl">{title}</span>
+              <span className="text-lg">{title}</span>
               <ChevronUpIcon
                 className={`${
                   open ? 'rotate-180 transform' : ''

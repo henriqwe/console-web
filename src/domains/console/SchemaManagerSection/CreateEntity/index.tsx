@@ -140,9 +140,14 @@ export function CreateEntity() {
   return (
     <common.Card className="flex flex-col w-full h-full">
       <common.ContentSection
-        title={<p className="text-base text-gray-900">Create a new entity</p>}
+        variant="WithoutTitleBackgroundColor"
+        title={
+          <p className="text-base font-semibold text-gray-900">
+            Create a new entity
+          </p>
+        }
       >
-        <div className={`flex flex-col h-auto p-6  bg-white rounded-b-lg`}>
+        <div className={`flex flex-col h-auto p-6  bg-white rounded-lg`}>
           <Controller
             name="Name"
             control={control}

@@ -1,11 +1,7 @@
 import * as consoleSection from 'domains/console'
 import cookie from 'cookie'
-import { Header } from 'domains/console/Header'
 import { GetServerSideProps } from 'next'
-import { TourProvider, useTour } from '@reactour/tour'
-import { useEffect } from 'react'
-import * as common from 'common'
-import * as consoleEditor from 'domains/console/ConsoleEditorContext'
+import { TourProvider } from '@reactour/tour'
 
 export default function Home({
   cookie
@@ -61,33 +57,7 @@ export default function Home({
 }
 
 function Page() {
-  const { currentTab, setCurrentTab } = consoleSection.useData()
-  const { setIsOpen, currentStep, setSteps, isOpen, setCurrentStep } = useTour()
-  const { tabsData } = consoleEditor.useConsoleEditor()
-
-  let tab = <consoleSection.DataManagerSection />
-  switch (currentTab) {
-    case 'Schema Manager':
-      tab = <consoleSection.SchemaManagerSection />
-      break
-    case 'Schema Manager':
-      tab = <consoleSection.DataManagerSection />
-      break
-    case 'USERS':
-      tab = <consoleSection.UsersSection />
-      break
-  }
-
-  return (
-    <div className="bg-[#EDEDEC] h-[100vh] max-h-[100vh] flex flex-col">
-      <common.SlideWithTabs tabsData={tabsData} />
-      <Header />
-      <div className="flex h-full w-full ">
-        <consoleSection.SideBar />
-        <div className="flex flex-1 h-full ">{tab}</div>
-      </div>
-    </div>
-  )
+  return <consoleSection.ViewConsole />
 }
 
 export const getServerSideProps: GetServerSideProps = async (props) => {

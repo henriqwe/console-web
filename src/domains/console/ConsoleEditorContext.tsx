@@ -208,28 +208,26 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   }
 
   function formaterCodeExporterValue() {
-    const text = `  async function yc_persistence_service(jwt, tenantID, BODY) {
-    const result = await fetch('https://api.ycodify.com/api/interpreter-p/s', 
-    {
-      method: 'POST',
-      body: BODY,
-      headers: {
-      Authorization: 'Bearer '.concat(jwt),
-      'X-TenantID': tenantID,
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-      }
-    })
-    return await result.json()
-  }
-  
-  const jwt = '${getCookie('admin_access_token')}'
-  const tenantID = '${getCookie('X-TenantID')}'
-  const BODY = ${consoleValueLastOperation}
- 
-  yc_persistence_service(jwt, tenantID, BODY) 
-   
-  `
+    const text = `async function yc_persistence_service(jwt, tenantID, BODY) {
+  const result = await fetch('https://api.ycodify.com/api/interpreter-p/s', 
+  {
+    method: 'POST',
+    body: BODY,
+    headers: {
+    Authorization: 'Bearer '.concat(jwt),
+    'X-TenantID': tenantID,
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+    }
+  })
+  return await result.json()
+}
+
+const jwt = '${getCookie('admin_access_token')}'
+const tenantID = '${getCookie('X-TenantID')}'
+const BODY = ${consoleValueLastOperation}
+
+yc_persistence_service(jwt, tenantID, BODY)`
     setCodeExporterValue(text)
   }
 

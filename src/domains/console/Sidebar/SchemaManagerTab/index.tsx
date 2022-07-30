@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import { PlusIcon } from '@heroicons/react/outline'
 import { CheckCircleIcon } from '@heroicons/react/solid'
 
-export function DataTab() {
+export function SchemaManagerTab() {
   const router = useRouter()
   const {
     selectedEntity,

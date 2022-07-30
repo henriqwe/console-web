@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import * as utils from 'utils'
 
@@ -28,7 +27,7 @@ export function SchemaFormater() {
         <span className="text-yellow-500">&#123;</span>
       </div>
       {/* entities */}
-      <div className="ml-4 flex gap-4">
+      <div className="ml-4 flex gap-4 flex-col">
         {documentationValueParsed?.schema.entities?.map((entity, idx) => {
           return (
             <div key={idx} className="ml-4">

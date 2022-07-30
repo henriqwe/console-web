@@ -63,19 +63,22 @@ export function SchemaManagerSection() {
       <common.Card className="flex flex-col h-full">
         <consoleSection.SlidePanel />
         <common.ContentSection
+          variant="WithoutTitleBackgroundColor"
           title={
-            <div className="flex gap-2">
-              <p className="text-base text-gray-900">
+            <div className="flex gap-2 items-center">
+              <p className="text-base font-semibold text-gray-900">
                 {selectedEntity ? selectedEntity : 'Entities'}
               </p>
               {selectedEntity && (
-                <PencilIcon
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={() => {
-                    setOpenSlide(true)
-                    setSlideType('UPDATE ENTITY')
-                  }}
-                />
+                <div title="Edit entity name">
+                  <PencilIcon
+                    className="w-3 h-3 cursor-pointer"
+                    onClick={() => {
+                      setOpenSlide(true)
+                      setSlideType('UPDATE ENTITY')
+                    }}
+                  />
+                </div>
               )}
             </div>
           }
