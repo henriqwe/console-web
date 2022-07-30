@@ -99,10 +99,10 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           }
         }
       )
-      console.log('data.data', data.data)
       setdocumentationValue(data.data)
     } catch (err: any) {
-      if (err.response.status !== 404) {
+      console.log(err)
+      if (err?.response?.status !== 404) {
         utils.notification(err.message, 'error')
       }
     }
@@ -144,7 +144,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         utils.apiRoutes.local.interpreter,
         {
           data: JSON.parse(consoleValue),
-          access_token: `${utils.getCookie('admin_access_token')}`,
+          access_token: `${utils.getCookie('access_token')}`,
           'X-TenantID': utils.getCookie('X-TenantID')
         },
         {

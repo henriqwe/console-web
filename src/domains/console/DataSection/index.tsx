@@ -76,6 +76,7 @@ export function DataSection() {
             </div>
           }
         >
+          {/* <consoleSection.RelationshipTab loading={loading} /> */}
           {selectedTable ? (
             <consoleSection.ModifyTab loading={loading} />
           ) : (

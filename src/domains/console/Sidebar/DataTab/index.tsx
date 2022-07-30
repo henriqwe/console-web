@@ -9,8 +9,13 @@ import { PlusIcon } from '@heroicons/react/outline'
 
 export function DataTab() {
   const router = useRouter()
-  const { selectedTable, setSelectedTable, reload, setShowCreateTableSection } =
-    consoleSection.useData()
+  const {
+    selectedTable,
+    setSelectedTable,
+    reload,
+    setShowCreateTableSection,
+    setSchemaTables
+  } = consoleSection.useData()
   const [tables, setTables] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -18,17 +23,21 @@ export function DataTab() {
     try {
       setLoading(true)
 
-      const { data } = await utils.localApi.get(
-        utils.apiRoutes.local.schema(router.query.name as string),
-        {
+      const response = await utils.api
+        .get(`${utils.apiRoutes.entityList(router.query.name as string)}`, {
           headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
-        }
-      )
-      setTables(Object.keys(data.data) as string[])
+        })
+        .catch(() => null)
+      if (response!.data) {
+        setSchemaTables(response!.data)
+        setTables(Object.keys(response!.data) as string[])
+      }
     } catch (err: any) {
-      if (err.response.status !== 404) {
+      if (err?.response?.status !== 404) {
         utils.notification(err.message, 'error')
       }
     } finally {

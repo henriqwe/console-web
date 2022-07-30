@@ -45,11 +45,11 @@ export default function Home({
         <consoleSection.ConsoleEditorProvider>
           <consoleSection.SidebarProvider>
             <consoleSection.UserProvider>
-              {!cookie.admin_access_token ? (
+              {/* {!cookie.admin_access_token ? (
                 <consoleSection.AdminLogin />
-              ) : (
+              ) : ( */}
                 <Page />
-              )}
+               {/* )} */}
             </consoleSection.UserProvider>
           </consoleSection.SidebarProvider>
         </consoleSection.ConsoleEditorProvider>
@@ -72,8 +72,6 @@ function Page() {
       tab = <consoleSection.UsersSection />
       break
   }
-
-  console.log(currentStep)
 
   useEffect(() => {
     setIsOpen(true)

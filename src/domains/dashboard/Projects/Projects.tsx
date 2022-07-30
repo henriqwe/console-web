@@ -252,12 +252,13 @@ export function Project({
           <button
             className="px-1 py-1"
             onClick={() => {
-              if (
-                utils.getCookie('X-TenantID')?.split('@')[1] !== schema.name
-              ) {
-                utils.removeCookie('X-TenantID')
-                utils.removeCookie('admin_access_token')
-              }
+              // if (
+              //   utils.getCookie('X-TenantID')?.split('@')[1] !== schema.name
+              // ) {
+              //   utils.removeCookie('X-TenantID')
+              //   utils.removeCookie('admin_access_token')
+              // }
+              utils.setCookie('X-TenantID', schema.tenantId)
               router.push(`${routes.console}/${schema.name}`)
             }}
           >

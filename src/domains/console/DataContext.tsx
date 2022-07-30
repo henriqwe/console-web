@@ -31,6 +31,9 @@ type DataContextProps = {
   setSlideType: Dispatch<SetStateAction<'UPDATE' | 'UPDATE TABLE'>>
   slideState: slideState
   setSlideState: Dispatch<SetStateAction<slideState>>
+  schemaTables?: types.SchemaTable
+  setSchemaTables: Dispatch<SetStateAction<types.SchemaTable | undefined>>
+  relationshipSchema: yup.AnyObjectSchema
 }
 
 type ProviderProps = {
@@ -57,6 +60,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
   const [currentTab, setCurrentTab] = useState<'API' | 'DATA' | 'USERS'>('DATA')
   const [selectedTable, setSelectedTable] = useState<string>()
   const [tableData, setTableData] = useState<types.TableData[]>()
+  const [schemaTables, setSchemaTables] = useState<types.SchemaTable>()
   const [slideState, setSlideState] = useState<slideState>({
     open: false,
     type: 'CodeExporterView'
@@ -69,6 +73,13 @@ export const DataProvider = ({ children }: ProviderProps) => {
     Unique: yup.object().required(),
     Index: yup.object().required(),
     Comment: yup.string().required()
+  })
+
+  const relationshipSchema = yup.object().shape({
+    RelationshipName: yup.string().required('This field is required'),
+    ReferenceEntity: yup.object().required('This field is required'),
+    From: yup.object().required('This field is required'),
+    To: yup.object().required('This field is required')
   })
 
   return (
@@ -94,7 +105,10 @@ export const DataProvider = ({ children }: ProviderProps) => {
         slideType,
         setSlideType,
         slideState,
-        setSlideState
+        setSlideState,
+        schemaTables,
+        setSchemaTables,
+        relationshipSchema
       }}
     >
       {children}

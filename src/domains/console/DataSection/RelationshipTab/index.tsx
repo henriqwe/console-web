@@ -1,23 +1,31 @@
-import { Column } from './Column'
+import { RelationshipCard } from './RelationshipCard'
 import * as utils from 'utils'
 import * as common from 'common'
+import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
-import { XIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline'
+import { XIcon, PlusIcon } from '@heroicons/react/outline'
 import { SetStateAction, useState, Dispatch } from 'react'
 import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 
-type ModifyTabProps = {
+type RelationshipTabProps = {
   loading: boolean
 }
 
-export function ModifyTab({ loading }: ModifyTabProps) {
+export function RelationshipTab({ loading }: RelationshipTabProps) {
   const router = useRouter()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [openForm, setOpenForm] = useState(false)
-  const { tableData, selectedTable, setReload, reload, setSelectedTable } =
-    consoleSection.useData()
+  const {
+    tableData,
+    selectedTable,
+    setReload,
+    reload,
+    setSelectedTable,
+    schemaTables
+  } = consoleSection.useData()
 
   async function RemoveTable() {
     try {
@@ -46,50 +54,54 @@ export function ModifyTab({ loading }: ModifyTabProps) {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center w-full h-full mt-10">
-        <div className="w-10 h-10">
-          <common.Spinner />
-        </div>
-        <p>Loading...</p>
-      </div>
-    )
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex flex-col items-center justify-center w-full h-full mt-10">
+  //       <div className="w-10 h-10">
+  //         <common.Spinner />
+  //       </div>
+  //       <p>Loading...</p>
+  //     </div>
+  //   )
+  // }
 
   return (
     <div
-      className={`flex flex-col ${
-        loading ? 'items-center justify-center' : 'items-start'
-      } rounded-b-md bg-white p-6 gap-2`}
+      className={`flex flex-col items-start rounded-b-md bg-white p-6 gap-2`}
     >
-      <h3 className="text-lg">Columns:</h3>
-      {tableData
-        ?.filter((data) => data.name !== '_conf')
-        .map((data) => (
-          <Column key={data.name} data={data} />
-        ))}
+      <h3 className="text-lg">Entity relationships:</h3>
+
+      <div className="flex justify-between w-full">
+        <div className="flex-1 border border-y-0 border-x-0">
+          <div className="px-4 py-2 bg-gray-100 border rounded-tl-xl">
+            <p className="text-sm">Object relationships</p>
+          </div>
+          <RelationshipCard />
+        </div>
+
+        <div className="flex-1 border border-y-0 border-x-0">
+          <div className="px-4 py-2 bg-gray-100 border rounded-tr-xl">
+            <p className="text-sm">Array relationships</p>
+          </div>
+          <RelationshipCard />
+        </div>
+      </div>
 
       {openForm && (
-        <AttributeForm
-          setOpenForm={setOpenForm}
-          setReload={setReload}
-          reload={reload}
-          selectedTable={selectedTable}
-        />
+        <>
+          <common.Separator />
+          <AttributeForm
+            setOpenForm={setOpenForm}
+            setReload={setReload}
+            reload={reload}
+            selectedTable={selectedTable}
+            schemaTables={schemaTables}
+            tableData={tableData}
+          />
+        </>
       )}
       <common.Separator />
-      <div className="flex justify-between w-full gap-4 ">
-        <common.Buttons.Clean
-          type="button"
-          loading={submitLoading}
-          disabled={submitLoading}
-          onClick={() => setOpenModal(true)}
-          icon={<TrashIcon className="w-4 h-4" />}
-        >
-          Remove entity
-        </common.Buttons.Clean>
-
+      <div className="flex justify-end w-full gap-4 ">
         {!openForm && (
           <common.Buttons.Clean
             type="button"
@@ -98,7 +110,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
             onClick={() => setOpenForm(true)}
             icon={<PlusIcon className="w-3 h-3" />}
           >
-            Add attribute
+            Add relationship
           </common.Buttons.Clean>
         )}
       </div>
@@ -129,13 +141,18 @@ function AttributeForm({
   setOpenForm,
   setReload,
   reload,
-  selectedTable
+  selectedTable,
+  schemaTables,
+  tableData
 }: {
   setOpenForm: Dispatch<SetStateAction<boolean>>
   setReload: Dispatch<SetStateAction<boolean>>
   reload: boolean
   selectedTable?: string
+  schemaTables?: types.SchemaTable
+  tableData?: types.TableData[]
 }) {
+  const { relationshipSchema } = consoleSection.useData()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const {
@@ -143,7 +160,7 @@ function AttributeForm({
     watch,
     formState: { errors },
     handleSubmit
-  } = useForm()
+  } = useForm({ resolver: yupResolver(relationshipSchema) })
 
   async function Submit(data: any) {
     try {
@@ -189,112 +206,124 @@ function AttributeForm({
       setLoading(false)
     }
   }
+
   return (
     <form
-      className="grid grid-cols-12 gap-4 px-4 py-5 bg-white border border-gray-300 rounded-lg"
+      className="flex flex-col w-full gap-4 px-4 py-5 bg-gray-100 border border-gray-300 rounded-lg"
       onSubmit={handleSubmit(Submit)}
     >
       <Controller
-        name={'ColumnName'}
+        name={'RelationshipName'}
         control={control}
         render={({ field: { onChange, value } }) => (
-          <div className="col-span-3">
+          <div className="w-1/2 pr-2">
             <common.Input
-              placeholder="Column name"
+              placeholder="Relationship name"
               value={value}
               onChange={onChange}
-              errors={errors.ColumnName}
+              errors={errors.RelationshipName}
+              label="Relationship name"
             />
           </div>
         )}
       />
 
       <Controller
-        name={'Type'}
-        defaultValue={{ name: 'String', value: 'String' }}
+        name={'ReferenceEntity'}
         control={control}
         render={({ field: { onChange, value } }) => (
-          <div className="col-span-2">
+          <div className="w-1/2 pr-2">
             <common.Select
-              options={[
-                { name: 'String', value: 'String' },
-                { name: 'Integer', value: 'Integer' },
-                { name: 'Long', value: 'Long' },
-                { name: 'Boolean', value: 'Boolean' },
-                { name: 'Double', value: 'Double' },
-                { name: 'Timestamp', value: 'Timestamp' }
-              ]}
+              options={Object.keys(schemaTables!).map((entity) => {
+                return {
+                  name: entity,
+                  value: entity
+                }
+              })}
               value={value}
+              label="Reference entity"
+              placeholder="Reference entity"
               onChange={onChange}
+              errors={errors.ReferenceEntity}
             />
           </div>
         )}
       />
 
-      {watch('Type')?.name === 'String' && (
+      <div className="flex justify-between gap-4">
         <Controller
-          name={'Length'}
+          name={'From'}
           control={control}
           render={({ field: { onChange, value } }) => (
-            <div className="col-span-2">
-              <common.Input
-                placeholder="String Length"
+            <div className="w-1/2">
+              <common.Select
+                options={
+                  tableData
+                    ? tableData.map((table) => {
+                        return {
+                          name: table.name,
+                          value: table.name
+                        }
+                      })
+                    : []
+                }
                 value={value}
+                label="From:"
+                placeholder="Entity attribute"
+                errors={errors.From}
                 onChange={onChange}
-                errors={errors.Length}
               />
             </div>
           )}
         />
-      )}
 
-      <Controller
-        name={'Comment'}
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <div
-            className={
-              watch('Type')?.name === 'String' ? 'col-span-2' : 'col-span-4'
-            }
-          >
-            <common.Input
-              placeholder="Comment"
-              value={value}
-              onChange={onChange}
-              errors={errors.Comment}
-            />
-          </div>
-        )}
-      />
+        <Controller
+          name={'To'}
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <div className="w-1/2">
+              <common.Select
+                options={
+                  watch('ReferenceEntity')
+                    ? Object.keys(schemaTables![watch('ReferenceEntity').name])
+                        .filter((attribute) => attribute !== '_conf')
+                        .map((attribute) => {
+                          return {
+                            name: attribute,
+                            value: attribute
+                          }
+                        })
+                    : []
+                }
+                placeholder="Selected entity attribute"
+                value={value}
+                disabled={!watch('ReferenceEntity')}
+                label="To:"
+                errors={errors.To}
+                onChange={onChange}
+              />
+            </div>
+          )}
+        />
+      </div>
 
-      <Controller
-        name={'Nullable'}
-        control={control}
-        render={({ field: { onChange } }) => (
-          <div className="flex items-center gap-2">
-            <input type="checkbox" id={'Nullable'} onChange={onChange} />
-            <label htmlFor={'Nullable'}>Nullable</label>
-          </div>
-        )}
-      />
-
-      <div className="flex items-center justify-around w-full col-span-2">
-        <common.Buttons.Red
+      <div className="flex items-center justify-between w-full col-span-2">
+        <common.Buttons.White
           type="button"
           disabled={loading}
           onClick={() => setOpenForm(false)}
         >
-          <XIcon className="w-5 h-5 text-white" />
-        </common.Buttons.Red>
+          Close
+        </common.Buttons.White>
 
-        <common.Buttons.Green
+        <common.Buttons.Yellow
           type="submit"
           loading={loading}
           disabled={loading}
           onClick={() => setOpenForm(true)}
         >
-          <PlusIcon className="w-5 h-5 text-white" />
-        </common.Buttons.Green>
+          Create
+        </common.Buttons.Yellow>
       </div>
     </form>
   )

@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 type FormData = {
   comment?: string
   isIndex?: boolean
-  isNullable?: boolean
+  nullable?: boolean
   isUnique?: boolean
   name?: string
   length?: number
@@ -51,7 +51,10 @@ export function FieldDetail({
 
   async function Save(formData: FormData) {
     await utils.api.put(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
+      `${utils.apiRoutes.attribute({
+        entityName: selectedTable as string,
+        projectName: router.query.name as string
+      })}/${data.name}`,
       formData,
       {
         headers: {
@@ -178,7 +181,7 @@ export function FieldDetail({
         </FormField>
         <FormField
           title="Nullable"
-          handleSubmit={() => Save({ isNullable: watch('Nullable').value })}
+          handleSubmit={() => Save({ nullable: watch('Nullable').value })}
           setActiveFields={setActiveFields}
         >
           <Controller

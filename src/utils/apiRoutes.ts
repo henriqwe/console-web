@@ -4,6 +4,7 @@ export const apiRoutes = {
   roles: '/caccount/role',
   deleteRole: (name: string) => `/caccount/role/name/${name}`,
   getUserToken: '/security/oauth/token',
+  interpreter: '/interpreter-p/s',
   deleteUserAccount: ({
     username,
     version
@@ -18,9 +19,11 @@ export const apiRoutes = {
   getAdminToken: '/csecurity/oauth/token',
   adminData: '/caccount/account',
   parseReverse: (projectName: string) =>
-    `/project-name/${projectName}/parser/reverse`,
+    `v0/modeler/project-name/${projectName}/parser/reverse`,
+  entityList: (projectName: string) =>
+    `v0/modeler/project-name/${projectName}/schema/sql`,
   entity: (projectName: string) =>
-    `/project-name/${projectName}/schema/sql/entity`,
+    `v0/modeler/project-name/${projectName}/schema/sql/entity`,
   attribute: ({
     projectName,
     entityName
@@ -28,7 +31,7 @@ export const apiRoutes = {
     projectName: string
     entityName: string
   }) =>
-    `/project-name/${projectName}/schema/sql/entity/${entityName}/attribute`,
+    `v0/modeler/project-name/${projectName}/schema/sql/entity/${entityName}/attribute`,
   local: {
     adminLogin: '/adminLogin',
     createAccount: '/createAccount',

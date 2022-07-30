@@ -20,20 +20,22 @@ export function ApiTab() {
       const operations = []
       setLoading(true)
 
-      const { data: tables } = await utils.localApi.get(
-        utils.apiRoutes.local.schema(router.query.name as string),
-        {
+      const response = await utils.api
+        .get(`${utils.apiRoutes.entityList(router.query.name as string)}`, {
           headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
-        }
-      )
-      for (const table of Object.keys(tables.data)) {
+        })
+        .catch(() => null)
+      console.log(response!.data)
+      for (const table of Object.keys(response!.data)) {
         operations.push(`${table}`)
       }
       setOperations(operations)
     } catch (err: any) {
-      if (err.response.status !== 404) {
+      if (err?.response?.status !== 404) {
         utils.notification(err.message, 'error')
       }
     } finally {

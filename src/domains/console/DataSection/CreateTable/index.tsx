@@ -33,18 +33,20 @@ export function CreateTable() {
       if (spaceValidation.test(data.Name)) {
         throw new Error('Entity cannot contain spaces')
       }
+      // const response = await utils.api
+      //   .get(`${utils.apiRoutes.schemas}/${router.query.name}`, {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //       Accept: 'application/json',
+      //       Authorization: `Bearer ${utils.getCookie('access_token')}`
+      //     }
+      //   })
+      //   .catch(() => null)
 
-      const response = await utils.localApi
-        .get(utils.apiRoutes.local.schema(router.query.name as string), {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        })
-        .catch(() => null)
-      const tables = Object.keys(response ? response.data.data : {})
-      if (tables.includes(data.Name.toLowerCase())) {
-        throw new Error(`Entity ${data.Name} already exists`)
-      }
+      // const tables = Object.keys(response ? response.data.data : {})
+      // if (tables.includes(data.Name.toLowerCase())) {
+      //   throw new Error(`Entity ${data.Name} already exists`)
+      // }
 
       const filteredData = columnsGroup.filter((column) => column !== 0)
       const names: string[] = []
@@ -76,11 +78,11 @@ export function CreateTable() {
         names.push(data['ColumnName' + column])
 
         columnValues.push({
-          ColumnName: data['ColumnName' + column],
-          Type: data['Type' + column].value,
-          Comment: data['Comment' + column],
-          Nullable: data['Nullable' + column],
-          Length: data['Length' + column]
+          name: data['ColumnName' + column],
+          type: data['Type' + column].value,
+          comment: data['Comment' + column] || '',
+          nullable: data['Nullable' + column] || false,
+          length: data['Length' + column]
         })
       }
 
@@ -88,7 +90,8 @@ export function CreateTable() {
         utils.apiRoutes.entity(router.query.name as string),
         {
           name: data.Name,
-          dbType: 'sql'
+          attributes: columnValues,
+          associations: []
         },
         {
           headers: {
@@ -98,27 +101,27 @@ export function CreateTable() {
         }
       )
 
-      for (const column of columnValues) {
-        await utils.api.post(
-          utils.apiRoutes.attribute({
-            entityName: data.Name,
-            projectName: router.query.name as string
-          }),
-          {
-            name: column?.ColumnName,
-            comment: column?.Comment,
-            isNullable: column?.Nullable || false,
-            length: column?.Length,
-            type: column?.Type.value
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${utils.getCookie('access_token')}`
-            }
-          }
-        )
-      }
+      // for (const column of columnValues) {
+      //   await utils.api.post(
+      //     utils.apiRoutes.attribute({
+      //       entityName: data.Name,
+      //       projectName: router.query.name as string
+      //     }),
+      //     {
+      //       name: column?.name,
+      //       comment: column?.comment,
+      //       isNullable: column?.isNullable || false,
+      //       length: column?.length,
+      //       type: column?.type.value
+      //     },
+      //     {
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //         Authorization: `Bearer ${utils.getCookie('access_token')}`
+      //       }
+      //     }
+      //   )
+      // }
 
       setReload(!reload)
       setShowCreateTableSection(false)
