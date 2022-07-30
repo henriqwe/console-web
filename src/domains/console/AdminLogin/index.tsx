@@ -1,4 +1,3 @@
-import axios from 'axios'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as dataContext from 'domains/console'
@@ -26,8 +25,8 @@ export function AdminLogin() {
   async function Submit(formData: { userName: string; password: string }) {
     setLoading(true)
     try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/adminLogin`,
+      const { data } = await utils.localApi.post(
+        utils.apiRoutes.local.adminLogin,
         {
           username: formData.userName,
           password: formData.password

@@ -1,4 +1,3 @@
-import axios from 'axios'
 import * as utils from 'utils'
 import * as common from 'common'
 import * as types from 'domains/console/types'
@@ -12,7 +11,7 @@ import { useRouter } from 'next/router'
 type FormData = {
   comment?: string
   isIndex?: boolean
-  isNullable?: boolean
+  nullable?: boolean
   isUnique?: boolean
   name?: string
   length?: number
@@ -51,8 +50,11 @@ export function FieldDetail({
   } = useForm({ resolver: yupResolver(fieldSchema) })
 
   async function Save(formData: FormData) {
-    await axios.put(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}/attribute/${data.name}`,
+    await utils.api.put(
+      `${utils.apiRoutes.attribute({
+        entityName: selectedEntity as string,
+        projectName: router.query.name as string
+      })}/${data.name}`,
       formData,
       {
         headers: {
@@ -67,8 +69,11 @@ export function FieldDetail({
   }
 
   async function Remove() {
-    await axios.delete(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}/attribute/${data.name}`,
+    await utils.api.delete(
+      `${utils.apiRoutes.attribute({
+        projectName: router.query.name as string,
+        entityName: selectedEntity as string
+      })}/${data.name}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -176,7 +181,7 @@ export function FieldDetail({
         </FormField>
         <FormField
           title="Nullable"
-          handleSubmit={() => Save({ isNullable: watch('Nullable').value })}
+          handleSubmit={() => Save({ nullable: watch('Nullable').value })}
           setActiveFields={setActiveFields}
         >
           <Controller

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import axios from 'axios'
+import * as utils from 'utils'
 
 export default async function schemas(
   req: NextApiRequest,
@@ -7,8 +7,8 @@ export default async function schemas(
 ) {
   if (req.method === 'GET') {
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/parser/reverse/${req.query.parserName}`,
+      const { data } = await utils.api.get(
+        utils.apiRoutes.parseReverse(req.query.parserName as string),
         {
           headers: {
             'Content-Type': 'text/plain;charset=ISO-8859-1',

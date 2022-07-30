@@ -1,6 +1,5 @@
-import { ChevronRightIcon, ReplyIcon } from '@heroicons/react/outline'
+import { ReplyIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
-
 import { routes } from 'domains/routes'
 
 export function Header() {

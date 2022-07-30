@@ -27,7 +27,7 @@ export function Update() {
   const [createdSchemaName, setCreatedSchemaName] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [plan, setPlan] = useState<'Sandbox' | 'Dedicated'>()
-  const { createProjectSchema } = dashboard.useData()
+  const { createProjectSchema, setReload, reload } = dashboard.useData()
 
   const {
     control,
@@ -47,21 +47,26 @@ export function Update() {
         throw new Error('Project name cannot contain spaces')
       }
 
-      const response = await utils.localApi
-        .get(`/schemas`, {
+      const response = await utils.api
+        .get(utils.apiRoutes.schemas, {
           headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
             Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
         })
         .catch(() => null)
-      const schemas = response ? response.data.data : []
+
+      const schemas = response
+        ? response.data.map((schema: { name: string }) => schema.name)
+        : []
 
       if (schemas.includes(data.ProjectName.toLowerCase())) {
         throw new Error(`Project ${data.ProjectName} already exists`)
       }
 
       await utils.api.post(
-        '/modeler/schema',
+        utils.apiRoutes.schemas,
         {
           name: data.ProjectName
         },
@@ -74,7 +79,7 @@ export function Update() {
       )
 
       const AdminAccount = await utils.api.post(
-        `/modeler/schema/${data.ProjectName}/create-admin-account`,
+        utils.apiRoutes.createAdminAccount(data.ProjectName),
         {},
         {
           headers: {
@@ -86,6 +91,7 @@ export function Update() {
       )
       setAdminUser(AdminAccount.data)
       setCreatedSchemaName(data.ProjectName)
+      setReload(!reload)
       utils.notification(
         `Project ${data.ProjectName} created successfully`,
         'success'
@@ -101,13 +107,10 @@ export function Update() {
     try {
       setLoading(true)
 
-      const { data } = await utils.localApi.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/adminLogin`,
-        {
-          username: adminUser?.username,
-          password: adminUser?.password
-        }
-      )
+      const { data } = await utils.localApi.post(utils.apiRoutes.local.adminLogin, {
+        username: adminUser?.username,
+        password: adminUser?.password
+      })
       utils.setCookie('admin_access_token', data.data.access_token)
       utils.setCookie('X-TenantID', data.data.username)
 

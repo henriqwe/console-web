@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { getCookie } from 'utils'
 
 import {
@@ -92,8 +91,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
   async function loadParser() {
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/parser?parserName=${router.query.name}`,
+      const { data } = await utils.localApi.get(
+        utils.apiRoutes.local.parser(router.query.name as string),
         {
           headers: {
             Authorization: `Bearer ${utils.getCookie('access_token')}`
@@ -102,7 +101,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       )
       setdocumentationValue(data.data)
     } catch (err: any) {
-      if (err.response.status !== 404) {
+      console.log(err)
+      if (err?.response?.status !== 404) {
         utils.notification(err.message, 'error')
       }
     }
@@ -140,12 +140,11 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     try {
       setConsoleValueLastOperation(consoleValue)
       setconsoleResponseLoading(true)
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
+      const { data } = await utils.localApi.post(
+        utils.apiRoutes.local.interpreter,
         {
           data: JSON.parse(consoleValue),
-          schema: router.query.name,
-          access_token: `${utils.getCookie('admin_access_token')}`,
+          access_token: `${utils.getCookie('access_token')}`,
           'X-TenantID': utils.getCookie('X-TenantID')
         },
         {

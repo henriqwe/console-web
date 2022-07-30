@@ -4,7 +4,6 @@ import * as common from 'common'
 import * as consoleSection from 'domains/console'
 import { XIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline'
 import { SetStateAction, useState, Dispatch } from 'react'
-import axios from 'axios'
 import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -23,8 +22,10 @@ export function ModifyTab({ loading }: ModifyTabProps) {
   async function RemoveEntity() {
     try {
       setSubmitLoading(true)
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}`,
+      await utils.api.delete(
+        `${utils.apiRoutes.entity(
+          router.query.name as string
+        )}/${selectedEntity}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -63,9 +64,11 @@ export function ModifyTab({ loading }: ModifyTabProps) {
       } rounded-b-md bg-white p-6 gap-2`}
     >
       <h3 className="text-lg">Columns:</h3>
-      {entityData?.map((data) => (
-        <Column key={data.name} data={data} />
-      ))}
+      {entityData
+        ?.filter((data) => data.name !== '_conf')
+        .map((data) => (
+          <Column key={data.name} data={data} />
+        ))}
 
       {openForm && (
         <AttributeForm
@@ -153,8 +156,11 @@ function AttributeForm({
         throw new Error('String length is required')
       }
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}/attribute`,
+      await utils.api.post(
+        utils.apiRoutes.attribute({
+          projectName: router.query.name as string,
+          entityName: selectedEntity as string
+        }),
         {
           name: data.ColumnName,
           comment: data.Comment,

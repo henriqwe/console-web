@@ -1,6 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
 import { useState } from 'react'
-import axios from 'axios'
 import * as consoleData from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
@@ -27,8 +26,10 @@ export function UpdateEntityName() {
   const onSubmit = async (formData: any) => {
     try {
       setLoading(true)
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}`,
+      await utils.api.put(
+        `${utils.apiRoutes.entity(
+          router.query.name as string
+        )}/${selectedEntity}`,
         {
           name: formData.Name
         },

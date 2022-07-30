@@ -1,10 +1,7 @@
 import { Icon } from '@iconify/react'
 import { SetStateAction, useEffect, useState } from 'react'
-import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
-import axios from 'axios'
-import { getCookie } from 'utils/cookies'
 import * as consoleEditor from '../../ConsoleEditorContext'
 import { useRouter } from 'next/router'
 import { CheckIcon } from '@heroicons/react/outline'
@@ -21,20 +18,22 @@ export function DataManagerTab() {
       const operations = []
       setLoading(true)
 
-      const { data: entities } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
-        {
+      const response = await utils.api
+        .get(`${utils.apiRoutes.entityList(router.query.name as string)}`, {
           headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
-        }
-      )
-      for (const entity of Object.keys(entities.data)) {
-        operations.push(`${entity}`)
+        })
+        .catch(() => null)
+
+      for (const table of Object.keys(response!.data)) {
+        operations.push(`${table}`)
       }
       setOperations(operations)
     } catch (err: any) {
-      if (err.response.status !== 404) {
+      if (err?.response?.status !== 404) {
         utils.notification(err.message, 'error')
       }
     } finally {

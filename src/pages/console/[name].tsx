@@ -43,11 +43,11 @@ export default function Home({
         <consoleSection.ConsoleEditorProvider>
           <consoleSection.SidebarProvider>
             <consoleSection.UserProvider>
-              {!cookie.admin_access_token ? (
+              {/* {!cookie.admin_access_token ? (
                 <consoleSection.AdminLogin />
-              ) : (
-                <Page />
-              )}
+              ) : ( */}
+              <Page />
+              {/* )} */}
             </consoleSection.UserProvider>
           </consoleSection.SidebarProvider>
         </consoleSection.ConsoleEditorProvider>

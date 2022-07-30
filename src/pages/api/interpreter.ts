@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import axios from 'axios'
+import * as utils from 'utils'
 
 export default async function interpreter(
   req: NextApiRequest,
@@ -7,23 +7,11 @@ export default async function interpreter(
 ) {
   if (req.method === 'POST') {
     try {
-      if (req.body.schema) {
-        await axios.put(
-          `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${req.body.schema}`,
-          { status: 2 },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `${req.headers.authorization}`
-            }
-          }
-        )
-      }
       const sendDate = new Date().getTime()
 
       // g0voBnPhLWq2pRMv
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/interpreter-p/s`,
+      const { data } = await utils.api.post(
+        utils.apiRoutes.interpreter,
         req.body.data,
         {
           headers: {

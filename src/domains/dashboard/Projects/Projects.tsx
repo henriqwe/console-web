@@ -3,12 +3,25 @@ import * as utils from 'utils'
 import * as dashboard from 'domains/dashboard'
 import axios from 'axios'
 import { Icon } from '@iconify/react'
-import { PlusIcon, SearchIcon } from '@heroicons/react/outline'
+import {
+  PlusIcon,
+  SearchIcon,
+  DocumentDuplicateIcon
+} from '@heroicons/react/outline'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { PlayIcon, CogIcon } from '@heroicons/react/solid'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
+
+type Schemas = {
+  createdat: number
+  name: string
+  status: string
+  tenantAc: string
+  tenantId: string
+}
 
 export function Projects() {
   const router = useRouter()
@@ -21,21 +34,20 @@ export function Projects() {
     reload
   } = dashboard.useData()
   const [showFiltered, setShowFiltered] = useState(false)
-  const [filteredSchemas, setFilteredSchemas] = useState<string[]>([])
-  const [schemas, setSchemas] = useState<string[]>([])
+  const [filteredSchemas, setFilteredSchemas] = useState<Schemas[]>([])
+  const [schemas, setSchemas] = useState<Schemas[]>([])
   const [loadingSchemas, setLoadingSchemas] = useState(true)
 
   async function loadSchemas() {
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/schemas`,
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
+      const { data } = await utils.api.get(utils.apiRoutes.schemas, {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
         }
-      )
-      setSchemas(data.data)
+      })
+      setSchemas(data)
     } catch (err: any) {
       if (err.response.status !== 404) {
         utils.notification(err.message, 'error')
@@ -76,7 +88,7 @@ export function Projects() {
     )
     const re = RegExp(p)
 
-    return schemas.filter((v) => v.match(re))
+    return schemas.filter((v) => v.name.match(re))
   }
 
   function filterSchemas() {
@@ -86,6 +98,13 @@ export function Projects() {
   function removeFilterSchemas() {
     setFilteredSchemas([])
     setShowFiltered(false)
+  }
+
+  function onConfigClick(schema: Schemas) {
+    setOpenSlide(true)
+    setSlideType('VIEW')
+    setSlideSize('normal')
+    setSelectedSchema(schema)
   }
 
   useEffect(() => {
@@ -158,68 +177,112 @@ export function Projects() {
           </div>
         ) : (
           (showFiltered ? filteredSchemas : schemas).map((schema) => (
-            <common.Card className="flex p-6 bg-white shadow-sm" key={schema}>
-              <div className="grid items-center justify-between flex-1 grid-cols-4 gap-4">
-                <div>
-                  <p className="text-2xl">{schema}</p>
-                  <p className="text-xs text-gray-600">Standard</p>
-                </div>
-                <div className="flex items-center justify-around flex-1 col-span-2">
-                  <div className="p-2">
-                    <p className="text-sm">Traffic: </p>
-                    <p className="text-xs text-gray-600">
-                      50.000 requests per day
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 border rounded-lg">
-                    <Icon icon="logos:aws" className="w-6 h-6" />
-                    <p className="text-xs text-gray-600">AWS</p>
-                  </div>
-                </div>
-
-                <div className="flex items-end justify-end">
-                  <button
-                    className="px-1 py-1"
-                    onClick={() => {
-                      if (
-                        utils.getCookie('X-TenantID')?.split('@')[1] !== schema
-                      ) {
-                        utils.removeCookie('X-TenantID')
-                        utils.removeCookie('admin_access_token')
-                      }
-                      router.push(`${routes.console}/${schema}`)
-                    }}
-                  >
-                    <PlayIcon className="w-6 h-6 text-green-700" />
-                  </button>
-
-                  <button
-                    className="px-1 py-1"
-                    onClick={() => {
-                      setOpenSlide(true)
-                      setSlideType('VIEW')
-                      setSlideSize('normal')
-                      setSelectedSchema(schema)
-                    }}
-                  >
-                    <CogIcon className="w-6 h-6 text-gray-600" />
-                  </button>
-                  {/* <button
-                    className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
-                    onClick={() => {
-                      downloadSchema(schema)
-                    }}
-                  >
-                    <DownloadIcon className="w-6 h-6 text-white" />
-                  </button> */}
-                </div>
-              </div>
-            </common.Card>
+            <Project
+              key={schema.createdat}
+              schema={schema}
+              onConfigClick={onConfigClick}
+            />
           ))
         )}
       </section>
 
       <dashboard.SlidePanel />
     </div>
+  )
+}
+
+export function Project({
+  schema,
+  onConfigClick
+}: {
+  schema: Schemas
+  onConfigClick: (schema: Schemas) => void
+}) {
+  const [showCopyText, setShowCopyText] = useState(false)
+  const router = useRouter()
+  return (
+    <common.Card className="flex p-6 bg-white shadow-sm" key={schema.createdat}>
+      <div className="grid items-center justify-between flex-1 grid-cols-5 gap-4">
+        <div>
+          <p className="text-2xl">{schema.name}</p>
+          <p className="text-xs text-gray-600">Standard</p>
+        </div>
+        <div>
+          <p>Project secret: </p>
+          <div className="relative flex w-full h-full">
+            <input
+              disabled
+              value={schema.tenantAc}
+              type="password"
+              className="w-40 text-xs bg-transparent"
+            />
+            <CopyToClipboard
+              text="Copy to clipboard"
+              onCopy={() => {
+                setShowCopyText(true)
+                setTimeout(() => {
+                  setShowCopyText(false)
+                }, 800)
+              }}
+            >
+              <div>
+                {showCopyText && (
+                  <span className="absolute right-0 bottom-5">Copied!</span>
+                )}
+                <DocumentDuplicateIcon
+                  className="w-5 h-5 text-gray-700 cursor-pointer"
+                  onClick={() => navigator.clipboard.writeText(schema.tenantAc)}
+                />
+              </div>
+            </CopyToClipboard>
+          </div>
+        </div>
+        <div className="flex items-center justify-around flex-1 col-span-2">
+          <div className="p-2">
+            <p className="text-sm">Traffic: </p>
+            <p className="text-xs text-gray-600">50.000 requests per day</p>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 border rounded-lg">
+            <Icon icon="logos:aws" className="w-6 h-6" />
+            <p className="text-xs text-gray-600">AWS</p>
+          </div>
+        </div>
+
+        <div className="flex items-end justify-end">
+          <button
+            className="px-1 py-1"
+            onClick={() => {
+              // if (
+              //   utils.getCookie('X-TenantID')?.split('@')[1] !== schema.name
+              // ) {
+              //   utils.removeCookie('X-TenantID')
+              //   utils.removeCookie('admin_access_token')
+              // }
+              utils.setCookie('X-TenantID', schema.tenantId)
+              router.push(`${routes.console}/${schema.name}`)
+            }}
+          >
+            <PlayIcon className="w-6 h-6 text-green-700" />
+          </button>
+
+          <button
+            className="px-1 py-1"
+            onClick={() => {
+              onConfigClick(schema)
+            }}
+          >
+            <CogIcon className="w-6 h-6 text-gray-600" />
+          </button>
+          {/* <button
+          className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
+          onClick={() => {
+            downloadSchema(schema)
+          }}
+        >
+          <DownloadIcon className="w-6 h-6 text-white" />
+        </button> */}
+        </div>
+      </div>
+    </common.Card>
   )
 }

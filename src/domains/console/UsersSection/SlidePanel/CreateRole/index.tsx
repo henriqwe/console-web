@@ -5,7 +5,6 @@ import {
   useForm
 } from 'react-hook-form'
 import { useState } from 'react'
-import axios from 'axios'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
@@ -29,9 +28,9 @@ export function CreateRole() {
     Default: { name: string; value: string }
   }) => {
     setLoading(true)
-    await axios
+    await utils.api
       .post(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/role`,
+        utils.apiRoutes.roles,
         {
           name: formData.Name,
           defaultUse: formData.Default.value,

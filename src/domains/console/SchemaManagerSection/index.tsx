@@ -2,7 +2,7 @@ import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import * as utils from 'utils'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
@@ -20,8 +20,10 @@ export function SchemaManagerSection() {
   const [loading, setLoading] = useState(true)
 
   async function loadEntityData() {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedEntity}`,
+    const { data } = await utils.api.get(
+      `${utils.apiRoutes.entity(
+        router.query.name as string
+      )}/${selectedEntity}`,
       {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`
@@ -83,17 +85,11 @@ export function SchemaManagerSection() {
             </div>
           }
         >
+          {/* <consoleSection.RelationshipTab loading={loading} /> */}
           {selectedEntity ? (
             <consoleSection.ModifyTab loading={loading} />
           ) : (
-            <div className="flex items-center justify-center w-full h-full bg-white rounded-b-lg">
-              <div className="flex flex-col items-center ">
-                <div className="mb-5 w-72">
-                  <common.illustrations.Empty />
-                </div>
-                <div className="text-lg">Select an entity to see all data</div>
-              </div>
-            </div>
+            <consoleSection.DefaultPage />
           )}
         </common.ContentSection>
       </common.Card>
