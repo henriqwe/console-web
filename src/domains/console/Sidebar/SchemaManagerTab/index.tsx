@@ -6,7 +6,6 @@ import * as consoleSection from 'domains/console'
 import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
-import { PlusIcon } from '@heroicons/react/outline'
 import { CheckCircleIcon } from '@heroicons/react/solid'
 
 export function SchemaManagerTab() {
@@ -15,8 +14,10 @@ export function SchemaManagerTab() {
     selectedEntity,
     setSelectedEntity,
     reload,
-    setShowCreateEntitySection
-  } = consoleSection.useData()
+    setShowCreateEntitySection,
+    setBreadcrumbPages,
+    breadcrumbPagesData
+  } = consoleSection.useSchemaManager()
   const [entities, setEntities] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -54,7 +55,9 @@ export function SchemaManagerTab() {
         <div
           className="font-semibold flex items-center gap-2 hover:cursor-pointer"
           onClick={() => {
+            setShowCreateEntitySection(false)
             setSelectedEntity(undefined)
+            setBreadcrumbPages(breadcrumbPagesData.home)
           }}
         >
           Entities &#40; {entities.length} &#41;{' '}

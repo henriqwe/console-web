@@ -8,7 +8,11 @@ import { PlusIcon } from '@heroicons/react/solid'
 export function DefaultPage() {
   const router = useRouter()
   const [publish, setPublish] = useState(false)
-  const { setShowCreateEntitySection } = consoleSection.useData()
+  const {
+    setShowCreateEntitySection,
+    setBreadcrumbPages,
+    breadcrumbPagesData
+  } = consoleSection.useSchemaManager()
   const sections = [
     {
       name: {
@@ -67,6 +71,7 @@ export function DefaultPage() {
           data-tour="step-2"
           onClick={() => {
             setShowCreateEntitySection(true)
+            setBreadcrumbPages(breadcrumbPagesData.createEntity)
           }}
         >
           <div className="flex items-center gap-2">

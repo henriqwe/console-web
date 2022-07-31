@@ -12,7 +12,7 @@ import { SchemaFormater } from './SchemaFormater'
 
 export function Editors() {
   const { setShowTableViewMode, showTableViewMode, setSlideState } =
-    consoleSection.useData()
+    consoleSection.useSchemaManager()
 
   const {
     consoleValue,

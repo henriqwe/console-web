@@ -41,7 +41,7 @@ export function FieldDetail({
     Comment: true
   })
   const { fieldSchema, selectedEntity, setReload, reload } =
-    consoleData.useData()
+    consoleData.useSchemaManager()
 
   const {
     watch,

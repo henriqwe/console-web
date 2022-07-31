@@ -12,7 +12,7 @@ export function UpdateEntityName() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const { setOpenSlide, setReload, reload, selectedEntity, setSelectedEntity } =
-    consoleData.useData()
+    consoleData.useSchemaManager()
 
   const yupSchema = yup.object().shape({ Name: yup.string().required() })
 

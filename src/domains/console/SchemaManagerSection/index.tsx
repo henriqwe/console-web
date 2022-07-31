@@ -15,8 +15,10 @@ export function SchemaManagerSection() {
     reload,
     setEntityData,
     showCreateEntitySection,
-    setSlideType
-  } = consoleSection.useData()
+    setSlideType,
+    breadcrumbPages,
+    setBreadcrumbPages
+  } = consoleSection.useSchemaManager()
   const [loading, setLoading] = useState(true)
 
   async function loadEntityData() {
@@ -55,6 +57,9 @@ export function SchemaManagerSection() {
   if (showCreateEntitySection) {
     return (
       <div className="w-full h-full p-4">
+        <div className="flex w-full px-4">
+          <common.Breadcrumb pages={breadcrumbPages} />
+        </div>
         <consoleSection.CreateEntity />
       </div>
     )
@@ -63,6 +68,9 @@ export function SchemaManagerSection() {
   return (
     <div data-tour="step-1" className="w-full h-full p-4">
       <common.Card className="flex flex-col h-full">
+        <div className="flex w-full px-4">
+          <common.Breadcrumb pages={breadcrumbPages} />
+        </div>
         <consoleSection.SlidePanel />
         <common.ContentSection
           variant="WithoutTitleBackgroundColor"

@@ -17,7 +17,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
   const [openModal, setOpenModal] = useState(false)
   const [openForm, setOpenForm] = useState(false)
   const { entityData, selectedEntity, setReload, reload, setSelectedEntity } =
-    consoleSection.useData()
+    consoleSection.useSchemaManager()
 
   async function RemoveEntity() {
     try {

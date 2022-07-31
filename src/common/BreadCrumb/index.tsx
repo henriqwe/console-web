@@ -3,7 +3,7 @@ import { ChevronRightIcon } from '@heroicons/react/solid'
 
 type BreadcrumbProps = {
   pages: { name: string; current: boolean }[]
-  showNumber: boolean
+  showNumber?: boolean
 }
 
 export function Breadcrumb({ pages, showNumber = false }: BreadcrumbProps) {
@@ -14,7 +14,9 @@ export function Breadcrumb({ pages, showNumber = false }: BreadcrumbProps) {
           <li key={page.name}>
             <div className="flex items-between">
               <p
-                className={`flex items-center gap-2 mr-4 text-sm font-medium text-center ${page.current ? '' : 'text-gray-500'}`}
+                className={`flex items-center gap-2 mr-4 text-sm font-medium text-center ${
+                  page.current ? '' : 'text-gray-500'
+                }`}
                 aria-current={page.current ? 'page' : undefined}
               >
                 {showNumber && (

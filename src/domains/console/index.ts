@@ -15,7 +15,11 @@ export { AccountTab } from './UsersSection/AccountTab'
 export { RoleTab } from './UsersSection/RoleTab'
 export { UserSlidePanel } from './UsersSection/SlidePanel'
 export { AdminLogin } from './AdminLogin'
-export { DataContext, DataProvider, useData } from './DataContext'
+export {
+  SchemaManagerContext,
+  SchemaManagerProvider,
+  useSchemaManager
+} from './SchemaManagerContext'
 export {
   ConsoleEditorContext,
   ConsoleEditorProvider,

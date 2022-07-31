@@ -7,7 +7,7 @@ import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { SchemaFormater } from 'domains/console/Console/Editors/SchemaFormater'
 
 export function ViewConsole() {
-  const { currentTab, setCurrentTab } = consoleSection.useData()
+  const { currentTab } = consoleSection.useSchemaManager()
   const { setIsOpen, currentStep, setSteps, isOpen, setCurrentStep } = useTour()
   const { tabsData, documentationValue, setSchemaTabData } =
     consoleEditor.useConsoleEditor()

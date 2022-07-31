@@ -11,7 +11,7 @@ type accordionsDatatype = {
 
 export function SideBar() {
   const { selectedTab } = consoleSection.useSidebar()
-  const { setCurrentTab } = consoleSection.useData()
+  const { setCurrentTab } = consoleSection.useSchemaManager()
 
   useEffect(() => {
     setCurrentTab(selectedTab.name as 'Data Manager' | 'Schema Manager')

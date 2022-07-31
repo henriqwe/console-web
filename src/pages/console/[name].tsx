@@ -39,7 +39,7 @@ export default function Home({
         close: (base) => ({ ...base, right: 8, top: 8 })
       }}
     >
-      <consoleSection.DataProvider>
+      <consoleSection.SchemaManagerProvider>
         <consoleSection.ConsoleEditorProvider>
           <consoleSection.SidebarProvider>
             <consoleSection.UserProvider>
@@ -51,7 +51,7 @@ export default function Home({
             </consoleSection.UserProvider>
           </consoleSection.SidebarProvider>
         </consoleSection.ConsoleEditorProvider>
-      </consoleSection.DataProvider>
+      </consoleSection.SchemaManagerProvider>
     </TourProvider>
   )
 }

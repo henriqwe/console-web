@@ -7,7 +7,7 @@ import { PlusIcon } from '@heroicons/react/outline'
 
 export function RoleTab() {
   const [loading, setLoading] = useState(true)
-  const { selectedEntity } = consoleData.useData()
+  const { selectedEntity } = consoleData.useSchemaManager()
   const { reload, setSlideType, setOpenSlide, setRoles, roles } =
     consoleData.useUser()
 

@@ -9,7 +9,7 @@ import { PlusIcon, CheckIcon } from '@heroicons/react/outline'
 export function CreateEntity() {
   const router = useRouter()
   const { setShowCreateEntitySection, setReload, reload } =
-    consoleSection.useData()
+    consoleSection.useSchemaManager()
   const {
     control,
     formState: { errors },

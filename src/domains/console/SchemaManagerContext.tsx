@@ -9,7 +9,7 @@ import {
 import * as yup from 'yup'
 import * as types from 'domains/console/types'
 
-type DataContextProps = {
+type SchemaManagerContextProps = {
   currentTab: 'Data Manager' | 'Schema Manager' | 'USERS'
   setCurrentTab: Dispatch<
     SetStateAction<'Data Manager' | 'Schema Manager' | 'USERS'>
@@ -36,21 +36,52 @@ type DataContextProps = {
   schemaTables?: types.SchemaTable
   setSchemaTables: Dispatch<SetStateAction<types.SchemaTable | undefined>>
   relationshipSchema: yup.AnyObjectSchema
+  breadcrumbPages: breadcrumbPageType[]
+  setBreadcrumbPages: Dispatch<SetStateAction<breadcrumbPageType[]>>
+  breadcrumbPagesData: {
+    home: breadcrumbPageType[]
+    createEntity: breadcrumbPageType[]
+    viewEntity: (entityName: string) => breadcrumbPageType[]
+    viewEntityRelationship: (entityName: string) => breadcrumbPageType[]
+  }
 }
 
 type ProviderProps = {
   children: ReactNode
 }
+
 type slideState = {
   open: boolean
   type: 'CodeExporterView'
 }
 
-export const DataContext = createContext<DataContextProps>(
-  {} as DataContextProps
+type breadcrumbPageType = { name: string; current: boolean }
+
+export const SchemaManagerContext = createContext<SchemaManagerContextProps>(
+  {} as SchemaManagerContextProps
 )
 
-export const DataProvider = ({ children }: ProviderProps) => {
+const breadcrumbPagesData = {
+  home: [
+    { name: 'Schema manager', current: false },
+    { name: 'Home', current: true }
+  ],
+  createEntity: [
+    { name: 'Schema manager', current: false },
+    { name: 'Create entity', current: true }
+  ],
+  viewEntity: (entityName: string) => [
+    { name: 'Schema manager', current: false },
+    { name: entityName, current: false }
+  ],
+  viewEntityRelationship: (entityName: string) => [
+    { name: 'Schema manager', current: false },
+    { name: entityName, current: false },
+    { name: 'Relationship', current: true }
+  ]
+}
+
+export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const [openSlide, setOpenSlide] = useState(false)
   const [slideType, setSlideType] = useState<'UPDATE' | 'UPDATE ENTITY'>(
     'UPDATE'
@@ -69,6 +100,9 @@ export const DataProvider = ({ children }: ProviderProps) => {
     open: false,
     type: 'CodeExporterView'
   })
+  const [breadcrumbPages, setBreadcrumbPages] = useState<breadcrumbPageType[]>(
+    breadcrumbPagesData.home
+  )
 
   const fieldSchema = yup.object().shape({
     // Name: yup.string().required(),
@@ -87,7 +121,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
   })
 
   return (
-    <DataContext.Provider
+    <SchemaManagerContext.Provider
       value={{
         currentTab,
         setCurrentTab,
@@ -112,14 +146,17 @@ export const DataProvider = ({ children }: ProviderProps) => {
         setSlideState,
         schemaTables,
         setSchemaTables,
-        relationshipSchema
+        relationshipSchema,
+        breadcrumbPages,
+        setBreadcrumbPages,
+        breadcrumbPagesData
       }}
     >
       {children}
-    </DataContext.Provider>
+    </SchemaManagerContext.Provider>
   )
 }
 
-export const useData = () => {
-  return useContext(DataContext)
+export const useSchemaManager = () => {
+  return useContext(SchemaManagerContext)
 }

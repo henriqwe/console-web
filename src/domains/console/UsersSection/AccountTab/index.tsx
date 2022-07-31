@@ -8,7 +8,7 @@ import { PlusIcon } from '@heroicons/react/outline'
 export function AccountTab() {
   const [loading, setLoading] = useState(true)
   const [entityData, setEntityData] = useState()
-  const { selectedEntity } = consoleData.useData()
+  const { selectedEntity } = consoleData.useSchemaManager()
   const { reload, setOpenSlide, setSlideType } = consoleData.useUser()
 
   async function loadData() {

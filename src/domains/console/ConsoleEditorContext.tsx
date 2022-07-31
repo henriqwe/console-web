@@ -67,7 +67,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleResponseLoading, setconsoleResponseLoading] = useState(false)
   const router = useRouter()
   const [responseTime, setResponseTime] = useState<number>()
-  const { reload } = data.useData()
+  const { reload } = data.useSchemaManager()
   const [codeExporterValue, setCodeExporterValue] = useState('')
   const [variablesValue, setVariablesValue] = useState('')
 

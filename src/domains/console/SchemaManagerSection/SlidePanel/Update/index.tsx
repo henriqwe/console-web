@@ -16,7 +16,7 @@ export function Update() {
     selectedEntity,
     selectedItemToExclude,
     entityData
-  } = consoleData.useData()
+  } = consoleData.useSchemaManager()
 
   let schemaShape = {}
 
