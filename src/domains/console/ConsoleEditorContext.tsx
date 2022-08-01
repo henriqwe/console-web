@@ -67,7 +67,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleResponseLoading, setconsoleResponseLoading] = useState(false)
   const router = useRouter()
   const [responseTime, setResponseTime] = useState<number>()
-  const { reload } = data.useData()
+  const { reload } = data.useSchemaManager()
   const [codeExporterValue, setCodeExporterValue] = useState('')
   const [variablesValue, setVariablesValue] = useState('')
 
@@ -79,8 +79,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       content: <div>Docs</div>
     },
     {
-      title: 'Schema',
-      color: 'red',
+      title: 'Spec',
+      color: 'blue',
       content: <div>{schemaTabData}</div>
     }
   ])
@@ -207,28 +207,26 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   }
 
   function formaterCodeExporterValue() {
-    const text = `  async function yc_persistence_service(jwt, tenantID, BODY) {
-    const result = await fetch('https://api.ycodify.com/api/interpreter-p/s', 
-    {
-      method: 'POST',
-      body: BODY,
-      headers: {
-      Authorization: 'Bearer '.concat(jwt),
-      'X-TenantID': tenantID,
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-      }
-    })
-    return await result.json()
-  }
-  
-  const jwt = '${getCookie('admin_access_token')}'
-  const tenantID = '${getCookie('X-TenantID')}'
-  const BODY = ${consoleValueLastOperation}
- 
-  yc_persistence_service(jwt, tenantID, BODY) 
-   
-  `
+    const text = `async function yc_persistence_service(jwt, tenantID, BODY) {
+  const result = await fetch('https://api.ycodify.com/api/interpreter-p/s', 
+  {
+    method: 'POST',
+    body: BODY,
+    headers: {
+    Authorization: 'Bearer '.concat(jwt),
+    'X-TenantID': tenantID,
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+    }
+  })
+  return await result.json()
+}
+
+const jwt = '${getCookie('admin_access_token')}'
+const tenantID = '${getCookie('X-TenantID')}'
+const BODY = ${consoleValueLastOperation}
+
+yc_persistence_service(jwt, tenantID, BODY)`
     setCodeExporterValue(text)
   }
 
@@ -247,9 +245,13 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           content: <div>Docs</div>
         },
         {
-          title: 'Schema',
-          color: 'red',
-          content: <div>{schemaTabData}</div>
+          title: 'Spec',
+          color: 'blue',
+          content: (
+            <div className="leading-5 bg-gray-50 p-4 rounded-lg">
+              {schemaTabData}
+            </div>
+          )
         }
       ])
     }

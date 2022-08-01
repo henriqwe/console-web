@@ -7,7 +7,7 @@ import { PlusIcon } from '@heroicons/react/outline'
 
 export function RoleTab() {
   const [loading, setLoading] = useState(true)
-  const { selectedTable } = consoleData.useData()
+  const { selectedEntity } = consoleData.useSchemaManager()
   const { reload, setSlideType, setOpenSlide, setRoles, roles } =
     consoleData.useUser()
 
@@ -35,7 +35,7 @@ export function RoleTab() {
     setRoles(undefined)
     setLoading(true)
     loadData()
-  }, [selectedTable, reload])
+  }, [selectedEntity, reload])
 
   return (
     <div
@@ -49,7 +49,7 @@ export function RoleTab() {
             <common.Spinner />
           </div>
 
-          <p className="text-lg font-bold text-gray-700">Loading table data</p>
+          <p className="text-lg font-bold text-gray-700">Loading entity data</p>
         </div>
       ) : (
         <div className="w-full h-full bg-gray-100 rounded-b-lg overflow-y">
@@ -66,8 +66,8 @@ export function RoleTab() {
             </common.Buttons.Blue>
           </div>
           <common.Separator />
-          <common.Table
-            tableColumns={[
+          <common.Entity
+            entityColumns={[
               { name: 'name', displayName: 'Name' },
               { name: 'schema', displayName: 'Schema' },
               {

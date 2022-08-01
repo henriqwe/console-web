@@ -27,7 +27,7 @@ export function FieldDetail({
   data,
   setShowDetails
 }: {
-  data: types.TableData
+  data: types.EntityData
   setShowDetails: Dispatch<SetStateAction<boolean>>
 }) {
   const router = useRouter()
@@ -40,8 +40,8 @@ export function FieldDetail({
     Index: true,
     Comment: true
   })
-  const { fieldSchema, selectedTable, setReload, reload } =
-    consoleData.useData()
+  const { fieldSchema, selectedEntity, setReload, reload } =
+    consoleData.useSchemaManager()
 
   const {
     watch,
@@ -52,7 +52,7 @@ export function FieldDetail({
   async function Save(formData: FormData) {
     await utils.api.put(
       `${utils.apiRoutes.attribute({
-        entityName: selectedTable as string,
+        entityName: selectedEntity as string,
         projectName: router.query.name as string
       })}/${data.name}`,
       formData,
@@ -72,7 +72,7 @@ export function FieldDetail({
     await utils.api.delete(
       `${utils.apiRoutes.attribute({
         projectName: router.query.name as string,
-        entityName: selectedTable as string
+        entityName: selectedEntity as string
       })}/${data.name}`,
       {
         headers: {

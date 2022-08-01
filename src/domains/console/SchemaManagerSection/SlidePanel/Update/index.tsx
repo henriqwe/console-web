@@ -13,14 +13,14 @@ export function Update() {
     setOpenSlide,
     setReload,
     reload,
-    selectedTable,
+    selectedEntity,
     selectedItemToExclude,
-    tableData
-  } = consoleData.useData()
+    entityData
+  } = consoleData.useSchemaManager()
 
   let schemaShape = {}
 
-  for (const field of tableData!.filter((field) => field.name !== 'id')) {
+  for (const field of entityData!.filter((field) => field.name !== 'id')) {
     let yupValidation
     switch (field.type) {
       case 'String':
@@ -68,10 +68,10 @@ export function Update() {
             `{\n 
               "action":"UPDATE",\n 
               "object":{\n 
-                "classUID": "${selectedTable}",\n 
+                "classUID": "${selectedEntity}",\n 
                 "id": ${selectedItemToExclude.id},\n 
                 "role": "ROLE_ADMIN",\n 
-                ${tableData
+                ${entityData
                   ?.filter((field) => field.name !== 'id')
                   .map(
                     (field, index) =>
@@ -79,7 +79,7 @@ export function Update() {
                         field.type === 'Boolean'
                           ? formData[field.name].key
                           : formData[field.name]
-                      }"${index !== tableData?.length - 2 ? ',' : ''}\n`
+                      }"${index !== entityData?.length - 2 ? ',' : ''}\n`
                   )
                   .join('')}
               }\n
@@ -113,7 +113,7 @@ export function Update() {
       className="flex flex-col items-end"
     >
       <div className="flex flex-col w-full gap-2 mb-2">
-        {tableData
+        {entityData
           ?.filter((field) => field.name !== 'id')
           .map((field) => (
             <Controller

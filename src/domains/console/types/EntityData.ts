@@ -1,4 +1,4 @@
-export type TableData = {
+export type EntityData = {
   name: string
   comment: string
   createdAt: number

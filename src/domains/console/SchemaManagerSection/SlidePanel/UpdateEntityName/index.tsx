@@ -8,11 +8,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { CheckIcon } from '@heroicons/react/outline'
 
-export function UpdateTableName() {
+export function UpdateEntityName() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const { setOpenSlide, setReload, reload, selectedTable, setSelectedTable } =
-    consoleData.useData()
+  const { setOpenSlide, setReload, reload, selectedEntity, setSelectedEntity } =
+    consoleData.useSchemaManager()
 
   const yupSchema = yup.object().shape({ Name: yup.string().required() })
 
@@ -29,7 +29,7 @@ export function UpdateTableName() {
       await utils.api.put(
         `${utils.apiRoutes.entity(
           router.query.name as string
-        )}/${selectedTable}`,
+        )}/${selectedEntity}`,
         {
           name: formData.Name
         },
@@ -42,7 +42,7 @@ export function UpdateTableName() {
       )
 
       reset()
-      setSelectedTable(formData.Name)
+      setSelectedEntity(formData.Name)
       setReload(!reload)
       setOpenSlide(false)
       setLoading(false)
@@ -63,7 +63,7 @@ export function UpdateTableName() {
       <div className="flex flex-col w-full gap-2 mb-2">
         <Controller
           name="Name"
-          defaultValue={selectedTable}
+          defaultValue={selectedEntity}
           control={control}
           render={({ field: { onChange, value } }) => (
             <common.Input

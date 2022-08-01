@@ -17,6 +17,7 @@ export { Breadcrumb } from './BreadCrumb'
 export { ListRadioGroup } from './ListRadioGroup'
 export { ContentSection } from './ContentSection'
 export { SlideWithTabs } from './SlideWithTabs'
+export { AccordionGroup } from './AccordionGroup'
 export { Toggle } from './Toggle'
 
 export * as illustrations from './Ilustrations'
