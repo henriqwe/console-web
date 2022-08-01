@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { FieldDetail } from './FieldDetail'
 import * as common from 'common'
 
-export function Column({ data }: { data: types.TableData }) {
+export function Column({ data }: { data: types.EntityData }) {
   const [showDetails, setShowDetails] = useState(false)
 
   if (showDetails) {

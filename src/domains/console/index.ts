@@ -1,21 +1,25 @@
 export { SideBar } from './Sidebar'
-export { ApiTab } from './Sidebar/ApiTab'
-export { DataTab } from './Sidebar/DataTab'
-export { ApiSection } from './ApiSection'
-export { DataSection } from './DataSection'
-export { CreateTable } from './DataSection/CreateTable'
+export { DataManagerTab } from './Sidebar/DataManagerTab'
+export { SchemaManagerTab } from './Sidebar/SchemaManagerTab'
+export { DataManagerSection } from './DataManagerSection'
+export { SchemaManagerSection } from './SchemaManagerSection'
+export { CreateEntity } from './SchemaManagerSection/CreateEntity'
 export { TableViewMode } from './Console/TableViewMode'
-export { ModifyTab } from './DataSection/ModifyTab'
-export { RelationshipTab } from './DataSection/RelationshipTab'
-export { SlidePanel } from './DataSection/SlidePanel'
+export { ModifyTab } from './SchemaManagerSection/ModifyTab'
+export { RelationshipTab } from './SchemaManagerSection/RelationshipTab'
+export { SlidePanel } from './SchemaManagerSection/SlidePanel'
+export { DefaultPage } from './SchemaManagerSection/DefaultPage'
 export { Editors } from './Console'
 export { UsersSection } from './UsersSection'
 export { AccountTab } from './UsersSection/AccountTab'
 export { RoleTab } from './UsersSection/RoleTab'
 export { UserSlidePanel } from './UsersSection/SlidePanel'
-export { DefaultPage } from './DataSection/DefaultPage'
 export { AdminLogin } from './AdminLogin'
-export { DataContext, DataProvider, useData } from './DataContext'
+export {
+  SchemaManagerContext,
+  SchemaManagerProvider,
+  useSchemaManager
+} from './SchemaManagerContext'
 export {
   ConsoleEditorContext,
   ConsoleEditorProvider,
@@ -27,3 +31,4 @@ export {
   useSidebar,
   SidebarProvider
 } from './Sidebar/SidebarContext'
+export { ViewConsole } from './ViewConsole'

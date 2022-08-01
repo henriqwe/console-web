@@ -12,7 +12,7 @@ import { SchemaFormater } from './SchemaFormater'
 
 export function Editors() {
   const { setShowTableViewMode, showTableViewMode, setSlideState } =
-    consoleSection.useData()
+    consoleSection.useSchemaManager()
 
   const {
     consoleValue,
@@ -22,22 +22,11 @@ export function Editors() {
     setConsoleValue,
     consoleResponseLoading,
     responseTime,
-    consoleValueLastOperation,
-    tabsData,
-    documentationValue,
-    setSchemaTabData
+    consoleValueLastOperation
   } = consoleEditor.useConsoleEditor()
-
-  useEffect(() => {
-    if (documentationValue) {
-      setSchemaTabData(<SchemaFormater />)
-    }
-  }, [documentationValue])
 
   return (
     <div className="flex flex-col w-full h-full" data-tour="step-4">
-      <common.SlideWithTabs tabsData={tabsData} />
-
       <common.ContentSection
         title={
           <div className="flex items-center justify-between w-full">
@@ -94,7 +83,7 @@ export function Editors() {
           <div
             className={`${
               showTableViewMode ? 'col-span-4' : 'col-span-6'
-            } h-full rounded-bl-lg`}
+            } h-full rounded-bl-lg flex`}
           >
             <div className="flex w-full h-full overflow-x-auto rounded-bl-lg">
               <CodeMirror
@@ -117,7 +106,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-8' : 'col-span-6'
             }  h-full flex flex-col`}
           >
-            <div className="flex w-full h-full overflow-x-auto rounded-br-lg">
+            <div className="flex w-full h-full overflow-x-auto rounded-br-lg border-l-4 border-gray-200">
               {consoleResponseLoading ? (
                 <div className="flex items-center justify-center w-full h-full">
                   <div className="flex items-center gap-2">
@@ -134,6 +123,10 @@ export function Editors() {
                     className="flex w-full h-full "
                     width="100%"
                     // theme={responseTheme}
+                    basicSetup={{
+                      lineNumbers: false,
+                      foldGutter: false
+                    }}
                     editable={false}
                     extensions={[javascript({ jsx: true })]}
                   />

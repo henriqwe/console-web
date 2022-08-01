@@ -34,8 +34,8 @@ export function FieldDetail({
     Index: true,
     Comment: true
   })
-  const { fieldSchema, selectedTable, setReload, reload } =
-    consoleData.useData()
+  const { fieldSchema, selectedEntity, setReload, reload } =
+    consoleData.useSchemaManager()
 
   const {
     watch,

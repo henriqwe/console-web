@@ -1,6 +1,6 @@
 import * as common from 'common'
 import * as utils from 'utils'
-import * as dataContext from 'domains/console'
+import * as SchemaManagerContext from 'domains/console'
 import {
   useForm,
   FieldValues,
@@ -15,7 +15,7 @@ import { routes } from 'domains/routes'
 export function AdminLogin() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const { logUserSchema } = dataContext.useUser()
+  const { logUserSchema } = SchemaManagerContext.useUser()
   const {
     formState: { errors },
     handleSubmit,

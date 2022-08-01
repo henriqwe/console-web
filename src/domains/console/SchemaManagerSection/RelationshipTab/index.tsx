@@ -3,7 +3,7 @@ import * as utils from 'utils'
 import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
-import { XIcon, PlusIcon } from '@heroicons/react/outline'
+import { PlusIcon } from '@heroicons/react/outline'
 import { SetStateAction, useState, Dispatch } from 'react'
 import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
@@ -19,12 +19,13 @@ export function RelationshipTab({ loading }: RelationshipTabProps) {
   const [openModal, setOpenModal] = useState(false)
   const [openForm, setOpenForm] = useState(false)
   const {
-    selectedTable,
+    entityData,
+    selectedEntity,
     setReload,
     reload,
-    setSelectedTable,
+    setSelectedEntity,
     schemaTables
-  } = consoleSection.useData()
+  } = consoleSection.useSchemaManager()
 
   async function RemoveTable() {
     try {
@@ -32,7 +33,7 @@ export function RelationshipTab({ loading }: RelationshipTabProps) {
       await utils.api.delete(
         `${utils.apiRoutes.entity(
           router.query.name as string
-        )}/${selectedTable}`,
+        )}/${selectedEntity}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -41,9 +42,9 @@ export function RelationshipTab({ loading }: RelationshipTabProps) {
         }
       )
       setReload(!reload)
-      setSelectedTable(undefined)
+      setSelectedEntity(undefined)
       utils.notification(
-        `Table ${selectedTable} deleted successfully`,
+        `Table ${selectedEntity} deleted successfully`,
         'success'
       )
     } catch (err: any) {
@@ -93,7 +94,9 @@ export function RelationshipTab({ loading }: RelationshipTabProps) {
             setOpenForm={setOpenForm}
             setReload={setReload}
             reload={reload}
+            selectedEntity={selectedEntity}
             schemaTables={schemaTables}
+            entityData={entityData}
           />
         </>
       )}
@@ -116,7 +119,7 @@ export function RelationshipTab({ loading }: RelationshipTabProps) {
         setOpen={setOpenModal}
         loading={submitLoading}
         disabled={submitLoading}
-        title={`Remove ${selectedTable} entity?`}
+        title={`Remove ${selectedEntity} entity?`}
         description={
           <>
             <p className="text-sm text-gray-600">
@@ -138,14 +141,19 @@ function AttributeForm({
   setOpenForm,
   setReload,
   reload,
-  schemaTables
+  selectedEntity,
+  schemaTables,
+  entityData
 }: {
   setOpenForm: Dispatch<SetStateAction<boolean>>
   setReload: Dispatch<SetStateAction<boolean>>
   reload: boolean
+  selectedEntity?: string
   schemaTables?: types.SchemaTable
+  entityData?: types.EntityData[]
 }) {
-  const { relationshipSchema } = consoleSection.useData()
+  const { relationshipSchema } = consoleSection.useSchemaManager()
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const {
     control,
@@ -209,9 +217,18 @@ function AttributeForm({
           name={'RelationshipName'}
           control={control}
           render={({ field: { onChange, value } }) => (
-            <div className="w-1/2 pr-2">
-              <common.Input
-                placeholder="Relationship name"
+            <div className="w-1/2">
+              <common.Select
+                options={
+                  entityData
+                    ? entityData.map((table) => {
+                        return {
+                          name: table.name,
+                          value: table.name
+                        }
+                      })
+                    : []
+                }
                 value={value}
                 onChange={onChange}
                 errors={errors.RelationshipName}
