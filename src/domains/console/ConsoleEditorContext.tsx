@@ -131,9 +131,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         break
     }
 
-    setConsoleValue(
-      `{\n "action":"${action}",\n "object":{\n   "classUID": "${entity}",\n   "role": "ROLE_ADMIN"\n }\n}`
-    )
+    setConsoleValue(`{\n "action":"${action}",\n "${entity}":{\n  \n }\n}`)
   }
 
   async function runOperation() {
@@ -146,7 +144,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           data: JSON.parse(consoleValue),
           access_token: `${utils.getCookie('access_token')}`,
           'X-TenantID': utils.getCookie('X-TenantID'),
-          'X-TenantAC': utils.getCookie('X-TenantAC'),
+          'X-TenantAC': utils.getCookie('X-TenantAC')
         },
         {
           headers: {
@@ -249,7 +247,7 @@ yc_persistence_service(jwt, tenantID, BODY)`
           title: 'Spec',
           color: 'blue',
           content: (
-            <div className="leading-5 bg-gray-50 p-4 rounded-lg">
+            <div className="p-4 leading-5 rounded-lg bg-gray-50">
               {schemaTabData}
             </div>
           )

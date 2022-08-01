@@ -25,15 +25,16 @@ export function SchemaManagerTab() {
     try {
       setLoading(true)
 
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
+      const { data } = await utils.api.get(
+        `${utils.apiRoutes.entityList(router.query.name as string)}`,
         {
           headers: {
             Authorization: `Bearer ${getCookie('access_token')}`
           }
         }
       )
-      setEntities(Object.keys(data.data) as string[])
+
+      setEntities(Object.keys(data) as string[])
     } catch (err: any) {
       if (err.response.status !== 404) {
         utils.notification(err.message, 'error')
@@ -50,10 +51,10 @@ export function SchemaManagerTab() {
   }, [router.query.name, reload])
 
   return (
-    <div className="flex flex-col h-full px-4 overflow-y-auto pt-1 ">
+    <div className="flex flex-col h-full px-4 pt-1 overflow-y-auto ">
       <div className="flex items-center w-full">
         <div
-          className="font-semibold flex items-center gap-2 hover:cursor-pointer"
+          className="flex items-center gap-2 font-semibold hover:cursor-pointer"
           onClick={() => {
             setShowCreateEntitySection(false)
             setSelectedEntity(undefined)
@@ -61,7 +62,7 @@ export function SchemaManagerTab() {
           }}
         >
           Entities &#40; {entities.length} &#41;{' '}
-          <CheckCircleIcon className="text-green-600 w-4 h-4" />
+          <CheckCircleIcon className="w-4 h-4 text-green-600" />
         </div>
       </div>
       <common.Separator />
