@@ -20,8 +20,12 @@ type data = {
 
 const tabsData: data = [
   { title: 'Tab', color: 'blue', content },
-  { title: 'Tab', color: 'red', content },
-  { title: 'Tab', color: 'blue', content }
+  { title: 'Eu poderia ser menor', color: 'blue', content },
+  {
+    title: 'Tab com o nome bem grande, bem grande ...',
+    color: 'red',
+    content
+  }
 ]
 
 const options = [

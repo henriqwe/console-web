@@ -8,8 +8,7 @@ type AccordionProps = {
   content: ReactNode
   defaultOpen?: boolean
   elementRef: any
-  hideOther: () => void
-  hideSelf: () => void
+  hideOther?: () => void
 }
 
 export function Accordion({
@@ -18,8 +17,7 @@ export function Accordion({
   content,
   defaultOpen = false,
   elementRef,
-  hideOther,
-  hideSelf
+  hideOther
 }: AccordionProps) {
   return (
     <div className={`w-full`}>
@@ -33,8 +31,7 @@ export function Accordion({
               ref={elementRef}
               data-id={id}
               onClick={() => {
-                if (open) hideSelf()
-                else hideOther()
+                if (hideOther) hideOther()
               }}
             >
               <span className="text-xl">{title}</span>

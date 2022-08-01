@@ -9,9 +9,13 @@ type AccordionGroupProps = {
     defaultOpen: boolean
     action: () => void
   }[]
+  hideSelf: boolean
 }
 
-export function AccordionGroup({ accordionsData }: AccordionGroupProps) {
+export function AccordionGroup({
+  accordionsData,
+  hideSelf = false
+}: AccordionGroupProps) {
   const elementsRef = useRef(accordionsData?.map(() => createRef()))
 
   const hideOther = (id: number) => {
@@ -26,7 +30,7 @@ export function AccordionGroup({ accordionsData }: AccordionGroupProps) {
       return false
     })
 
-    if (tabIsOpen) {
+    if (tabIsOpen || hideSelf) {
       items.forEach((elm) => {
         if (elm?.current?.getAttribute('aria-expanded') === 'true') {
           elm?.current?.click()
@@ -34,24 +38,10 @@ export function AccordionGroup({ accordionsData }: AccordionGroupProps) {
       })
       return
     }
+
     elementsRef.current.forEach((elm) => {
       if (elm?.current?.getAttribute('aria-expanded') === 'true') {
         elm?.current?.click()
-      }
-    })
-  }
-
-  const hideSelf = (id: number) => {
-    const items = elementsRef.current.filter((elm: MutableRefObject<null>) => {
-      if (elm?.current?.getAttribute('data-id') === id.toString()) {
-        return true
-      }
-      return false
-    })
-
-    items.forEach((elm) => {
-      if (elm?.current?.getAttribute('aria-expanded') === 'true') {
-        elm?.current?.setAttribute('aria-expanded', false)
       }
     })
   }
@@ -73,7 +63,6 @@ export function AccordionGroup({ accordionsData }: AccordionGroupProps) {
               elementRef={elementsRef.current[idx]}
               id={accordionData.id}
               hideOther={() => hideOther(accordionData.id)}
-              hideSelf={() => hideSelf(accordionData.id)}
             />
           </div>
         )

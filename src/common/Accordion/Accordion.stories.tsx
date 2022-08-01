@@ -25,7 +25,6 @@ export const Default = Template.bind({})
 Default.args = {
   title: 'Accordion',
   defaultOpen: false,
-  action: () => {},
   content,
   id: 0
 }

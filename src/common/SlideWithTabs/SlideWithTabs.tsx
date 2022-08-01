@@ -51,7 +51,7 @@ export function SlideWithTabs({
           leaveTo="translate-x-full"
         >
           <div
-            className={`absolute  inset-y-0 right-0  z-10 ${slidePanelWidth} items-center justify-stat space-y-10  my-36`}
+            className={`gap-y-5 flex flex-col absolute inset-y-0 right-0 z-10 ${slidePanelWidth} translate-x-1 items-end justify-center mr-0 my-36 max-w-[50px] px-1`}
           >
             {tabsData?.map((tab, idx) => {
               return (
@@ -95,7 +95,7 @@ export function SlideWithTabs({
                   className={`w-screen flex pointer-events-auto ${slidePanelWidth} `}
                 >
                   <div
-                    className={`sticky inset-y-0 right-0 z-50 ${slidePanelWidth} items-center space-y-10 my-36`}
+                    className={`gap-y-5 flex flex-col sticky self-center inset-y-0 right-0 z-50 ${slidePanelWidth} items-end max-w-[50px]`}
                   >
                     {tabsData?.map((tab, idx) => {
                       return (
@@ -177,10 +177,10 @@ function Button({ onClick, children, color }: ButtonType) {
       break
   }
   return (
-    <div className="-rotate-90 translate-x-2">
+    <div className="">
       <button
         onClick={onClick}
-        className={`bg-white border-x-2 border-t-2 py-1 px-2 rounded-t-md ${btnColor}`}
+        className={`bg-white border-y-2 border-l-2 py-1 px-2 rounded-l-md ${btnColor} break-words`}
       >
         {children}
       </button>

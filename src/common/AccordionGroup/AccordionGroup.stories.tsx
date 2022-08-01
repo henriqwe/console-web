@@ -31,5 +31,12 @@ const Template: ComponentStory<typeof AccordionGroup> = (args) => (
 
 export const Default = Template.bind({})
 Default.args = {
-  accordionsData: accordions
+  accordionsData: accordions,
+  hideSelf: false
+}
+
+export const HideSelf = Template.bind({})
+HideSelf.args = {
+  accordionsData: accordions,
+  hideSelf: true
 }
