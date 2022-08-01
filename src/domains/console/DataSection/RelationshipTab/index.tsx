@@ -19,7 +19,6 @@ export function RelationshipTab({ loading }: RelationshipTabProps) {
   const [openModal, setOpenModal] = useState(false)
   const [openForm, setOpenForm] = useState(false)
   const {
-    tableData,
     selectedTable,
     setReload,
     reload,
@@ -94,9 +93,7 @@ export function RelationshipTab({ loading }: RelationshipTabProps) {
             setOpenForm={setOpenForm}
             setReload={setReload}
             reload={reload}
-            selectedTable={selectedTable}
             schemaTables={schemaTables}
-            tableData={tableData}
           />
         </>
       )}
@@ -141,19 +138,14 @@ function AttributeForm({
   setOpenForm,
   setReload,
   reload,
-  selectedTable,
-  schemaTables,
-  tableData
+  schemaTables
 }: {
   setOpenForm: Dispatch<SetStateAction<boolean>>
   setReload: Dispatch<SetStateAction<boolean>>
   reload: boolean
-  selectedTable?: string
   schemaTables?: types.SchemaTable
-  tableData?: types.TableData[]
 }) {
   const { relationshipSchema } = consoleSection.useData()
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const {
     control,
@@ -173,25 +165,25 @@ function AttributeForm({
         throw new Error('String length is required')
       }
 
-      await utils.api.post(
-        utils.apiRoutes.attribute({
-          projectName: router.query.name as string,
-          entityName: selectedTable as string
-        }),
-        {
-          name: data.ColumnName,
-          comment: data.Comment,
-          isNullable: data.Nullable || false,
-          length: data.Length,
-          type: data.Type.value
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      // await utils.api.post(
+      //   utils.apiRoutes.attribute({
+      //     projectName: router.query.name as string,
+      //     entityName: selectedTable as string
+      //   }),
+      //   {
+      //     name: data.ColumnName,
+      //     comment: data.Comment,
+      //     isNullable: data.Nullable || false,
+      //     length: data.Length,
+      //     type: data.Type.value
+      //   },
+      //   {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //       Authorization: `Bearer ${utils.getCookie('access_token')}`
+      //     }
+      //   }
+      // )
 
       setReload(!reload)
       setOpenForm(false)
@@ -212,95 +204,40 @@ function AttributeForm({
       className="flex flex-col w-full gap-4 px-4 py-5 bg-gray-100 border border-gray-300 rounded-lg"
       onSubmit={handleSubmit(Submit)}
     >
-      <Controller
-        name={'RelationshipName'}
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <div className="w-1/2 pr-2">
-            <common.Input
-              placeholder="Relationship name"
-              value={value}
-              onChange={onChange}
-              errors={errors.RelationshipName}
-              label="Relationship name"
-            />
-          </div>
-        )}
-      />
-
-      <Controller
-        name={'ReferenceEntity'}
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <div className="w-1/2 pr-2">
-            <common.Select
-              options={Object.keys(schemaTables!).map((entity) => {
-                return {
-                  name: entity,
-                  value: entity
-                }
-              })}
-              value={value}
-              label="Reference entity"
-              placeholder="Reference entity"
-              onChange={onChange}
-              errors={errors.ReferenceEntity}
-            />
-          </div>
-        )}
-      />
-
-      <div className="flex justify-between gap-4">
+      <div className="flex items-center justify-between gap-4">
         <Controller
-          name={'From'}
+          name={'RelationshipName'}
           control={control}
           render={({ field: { onChange, value } }) => (
-            <div className="w-1/2">
-              <common.Select
-                options={
-                  tableData
-                    ? tableData.map((table) => {
-                        return {
-                          name: table.name,
-                          value: table.name
-                        }
-                      })
-                    : []
-                }
+            <div className="w-1/2 pr-2">
+              <common.Input
+                placeholder="Relationship name"
                 value={value}
-                label="From:"
-                placeholder="Entity attribute"
-                errors={errors.From}
                 onChange={onChange}
+                errors={errors.RelationshipName}
+                label="Relationship name"
               />
             </div>
           )}
         />
 
         <Controller
-          name={'To'}
+          name={'ReferenceEntity'}
           control={control}
           render={({ field: { onChange, value } }) => (
-            <div className="w-1/2">
+            <div className="w-1/2 pr-2">
               <common.Select
-                options={
-                  watch('ReferenceEntity')
-                    ? Object.keys(schemaTables![watch('ReferenceEntity').name])
-                        .filter((attribute) => attribute !== '_conf')
-                        .map((attribute) => {
-                          return {
-                            name: attribute,
-                            value: attribute
-                          }
-                        })
-                    : []
-                }
-                placeholder="Selected entity attribute"
+                options={Object.keys(schemaTables!).map((entity) => {
+                  return {
+                    name: entity,
+                    value: entity
+                  }
+                })}
                 value={value}
-                disabled={!watch('ReferenceEntity')}
-                label="To:"
-                errors={errors.To}
+                label="Reference entity"
+                placeholder="Reference entity"
                 onChange={onChange}
+                errors={errors.ReferenceEntity}
               />
             </div>
           )}

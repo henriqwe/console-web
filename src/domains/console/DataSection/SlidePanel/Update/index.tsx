@@ -86,7 +86,8 @@ export function Update() {
             }`
           ),
           access_token: getCookie('admin_access_token'),
-          'X-TenantID': getCookie('X-TenantID')
+          'X-TenantID': getCookie('X-TenantID'),
+          'X-TenantAC': getCookie('X-TenantAC'),
         },
         {
           headers: {

@@ -259,6 +259,7 @@ export function Project({
               //   utils.removeCookie('admin_access_token')
               // }
               utils.setCookie('X-TenantID', schema.tenantId)
+              utils.setCookie('X-TenantAC', schema.tenantAc)
               router.push(`${routes.console}/${schema.name}`)
             }}
           >

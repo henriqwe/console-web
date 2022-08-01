@@ -4,7 +4,7 @@ export const apiRoutes = {
   roles: '/caccount/role',
   deleteRole: (name: string) => `/caccount/role/name/${name}`,
   getUserToken: '/security/oauth/token',
-  interpreter: '/interpreter-p/s',
+  interpreter: 'v0/interpreter-p/s/no-ac',
   deleteUserAccount: ({
     username,
     version

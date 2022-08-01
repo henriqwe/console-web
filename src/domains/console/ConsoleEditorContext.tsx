@@ -145,7 +145,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         {
           data: JSON.parse(consoleValue),
           access_token: `${utils.getCookie('access_token')}`,
-          'X-TenantID': utils.getCookie('X-TenantID')
+          'X-TenantID': utils.getCookie('X-TenantID'),
+          'X-TenantAC': utils.getCookie('X-TenantAC'),
         },
         {
           headers: {

@@ -77,9 +77,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
 
   const relationshipSchema = yup.object().shape({
     RelationshipName: yup.string().required('This field is required'),
-    ReferenceEntity: yup.object().required('This field is required'),
-    From: yup.object().required('This field is required'),
-    To: yup.object().required('This field is required')
+    ReferenceEntity: yup.object().required('This field is required')
   })
 
   return (

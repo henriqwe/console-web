@@ -18,7 +18,8 @@ export default async function interpreter(
             'Content-Type': 'application/json',
             Accept: 'application/json',
             Authorization: `Bearer ${req.body.access_token}`,
-            'X-TenantID': `${req.body['X-TenantID']}`
+            'X-TenantID': `${req.body['X-TenantID']}`,
+            'X-TenantAC': `${req.body['X-TenantAC']}`,
           }
         }
       )
@@ -36,3 +37,6 @@ export default async function interpreter(
   }
   return res.status(404).json({ message: 'Not found! :(' })
 }
+
+
+// mesmo q atributo mudando para association
