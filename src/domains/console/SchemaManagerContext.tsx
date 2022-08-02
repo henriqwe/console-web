@@ -19,6 +19,7 @@ type SchemaManagerContextProps = {
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
   fieldSchema: yup.AnyObjectSchema
+  updateAssociationSchema: yup.AnyObjectSchema
   selectedItemToExclude: any
   setSelectedItemToExclude: Dispatch<SetStateAction<any>>
   openSlide: boolean
@@ -35,7 +36,7 @@ type SchemaManagerContextProps = {
   setSlideState: Dispatch<SetStateAction<slideState>>
   schemaTables?: types.SchemaTable
   setSchemaTables: Dispatch<SetStateAction<types.SchemaTable | undefined>>
-  relationshipSchema: yup.AnyObjectSchema
+  associationSchema: yup.AnyObjectSchema
   breadcrumbPages: breadcrumbPageType[]
   setBreadcrumbPages: Dispatch<SetStateAction<breadcrumbPageType[]>>
   breadcrumbPagesData: {
@@ -113,11 +114,13 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     Comment: yup.string().required()
   })
 
-  const relationshipSchema = yup.object().shape({
-    RelationshipName: yup.string().required('This field is required'),
-    ReferenceEntity: yup.object().required('This field is required'),
-    From: yup.object().required('This field is required'),
-    To: yup.object().required('This field is required')
+  const updateAssociationSchema = yup.object().shape({
+    Name: yup.string().required()
+  })
+
+  const associationSchema = yup.object().shape({
+    AssociationName: yup.string().required('This field is required'),
+    ReferenceEntity: yup.object().required('This field is required')
   })
 
   return (
@@ -146,10 +149,11 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         setSlideState,
         schemaTables,
         setSchemaTables,
-        relationshipSchema,
+        associationSchema,
         breadcrumbPages,
         setBreadcrumbPages,
-        breadcrumbPagesData
+        breadcrumbPagesData,
+        updateAssociationSchema
       }}
     >
       {children}

@@ -2,79 +2,80 @@ import * as utils from 'utils'
 import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleData from 'domains/console'
+import { ArrowNarrowRightIcon } from '@heroicons/react/outline'
+import { Dispatch, SetStateAction, useState } from 'react'
 import {
-  PencilIcon,
-  XIcon,
-  CheckIcon,
-  ArrowNarrowRightIcon
-} from '@heroicons/react/outline'
-import { Dispatch, ReactNode, SetStateAction, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+  useForm,
+  Controller,
+  FieldValues,
+  SubmitHandler
+} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 
 type FormData = {
-  name: string
+  Name: string
 }
 
 export function FieldDetail({
-  data,
+  attribute,
+  schemaTables,
   setShowDetails
 }: {
-  data: { name: string }
+  attribute: string
+  schemaTables?: types.SchemaTable
   setShowDetails: Dispatch<SetStateAction<boolean>>
 }) {
   const router = useRouter()
   const [openModal, setOpenModal] = useState(false)
-  const [activeFields, setActiveFields] = useState({
-    Name: true,
-    Type: true,
-    Nullable: true,
-    Unique: true,
-    Index: true,
-    Comment: true
-  })
-  const { fieldSchema, selectedEntity, setReload, reload } =
+  const { updateAssociationSchema, selectedEntity, setReload, reload } =
     consoleData.useSchemaManager()
 
   const {
-    watch,
     formState: { errors },
-    control
-  } = useForm({ resolver: yupResolver(fieldSchema) })
+    control,
+    handleSubmit
+  } = useForm({ resolver: yupResolver(updateAssociationSchema) })
 
   async function Save(formData: FormData) {
-    // await utils.api.put(
-    //   `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
-    //   formData,
-    //   {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       Authorization: `Bearer ${utils.getCookie('access_token')}`
-    //     }
-    //   }
-    // )
-    // setReload(!reload)
-    // utils.notification('attribute updated successfully', 'success')
-    // setShowDetails(false)
+    await utils.api.put(
+      `${utils.apiRoutes.association({
+        projectName: router.query.name as string,
+        entityName: selectedEntity as string
+      })}/${attribute}`,
+      {
+        name: formData.Name
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
+        }
+      }
+    )
+    setReload(!reload)
+    utils.notification('attribute updated successfully', 'success')
+    setShowDetails(false)
   }
 
   async function Remove() {
-    // await utils.api.delete(
-    //   `${utils.apiRoutes.attribute({
-    //     projectName: router.query.name as string,
-    //     entityName: selectedTable as string
-    //   })}/${data.name}`,
-    //   {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       Authorization: `Bearer ${utils.getCookie('access_token')}`
-    //     }
-    //   }
-    // )
-    // setReload(!reload)
-    // utils.notification('attribute updated successfully', 'success')
-    // setShowDetails(false)
+    await utils.api.delete(
+      `${utils.apiRoutes.association({
+        projectName: router.query.name as string,
+        entityName: selectedEntity as string
+      })}/${attribute}/type/${
+        schemaTables![selectedEntity as string][attribute].type
+      }`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
+        }
+      }
+    )
+    setReload(!reload)
+    utils.notification('attribute updated successfully', 'success')
+    setShowDetails(false)
   }
 
   return (
@@ -91,18 +92,23 @@ export function FieldDetail({
         </div>
 
         <p className="flex gap-4 my-2 text-sm text-gray-500">
-          Branch . Book_Id <ArrowNarrowRightIcon className="w-5" /> Book . Id
+          {selectedEntity} . {attribute}{' '}
+          <ArrowNarrowRightIcon className="w-5" />
+          {schemaTables![selectedEntity as string][attribute].type}
         </p>
       </div>
-      <section className="flex flex-col gap-4">
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={handleSubmit(Save as SubmitHandler<FieldValues>)}
+      >
         <Controller
           name="Name"
-          defaultValue={data.name}
+          defaultValue={attribute}
           control={control}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input
-                placeholder="Relationship name"
+                placeholder="Association name"
                 value={value}
                 onChange={onChange}
                 errors={errors.Name}
@@ -119,31 +125,26 @@ export function FieldDetail({
           >
             Remove
           </common.Buttons.Red>
-          <common.Buttons.Yellow
-            type="button"
-            loading={false}
-            disabled={false}
-            onClick={() => setOpenModal(true)}
-          >
+          <common.Buttons.Yellow type="submit" loading={false} disabled={false}>
             Save
           </common.Buttons.Yellow>
         </div>
-      </section>
+      </form>
       <common.Modal
         open={openModal}
         setOpen={setOpenModal}
-        title={`Remove relationship?`}
+        title={`Remove association?`}
         description={
           <>
             <p className="text-sm text-gray-600">
-              Are you sure you want to remove this relationship?
+              Are you sure you want to remove this association?
             </p>
             <p className="text-sm font-bold text-gray-600">
               this action is irreversible!!!
             </p>
           </>
         }
-        buttonTitle="Remove relationship"
+        buttonTitle="Remove association"
         handleSubmit={Remove}
       />
     </common.Card>

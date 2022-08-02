@@ -8,6 +8,9 @@ import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
 
 export function SchemaManagerSection() {
+  const [selectedEntityTab, setSelectedEntityTab] = useState({
+    name: 'Modify entity'
+  })
   const router = useRouter()
   const {
     selectedEntity,
@@ -16,8 +19,7 @@ export function SchemaManagerSection() {
     setEntityData,
     showCreateEntitySection,
     setSlideType,
-    breadcrumbPages,
-    setBreadcrumbPages
+    breadcrumbPages
   } = consoleSection.useSchemaManager()
   const [loading, setLoading] = useState(true)
 
@@ -75,27 +77,41 @@ export function SchemaManagerSection() {
         <common.ContentSection
           variant="WithoutTitleBackgroundColor"
           title={
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center w-1/2 gap-2">
               <p className="text-base font-semibold text-gray-900">
                 {selectedEntity ? selectedEntity : 'Entities'}
               </p>
               {selectedEntity && (
-                <div title="Edit entity name">
-                  <PencilIcon
-                    className="w-3 h-3 cursor-pointer"
-                    onClick={() => {
-                      setOpenSlide(true)
-                      setSlideType('UPDATE ENTITY')
-                    }}
+                <>
+                  <div title="Edit entity name">
+                    <PencilIcon
+                      className="w-3 h-3 cursor-pointer"
+                      onClick={() => {
+                        setOpenSlide(true)
+                        setSlideType('UPDATE ENTITY')
+                      }}
+                    />
+                  </div>
+
+                  <common.Tabs
+                    selectedTab={selectedEntityTab}
+                    setSelectedTab={setSelectedEntityTab}
+                    tabs={[
+                      { name: 'Modify entity' },
+                      { name: 'Entity associations' }
+                    ]}
                   />
-                </div>
+                </>
               )}
             </div>
           }
         >
-          {/* <consoleSection.RelationshipTab loading={loading} /> */}
           {selectedEntity ? (
-            <consoleSection.ModifyTab loading={loading} />
+            selectedEntityTab.name === 'Modify entity' ? (
+              <consoleSection.ModifyTab loading={loading} />
+            ) : (
+              <consoleSection.AssociationTab loading={loading} />
+            )
           ) : (
             <consoleSection.DefaultPage />
           )}

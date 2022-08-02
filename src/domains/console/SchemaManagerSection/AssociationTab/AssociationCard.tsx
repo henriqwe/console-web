@@ -1,15 +1,28 @@
 import { useState } from 'react'
 import { FieldDetail } from './FieldDetail'
 import * as common from 'common'
+import * as types from 'domains/console/types'
 import { ArrowNarrowRightIcon } from '@heroicons/react/outline'
 
-export function RelationshipCard(/*{ data }: { data: types.TableData }*/) {
+export function AssociationCard({
+  attribute,
+  schemaTables,
+  selectedEntity
+}: {
+  attribute: string
+  selectedEntity?: string
+  schemaTables?: types.SchemaTable
+}) {
   const [showDetails, setShowDetails] = useState(false)
 
   return (
     <div className="px-4 py-2 border border-t-0">
       {showDetails ? (
-        <FieldDetail data={{ name: '' }} setShowDetails={setShowDetails} />
+        <FieldDetail
+          attribute={attribute}
+          schemaTables={schemaTables}
+          setShowDetails={setShowDetails}
+        />
       ) : (
         <>
           <div className="flex items-center gap-2 mb-2">
@@ -19,10 +32,12 @@ export function RelationshipCard(/*{ data }: { data: types.TableData }*/) {
             >
               Edit
             </common.Buttons.WhiteOutline>
-            <p>Book</p>
+            <p>{attribute}</p>
           </div>
           <p className="flex gap-4 text-sm text-gray-500">
-            Branch . Book_Id <ArrowNarrowRightIcon className="w-5" /> Book . Id
+            {selectedEntity} . {attribute}{' '}
+            <ArrowNarrowRightIcon className="w-5" />
+            {schemaTables![selectedEntity as string][attribute].type}
           </p>
         </>
       )}

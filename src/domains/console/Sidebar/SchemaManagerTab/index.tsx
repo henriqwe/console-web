@@ -16,7 +16,8 @@ export function SchemaManagerTab() {
     reload,
     setShowCreateEntitySection,
     setBreadcrumbPages,
-    breadcrumbPagesData
+    breadcrumbPagesData,
+    setSchemaTables
   } = consoleSection.useSchemaManager()
   const [entities, setEntities] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
@@ -34,6 +35,7 @@ export function SchemaManagerTab() {
         }
       )
 
+      setSchemaTables(data)
       setEntities(Object.keys(data) as string[])
     } catch (err: any) {
       if (err.response.status !== 404) {

@@ -1,5 +1,13 @@
 export const apiRoutes = {
   schemas: `v0/modeler/project-name`,
+  association: ({
+    projectName,
+    entityName
+  }: {
+    projectName: string
+    entityName: string
+  }) =>
+    `v0/modeler/project-name/${projectName}/schema/sql/entity/${entityName}/association`,
   userAccount: '/account/account',
   roles: '/caccount/role',
   deleteRole: (name: string) => `/caccount/role/name/${name}`,
