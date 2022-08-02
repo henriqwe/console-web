@@ -16,8 +16,14 @@ export function ModifyTab({ loading }: ModifyTabProps) {
   const [submitLoading, setSubmitLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [openForm, setOpenForm] = useState(false)
-  const { entityData, selectedEntity, setReload, reload, setSelectedEntity } =
-    consoleSection.useSchemaManager()
+  const {
+    entityData,
+    selectedEntity,
+    setReload,
+    reload,
+    setSelectedEntity,
+    schemaTables
+  } = consoleSection.useSchemaManager()
 
   async function RemoveEntity() {
     try {
@@ -65,7 +71,13 @@ export function ModifyTab({ loading }: ModifyTabProps) {
     >
       <h3 className="text-lg">Columns:</h3>
       {entityData
-        ?.filter((data) => data.name !== '_conf')
+        ?.filter((data) => {
+          const entities = Object.keys(schemaTables!)
+          if(entities.includes(data.type)){
+            return false
+          }
+          return data.name !== '_conf'
+        })
         .map((data) => (
           <Column key={data.name} data={data} />
         ))}

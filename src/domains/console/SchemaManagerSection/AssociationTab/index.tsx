@@ -1,19 +1,24 @@
-import { RelationshipCard } from './RelationshipCard'
+import { AssociationCard } from './AssociationCard'
 import * as utils from 'utils'
 import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
 import { PlusIcon } from '@heroicons/react/outline'
-import { SetStateAction, useState, Dispatch } from 'react'
+import { SetStateAction, useState, Dispatch, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { Controller, useForm } from 'react-hook-form'
+import {
+  Controller,
+  FieldValues,
+  SubmitHandler,
+  useForm
+} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-type RelationshipTabProps = {
+type AssociationTabProps = {
   loading: boolean
 }
 
-export function RelationshipTab({ loading }: RelationshipTabProps) {
+export function AssociationTab({ loading }: AssociationTabProps) {
   const router = useRouter()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
@@ -69,21 +74,35 @@ export function RelationshipTab({ loading }: RelationshipTabProps) {
     <div
       className={`flex flex-col items-start rounded-b-md bg-white p-6 gap-2`}
     >
-      <h3 className="text-lg">Entity relationships:</h3>
+      <h3 className="text-lg">Entity associations:</h3>
 
       <div className="flex justify-between w-full">
         <div className="flex-1 border border-y-0 border-x-0">
           <div className="px-4 py-2 bg-gray-100 border rounded-tl-xl">
-            <p className="text-sm">Object relationships</p>
+            <p className="text-sm">Object associations</p>
           </div>
-          <RelationshipCard />
+          {Object.keys(schemaTables![selectedEntity as string])
+            .filter((attribute) => {
+              const entities = Object.keys(schemaTables!)
+              return entities.includes(
+                schemaTables![selectedEntity as string][attribute].type
+              )
+            })
+            .map((attribute) => (
+              <AssociationCard
+                key={attribute}
+                attribute={attribute}
+                schemaTables={schemaTables}
+                selectedEntity={selectedEntity}
+              />
+            ))}
         </div>
 
         <div className="flex-1 border border-y-0 border-x-0">
           <div className="px-4 py-2 bg-gray-100 border rounded-tr-xl">
-            <p className="text-sm">Array relationships</p>
+            <p className="text-sm">Array associations</p>
           </div>
-          <RelationshipCard />
+          {/* <AssociationCard /> */}
         </div>
       </div>
 
@@ -96,7 +115,6 @@ export function RelationshipTab({ loading }: RelationshipTabProps) {
             reload={reload}
             selectedEntity={selectedEntity}
             schemaTables={schemaTables}
-            entityData={entityData}
           />
         </>
       )}
@@ -110,7 +128,7 @@ export function RelationshipTab({ loading }: RelationshipTabProps) {
             onClick={() => setOpenForm(true)}
             icon={<PlusIcon className="w-3 h-3" />}
           >
-            Add relationship
+            Add Association
           </common.Buttons.Clean>
         )}
       </div>
@@ -142,61 +160,57 @@ function AttributeForm({
   setReload,
   reload,
   selectedEntity,
-  schemaTables,
-  entityData
+  schemaTables
 }: {
   setOpenForm: Dispatch<SetStateAction<boolean>>
   setReload: Dispatch<SetStateAction<boolean>>
   reload: boolean
   selectedEntity?: string
   schemaTables?: types.SchemaTable
-  entityData?: types.EntityData[]
 }) {
-  const { relationshipSchema } = consoleSection.useSchemaManager()
+  const { associationSchema } = consoleSection.useSchemaManager()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const {
     control,
-    watch,
     formState: { errors },
     handleSubmit
-  } = useForm({ resolver: yupResolver(relationshipSchema) })
+  } = useForm({ resolver: yupResolver(associationSchema) })
 
-  async function Submit(data: any) {
+  async function Submit(data: {
+    AssociationName: string
+    ReferenceEntity: {
+      name: string
+      value: unknown
+    }
+    Comment?: string
+    Nullable?: boolean
+  }) {
     try {
       setLoading(true)
-      if (!data.ColumnName || !data.Type) {
-        throw new Error('Missing required fields')
-      }
-
-      if (data.Type.value === 'String' && !data.Length) {
-        throw new Error('String length is required')
-      }
-
-      // await utils.api.post(
-      //   utils.apiRoutes.attribute({
-      //     projectName: router.query.name as string,
-      //     entityName: selectedTable as string
-      //   }),
-      //   {
-      //     name: data.ColumnName,
-      //     comment: data.Comment,
-      //     isNullable: data.Nullable || false,
-      //     length: data.Length,
-      //     type: data.Type.value
-      //   },
-      //   {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //       Authorization: `Bearer ${utils.getCookie('access_token')}`
-      //     }
-      //   }
-      // )
+      await utils.api.post(
+        utils.apiRoutes.association({
+          projectName: router.query.name as string,
+          entityName: selectedEntity as string
+        }),
+        {
+          name: data.AssociationName,
+          type: data.ReferenceEntity.name,
+          nullable: data.Nullable || false,
+          comment: data.Comment
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
 
       setReload(!reload)
       setOpenForm(false)
       utils.notification(
-        `Attribute ${data.ColumnName} created successfully`,
+        `Association ${data.AssociationName} created successfully`,
         'success'
       )
     } catch (err: any) {
@@ -210,29 +224,20 @@ function AttributeForm({
   return (
     <form
       className="flex flex-col w-full gap-4 px-4 py-5 bg-gray-100 border border-gray-300 rounded-lg"
-      onSubmit={handleSubmit(Submit)}
+      onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
     >
       <div className="flex items-center justify-between gap-4">
         <Controller
-          name={'RelationshipName'}
+          name={'AssociationName'}
           control={control}
           render={({ field: { onChange, value } }) => (
-            <div className="w-1/2">
-              <common.Select
-                options={
-                  entityData
-                    ? entityData.map((table) => {
-                        return {
-                          name: table.name,
-                          value: table.name
-                        }
-                      })
-                    : []
-                }
-                value={value}
+            <div className="w-1/3">
+              <common.Input
+                placeholder="Association name"
+                className="w-full"
                 onChange={onChange}
-                errors={errors.RelationshipName}
-                label="Relationship name"
+                errors={errors.AssociationName}
+                label="Association name"
               />
             </div>
           )}
@@ -242,7 +247,7 @@ function AttributeForm({
           name={'ReferenceEntity'}
           control={control}
           render={({ field: { onChange, value } }) => (
-            <div className="w-1/2 pr-2">
+            <div className="w-1/3 pr-2">
               <common.Select
                 options={Object.keys(schemaTables!).map((entity) => {
                   return {
@@ -256,6 +261,33 @@ function AttributeForm({
                 onChange={onChange}
                 errors={errors.ReferenceEntity}
               />
+            </div>
+          )}
+        />
+
+        <Controller
+          name={'Comment'}
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <div>
+              <common.Input
+                placeholder="Comment"
+                value={value}
+                onChange={onChange}
+                errors={errors.Comment}
+                label="Comment"
+              />
+            </div>
+          )}
+        />
+
+        <Controller
+          name={'Nullable'}
+          control={control}
+          render={({ field: { onChange } }) => (
+            <div className="flex items-center gap-2 h-[50%] self-end ">
+              <input type="checkbox" id={'Nullable'} onChange={onChange} />
+              <label htmlFor={'Nullable'}>Nullable</label>
             </div>
           )}
         />
