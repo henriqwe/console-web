@@ -6,11 +6,19 @@ import * as common from 'common'
 type SlideWithTabsProps = {
   slideSize?: 'normal' | 'halfPage' | 'fullPage'
   noPadding?: boolean
-  tabsData: {
-    title: string
-    color: 'blue' | 'red'
-    content: JSX.Element
-  }[]
+  tabsData: tabsDataType[]
+}
+
+type tabsDataType = {
+  title: string
+  color: 'blue' | 'red'
+  content: JSX.Element
+}
+
+type slideDataType = {
+  open: boolean
+  content: ReactNode
+  title: string
 }
 
 export function SlideWithTabs({
@@ -32,11 +40,12 @@ export function SlideWithTabs({
     default:
       break
   }
-  const [slideData, setSlideData] = useState<{
-    open: boolean
-    content: ReactNode
-    title: string
-  }>({ open: false, content: <div />, title: '' })
+  const [slideData, setSlideData] = useState<slideDataType>({
+    open: false,
+    content: <div />,
+    title: ''
+  })
+  const [activeTab, setActiveTab] = useState<tabsDataType>()
 
   return (
     <>
@@ -56,7 +65,9 @@ export function SlideWithTabs({
             {tabsData?.map((tab, idx) => {
               return (
                 <Button
+                  activeTab={activeTab}
                   onClick={() => {
+                    setActiveTab(tab)
                     setSlideData({
                       open: true,
                       content: tab.content,
@@ -77,7 +88,7 @@ export function SlideWithTabs({
       <Transition.Root show={slideData.open} as={Fragment}>
         <Dialog
           as="div"
-          className="fixed inset-0 z-10 overflow-hidden"
+          className="fixed inset-0 z-10 overflow-hidden "
           onClose={() => null}
         >
           <div className="absolute inset-0 overflow-hidden ">
@@ -100,7 +111,9 @@ export function SlideWithTabs({
                     {tabsData?.map((tab, idx) => {
                       return (
                         <Button
+                          activeTab={activeTab}
                           onClick={() => {
+                            setActiveTab(tab)
                             setSlideData({
                               open: true,
                               content: tab.content,
@@ -108,7 +121,7 @@ export function SlideWithTabs({
                             })
                           }}
                           color={tab.color}
-                          key={idx}
+                          key={tab.title + idx}
                         >
                           {tab.title}
                         </Button>
@@ -116,7 +129,13 @@ export function SlideWithTabs({
                     })}
                   </div>
                   <div
-                    className={`flex border-l flex-col h-full w-full py-6 overflow-y-scroll bg-white shadow-xl`}
+                    className={`flex border-l flex-col h-full w-full py-6 overflow-y-scroll bg-white shadow-xl ${
+                      activeTab?.color === 'red'
+                        ? 'border-red-500'
+                        : activeTab?.color === 'blue'
+                        ? 'border-blue-500'
+                        : ''
+                    } `}
                   >
                     <div className="px-4 mb-4 sm:px-6">
                       <div className="flex items-start justify-between">
@@ -128,12 +147,13 @@ export function SlideWithTabs({
                           <button
                             type="button"
                             className="text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            onClick={() =>
+                            onClick={() => {
+                              setActiveTab(undefined)
                               setSlideData({
                                 ...slideData,
                                 open: false
                               })
-                            }
+                            }}
                             title="Close"
                           >
                             <span className="sr-only">Close panel</span>
@@ -165,25 +185,34 @@ type ButtonType = {
   onClick: () => void
   children: ReactNode
   color: 'red' | 'blue'
+  activeTab: tabsDataType | undefined
 }
-function Button({ onClick, children, color }: ButtonType) {
-  let btnColor
+function Button({ onClick, children, color, activeTab }: ButtonType) {
+  let borderColor
+  let bgColor
+  let textColor
   switch (color) {
     case 'blue':
-      btnColor = 'border-blue-300'
+      borderColor = 'border-blue-300'
+      bgColor = 'bg-blue-500'
+      textColor = 'text-white'
       break
     case 'red':
-      btnColor = 'border-red-300'
+      borderColor = 'border-red-500'
+      bgColor = 'bg-red-500'
+      textColor = 'text-white'
       break
   }
   return (
-    <div className="-rotate-90 translate-x-1.5">
-      <button
-        onClick={onClick}
-        className={`bg-white border-x-2 border-t-2 p-2 rounded-t-md ${btnColor}`}
-      >
+    <button
+      onClick={onClick}
+      className={`border-y-2 border-l-2 p-2 rounded-l-md ${borderColor} ${
+        activeTab?.title === children ? `${bgColor} ${textColor} ` : 'bg-white'
+      }`}
+    >
+      <span className="rotate-180" style={{ writingMode: 'vertical-rl' }}>
         {children}
-      </button>
-    </div>
+      </span>
+    </button>
   )
 }
