@@ -106,7 +106,7 @@ export function SlideWithTabs({
                   className={`w-screen flex pointer-events-auto ${slidePanelWidth} `}
                 >
                   <div
-                    className={`sticky  flex flex-col inset-y-0 right-0  z-10 ${slidePanelWidth} w-0 items-end justify-end space-y-10  my-24 `}
+                    className={`sticky flex flex-col inset-y-0 right-0  z-10 ${slidePanelWidth} w-0 items-end justify-end space-y-10  my-24 `}
                   >
                     {tabsData?.map((tab, idx) => {
                       return (
