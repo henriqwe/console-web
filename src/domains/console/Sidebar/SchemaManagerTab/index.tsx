@@ -53,7 +53,7 @@ export function SchemaManagerTab() {
   }, [router.query.name, reload])
 
   return (
-    <div className="flex flex-col h-full px-4 pt-1 overflow-y-auto ">
+    <div className="flex flex-col h-full px-4 pt-3 overflow-y-auto gap-1">
       <div className="flex items-center w-full">
         <div
           className="flex items-center gap-2 font-semibold hover:cursor-pointer"
@@ -80,22 +80,25 @@ export function SchemaManagerTab() {
           <p>Entities not found</p>
         </div>
       ) : (
-        entities.map((entity) => (
-          <div key={entity}>
-            <div
-              className={`flex items-center gap-2 pb-2 cursor-pointer ${
-                selectedEntity === `${entity}` && 'text-orange-400'
-              }`}
-              onClick={() => {
-                setSelectedEntity(`${entity}`)
-                setShowCreateEntitySection(false)
-              }}
-            >
-              <Icon icon="bi:entity" className="w-4 h-4" />
-              <p className="text-sm">{entity}</p>
+        <div>
+          {entities.map((entity) => (
+            <div key={entity}>
+              <div
+                className={`flex items-center gap-2 pb-2 cursor-pointer ${
+                  selectedEntity === `${entity}` && 'text-orange-400'
+                }`}
+                onClick={() => {
+                  setSelectedEntity(`${entity}`)
+                  setShowCreateEntitySection(false)
+                  setBreadcrumbPages(breadcrumbPagesData.viewEntity(entity))
+                }}
+              >
+                <Icon icon="bi:entity" className="w-4 h-4" />
+                <p className="text-sm">{entity}</p>
+              </div>
             </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
     </div>
   )
