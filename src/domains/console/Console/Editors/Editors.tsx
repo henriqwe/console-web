@@ -85,7 +85,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-4' : 'col-span-6'
             } h-full rounded-bl-lg flex`}
           >
-            <div className="flex w-full h-full overflow-x-auto rounded-bl-lg">
+            <div className="flex flex-col w-full h-full overflow-x-auto rounded-bl-lg">
               <CodeMirror
                 value={consoleValue}
                 className="flex w-full h-full"
@@ -99,6 +99,13 @@ export function Editors() {
                   globalJavaScriptCompletions
                 ]}
               />
+              <div className="flex items-center justify-end h-6 px-4 ">
+                {responseTime && (
+                  <div className="text-xs">
+                    Response time: {responseTime} ms
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <div
@@ -106,7 +113,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-8' : 'col-span-6'
             }  h-full flex flex-col`}
           >
-            <div className="flex w-full h-full overflow-x-auto rounded-br-lg border-l-4 border-gray-200">
+            <div className="flex w-full h-full overflow-x-auto rounded-br-lg border-l border-gray-200">
               {consoleResponseLoading ? (
                 <div className="flex items-center justify-center w-full h-full">
                   <div className="flex items-center gap-2">
@@ -123,10 +130,7 @@ export function Editors() {
                     className="flex w-full h-full "
                     width="100%"
                     // theme={responseTheme}
-                    basicSetup={{
-                      lineNumbers: false,
-                      foldGutter: false
-                    }}
+
                     editable={false}
                     extensions={[javascript({ jsx: true })]}
                   />

@@ -38,8 +38,8 @@ type ConsoleEditorContextProps = {
   variablesValue: string
   setVariablesValue: Dispatch<SetStateAction<string>>
   formaterCodeExporterValue(): void
-  tabsData: tabsDataType
-  setTabsData: Dispatch<SetStateAction<tabsDataType>>
+  tabsData: tabsDataType | undefined
+  setTabsData: Dispatch<SetStateAction<tabsDataType | undefined>>
   schemaTabData: JSX.Element | undefined
   setSchemaTabData: Dispatch<SetStateAction<JSX.Element | undefined>>
 }
@@ -72,18 +72,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [variablesValue, setVariablesValue] = useState('')
 
   const [schemaTabData, setSchemaTabData] = useState<JSX.Element>()
-  const [tabsData, setTabsData] = useState<tabsDataType>([
-    {
-      title: 'Docs',
-      color: 'blue',
-      content: <div>Docs</div>
-    },
-    {
-      title: 'Spec',
-      color: 'blue',
-      content: <div>{schemaTabData}</div>
-    }
-  ])
+  const [tabsData, setTabsData] = useState<tabsDataType>()
 
   const globalJavaScriptCompletions = javascriptLanguage.data.of({
     autocomplete: completeFromGlobalScope
