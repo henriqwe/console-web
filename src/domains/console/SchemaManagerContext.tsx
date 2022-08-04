@@ -45,6 +45,8 @@ type SchemaManagerContextProps = {
     viewEntity: (entityName: string) => breadcrumbPageType[]
     viewEntityRelationship: (entityName: string) => breadcrumbPageType[]
   }
+  schemaStatus?: number
+  setSchemaStatus: Dispatch<SetStateAction<number | undefined>>
 }
 
 type ProviderProps = {
@@ -104,6 +106,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const [breadcrumbPages, setBreadcrumbPages] = useState<breadcrumbPageType[]>(
     breadcrumbPagesData.home
   )
+  const [schemaStatus, setSchemaStatus] = useState<number>()
 
   const fieldSchema = yup.object().shape({
     // Name: yup.string().required(),
@@ -153,7 +156,9 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         breadcrumbPages,
         setBreadcrumbPages,
         breadcrumbPagesData,
-        updateAssociationSchema
+        updateAssociationSchema,
+        schemaStatus,
+        setSchemaStatus,
       }}
     >
       {children}

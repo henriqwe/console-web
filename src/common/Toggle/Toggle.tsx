@@ -3,14 +3,14 @@ import { Switch } from '@headlessui/react'
 
 type ToggleProps = {
   enabled: boolean
-  setEnabled: Dispatch<SetStateAction<boolean>>
+  onChange: (value: boolean) => void
 }
 
-export function Toggle({ enabled, setEnabled }: ToggleProps) {
+export function Toggle({ enabled, onChange }: ToggleProps) {
   return (
     <Switch
       checked={enabled}
-      onChange={setEnabled}
+      onChange={onChange}
       className={`${enabled ? 'bg-indigo-600' : 'bg-gray-200'}
         relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
     >
