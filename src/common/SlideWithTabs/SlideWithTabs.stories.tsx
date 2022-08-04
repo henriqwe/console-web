@@ -22,7 +22,7 @@ const tabsData: data = [
   { title: 'Tab', color: 'blue', content },
   { title: 'Eu poderia ser menor', color: 'blue', content },
   {
-    title: 'Tab com o nome bem grande, bem grande ...',
+    title: 'Palavramuitograndevaiquebrar',
     color: 'red',
     content
   }

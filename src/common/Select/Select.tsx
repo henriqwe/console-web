@@ -16,6 +16,7 @@ type SelectProps = {
   errors?: DeepMap<FieldValues, FieldError> & { message?: string }
   disabled?: boolean
   label?: string
+  placeholder?: string
 }
 
 export const Select = ({
@@ -24,9 +25,10 @@ export const Select = ({
   onChange,
   errors,
   disabled = false,
-  label
+  label,
+  placeholder
 }: SelectProps) => {
-  const [selected, setSelected] = useState(value || options[0])
+  const [selected, setSelected] = useState(value)
 
   return (
     <Listbox
@@ -40,17 +42,23 @@ export const Select = ({
       {({ open }) => (
         <>
           {label && (
-            <Listbox.Label className="block mb-2 text-sm font-medium text-gray-700">
+            <Listbox.Label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-200">
               {label}
             </Listbox.Label>
           )}
           <div className="relative">
             <Listbox.Button
-              className="relative w-full py-2 pl-3 pr-10 text-left transition bg-white border border-gray-300 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="relative w-full py-2 pl-3 min-h-[2.5rem] pr-10 text-left transition bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
               aria-disabled={disabled}
               disabled={disabled}
             >
-              <span className="block truncate">{selected.name}</span>
+              <span
+                className={`block truncate ${
+                  !selected?.name && 'text-gray-400'
+                }`}
+              >
+                {selected?.name || placeholder}
+              </span>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <SelectorIcon
                   className="w-5 h-5 text-gray-400"
@@ -67,13 +75,15 @@ export const Select = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white dark:bg-gray-800 rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {options.map((option) => (
                   <Listbox.Option
                     key={option.name}
                     className={({ active }) =>
                       `${
-                        active ? 'text-white bg-indigo-600' : 'text-gray-900'
+                        active
+                          ? 'text-white bg-indigo-600'
+                          : 'text-gray-900 dark:text-gray-200'
                       } cursor-default select-none relative py-2 pl-3 pr-9`
                     }
                     value={option}
@@ -92,7 +102,11 @@ export const Select = ({
                         {selected ? (
                           <span
                             className={`
-                              ${active ? 'text-white' : 'text-indigo-600'}
+                              ${
+                                active
+                                  ? 'text-white'
+                                  : 'text-indigo-600 dark:text-indigo-500'
+                              }
                               absolute inset-y-0 right-0 flex items-center pr-4
                             `}
                           >

@@ -4,6 +4,7 @@ module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   staticDirs: ['../public'],
   addons: [
+    'storybook-tailwind-dark-mode',
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
@@ -21,6 +22,9 @@ module.exports = {
     }
   ],
   framework: '@storybook/react',
+  typescript: {
+    reactDocgen: false
+  },
   core: {
     builder: '@storybook/builder-webpack5'
   },

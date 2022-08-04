@@ -21,5 +21,14 @@ export const Default = Template.bind({})
 Default.args = {
   disabled: false,
   options,
-  label: 'Select Label'
+  label: 'Default Select',
+  placeholder: 'Select an option'
+}
+
+export const Disabled = Template.bind({})
+Disabled.args = {
+  disabled: true,
+  options,
+  label: 'Disabled Select',
+  placeholder: 'Select an option'
 }

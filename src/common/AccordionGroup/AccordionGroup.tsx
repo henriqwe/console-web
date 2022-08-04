@@ -9,7 +9,7 @@ type AccordionGroupProps = {
     defaultOpen: boolean
     action: () => void
   }[]
-  hideSelf: boolean
+  hideSelf?: boolean
 }
 
 export function AccordionGroup({
@@ -38,7 +38,6 @@ export function AccordionGroup({
       })
       return
     }
-
     elementsRef.current.forEach((elm) => {
       if (elm?.current?.getAttribute('aria-expanded') === 'true') {
         elm?.current?.click()
@@ -62,7 +61,7 @@ export function AccordionGroup({
               defaultOpen={accordionData.defaultOpen}
               elementRef={elementsRef.current[idx]}
               id={accordionData.id}
-              hideOther={() => hideOther(accordionData.id)}
+              action={() => hideOther(accordionData.id)}
             />
           </div>
         )

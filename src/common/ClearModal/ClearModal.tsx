@@ -27,7 +27,7 @@ export function ClearModal({ open, setOpen, children }: ModalProps) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" />
+          <div className="fixed inset-0 transition-opacity bg-gray-500 dark:bg-gray-700 bg-opacity-75" />
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -41,7 +41,7 @@ export function ClearModal({ open, setOpen, children }: ModalProps) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8">
+              <Dialog.Panel className="relative overflow-hidden text-left transition-all transform bg-white dark:bg-gray-800 dark:text-gray-200 rounded-lg shadow-xl sm:my-8">
                 {children}
               </Dialog.Panel>
             </Transition.Child>
