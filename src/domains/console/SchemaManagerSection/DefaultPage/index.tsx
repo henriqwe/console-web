@@ -11,7 +11,8 @@ export function DefaultPage() {
   const {
     setShowCreateEntitySection,
     setBreadcrumbPages,
-    breadcrumbPagesData
+    breadcrumbPagesData,
+    schemaStatus
   } = consoleSection.useSchemaManager()
   const sections = [
     {
@@ -57,10 +58,8 @@ export function DefaultPage() {
   }
 
   useEffect(() => {
-    if (publish) {
-      publishSchema()
-    }
-  }, [publish])
+    setPublish(schemaStatus === 2)
+  }, [schemaStatus])
 
   return (
     <div className="flex flex-col w-full h-full p-6">
@@ -93,7 +92,15 @@ export function DefaultPage() {
         </div>
         <div className="flex gap-2">
           Publish version
-          <common.Toggle enabled={publish} setEnabled={setPublish} />
+          <common.Toggle
+            enabled={publish}
+            onChange={(value) => {
+              if (value) {
+                publishSchema()
+              }
+              setPublish(value)
+            }}
+          />
         </div>
       </div>
       <common.Separator />

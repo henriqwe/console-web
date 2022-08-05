@@ -19,7 +19,8 @@ export function SchemaManagerSection() {
     setEntityData,
     showCreateEntitySection,
     setSlideType,
-    breadcrumbPages
+    breadcrumbPages,
+    setSchemaStatus
   } = consoleSection.useSchemaManager()
   const [loading, setLoading] = useState(true)
 
@@ -55,6 +56,18 @@ export function SchemaManagerSection() {
     }
     return () => setLoading(true)
   }, [selectedEntity, reload])
+
+  useEffect(() => {
+    utils.api
+      .get(`${utils.apiRoutes.schemas}/${router.query.name as string}`, {
+        headers: {
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
+        }
+      })
+      .then(({ data }) => {
+        setSchemaStatus(data.status)
+      })
+  }, [])
 
   if (showCreateEntitySection) {
     return (
