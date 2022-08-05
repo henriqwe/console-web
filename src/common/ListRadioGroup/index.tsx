@@ -56,34 +56,35 @@ export function ListRadioGroup({
                 key={`radio-grupo-item-${indice}`}
                 value={opcao}
                 className={({ active }) =>
-                  `${
+                  `dark:bg-gray-900
+                  ${
                     disabled && !(opcao.value === selected?.value)
-                      ? '!bg-gray-400 '
+                      ? '!bg-gray-400'
                       : disabled
                       ? 'bg-gray-200 cursor-not-allowed '
                       : ''
                   } 
-
                   ${disabled && opcao.value === selected?.value && ''}
                   
                   ${
                     active
-                      ? 'ring ring-offset !ring-offset-sky-300 !ring-blue-400 ring-opacity-40'
+                      ? 'ring-2 ring-offset !ring-offset-sky-300 !ring-gray-400 ring-opacity-40'
                       : ''
                   }
-                ${
-                  opcao.value === selected?.value
-                    ? '!bg-blue-200 bg-opacity-50 !text-gray-800 '
-                    : 'bg-gray-100 '
-                } 
-                ${horizontal ? 'flex-1 mt-0' : ''}  
-                  relative rounded-lg shadow-md ${
-                    compact ? 'px-2 py-2' : 'px-5 py-4'
-                  } cursor-pointer flex focus:outline-none
+                  
+                  ${
+                    opcao.value === selected?.value
+                      ? '!bg-blue-200 dark:!bg-gray-800 bg-opacity-50 !text-gray-800 ring-2 ring-offset !ring-offset-sky-300 !ring-gray-400 ring-opacity-40'
+                      : 'bg-gray-100 '
+                  } 
+                  ${horizontal ? 'flex-1 mt-0' : ''}  
+                    relative rounded-lg shadow-md ${
+                      compact ? 'px-2 py-2' : 'px-5 py-4'
+                    } cursor-pointer flex focus:outline-none
                   `
                 }
               >
-                <div className="flex items-center justify-between w-full">
+                <div className="flex items-center justify-between w-full dark:text-gray-200">
                   {opcao.content}
                   {opcao.value === selected?.value &&
                     !disabledCheckBoxIcon &&

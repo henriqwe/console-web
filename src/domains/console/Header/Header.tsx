@@ -1,6 +1,7 @@
 import { ReplyIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
+import { ToggleTheme } from 'common'
 
 export function Header() {
   const router = useRouter()
@@ -32,6 +33,9 @@ export function Header() {
             {router.query.name}
           </span>
         </div>
+      </div>
+      <div className="ml-auto mr-5 items-center flex">
+        <ToggleTheme changeColor={false} />
       </div>
     </div>
   )
