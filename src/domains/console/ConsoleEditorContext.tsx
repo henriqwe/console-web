@@ -260,14 +260,19 @@ yc_persistence_service(jwt, tenantID, BODY)`
   const format = useRef<FormatterFunction>()
 
   const handleFormat = useCallback(() => {
-    value.current = format?.current ? format?.current(value.current) : ''
-    if (value.current !== consoleValue) setConsoleValue(value.current)
-    else {
-      // Edge case: Only formatting was changed (this would not trigger re-render)
-      // Use a dummy value to force update code
-      setConsoleValue(value.current + ' ')
-      // Then use delay to immidiately correct it
-      setTimeout(() => setConsoleValue(value.current.slice(0, -1)), 0)
+    try {
+      value.current = format?.current ? format?.current(value.current) : ''
+      if (value.current !== consoleValue) setConsoleValue(value.current)
+      else {
+        // Edge case: Only formatting was changed (this would not trigger re-render)
+        // Use a dummy value to force update code
+        setConsoleValue(value.current + ' ')
+        // Then use delay to immidiately correct it
+        setTimeout(() => setConsoleValue(value.current.slice(0, -1)), 0)
+      }
+    } catch (error) {
+      console.log('error', error)
+      utils.notification('There was an error formatting', 'error')
     }
   }, [consoleValue])
 
