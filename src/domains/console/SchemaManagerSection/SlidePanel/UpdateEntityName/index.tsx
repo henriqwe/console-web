@@ -31,7 +31,8 @@ export function UpdateEntityName() {
           router.query.name as string
         )}/${selectedEntity}`,
         {
-          name: formData.Name
+          name: formData.Name,
+          _conf:{}
         },
         {
           headers: {
