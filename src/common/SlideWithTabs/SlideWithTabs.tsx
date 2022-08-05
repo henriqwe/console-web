@@ -60,7 +60,7 @@ export function SlideWithTabs({
           leaveTo="translate-x-full"
         >
           <div
-            className={`absolute flex flex-col inset-y-0 right-0  z-10 ${slidePanelWidth} w-0 items-end justify-end space-y-10   my-24`}
+            className={`absolute flex flex-col inset-y-0 right-0 z-10 ${slidePanelWidth} w-0 items-end justify-end space-y-10 my-24`}
           >
             {tabsData?.map((tab, idx) => {
               return (
@@ -106,7 +106,7 @@ export function SlideWithTabs({
                   className={`w-screen flex pointer-events-auto ${slidePanelWidth} `}
                 >
                   <div
-                    className={`sticky flex flex-col inset-y-0 right-0  z-10 ${slidePanelWidth} w-0 items-end justify-end space-y-10  my-24 `}
+                    className={`sticky flex flex-col inset-y-0 right-0 z-10 ${slidePanelWidth} w-0 items-end justify-end space-y-10 my-24 `}
                   >
                     {tabsData?.map((tab, idx) => {
                       return (
@@ -129,24 +129,24 @@ export function SlideWithTabs({
                     })}
                   </div>
                   <div
-                    className={`flex border-l flex-col h-full w-full py-6 overflow-y-scroll bg-white shadow-xl ${
+                    className={`flex border-l flex-col h-full w-full py-6 overflow-y-scroll bg-white dark:bg-gray-800 shadow-xl ${
                       activeTab?.color === 'red'
-                        ? 'border-red-500'
+                        ? 'border-red-500 dark:border-red-900/50'
                         : activeTab?.color === 'blue'
-                        ? 'border-blue-500'
+                        ? 'border-blue-500 dark:border-blue-900/50'
                         : ''
                     } `}
                   >
                     <div className="px-4 mb-4 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-lg font-medium text-gray-900">
+                        <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
                           {slideData.title}
                         </Dialog.Title>
 
                         <div className="flex items-center ml-3 h-7">
                           <button
                             type="button"
-                            className="text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="text-gray-400 bg-white dark:bg-gray-800 rounded-md hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             onClick={() => {
                               setActiveTab(undefined)
                               setSlideData({
@@ -162,11 +162,11 @@ export function SlideWithTabs({
                         </div>
                       </div>
                     </div>
-                    <common.Separator />
+                    <common.Separator className="dark:border-gray-700" />
                     <div
-                      className={`relative flex-1 mt-6 ${
-                        noPadding ? '' : 'px-4 sm:px-6'
-                      }`}
+                      className={`relative flex-1 mt-6 dark:text-gray-200
+                      ${noPadding ? '' : 'px-4 sm:px-6'}
+                      `}
                     >
                       {slideData.content}
                     </div>
@@ -193,21 +193,23 @@ function Button({ onClick, children, color, activeTab }: ButtonType) {
   let textColor
   switch (color) {
     case 'blue':
-      borderColor = 'border-blue-300'
-      bgColor = 'bg-blue-500'
+      borderColor = 'border-blue-300 dark:border-blue-900/50'
+      bgColor = 'bg-blue-500 dark:bg-blue-800'
       textColor = 'text-white'
       break
     case 'red':
-      borderColor = 'border-red-500'
-      bgColor = 'bg-red-500'
+      borderColor = 'border-red-500 dark:border-red-900/50'
+      bgColor = 'bg-red-500 dark:bg-red-800'
       textColor = 'text-white'
       break
   }
   return (
     <button
       onClick={onClick}
-      className={`border-y-2 border-l-2 p-2 rounded-l-md ${borderColor} ${
-        activeTab?.title === children ? `${bgColor} ${textColor} ` : 'bg-white'
+      className={`border-y-2 border-l-2 p-2 rounded-l-md dark:text-gray-200 ${borderColor} ${
+        activeTab?.title === children
+          ? `${bgColor} ${textColor} `
+          : 'bg-white dark:bg-gray-800'
       }`}
     >
       <span className="rotate-180" style={{ writingMode: 'vertical-rl' }}>

@@ -6,23 +6,22 @@ import { SlideWithTabs } from '.'
 const content = (
   <ul>
     <li>Content placeholder 1</li>
-    <li>Content placeholder 1</li>
-    <li>Content placeholder 1</li>
-    <li>Content placeholder 1</li>
+    <li>Content placeholder 2</li>
+    <li>Content placeholder 3</li>
+    <li>Content placeholder 4</li>
   </ul>
 )
 
 type data = {
   title: string
   color: 'blue' | 'red'
-  content: ReactNode
+  content: JSX.Element
 }[]
 
 const tabsData: data = [
-  { title: 'Tab', color: 'blue', content },
-  { title: 'Eu poderia ser menor', color: 'blue', content },
+  { title: 'Tab normal', color: 'blue', content },
   {
-    title: 'Palavramuitograndevaiquebrar',
+    title: 'Titulo muito grande mesmo, bem grandão',
     color: 'red',
     content
   }
