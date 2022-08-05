@@ -7,7 +7,10 @@ import {
   useContext,
   useState,
   Dispatch,
-  useEffect
+  useEffect,
+  useCallback,
+  useRef,
+  MutableRefObject
 } from 'react'
 import { javascriptLanguage } from '@codemirror/lang-javascript'
 import { completeFromGlobalScope } from './Console/Editors/Autocomplete'
@@ -42,6 +45,11 @@ type ConsoleEditorContextProps = {
   setTabsData: Dispatch<SetStateAction<tabsDataType | undefined>>
   schemaTabData: JSX.Element | undefined
   setSchemaTabData: Dispatch<SetStateAction<JSX.Element | undefined>>
+  value: MutableRefObject<string>
+  format: MutableRefObject<FormatterFunction | undefined>
+  handleFormat: () => void
+  handleChange: (input: string) => void
+  setFormatter: (func: FormatterFunction) => void
 }
 
 type ProviderProps = {
@@ -53,6 +61,8 @@ type tabsDataType = {
   color: 'blue' | 'red'
   content: JSX.Element
 }[]
+
+type FormatterFunction = (text: string) => string
 
 export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
   {} as ConsoleEditorContextProps
@@ -245,6 +255,29 @@ yc_persistence_service(jwt, tenantID, BODY)`
     }
   }, [schemaTabData])
 
+  const value = useRef<string>('')
+
+  const format = useRef<FormatterFunction>()
+
+  const handleFormat = useCallback(() => {
+    value.current = format?.current ? format?.current(value.current) : ''
+    if (value.current !== consoleValue) setConsoleValue(value.current)
+    else {
+      // Edge case: Only formatting was changed (this would not trigger re-render)
+      // Use a dummy value to force update code
+      setConsoleValue(value.current + ' ')
+      // Then use delay to immidiately correct it
+      setTimeout(() => setConsoleValue(value.current.slice(0, -1)), 0)
+    }
+  }, [consoleValue])
+
+  const handleChange = useCallback((input: string) => {
+    value.current = input
+  }, [])
+
+  const setFormatter = useCallback((func: FormatterFunction) => {
+    format.current = func
+  }, [])
   return (
     <ConsoleEditorContext.Provider
       value={{
@@ -272,7 +305,12 @@ yc_persistence_service(jwt, tenantID, BODY)`
         tabsData,
         setTabsData,
         schemaTabData,
-        setSchemaTabData
+        setSchemaTabData,
+        value,
+        format,
+        handleFormat,
+        handleChange,
+        setFormatter
       }}
     >
       {children}
