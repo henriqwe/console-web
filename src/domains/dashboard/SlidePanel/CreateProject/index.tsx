@@ -107,10 +107,13 @@ export function Update() {
     try {
       setLoading(true)
 
-      const { data } = await utils.localApi.post(utils.apiRoutes.local.adminLogin, {
-        username: adminUser?.username,
-        password: adminUser?.password
-      })
+      const { data } = await utils.localApi.post(
+        utils.apiRoutes.local.adminLogin,
+        {
+          username: adminUser?.username,
+          password: adminUser?.password
+        }
+      )
       utils.setCookie('admin_access_token', data.data.access_token)
       utils.setCookie('X-TenantID', data.data.username)
 
@@ -128,20 +131,20 @@ export function Update() {
     return (
       <div>
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col items-center w-full gap-5">
-            <div className="w-40 h-40">
+          <div className="flex flex-col items-center w-full gap-5 dark:text-gray-200">
+            <div className="w-40 h-">
               <UserCircleIcon />
             </div>
             <p className="text-lg">Schema {createdSchemaName} created!</p>
             <p className="text-sm">
               Save the admin user data to access the schema
             </p>
-            <div>
-              <p className="text-sm text-gray-600">
+            <div className="flex flex-col items-center">
+              <p className="text-sm text-gray-600 dark:text-gray-300">
                 Admin user name:{' '}
                 <span className="font-bold">{adminUser?.username}</span>
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-300">
                 Admin password:{' '}
                 <span className="font-bold">{adminUser?.password}</span>
               </p>
@@ -188,7 +191,9 @@ export function Update() {
           )}
         />
       </div>
-      <p className="w-full">Select a plan</p>
+      <p className="w-full text-sm font-medium dark:text-gray-200">
+        Select a plan
+      </p>
       <common.ListRadioGroup
         options={[
           {
@@ -196,10 +201,10 @@ export function Update() {
             content: (
               <div>
                 <div>
-                  <p className="font-bold">Sandbox</p>
+                  <p className="font-bold dark:text-gray-200">Sandbox</p>
                   {plan === 'Sandbox' && (
-                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg">
-                      <p className="flex items-center gap-1 text-white">
+                    <div className="absolute top-0 right-0 p-2 bg-green-400 dark:bg-green-600 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg">
+                      <p className="flex items-center gap-1 text-white ">
                         Selected{' '}
                         <span className="w-5 h-5">
                           <CheckCircleIcon />
@@ -248,9 +253,9 @@ export function Update() {
             content: (
               <div>
                 <div>
-                  <p className="font-bold">Dedicated</p>
+                  <p className="font-bold dark:text-gray-200">Dedicated</p>
                   {plan === 'Dedicated' && (
-                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg">
+                    <div className="absolute top-0 right-0 p-2 bg-green-400 dark:bg-green-600 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg">
                       <p className="flex items-center gap-1 text-white">
                         Selected{' '}
                         <span className="w-5 h-5">
@@ -319,7 +324,7 @@ export function Update() {
       <common.Buttons.Clean
         disabled={loading}
         loading={loading}
-        icon={<CheckIcon className="w-3 h-3" />}
+        icon={<CheckIcon className="w-4 h-4" />}
       >
         Create project
       </common.Buttons.Clean>

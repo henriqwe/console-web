@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, ReactNode, useState } from 'react'
+import { Fragment, ReactNode, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import {
   LogoutIcon,
@@ -15,6 +15,7 @@ import {
 import { useRouter } from 'next/router'
 import { removeCookie } from 'utils'
 import { routes } from 'domains/routes'
+import { ToggleTheme } from 'common'
 
 const navigation = [
   { name: 'Projects', href: '#', icon: HomeIcon, current: true },
@@ -42,16 +43,19 @@ export function Template({ children }: TemplateProps) {
     <>
       <div>
         {/* Static sidebar for desktop */}
-        <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
+        <div className="bg-gray-900 z-20 hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex flex-col flex-1 min-h-0 bg-gray-800">
+          <div className="flex flex-col flex-1 min-h-0 bg-gray-800/50 border-r-gray-700 border-r">
             <div className="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto mx-4">
-              <div className="flex items-center flex-shrink-0 px-4 my-10">
+              <div className="flex items-center justify-between flex-shrink-0 px-4 my-10">
                 <img
                   className="w-auto h-7"
                   src="/assets/images/logo.png"
                   alt="Workflow"
                 />
+                <div className="z-50">
+                  <ToggleTheme changeColor={false} />
+                </div>
               </div>
               <nav className="flex-1 px-2 mt-5 space-y-1">
                 {navigation.map((item) => (
@@ -76,6 +80,9 @@ export function Template({ children }: TemplateProps) {
                   </a>
                 ))}
               </nav>
+              <div
+                className={`mb-6 flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:text-white cursor-pointer mx-2 transition`}
+              ></div>
               <div
                 className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-red-700 hover:text-white cursor-pointer mx-2 transition`}
                 onClick={() => {
@@ -105,7 +112,9 @@ export function Template({ children }: TemplateProps) {
               <MenuIcon className="w-6 h-6" aria-hidden="true" />
             </button>
           </div>
-          <main className="flex-1">{children}</main>
+          <main className="h-screen dark:bg-gray-900 bg-gray-200 pt-10">
+            {children}
+          </main>
         </div>
       </div>
     </>

@@ -38,7 +38,7 @@ export function Slide({
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 z-10 overflow-hidden"
+        className="fixed inset-0 z-50 overflow-hidden"
         onClose={() => null}
       >
         <div className="absolute inset-0 overflow-hidden">
@@ -53,21 +53,21 @@ export function Slide({
               leaveTo="translate-x-full"
             >
               <Dialog.Panel
-                className={`w-screen pointer-events-auto ${slidePanelWidth}`}
+                className={`z-50 w-screen pointer-events-auto ${slidePanelWidth}`}
               >
                 <div
-                  className={`flex flex-col h-full py-6 overflow-y-scroll bg-white shadow-xl`}
+                  className={`border-l-gray-700 border-l flex flex-col h-full py-6 overflow-y-auto bg-white dark:bg-gray-800 shadow-xl`}
                 >
                   <div className="px-4 mb-4 sm:px-6">
                     <div className="flex items-start justify-between">
-                      <Dialog.Title className="text-lg font-medium text-gray-900">
+                      <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-gray-100">
                         {title}
                       </Dialog.Title>
 
                       <div className="flex items-center ml-3 h-7">
                         <button
                           type="button"
-                          className="text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          className="text-gray-400 dark:text-gray-300 bg-white dark:bg-gray-800 rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                           onClick={() => setOpen(false)}
                           title="Close"
                         >

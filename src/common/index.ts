@@ -19,6 +19,7 @@ export { ContentSection } from './ContentSection'
 export { SlideWithTabs } from './SlideWithTabs'
 export { AccordionGroup } from './AccordionGroup'
 export { Toggle } from './Toggle'
+export { ToggleTheme } from './ToggleTheme'
 
 export * as illustrations from './Ilustrations'
 export * as icons from './Icons'
