@@ -34,7 +34,7 @@ export function SideBar() {
     }
   ]
   return (
-    <div className="text-gray-600  w-[20%] h-full flex flex-col bg-theme-primary">
+    <div className="text-gray-600 border-r border-white dark:border-gray-700/75   w-[20%] h-full flex flex-col bg-theme-primary dark:bg-gray-900">
       <common.AccordionGroup accordionsData={accordionsData} />
     </div>
   )

@@ -80,7 +80,9 @@ export function Modal({
                       >
                         {title}
                       </Dialog.Title>
-                      <div className="mt-2">{description}</div>
+                      <div className="mt-2 dark:text-gray-200">
+                        {description}
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -44,8 +44,10 @@ export function Editors() {
       <common.ContentSection
         title={
           <div className="flex items-center justify-between w-full">
-            <p className="text-sm text-gray-900">YCodi Console</p>
-            <p className="text-sm text-gray-900">
+            <p className="text-sm text-gray-900 dark:text-white">
+              YCodi Console
+            </p>
+            <p className="text-sm text-gray-900 dark:text-white">
               Schema status:{' '}
               <span className="font-bold">
                 {schemaStatus === 2 ? 'Running' : 'Modeling'}
@@ -54,33 +56,33 @@ export function Editors() {
 
             <div className="flex items-center justify-end gap-4">
               {consoleValueLastOperation && (
-                <common.Buttons.White
+                <common.Buttons.Clean
                   type="button"
                   onClick={() => {
                     setSlideState({ open: true, type: 'CodeExporterView' })
                   }}
                 >
                   Code exporter
-                </common.Buttons.White>
+                </common.Buttons.Clean>
               )}
               {showTableViewMode ? (
-                <common.Buttons.White
+                <common.Buttons.Clean
                   type="button"
                   onClick={() => {
                     setShowTableViewMode(false)
                   }}
                 >
                   JSON mode
-                </common.Buttons.White>
+                </common.Buttons.Clean>
               ) : (
-                <common.Buttons.White
+                <common.Buttons.Clean
                   type="button"
                   onClick={() => {
                     setShowTableViewMode(true)
                   }}
                 >
                   Table mode
-                </common.Buttons.White>
+                </common.Buttons.Clean>
               )}
             </div>
           </div>
@@ -109,7 +111,7 @@ export function Editors() {
             </div>
           </button>
         </div>
-        <div className="grid w-full h-full grid-cols-12 border border-gray-200">
+        <div className="grid w-full h-full grid-cols-12 border border-gray-200 dark:border-gray-700">
           <div
             className={`${
               showTableViewMode ? 'col-span-4' : 'col-span-6'
@@ -124,7 +126,7 @@ export function Editors() {
                   setConsoleValue(value)
                   handleChange(value)
                 }}
-                // theme={consoleTheme}
+                // theme={okaidia}
                 extensions={[
                   javascript({ jsx: true }),
                   globalJavaScriptCompletions,

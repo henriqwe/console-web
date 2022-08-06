@@ -67,7 +67,7 @@ export function SchemaManagerTab() {
           <CheckCircleIcon className="w-4 h-4 text-green-600" />
         </div>
       </div>
-      <common.Separator />
+      <common.Separator className="dark:border-gray-500/50" />
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <div className="w-8 h-8 mr-8">

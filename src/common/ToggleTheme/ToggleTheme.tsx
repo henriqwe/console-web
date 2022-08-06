@@ -47,13 +47,6 @@ export function ToggleTheme({ changeColor = true }: ToggleThemeProps) {
           : 'text-white hover:bg-gray-700/40'
       } rounded-full p-2 cursor-pointer w-10 h-10`}
     >
-      {/* <span
-          aria-hidden="true"
-          className={`$
-            ${enabled ? 'translate-x-5' : 'translate-x-0'}
-            pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200
-          `}
-        /> */}
       {enabled ? <SunIcon /> : <MoonIcon />}
     </div>
   )

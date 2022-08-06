@@ -15,7 +15,9 @@ export function Breadcrumb({ pages, showNumber = false }: BreadcrumbProps) {
             <div className="flex items-between">
               <p
                 className={`flex items-center gap-2 mr-4 text-sm font-medium text-center ${
-                  page.current ? '' : 'text-gray-500'
+                  page.current
+                    ? 'dark:text-white'
+                    : 'text-gray-500 dark:text-gray-400'
                 }`}
                 aria-current={page.current ? 'page' : undefined}
               >
