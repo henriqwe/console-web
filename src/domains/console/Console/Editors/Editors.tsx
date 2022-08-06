@@ -7,7 +7,9 @@ import * as utils from 'utils'
 import * as consoleSection from 'domains/console'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { Slide } from '../Slide'
-import { useRouter } from 'next/router'
+import { EditorView } from '@codemirror/view'
+import usePrettier from 'domains/hooks/usePrettier'
+import parserBabel from 'prettier/parser-babel'
 
 export function Editors() {
   const {
@@ -19,14 +21,23 @@ export function Editors() {
 
   const {
     consoleValue,
+    setConsoleValue,
     globalJavaScriptCompletions,
     runOperation,
     consoleResponseFormated,
-    setConsoleValue,
     consoleResponseLoading,
     responseTime,
-    consoleValueLastOperation
+    consoleValueLastOperation,
+    handleFormat,
+    handleChange
   } = consoleEditor.useConsoleEditor()
+
+  const isReady = usePrettier({
+    parser: 'json',
+    plugins: [parserBabel]
+  })
+
+  if (!isReady) return null
 
   return (
     <div className="flex flex-col w-full h-full" data-tour="step-4">
@@ -104,20 +115,35 @@ export function Editors() {
               showTableViewMode ? 'col-span-4' : 'col-span-6'
             } h-full rounded-bl-lg flex`}
           >
-            <div className="flex flex-col w-full h-full overflow-x-auto rounded-bl-lg">
+            <div className="flex relative flex-col w-full h-full overflow-x-auto rounded-bl-lg">
               <CodeMirror
                 value={consoleValue}
                 className="flex w-full h-full"
                 width="100%"
                 onChange={(value, viewUpdate) => {
                   setConsoleValue(value)
+                  handleChange(value)
                 }}
                 // theme={consoleTheme}
                 extensions={[
                   javascript({ jsx: true }),
-                  globalJavaScriptCompletions
+                  globalJavaScriptCompletions,
+                  EditorView.lineWrapping
                 ]}
               />
+              <div className="absolute bottom-7 right-2">
+                <button
+                  type="button"
+                  title="Format"
+                  onClick={handleFormat}
+                  className="hover:bg-gray-200/50 rounded-full cursor-pointer w-7 h-7 flex items-center justify-center"
+                >
+                  <Icon
+                    icon="bxs:magic-wand"
+                    className="w-5 h-5 text-gray-600"
+                  />
+                </button>
+              </div>
               <div className="flex items-center justify-end h-6 px-4 ">
                 {responseTime && (
                   <div className="text-xs">
