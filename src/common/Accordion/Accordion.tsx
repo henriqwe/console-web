@@ -22,7 +22,7 @@ export function Accordion({
   return (
     <div className={`w-full`}>
       <Disclosure defaultOpen={defaultOpen}>
-        {({ open }) => (
+        {({ open }: { open: boolean }) => (
           <>
             <Disclosure.Button
               className={`flex w-full items-center justify-between px-6 py-2 text-left font-semibold text-gray-700 dark:text-gray-200 ${
@@ -45,7 +45,7 @@ export function Accordion({
                 } h-5 w-5 text-gray-700 dark:text-gray-200`}
               />
             </Disclosure.Button>
-            <Disclosure.Panel className="p-3 pb-8 text-sm text-gray-500 dark:text-gray-200 bg-white dark:bg-gray-700">
+            <Disclosure.Panel className="p-3 pb-8 text-sm text-gray-500 bg-white dark:text-gray-200 dark:bg-gray-700">
               {content}
             </Disclosure.Panel>
           </>
