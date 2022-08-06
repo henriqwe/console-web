@@ -9,7 +9,7 @@ import { PencilIcon } from '@heroicons/react/outline'
 
 export function SchemaManagerSection() {
   const [selectedEntityTab, setSelectedEntityTab] = useState({
-    name: 'Modify entity'
+    name: 'Attributes'
   })
   const router = useRouter()
   const {
@@ -110,8 +110,8 @@ export function SchemaManagerSection() {
                     selectedTab={selectedEntityTab}
                     setSelectedTab={setSelectedEntityTab}
                     tabs={[
-                      { name: 'Modify entity' },
-                      { name: 'Entity associations' }
+                      { name: 'Attributes' },
+                      { name: 'Associations' }
                     ]}
                   />
                 </>
@@ -120,7 +120,7 @@ export function SchemaManagerSection() {
           }
         >
           {selectedEntity ? (
-            selectedEntityTab.name === 'Modify entity' ? (
+            selectedEntityTab.name === 'Attributes' ? (
               <consoleSection.ModifyTab loading={loading} />
             ) : (
               <consoleSection.AssociationTab loading={loading} />
