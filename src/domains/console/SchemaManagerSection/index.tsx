@@ -25,29 +25,33 @@ export function SchemaManagerSection() {
   const [loading, setLoading] = useState(true)
 
   async function loadEntityData() {
-    const { data } = await utils.api.get(
-      `${utils.apiRoutes.entity(
-        router.query.name as string
-      )}/${selectedEntity}`,
-      {
-        headers: {
-          Authorization: `Bearer ${getCookie('access_token')}`
+    try {
+      const { data } = await utils.api.get(
+        `${utils.apiRoutes.entity(
+          router.query.name as string
+        )}/${selectedEntity}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getCookie('access_token')}`
+          }
         }
-      }
-    )
-    const entityData: types.EntityData[] = []
-    Object.keys(data).map((key) => {
-      if (key !== '_classDef') {
-        entityData.push({
-          name: key,
-          ...data[key]
-        })
-      }
-    })
-    const entityFields = Object.keys(data).filter((value) => value[0] !== '_')
-    entityFields.unshift('id')
-    setEntityData(entityData)
-    setLoading(false)
+      )
+      const entityData: types.EntityData[] = []
+      Object.keys(data).map((key) => {
+        if (key !== '_classDef') {
+          entityData.push({
+            name: key,
+            ...data[key]
+          })
+        }
+      })
+      const entityFields = Object.keys(data).filter((value) => value[0] !== '_')
+      entityFields.unshift('id')
+      setEntityData(entityData)
+      setLoading(false)
+    } catch (err) {
+      utils.showError(err)
+    }
   }
 
   useEffect(() => {
@@ -109,10 +113,7 @@ export function SchemaManagerSection() {
                     <common.Tabs
                       selectedTab={selectedEntityTab}
                       setSelectedTab={setSelectedEntityTab}
-                      tabs={[
-                        { name: 'Attributes' },
-                        { name: 'Associations' }
-                      ]}
+                      tabs={[{ name: 'Attributes' }, { name: 'Associations' }]}
                     />
                   </>
                 )}

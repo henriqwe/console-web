@@ -51,7 +51,7 @@ export function Projects() {
       setSchemas(data)
     } catch (err: any) {
       if (err.response.status !== 404) {
-        utils.notification(err.message, 'error')
+        utils.showError(err)
       }
     } finally {
       setLoadingSchemas(false)
@@ -123,8 +123,8 @@ export function Projects() {
 
   return (
     <div className="flex justify-center">
-      <div className="absolute z-10 top-0 inset-x-0 flex justify-center pointer-events-none blur-xl">
-        <div className="w-full flex-none flex justify-end">
+      <div className="absolute inset-x-0 top-0 z-10 flex justify-center pointer-events-none blur-xl">
+        <div className="flex justify-end flex-none w-full">
           <img
             src="/assets/images/green-blur-test.png"
             alt=""
@@ -132,10 +132,10 @@ export function Projects() {
           />
         </div>
       </div>
-      <div className="flex flex-col w-4/6 z-20 gap-y-8">
-        <section className="flex w-full justify-between mx-auto">
+      <div className="z-20 flex flex-col w-4/6 gap-y-8">
+        <section className="flex justify-between w-full mx-auto">
           <div className="flex">
-            <h1 className="pr-4 mr-1 text-2xl font-semibold text-gray-900 dark:text-gray-100 border-r border-r-gray-300 dark:border-r-gray-600">
+            <h1 className="pr-4 mr-1 text-2xl font-semibold text-gray-900 border-r dark:text-gray-100 border-r-gray-300 dark:border-r-gray-600">
               Projects
             </h1>
             <div className="flex items-center">
@@ -172,7 +172,7 @@ export function Projects() {
           </div>
         </section>
 
-        <section className="w-full flex flex-col gap-8 mx-auto">
+        <section className="flex flex-col w-full gap-8 mx-auto">
           {loadingSchemas ? (
             <div className="flex flex-col items-center justify-center gap-2 mt-32">
               <div className="w-20 h-20 dark:text-white">
@@ -181,8 +181,8 @@ export function Projects() {
               <p className="dark:text-gray-200">Loading projects</p>
             </div>
           ) : (showFiltered ? filteredSchemas : schemas).length === 0 ? (
-            <div className="flex flex-col gap-y-6 mt-16 text-center">
-              <div className="w-80 m-auto">
+            <div className="flex flex-col mt-16 text-center gap-y-6">
+              <div className="m-auto w-80">
                 <common.illustrations.Empty />
               </div>
               <p className="text-lg dark:text-gray-200">Projects not found</p>
@@ -217,7 +217,7 @@ export function Project({
   const router = useRouter()
   return (
     <common.Card
-      className="flex p-6 bg-white dark:bg-slate-800 shadow-sm border dark:border-gray-700"
+      className="flex p-6 bg-white border shadow-sm dark:bg-slate-800 dark:border-gray-700"
       key={schema.createdat}
     >
       <div className="grid items-center justify-between flex-1 grid-cols-4 gap-4">
@@ -248,7 +248,7 @@ export function Project({
                   <span className="absolute right-0 bottom-5">Copied!</span>
                 )}
                 <DocumentDuplicateIcon
-                  className="w-5 h-5 text-gray-700 dark:text-gray-300 cursor-pointer"
+                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-300"
                   onClick={() => navigator.clipboard.writeText(schema.tenantAc)}
                 />
               </div>

@@ -43,7 +43,7 @@ export function AdminLogin() {
           'error'
         )
       }
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }

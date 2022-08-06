@@ -59,9 +59,8 @@ export function Update() {
   } = useForm({ resolver: yupResolver(yupSchema) })
 
   const onSubmit = async (formData: any) => {
-    setLoading(true)
-    await utils.localApi
-      .post(
+    try {
+      await utils.localApi.post(
         utils.apiRoutes.local.interpreter,
         {
           data: JSON.parse(
@@ -87,7 +86,7 @@ export function Update() {
           ),
           access_token: getCookie('admin_access_token'),
           'X-TenantID': getCookie('X-TenantID'),
-          'X-TenantAC': getCookie('X-TenantAC'),
+          'X-TenantAC': getCookie('X-TenantAC')
         },
         {
           headers: {
@@ -95,16 +94,16 @@ export function Update() {
           }
         }
       )
-      .then(() => {
-        reset()
-        setReload(!reload)
-        setOpenSlide(false)
-        setLoading(false)
-        utils.notification('Operation performed successfully', 'success')
-      })
-      .catch((err) => {
-        utils.notification(err.message, 'error')
-      })
+
+      reset()
+      setReload(!reload)
+      setOpenSlide(false)
+      setLoading(false)
+      utils.notification('Operation performed successfully', 'success')
+    } catch (err) {
+      utils.showError(err)
+    }
+    setLoading(true)
   }
 
   return (

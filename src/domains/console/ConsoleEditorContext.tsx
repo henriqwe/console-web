@@ -102,7 +102,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     } catch (err: any) {
       console.log(err)
       if (err?.response?.status !== 404) {
-        utils.notification(err.message, 'error')
+        utils.showError(err)
       }
     }
   }
@@ -187,7 +187,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         utils.notification('object or objects not found.', 'error')
         return
       }
-      utils.notification(err.message, 'error')
+
+      utils.showError(err)
     }
   }
 

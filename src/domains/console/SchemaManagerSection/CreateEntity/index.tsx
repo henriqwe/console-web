@@ -128,7 +128,7 @@ export function CreateEntity() {
       utils.notification(`Entity ${data.Name} created successfully`, 'success')
     } catch (err: any) {
       console.log(err)
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }

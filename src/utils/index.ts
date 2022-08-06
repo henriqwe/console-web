@@ -1,5 +1,5 @@
 export { getCookie, parseCookies, setCookie, removeCookie } from './cookies'
-export { notification } from './notification'
+export { notification, showError } from './notification'
 export { api, localApi } from './api'
 export {
   BRLMoneyFormat,
