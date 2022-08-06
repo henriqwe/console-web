@@ -34,7 +34,7 @@ export function DataManagerTab() {
       setOperations(operations)
     } catch (err: any) {
       if (err?.response?.status !== 404) {
-        utils.notification(err.message, 'error')
+        utils.showError(err)
       }
     } finally {
       setLoading(false)
@@ -48,7 +48,7 @@ export function DataManagerTab() {
   }, [router.query.name])
 
   return (
-    <div className="flex-1 h-full pt-3  px-4 overflow-y-auto rounded-b-lg gap-1">
+    <div className="flex-1 h-full gap-1 px-4 pt-3 overflow-y-auto rounded-b-lg">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <div className="w-8 h-8 mr-8">

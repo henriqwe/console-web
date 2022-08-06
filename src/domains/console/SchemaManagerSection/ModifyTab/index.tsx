@@ -46,7 +46,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
         'success'
       )
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setSubmitLoading(false)
     }
@@ -196,7 +196,7 @@ function AttributeForm({
       )
     } catch (err: any) {
       console.log(err)
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }

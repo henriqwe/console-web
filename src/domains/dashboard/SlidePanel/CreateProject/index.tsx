@@ -5,10 +5,7 @@ import {
   useForm
 } from 'react-hook-form'
 import { Dispatch, SetStateAction, useState } from 'react'
-import {
-  CheckCircleIcon,
-  CheckIcon
-} from '@heroicons/react/outline'
+import { CheckCircleIcon, CheckIcon } from '@heroicons/react/outline'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as dashboard from 'domains/dashboard'
@@ -78,12 +75,11 @@ export function Create() {
       )
       router.push(routes.console + '/' + data.ProjectName)
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
   }
-
 
   return (
     <form

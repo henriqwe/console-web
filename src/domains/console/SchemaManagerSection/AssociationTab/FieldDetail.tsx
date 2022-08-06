@@ -38,44 +38,52 @@ export function FieldDetail({
   } = useForm({ resolver: yupResolver(updateAssociationSchema) })
 
   async function Save(formData: FormData) {
-    await utils.api.put(
-      `${utils.apiRoutes.association({
-        projectName: router.query.name as string,
-        entityName: selectedEntity as string
-      })}/${attribute}`,
-      {
-        name: formData.Name
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
+    try {
+      await utils.api.put(
+        `${utils.apiRoutes.association({
+          projectName: router.query.name as string,
+          entityName: selectedEntity as string
+        })}/${attribute}`,
+        {
+          name: formData.Name
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
         }
-      }
-    )
-    setReload(!reload)
-    utils.notification('attribute updated successfully', 'success')
-    setShowDetails(false)
+      )
+      setReload(!reload)
+      utils.notification('attribute updated successfully', 'success')
+      setShowDetails(false)
+    } catch (err) {
+      utils.showError(err)
+    }
   }
 
   async function Remove() {
-    await utils.api.delete(
-      `${utils.apiRoutes.association({
-        projectName: router.query.name as string,
-        entityName: selectedEntity as string
-      })}/${attribute}/type/${
-        schemaTables![selectedEntity as string][attribute].type
-      }`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
+    try {
+      await utils.api.delete(
+        `${utils.apiRoutes.association({
+          projectName: router.query.name as string,
+          entityName: selectedEntity as string
+        })}/${attribute}/type/${
+          schemaTables![selectedEntity as string][attribute].type
+        }`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
         }
-      }
-    )
-    setReload(!reload)
-    utils.notification('attribute updated successfully', 'success')
-    setShowDetails(false)
+      )
+      setReload(!reload)
+      utils.notification('attribute updated successfully', 'success')
+      setShowDetails(false)
+    } catch (err) {
+      utils.showError(err)
+    }
   }
 
   return (

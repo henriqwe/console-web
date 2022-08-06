@@ -32,7 +32,7 @@ export function UpdateEntityName() {
         )}/${selectedEntity}`,
         {
           name: formData.Name,
-          _conf:{}
+          _conf: {}
         },
         {
           headers: {
@@ -49,7 +49,7 @@ export function UpdateEntityName() {
       setLoading(false)
       utils.notification('Operation performed successfully', 'success')
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as consoleSection from 'domains/console'
-import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { CheckCircleIcon } from '@heroicons/react/solid'
@@ -39,7 +38,7 @@ export function SchemaManagerTab() {
       setEntities(Object.keys(data) as string[])
     } catch (err: any) {
       if (err.response.status !== 404) {
-        utils.notification(err.message, 'error')
+        utils.showError(err)
       }
     } finally {
       setLoading(false)
@@ -53,7 +52,7 @@ export function SchemaManagerTab() {
   }, [router.query.name, reload])
 
   return (
-    <div className="flex flex-col h-full px-4 pt-3 overflow-y-auto gap-1">
+    <div className="flex flex-col h-full gap-1 px-4 pt-3 overflow-y-auto">
       <div className="flex items-center w-full">
         <div
           className="flex items-center gap-2 font-semibold hover:cursor-pointer"

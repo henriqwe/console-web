@@ -12,7 +12,8 @@ export function DefaultPage() {
     setShowCreateEntitySection,
     setBreadcrumbPages,
     breadcrumbPagesData,
-    schemaStatus
+    schemaStatus,
+    setSchemaStatus
   } = consoleSection.useSchemaManager()
   const sections = [
     {
@@ -44,17 +45,22 @@ export function DefaultPage() {
     }
   ]
 
-  async function publishSchema() {
-    await utils.api.put(
-      `${utils.apiRoutes.schemas}/${router.query.name}`,
-      { status: 2 },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${utils.getCookie('access_token')}`
+  async function publishSchema(value: boolean) {
+    try {
+      await utils.api.put(
+        `${utils.apiRoutes.schemas}/${router.query.name}`,
+        { status: value ? 2 : 1 },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${utils.getCookie('access_token')}`
+          }
         }
-      }
-    )
+      )
+      setSchemaStatus(value ? 2 : 1)
+    } catch (err) {
+      utils.showError(err)
+    }
   }
 
   useEffect(() => {
@@ -95,9 +101,7 @@ export function DefaultPage() {
           <common.Toggle
             enabled={publish}
             onChange={(value) => {
-              if (value) {
-                publishSchema()
-              }
+              publishSchema(value)
               setPublish(value)
             }}
           />

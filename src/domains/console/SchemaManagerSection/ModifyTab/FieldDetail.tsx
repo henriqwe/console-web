@@ -50,40 +50,48 @@ export function FieldDetail({
   } = useForm({ resolver: yupResolver(fieldSchema) })
 
   async function Save(formData: FormData) {
-    await utils.api.put(
-      `${utils.apiRoutes.attribute({
-        entityName: selectedEntity as string,
-        projectName: router.query.name as string
-      })}/${data.name}`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
+    try {
+      await utils.api.put(
+        `${utils.apiRoutes.attribute({
+          entityName: selectedEntity as string,
+          projectName: router.query.name as string
+        })}/${data.name}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
         }
-      }
-    )
-    setReload(!reload)
-    utils.notification('attribute updated successfully', 'success')
-    setShowDetails(false)
+      )
+      setReload(!reload)
+      utils.notification('attribute updated successfully', 'success')
+      setShowDetails(false)
+    } catch (err) {
+      utils.showError(err)
+    }
   }
 
   async function Remove() {
-    await utils.api.delete(
-      `${utils.apiRoutes.attribute({
-        projectName: router.query.name as string,
-        entityName: selectedEntity as string
-      })}/${data.name}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
+    try {
+      await utils.api.delete(
+        `${utils.apiRoutes.attribute({
+          projectName: router.query.name as string,
+          entityName: selectedEntity as string
+        })}/${data.name}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
         }
-      }
-    )
-    setReload(!reload)
-    utils.notification('attribute updated successfully', 'success')
-    setShowDetails(false)
+      )
+      setReload(!reload)
+      utils.notification('attribute updated successfully', 'success')
+      setShowDetails(false)
+    } catch (err) {
+      utils.showError(err)
+    }
   }
 
   return (

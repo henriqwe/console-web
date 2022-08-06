@@ -59,7 +59,7 @@ export function ViewSchema() {
       setLoading(false)
       utils.notification('Operation performed successfully', 'success')
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
@@ -152,7 +152,7 @@ export function ViewSchema() {
             >
               <div className="flex items-center">
                 <DocumentDuplicateIcon
-                  className="w-5 h-5 text-gray-700 dark:text-gray-300 cursor-pointer"
+                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-300"
                   onClick={() =>
                     navigator.clipboard.writeText(
                       selectedSchema?.tenantAc as string

@@ -41,7 +41,7 @@ export function CreateUser() {
       utils.notification('User created successfully', 'success')
       router.push(routes.dashboard)
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
