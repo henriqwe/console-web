@@ -82,53 +82,54 @@ export function SchemaManagerSection() {
 
   return (
     <div data-tour="step-1" className="w-full h-full p-4">
-      <common.Card className="flex flex-col h-full">
+      <common.Card className="flex flex-col h-full gap-y-3">
         <div className="flex w-full px-4">
           <common.Breadcrumb pages={breadcrumbPages} />
         </div>
         <consoleSection.SlidePanel />
-        <common.ContentSection
-          variant="WithoutTitleBackgroundColor"
-          title={
-            <div className="flex items-center w-1/2 gap-2">
-              <p className="text-base font-semibold text-gray-900">
-                {selectedEntity ? selectedEntity : 'Entities'}
-              </p>
-              {selectedEntity && (
-                <>
-                  <div title="Edit entity name">
-                    <PencilIcon
-                      className="w-3 h-3 cursor-pointer"
-                      onClick={() => {
-                        setOpenSlide(true)
-                        setSlideType('UPDATE ENTITY')
-                      }}
+        <div className="bg-white dark:bg-gray-800 rounded-md">
+          <common.ContentSection
+            variant="WithoutTitleBackgroundColor"
+            title={
+              <div className="flex items-center w-1/2 gap-2">
+                <p className="text-base font-semibold text-gray-900 dark:text-gray-200">
+                  {selectedEntity ? selectedEntity : 'Entities'}
+                </p>
+                {selectedEntity && (
+                  <>
+                    <div title="Edit entity name">
+                      <PencilIcon
+                        className="w-3 h-3 cursor-pointer"
+                        onClick={() => {
+                          setOpenSlide(true)
+                          setSlideType('UPDATE ENTITY')
+                        }}
+                      />
+                    </div>
+                    <common.Tabs
+                      selectedTab={selectedEntityTab}
+                      setSelectedTab={setSelectedEntityTab}
+                      tabs={[
+                        { name: 'Modify entity' },
+                        { name: 'Entity associations' }
+                      ]}
                     />
-                  </div>
-
-                  <common.Tabs
-                    selectedTab={selectedEntityTab}
-                    setSelectedTab={setSelectedEntityTab}
-                    tabs={[
-                      { name: 'Modify entity' },
-                      { name: 'Entity associations' }
-                    ]}
-                  />
-                </>
-              )}
-            </div>
-          }
-        >
-          {selectedEntity ? (
-            selectedEntityTab.name === 'Modify entity' ? (
-              <consoleSection.ModifyTab loading={loading} />
+                  </>
+                )}
+              </div>
+            }
+          >
+            {selectedEntity ? (
+              selectedEntityTab.name === 'Modify entity' ? (
+                <consoleSection.ModifyTab loading={loading} />
+              ) : (
+                <consoleSection.AssociationTab loading={loading} />
+              )
             ) : (
-              <consoleSection.AssociationTab loading={loading} />
-            )
-          ) : (
-            <consoleSection.DefaultPage />
-          )}
-        </common.ContentSection>
+              <consoleSection.DefaultPage />
+            )}
+          </common.ContentSection>
+        </div>
       </common.Card>
     </div>
   )

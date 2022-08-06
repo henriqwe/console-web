@@ -8,7 +8,7 @@ export function Header() {
 
   return (
     <div className="flex w-full bg-gray-800 h-16 gap-4">
-      <div className="flex w-[20%] h-full border-r border-gray-400 items-center px-6">
+      <div className="flex w-[20%] h-full border-r border-gray-400 dark:border-gray-700 items-center px-6">
         <img
           className="w-auto h-7"
           src="/assets/images/logo.png"

@@ -31,7 +31,7 @@ export function ViewConsole() {
   }, [documentationValue])
 
   return (
-    <div className="bg-[#EDEDEC] h-[100vh] max-h-[100vh] flex flex-col">
+    <div className="bg-[#EDEDEC] dark:bg-gray-900 h-[100vh] max-h-[100vh] flex flex-col">
       <common.SlideWithTabs tabsData={tabsData ?? []} />
       <Header />
       <div className="flex h-full w-full ">

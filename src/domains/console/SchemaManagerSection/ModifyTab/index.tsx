@@ -67,13 +67,13 @@ export function ModifyTab({ loading }: ModifyTabProps) {
     <div
       className={`flex flex-col ${
         loading ? 'items-center justify-center' : 'items-start'
-      } rounded-b-md bg-white p-6 gap-2`}
+      } rounded-b-md bg-white dark:bg-gray-800 p-6 gap-2`}
     >
       <h3 className="text-lg">Columns:</h3>
       {entityData
         ?.filter((data) => {
           const entities = Object.keys(schemaTables!)
-          if(entities.includes(data.type)){
+          if (entities.includes(data.type)) {
             return false
           }
           return data.name !== '_conf'

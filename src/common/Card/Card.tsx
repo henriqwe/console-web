@@ -6,5 +6,9 @@ type CardType = {
 }
 
 export function Card({ children, className }: CardType) {
-  return <div className={`w-full rounded-lg ${className}`}>{children}</div>
+  return (
+    <div className={`dark:text-gray-200 w-full rounded-lg ${className}`}>
+      {children}
+    </div>
+  )
 }

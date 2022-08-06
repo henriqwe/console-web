@@ -79,7 +79,7 @@ export function Slide({
                   </div>
                   <common.Separator />
                   <div
-                    className={`relative flex-1 mt-6 ${
+                    className={`relative dark:text-gray-200 flex-1 mt-6 ${
                       noPadding ? '' : 'px-4 sm:px-6'
                     }`}
                   >

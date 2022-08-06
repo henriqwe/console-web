@@ -82,13 +82,13 @@ export const MultiSelect = ({
       {({ open }) => (
         <>
           {label && (
-            <Listbox.Label className="block text-sm font-medium text-gray-700">
+            <Listbox.Label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-200">
               {label}
             </Listbox.Label>
           )}
           <div className="relative">
             <Listbox.Button
-              className="relative w-full py-2 pl-3 pr-10 text-left transition bg-white border border-gray-300 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="relative w-full py-2 pl-3 pr-10 text-left transition bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
               aria-disabled={disabled}
               disabled={disabled}
             >
@@ -116,7 +116,7 @@ export const MultiSelect = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white dark:bg-gray-800 rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {options.map((option) => {
                   const selected = isSelected(option)
                   return (
@@ -124,7 +124,9 @@ export const MultiSelect = ({
                       key={option.name}
                       className={({ active }) =>
                         `${
-                          active ? 'text-white bg-indigo-600' : 'text-gray-900'
+                          active
+                            ? 'text-white bg-indigo-600'
+                            : 'text-gray-900 dark:text-gray-200'
                         } cursor-default select-none relative py-2 pl-3 pr-9`
                       }
                       value={option}
@@ -143,7 +145,11 @@ export const MultiSelect = ({
                           {selected ? (
                             <span
                               className={`
-                              ${active ? 'text-white' : 'text-indigo-600'}
+                              ${
+                                active
+                                  ? 'text-white'
+                                  : 'text-indigo-600 dark:text-indigo-500'
+                              }
                               absolute inset-y-0 right-0 flex items-center pr-4
                             `}
                             >
