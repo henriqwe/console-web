@@ -37,6 +37,7 @@ export function Accordion({
                   action()
                 }
               }}
+              title={title}
             >
               <span className="text-lg">{title}</span>
               <ChevronUpIcon
