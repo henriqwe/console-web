@@ -40,7 +40,7 @@ Green.args = {
   buttonColor: 'bg-lime-400',
   hoverButtonColor: 'hover:bg-lime-500',
   disableButtonColor: 'disabled:bg-lime-600',
-  textColor: 'text-gray-800'
+  textColor: 'text-gray-800 dark:text-gray-800'
 }
 
 export const GreenOutline = Template.bind({})
@@ -72,7 +72,7 @@ White.args = {
   buttonColor: 'bg-white',
   hoverButtonColor: 'hover:bg-gray-50',
   disableButtonColor: 'disabled:bg-gray-200',
-  textColor: 'text-gray-800'
+  textColor: 'text-gray-800 dark:text-gray-800'
 }
 
 export const WhiteOutline = Template.bind({})
@@ -80,7 +80,7 @@ WhiteOutline.args = {
   buttonColor: 'bg-white border-2 border-gray-300',
   hoverButtonColor: 'hover:bg-gray-50',
   disableButtonColor: 'disabled:bg-gray-200',
-  textColor: 'text-gray-800'
+  textColor: 'text-gray-800 dark:text-gray-800'
 }
 
 export const Yellow = Template.bind({})
@@ -88,7 +88,7 @@ Yellow.args = {
   buttonColor: 'bg-yellow-300',
   hoverButtonColor: 'hover:bg-yellow-400',
   disableButtonColor: 'disabled:bg-yellow-200',
-  textColor: 'text-gray-800'
+  textColor: 'text-gray-800 dark:text-gray-800'
 }
 
 export const YellowOutline = Template.bind({})

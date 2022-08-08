@@ -56,7 +56,7 @@ export function Slide({
                 className={`z-50 w-screen pointer-events-auto ${slidePanelWidth}`}
               >
                 <div
-                  className={`border-l-gray-700 border-l flex flex-col h-full py-6 overflow-y-auto bg-white dark:bg-menu-primary shadow-xl`}
+                  className={`border-gray-200 border-l dark:border-menu-secondary/30 flex flex-col h-full py-6 overflow-y-auto bg-white dark:bg-menu-primary shadow-xl`}
                 >
                   <div className="px-4 mb-4 sm:px-6">
                     <div className="flex items-start justify-between">

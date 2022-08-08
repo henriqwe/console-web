@@ -28,7 +28,7 @@ export function Table({
               }`}
             >
               <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
-                <thead className="bg-gray-50 dark:bg-gray-800">
+                <thead className="bg-gray-50 dark:bg-menu-primary">
                   <tr>
                     {tableColumns.map((column) => (
                       <th
@@ -54,7 +54,7 @@ export function Table({
                     values.map((value, index) => (
                       <tr
                         key={index}
-                        className={`dark:text-gray-300
+                        className={`dark:text-text-secondary
                           ${
                             index % 2 === 0
                               ? undefined
@@ -75,7 +75,7 @@ export function Table({
                       </tr>
                     ))
                   ) : (
-                    <tr className="bg-white dark:bg-menuItem-secondary intro-x ">
+                    <tr className="bg-white dark:bg-menuItem-primary intro-x ">
                       <td
                         colSpan={
                           actions

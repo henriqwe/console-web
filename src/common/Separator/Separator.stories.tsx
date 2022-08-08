@@ -17,13 +17,13 @@ export default {
 
 const Template: ComponentStory<typeof Separator> = (args) => (
   <div>
-    <p className="text-text-primary">Item 1</p>
+    <p className="dark:text-text-primary">Item 1</p>
     <Separator {...args} />
-    <p className="text-text-primary">Item 2</p>
+    <p className="dark:text-text-primary">Item 2</p>
     <Separator {...args} />
-    <p className="text-text-primary">Item 2</p>
+    <p className="dark:text-text-primary">Item 2</p>
     <Separator {...args} />
-    <p className="text-text-primary">Item 2</p>
+    <p className="dark:text-text-primary">Item 2</p>
   </div>
 )
 

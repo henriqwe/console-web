@@ -83,7 +83,7 @@ export function ListRadioGroup({
                   `
                 }
               >
-                <div className="flex items-center justify-between w-full dark:text-gray-200">
+                <div className="flex items-center justify-between w-full dark:text-text-primary">
                   {opcao.content}
                   {opcao.value === selected?.value &&
                     !disabledCheckBoxIcon &&

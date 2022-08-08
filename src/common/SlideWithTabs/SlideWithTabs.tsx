@@ -131,7 +131,7 @@ export function SlideWithTabs({
                   <div
                     className={`flex border-l border-menu-primary flex-col h-full w-full py-6 overflow-y-scroll bg-white dark:bg-menu-primary shadow-xl ${
                       activeTab?.color === 'red'
-                        ? 'border-red-500 dark:border-red-700/50'
+                        ? 'border-red-300 dark:border-red-700/50'
                         : activeTab?.color === 'blue'
                         ? 'border-blue-500 dark:border-blue-700/50'
                         : ''
