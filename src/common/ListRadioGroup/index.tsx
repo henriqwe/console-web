@@ -56,15 +56,14 @@ export function ListRadioGroup({
                 key={`radio-grupo-item-${indice}`}
                 value={opcao}
                 className={({ active }) =>
-                  `dark:bg-gray-900
+                  `
                   ${
                     disabled && !(opcao.value === selected?.value)
-                      ? '!bg-gray-400'
+                      ? '!bg-gray-400 dark:bg-menu-secondary cursor-not-allowed'
                       : disabled
-                      ? 'bg-gray-200 cursor-not-allowed '
+                      ? 'bg-gray-400 cursor-not-allowed'
                       : ''
-                  } 
-                  ${disabled && opcao.value === selected?.value && ''}
+                  }
                   
                   ${
                     active
@@ -74,8 +73,8 @@ export function ListRadioGroup({
                   
                   ${
                     opcao.value === selected?.value
-                      ? '!bg-blue-200 dark:!bg-gray-800 bg-opacity-50 !text-gray-800 ring-2 ring-offset !ring-offset-sky-300 !ring-gray-400 ring-opacity-40'
-                      : 'bg-gray-100 '
+                      ? '!bg-blue-200 bg-opacity-50 dark:!bg-menu-secondary !text-gray-800 ring-2 ring-offset !ring-offset-sky-300 !ring-gray-400 ring-opacity-40'
+                      : 'bg-gray-100 dark:bg-menu-primary'
                   } 
                   ${horizontal ? 'flex-1 mt-0' : ''}  
                     relative rounded-lg shadow-md ${
@@ -89,7 +88,7 @@ export function ListRadioGroup({
                   {opcao.value === selected?.value &&
                     !disabledCheckBoxIcon &&
                     showCheckIcon && (
-                      <div className="flex-shrink-0 text-blue-700">
+                      <div className="flex-shrink-0 text-blue-700 dark:text-text-primary">
                         <CheckCircleIcon className="w-6 h-6" />
                       </div>
                     )}

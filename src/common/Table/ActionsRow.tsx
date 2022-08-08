@@ -19,7 +19,7 @@ export function ActionsRow({ actions }: ActionsRowProps) {
   const [openModal, setOpenModal] = useState(false)
   const [selectedItem, setSelectedItem] = useState<AcoesProps | null>(null)
   return (
-    <td className="relative py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">
+    <td className="relative py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-text-primary whitespace-nowrap sm:pl-6">
       <p className="flex items-center gap-2">
         {actions.map((item) => (
           <span

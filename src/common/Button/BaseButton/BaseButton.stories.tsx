@@ -13,7 +13,11 @@ const Template: ComponentStory<typeof BaseButton> = (args) => (
 )
 
 export const Default = Template.bind({})
-Default.args = {}
+Default.args = {
+  buttonColor: '',
+  hoverButtonColor: '',
+  disableButtonColor: ''
+}
 
 export const Blue = Template.bind({})
 Blue.args = {

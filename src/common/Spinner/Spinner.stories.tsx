@@ -12,5 +12,5 @@ const Template: ComponentStory<typeof Spinner> = (args) => <Spinner {...args} />
 
 export const Default = Template.bind({})
 Default.args = {
-  className: 'dark:text-gray-200 w-16'
+  className: 'dark:text-text-primary w-16'
 }

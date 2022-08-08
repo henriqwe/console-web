@@ -10,7 +10,7 @@ export function Dropdown({ actions, children }: DropdownProps) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+        <Menu.Button className="flex items-center px-2 py-1 rounded-md text-gray-400 dark:text-text-secondary hover:text-gray-600 dark:hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
           <span className="sr-only">Open options</span>
           {children}
         </Menu.Button>
@@ -25,27 +25,26 @@ export function Dropdown({ actions, children }: DropdownProps) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute w-56 mt-2 origin-top-right bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="py-1">
-            {actions.map((action) => (
-              <Menu.Item key={action.title}>
-                {({ active }: { active: boolean }) => (
-                  <a
-                    className={`dark:hover:bg-gray-700
+        <Menu.Items className="absolute w-full mt-1 origin-top-right bg-white dark:bg-menu-primary rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          {actions.map((action, index) => (
+            <Menu.Item key={action.title}>
+              {({ active }: { active: boolean }) => (
+                <a
+                  className={`${index === 0 ? 'rounded-t-md' : ''} 
+                  ${index === actions.length - 1 ? 'rounded-b-md' : ''}
                   ${
                     active
-                      ? 'bg-gray-100 text-gray-900 dark:text-gray-100'
-                      : 'text-gray-700 dark:text-gray-400'
+                      ? 'bg-gray-100 dark:bg-menu-secondary text-gray-900 dark:text-text-primary'
+                      : 'text-gray-700 dark:text-text-secondary'
                   }
                   block px-4 py-2 text-sm cursor-pointer`}
-                    onClick={action.onClick}
-                  >
-                    {action.title}
-                  </a>
-                )}
-              </Menu.Item>
-            ))}
-          </div>
+                  onClick={action.onClick}
+                >
+                  {action.title}
+                </a>
+              )}
+            </Menu.Item>
+          ))}
         </Menu.Items>
       </Transition>
     </Menu>
