@@ -61,15 +61,15 @@ export function LogUser() {
 
   useEffect(() => {
     setIsDark(isDarkTheme())
-  }, [])
 
-  window.onstorage = function () {
-    setIsDark(isDarkTheme())
-  }
+    window.onstorage = function () {
+      setIsDark(isDarkTheme())
+    }
+  }, [])
 
   return (
     <form
-      className="flex flex-col items-center w-1/3 bg-white dark:bg-menu-secondary/75 dark:text-text-primary rounded-lg"
+      className="flex flex-col items-center w-1/3 bg-white dark:bg-menu-primary dark:border-gray-500 border dark:text-text-primary rounded-lg"
       onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
     >
       <div className="flex flex-col items-center w-full px-6 pt-6 rounded-lg">

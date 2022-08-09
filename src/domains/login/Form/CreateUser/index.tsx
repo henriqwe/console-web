@@ -68,7 +68,7 @@ export function CreateUser() {
 
   return (
     <form
-      className="flex flex-col items-center w-1/3 bg-white dark:bg-menu-secondary/75 dark:text-text-primary rounded-lg"
+      className="flex flex-col items-center w-1/3 bg-white dark:bg-menu-primary dark:border-gray-500 border dark:text-text-primary rounded-lg"
       onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
     >
       <div className="flex flex-col items-center w-full px-6 pt-6 rounded-lg">
@@ -83,7 +83,9 @@ export function CreateUser() {
           <p>Web console</p>
         </div>
 
-        <p className="text-gray-700">Register user here</p>
+        <p className="text-gray-700 dark:text-text-primary">
+          Register user here
+        </p>
         <div className="flex flex-col w-full gap-4 my-4">
           <Controller
             name="userName"

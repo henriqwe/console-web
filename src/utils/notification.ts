@@ -4,7 +4,9 @@ function notification(
   message: string,
   type: 'success' | 'error' | 'warning' | 'info'
 ) {
-  toast[type](message, {
+  return toast[type](message, {
+    className:
+      'dark:bg-menu-primary dark:text-text-primary dark:border-gray-700 border',
     position: 'bottom-right',
     autoClose: 5000,
     hideProgressBar: false,
@@ -15,7 +17,7 @@ function notification(
   })
 }
 
-function showError(err: any){
+function showError(err: any) {
   notification(err?.response?.data?.message, 'error')
 }
 
