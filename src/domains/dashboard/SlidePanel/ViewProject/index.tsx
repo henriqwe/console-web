@@ -1,12 +1,13 @@
-import { Controller, useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { useForm } from 'react-hook-form'
+import { useState } from 'react'
 import * as dashboard from 'domains/dashboard'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
+import CopyToClipboard from 'react-copy-to-clipboard'
+import { DocumentDuplicateIcon } from '@heroicons/react/outline'
 
 type AdminUser = {
   name: string
@@ -24,6 +25,7 @@ export function ViewSchema() {
   const [adminUser, setAdminUser] = useState<AdminUser>()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [showCopyText, setShowCopyText] = useState(false)
 
   const yupSchema = yup.object().shape({ Name: yup.string().required() })
 
@@ -57,7 +59,7 @@ export function ViewSchema() {
       setLoading(false)
       utils.notification('Operation performed successfully', 'success')
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
@@ -66,8 +68,8 @@ export function ViewSchema() {
   async function DeleteProject() {
     try {
       setSubmitLoading(true)
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${selectedSchema}`,
+      await utils.api.delete(
+        `${utils.apiRoutes.schemas}/${selectedSchema?.name}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -80,7 +82,7 @@ export function ViewSchema() {
       setOpenSlide(false)
       setOpenModal(false)
       utils.notification(
-        `Project ${selectedSchema} deleted successfully`,
+        `Project ${selectedSchema?.name} deleted successfully`,
         'success'
       )
     } catch (err: any) {
@@ -90,27 +92,24 @@ export function ViewSchema() {
     }
   }
 
-  async function loadAdminUser() {
-    try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/account`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`,
-            'X-TenantID': utils.getCookie('X-TenantID') as string
-          }
-        }
-      )
-      setAdminUser(data[0])
-    } catch (err: any) {
-      utils.notification(err.message, 'error')
-    }
-  }
+  // async function loadAdminUser() {
+  //   try {
+  //     const { data } = await utils.api.get(utils.apiRoutes.adminData, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${utils.getCookie('admin_access_token')}`,
+  //         'X-TenantID': utils.getCookie('X-TenantID') as string
+  //       }
+  //     })
+  //     setAdminUser(data[0])
+  //   } catch (err: any) {
+  //     utils.notification(err.message, 'error')
+  //   }
+  // }
 
-  useEffect(() => {
-    loadAdminUser()
-  }, [])
+  // useEffect(() => {
+  //   loadAdminUser()
+  // }, [])
 
   return (
     <div
@@ -120,13 +119,55 @@ export function ViewSchema() {
     >
       <div className="flex justify-between w-full">
         <div>
-          <p className="text-sm text-gray-600">Projetc plan</p>
-          <p className="font-bold">Sandbox</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Project plan
+          </p>
+          <p className="font-bold dark:text-gray-300">Sandbox</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Created at:
+          </p>
+          <p className="text-sm dark:text-gray-300">
+            {new Date(selectedSchema?.createdat as number).toLocaleString()}
+          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Status:</p>
+          <p className="text-sm dark:text-gray-300">{selectedSchema?.status}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Project secret:
+          </p>
+          <div className="flex w-full">
+            <input
+              value={selectedSchema?.tenantAc}
+              disabled
+              type="password"
+              className="w-40 text-xs bg-transparent dark:text-gray-300"
+            />
+            <CopyToClipboard
+              text="Copy to clipboard"
+              onCopy={() => {
+                setShowCopyText(true)
+                setTimeout(() => {
+                  setShowCopyText(false)
+                }, 800)
+              }}
+            >
+              <div className="flex items-center">
+                <DocumentDuplicateIcon
+                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-300"
+                  onClick={() =>
+                    navigator.clipboard.writeText(
+                      selectedSchema?.tenantAc as string
+                    )
+                  }
+                />
+              </div>
+            </CopyToClipboard>
+          </div>
+          {showCopyText && <span className="dark:text-gray-400">Copied!</span>}
         </div>
         <div className="text-right">
-          <p className="text-sm text-gray-600">Admin user</p>
-          <p className="font-bold">
-            {adminUser ? adminUser.username : `tester@$${selectedSchema}`}
+          <p className="text-sm text-gray-600 dark:text-gray-400">Admin user</p>
+          <p className="font-bold dark:text-gray-300">
+            {adminUser ? adminUser.username : `tester@${selectedSchema?.name}`}
           </p>
         </div>
       </div>
@@ -157,10 +198,10 @@ export function ViewSchema() {
         title={`Remove ${selectedSchema} project?`}
         description={
           <>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               Are you sure you want to remove this project?{' '}
             </p>
-            <p className="text-sm font-bold text-gray-600">
+            <p className="text-sm font-bold text-gray-600 dark:text-gray-300">
               this action is irreversible!!!
             </p>
           </>

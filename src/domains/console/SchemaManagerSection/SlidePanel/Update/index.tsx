@@ -1,6 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import * as consoleData from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
@@ -14,14 +13,14 @@ export function Update() {
     setOpenSlide,
     setReload,
     reload,
-    selectedTable,
+    selectedEntity,
     selectedItemToExclude,
-    tableData
-  } = consoleData.useData()
+    entityData
+  } = consoleData.useSchemaManager()
 
   let schemaShape = {}
 
-  for (const field of tableData!.filter((field) => field.name !== 'id')) {
+  for (const field of entityData!.filter((field) => field.name !== 'id')) {
     let yupValidation
     switch (field.type) {
       case 'String':
@@ -60,19 +59,18 @@ export function Update() {
   } = useForm({ resolver: yupResolver(yupSchema) })
 
   const onSubmit = async (formData: any) => {
-    setLoading(true)
-    await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
+    try {
+      await utils.localApi.post(
+        utils.apiRoutes.local.interpreter,
         {
           data: JSON.parse(
             `{\n 
               "action":"UPDATE",\n 
               "object":{\n 
-                "classUID": "${selectedTable}",\n 
+                "classUID": "${selectedEntity}",\n 
                 "id": ${selectedItemToExclude.id},\n 
                 "role": "ROLE_ADMIN",\n 
-                ${tableData
+                ${entityData
                   ?.filter((field) => field.name !== 'id')
                   .map(
                     (field, index) =>
@@ -80,14 +78,15 @@ export function Update() {
                         field.type === 'Boolean'
                           ? formData[field.name].key
                           : formData[field.name]
-                      }"${index !== tableData?.length - 2 ? ',' : ''}\n`
+                      }"${index !== entityData?.length - 2 ? ',' : ''}\n`
                   )
                   .join('')}
               }\n
             }`
           ),
           access_token: getCookie('admin_access_token'),
-          'X-TenantID': getCookie('X-TenantID')
+          'X-TenantID': getCookie('X-TenantID'),
+          'X-TenantAC': getCookie('X-TenantAC')
         },
         {
           headers: {
@@ -95,16 +94,16 @@ export function Update() {
           }
         }
       )
-      .then(() => {
-        reset()
-        setReload(!reload)
-        setOpenSlide(false)
-        setLoading(false)
-        utils.notification('Operation performed successfully', 'success')
-      })
-      .catch((err) => {
-        utils.notification(err.message, 'error')
-      })
+
+      reset()
+      setReload(!reload)
+      setOpenSlide(false)
+      setLoading(false)
+      utils.notification('Operation performed successfully', 'success')
+    } catch (err) {
+      utils.showError(err)
+    }
+    setLoading(true)
   }
 
   return (
@@ -114,7 +113,7 @@ export function Update() {
       className="flex flex-col items-end"
     >
       <div className="flex flex-col w-full gap-2 mb-2">
-        {tableData
+        {entityData
           ?.filter((field) => field.name !== 'id')
           .map((field) => (
             <Controller

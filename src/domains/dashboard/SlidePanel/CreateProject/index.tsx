@@ -5,12 +5,7 @@ import {
   useForm
 } from 'react-hook-form'
 import { Dispatch, SetStateAction, useState } from 'react'
-import {
-  CheckCircleIcon,
-  CheckIcon,
-  ChevronRightIcon
-} from '@heroicons/react/outline'
-import { UserCircleIcon } from '@heroicons/react/solid'
+import { CheckCircleIcon, CheckIcon } from '@heroicons/react/outline'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as dashboard from 'domains/dashboard'
@@ -18,16 +13,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
 
-export function Update() {
+export function Create() {
   const router = useRouter()
-  const [adminUser, setAdminUser] = useState<{
-    username: string
-    password: string
-  }>()
-  const [createdSchemaName, setCreatedSchemaName] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [plan, setPlan] = useState<'Sandbox' | 'Dedicated'>()
-  const { createProjectSchema } = dashboard.useData()
+  const { createProjectSchema, setReload, reload } = dashboard.useData()
 
   const {
     control,
@@ -47,21 +37,26 @@ export function Update() {
         throw new Error('Project name cannot contain spaces')
       }
 
-      const response = await utils.localApi
-        .get(`/schemas`, {
+      const response = await utils.api
+        .get(utils.apiRoutes.schemas, {
           headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
             Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
         })
         .catch(() => null)
-      const schemas = response ? response.data.data : []
+
+      const schemas = response
+        ? response.data.map((schema: { name: string }) => schema.name)
+        : []
 
       if (schemas.includes(data.ProjectName.toLowerCase())) {
         throw new Error(`Project ${data.ProjectName} already exists`)
       }
 
       await utils.api.post(
-        '/modeler/schema',
+        utils.apiRoutes.schemas,
         {
           name: data.ProjectName
         },
@@ -73,93 +68,17 @@ export function Update() {
         }
       )
 
-      const AdminAccount = await utils.api.post(
-        `/modeler/schema/${data.ProjectName}/create-admin-account`,
-        {},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
-      setAdminUser(AdminAccount.data)
-      setCreatedSchemaName(data.ProjectName)
+      setReload(!reload)
       utils.notification(
         `Project ${data.ProjectName} created successfully`,
         'success'
       )
+      router.push(routes.console + '/' + data.ProjectName)
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
-  }
-
-  async function AccessSchema() {
-    try {
-      setLoading(true)
-
-      const { data } = await utils.localApi.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/adminLogin`,
-        {
-          username: adminUser?.username,
-          password: adminUser?.password
-        }
-      )
-      utils.setCookie('admin_access_token', data.data.access_token)
-      utils.setCookie('X-TenantID', data.data.username)
-
-      utils.notification(`Project concluded successfully`, 'success')
-      router.push(routes.console + '/' + createdSchemaName)
-    } catch (err: any) {
-      console.log(err)
-      utils.notification(err.message, 'error')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (adminUser) {
-    return (
-      <div>
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col items-center w-full gap-5">
-            <div className="w-40 h-40">
-              <UserCircleIcon />
-            </div>
-            <p className="text-lg">Schema {createdSchemaName} created!</p>
-            <p className="text-sm">
-              Save the admin user data to access the schema
-            </p>
-            <div>
-              <p className="text-sm text-gray-600">
-                Admin user name:{' '}
-                <span className="font-bold">{adminUser?.username}</span>
-              </p>
-              <p className="text-sm text-gray-600">
-                Admin password:{' '}
-                <span className="font-bold">{adminUser?.password}</span>
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-end w-full">
-            <div className="flex gap-4">
-              <common.Buttons.Clean
-                loading={loading}
-                disabled={loading}
-                onClick={AccessSchema}
-                icon={<ChevronRightIcon className="w-3 h-3" />}
-              >
-                Access schema
-              </common.Buttons.Clean>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -185,7 +104,9 @@ export function Update() {
           )}
         />
       </div>
-      <p className="w-full">Select a plan</p>
+      <p className="w-full text-sm font-medium dark:text-gray-200">
+        Select a plan
+      </p>
       <common.ListRadioGroup
         options={[
           {
@@ -193,10 +114,10 @@ export function Update() {
             content: (
               <div>
                 <div>
-                  <p className="font-bold">Sandbox</p>
+                  <p className="font-bold dark:text-gray-200">Sandbox</p>
                   {plan === 'Sandbox' && (
-                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg">
-                      <p className="flex items-center gap-1 text-white">
+                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
+                      <p className="flex items-center gap-1 text-white ">
                         Selected{' '}
                         <span className="w-5 h-5">
                           <CheckCircleIcon />
@@ -245,9 +166,9 @@ export function Update() {
             content: (
               <div>
                 <div>
-                  <p className="font-bold">Dedicated</p>
+                  <p className="font-bold dark:text-gray-200">Dedicated</p>
                   {plan === 'Dedicated' && (
-                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg">
+                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
                       <p className="flex items-center gap-1 text-white">
                         Selected{' '}
                         <span className="w-5 h-5">
@@ -316,7 +237,7 @@ export function Update() {
       <common.Buttons.Clean
         disabled={loading}
         loading={loading}
-        icon={<CheckIcon className="w-3 h-3" />}
+        icon={<CheckIcon className="w-4 h-4" />}
       >
         Create project
       </common.Buttons.Clean>

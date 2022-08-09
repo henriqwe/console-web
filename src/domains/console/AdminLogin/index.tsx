@@ -1,7 +1,6 @@
-import axios from 'axios'
 import * as common from 'common'
 import * as utils from 'utils'
-import * as dataContext from 'domains/console'
+import * as SchemaManagerContext from 'domains/console'
 import {
   useForm,
   FieldValues,
@@ -16,7 +15,7 @@ import { routes } from 'domains/routes'
 export function AdminLogin() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const { logUserSchema } = dataContext.useUser()
+  const { logUserSchema } = SchemaManagerContext.useUser()
   const {
     formState: { errors },
     handleSubmit,
@@ -26,8 +25,8 @@ export function AdminLogin() {
   async function Submit(formData: { userName: string; password: string }) {
     setLoading(true)
     try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/adminLogin`,
+      const { data } = await utils.localApi.post(
+        utils.apiRoutes.local.adminLogin,
         {
           username: formData.userName,
           password: formData.password
@@ -44,7 +43,7 @@ export function AdminLogin() {
           'error'
         )
       }
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }

@@ -1,19 +1,16 @@
 import { Icon } from '@iconify/react'
 import { SetStateAction, useEffect, useState } from 'react'
-import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
-import axios from 'axios'
-import { getCookie } from 'utils/cookies'
 import * as consoleEditor from '../../ConsoleEditorContext'
 import { useRouter } from 'next/router'
-import { CheckIcon, DatabaseIcon } from '@heroicons/react/outline'
+import { CheckIcon } from '@heroicons/react/outline'
 
-export function ApiTab() {
+export function DataManagerTab() {
   const router = useRouter()
   const [operations, setOperations] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
-  const [activeTable, setActiveTable] = useState<string>()
+  const [activeEntity, setActiveEntity] = useState<string>()
   const { formatQueryOrMutation } = consoleEditor.useConsoleEditor()
 
   async function loadOperations() {
@@ -21,21 +18,23 @@ export function ApiTab() {
       const operations = []
       setLoading(true)
 
-      const { data: tables } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
-        {
+      const response = await utils.api
+        .get(`${utils.apiRoutes.entityList(router.query.name as string)}`, {
           headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
-        }
-      )
-      for (const table of Object.keys(tables.data)) {
+        })
+        .catch(() => null)
+
+      for (const table of Object.keys(response!.data)) {
         operations.push(`${table}`)
       }
       setOperations(operations)
     } catch (err: any) {
-      if (err.response.status !== 404) {
-        utils.notification(err.message, 'error')
+      if (err?.response?.status !== 404) {
+        utils.showError(err)
       }
     } finally {
       setLoading(false)
@@ -49,7 +48,7 @@ export function ApiTab() {
   }, [router.query.name])
 
   return (
-    <div className="flex-1 h-full pt-4 overflow-y-auto rounded-b-lg">
+    <div className="flex-1 h-full gap-1 px-4 pt-3 overflow-y-auto rounded-b-lg">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <div className="w-8 h-8 mr-8">
@@ -66,9 +65,9 @@ export function ApiTab() {
           <Operation
             key={schema}
             schema={schema}
-            activeTable={activeTable}
+            activeEntity={activeEntity}
             formatQueryOrMutation={formatQueryOrMutation}
-            setActiveTable={setActiveTable}
+            setActiveEntity={setActiveEntity}
           />
         ))
       )}
@@ -78,22 +77,19 @@ export function ApiTab() {
 
 function Operation({
   schema,
-  activeTable,
+  activeEntity,
   formatQueryOrMutation,
-  setActiveTable
+  setActiveEntity
 }: {
   schema: string
-  activeTable: string | undefined
+  activeEntity: string | undefined
   formatQueryOrMutation: (type: string, entity: string) => void
-  setActiveTable: (value: SetStateAction<string | undefined>) => void
+  setActiveEntity: (value: SetStateAction<string | undefined>) => void
 }) {
   const [active, setActive] = useState(false)
 
-  const { setSelectedTab } = consoleSection.useSidebar()
-  const { setCurrentTab, setSelectedTable } = consoleSection.useData()
-
   return (
-    <div className="flex flex-col gap-2 px-3 mb-2">
+    <div className="flex flex-col gap-2 mb-2 ">
       <div
         className={`flex items-center gap-2 cursor-pointer justify-between`}
         onClick={() => {
@@ -110,22 +106,22 @@ function Operation({
       </div>
       {active &&
         ['insert', 'update', 'delete', 'select', 'select by pk'].map(
-          (table) => (
-            <div key={table}>
+          (entity) => (
+            <div key={entity}>
               <div
-                className={`flex items-center gap-2  ml-4 cursor-pointer ${
-                  activeTable === `${schema}${table}` && 'text-orange-400'
+                className={`flex items-center gap-2  ml-2 cursor-pointer ${
+                  activeEntity === `${schema}${entity}` && 'text-orange-400'
                 }`}
                 onClick={() => {
-                  setActiveTable(`${schema}${table}`)
-                  formatQueryOrMutation(table, schema)
+                  setActiveEntity(`${schema}${entity}`)
+                  formatQueryOrMutation(entity, schema)
                 }}
               >
                 <div className="w-4 h-4">
-                  {activeTable === `${schema}${table}` && <CheckIcon />}
+                  {activeEntity === `${schema}${entity}` && <CheckIcon />}
                 </div>
 
-                <p className="text-sm">{table}</p>
+                <p className="text-sm">{entity}</p>
               </div>
             </div>
           )

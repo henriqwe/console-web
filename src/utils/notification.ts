@@ -15,4 +15,8 @@ function notification(
   })
 }
 
-export { notification }
+function showError(err: any){
+  notification(err?.response?.data?.message, 'error')
+}
+
+export { notification, showError }

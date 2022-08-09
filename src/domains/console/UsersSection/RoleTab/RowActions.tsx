@@ -1,7 +1,6 @@
 import * as utils from 'utils'
 import * as common from 'common'
 import * as consoleData from 'domains/console'
-import axios from 'axios'
 
 export function RowActions({ item }: { item: any }) {
   const { setReload, reload } = consoleData.useUser()
@@ -11,18 +10,13 @@ export function RowActions({ item }: { item: any }) {
       handler: async () => {
         event?.preventDefault()
 
-        await axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/role/name/${item.name}`,
-            {
-              headers: {
-                Authorization: `Bearer ${utils.getCookie(
-                  'admin_access_token'
-                )}`,
-                'X-TenantID': utils.getCookie('X-TenantID') as string
-              }
+        await utils.api
+          .delete(utils.apiRoutes.deleteRole(item.name), {
+            headers: {
+              Authorization: `Bearer ${utils.getCookie('admin_access_token')}`,
+              'X-TenantID': utils.getCookie('X-TenantID') as string
             }
-          )
+          })
           .then(() => {
             setReload(!reload)
             utils.notification('Operation performed successfully', 'success')

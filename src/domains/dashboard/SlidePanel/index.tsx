@@ -1,6 +1,6 @@
 import * as dashboard from 'domains/dashboard'
 import * as common from 'common'
-import { Update } from './CreateProject'
+import { Create } from './CreateProject'
 import { ViewSchema } from './ViewProject'
 
 export function SlidePanel() {
@@ -9,12 +9,14 @@ export function SlidePanel() {
   return (
     <common.Slide
       title={
-        slideType === 'CREATE' ? 'Create schema' : (selectedSchema as string)
+        slideType === 'CREATE'
+          ? 'Create schema'
+          : (selectedSchema?.name as string)
       }
       open={openSlide}
       slideSize={slideSize}
       setOpen={setOpenSlide}
-      content={slideType === 'CREATE' ? <Update /> : <ViewSchema />}
+      content={slideType === 'CREATE' ? <Create /> : <ViewSchema />}
     />
   )
 }

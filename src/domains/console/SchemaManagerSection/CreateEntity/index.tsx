@@ -3,14 +3,13 @@ import * as common from 'common'
 import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import * as consoleSection from 'domains/console'
-import axios from 'axios'
 import { useRouter } from 'next/router'
 import { PlusIcon, CheckIcon } from '@heroicons/react/outline'
 
-export function CreateTable() {
+export function CreateEntity() {
   const router = useRouter()
-  const { setShowCreateTableSection, setReload, reload } =
-    consoleSection.useData()
+  const { setShowCreateEntitySection, setReload, reload } =
+    consoleSection.useSchemaManager()
   const {
     control,
     formState: { errors },
@@ -34,21 +33,20 @@ export function CreateTable() {
       if (spaceValidation.test(data.Name)) {
         throw new Error('Entity cannot contain spaces')
       }
+      // const response = await utils.api
+      //   .get(`${utils.apiRoutes.schemas}/${router.query.name}`, {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //       Accept: 'application/json',
+      //       Authorization: `Bearer ${utils.getCookie('access_token')}`
+      //     }
+      //   })
+      //   .catch(() => null)
 
-      const response = await axios
-        .get(
-          `${process.env.NEXT_PUBLIC_APP_URL}/api/schema?schemaName=${router.query.name}`,
-          {
-            headers: {
-              Authorization: `Bearer ${utils.getCookie('access_token')}`
-            }
-          }
-        )
-        .catch(() => null)
-      const tables = Object.keys(response ? response.data.data : {})
-      if (tables.includes(data.Name.toLowerCase())) {
-        throw new Error(`Entity ${data.Name} already exists`)
-      }
+      // const tables = Object.keys(response ? response.data.data : {})
+      // if (tables.includes(data.Name.toLowerCase())) {
+      //   throw new Error(`Entity ${data.Name} already exists`)
+      // }
 
       const filteredData = columnsGroup.filter((column) => column !== 0)
       const names: string[] = []
@@ -80,18 +78,20 @@ export function CreateTable() {
         names.push(data['ColumnName' + column])
 
         columnValues.push({
-          ColumnName: data['ColumnName' + column],
-          Type: data['Type' + column].value,
-          Comment: data['Comment' + column],
-          Nullable: data['Nullable' + column],
-          Length: data['Length' + column]
+          name: data['ColumnName' + column],
+          type: data['Type' + column].value,
+          comment: data['Comment' + column] || '',
+          nullable: data['Nullable' + column] || false,
+          length: data['Length' + column]
         })
       }
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity`,
+      await utils.api.post(
+        utils.apiRoutes.entity(router.query.name as string),
         {
-          name: data.Name
+          name: data.Name,
+          attributes: columnValues,
+          associations: []
         },
         {
           headers: {
@@ -101,31 +101,34 @@ export function CreateTable() {
         }
       )
 
-      for (const column of columnValues) {
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${data.Name}/attribute`,
-          {
-            name: column?.ColumnName,
-            comment: column?.Comment,
-            isNullable: column?.Nullable || false,
-            length: column?.Length,
-            type: column?.Type.value
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${utils.getCookie('access_token')}`
-            }
-          }
-        )
-      }
+      // for (const column of columnValues) {
+      //   await utils.api.post(
+      //     utils.apiRoutes.attribute({
+      //       entityName: data.Name,
+      //       projectName: router.query.name as string
+      //     }),
+      //     {
+      //       name: column?.name,
+      //       comment: column?.comment,
+      //       isNullable: column?.isNullable || false,
+      //       length: column?.length,
+      //       type: column?.type.value
+      //     },
+      //     {
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //         Authorization: `Bearer ${utils.getCookie('access_token')}`
+      //       }
+      //     }
+      //   )
+      // }
 
       setReload(!reload)
-      setShowCreateTableSection(false)
+      setShowCreateEntitySection(false)
       utils.notification(`Entity ${data.Name} created successfully`, 'success')
     } catch (err: any) {
       console.log(err)
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
@@ -140,9 +143,14 @@ export function CreateTable() {
   return (
     <common.Card className="flex flex-col w-full h-full">
       <common.ContentSection
-        title={<p className="text-base text-gray-900">Create a new entity</p>}
+        variant="WithoutTitleBackgroundColor"
+        title={
+          <p className="text-base font-semibold text-gray-900">
+            Create a new entity
+          </p>
+        }
       >
-        <div className={`flex flex-col h-full px-6 pt-5 bg-white rounded-b-lg`}>
+        <div className={`flex flex-col h-auto p-6  bg-white rounded-lg`}>
           <Controller
             name="Name"
             control={control}

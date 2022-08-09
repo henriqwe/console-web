@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { getCookie } from 'utils'
 
 import {
@@ -8,7 +7,10 @@ import {
   useContext,
   useState,
   Dispatch,
-  useEffect
+  useEffect,
+  useCallback,
+  useRef,
+  MutableRefObject
 } from 'react'
 import { javascriptLanguage } from '@codemirror/lang-javascript'
 import { completeFromGlobalScope } from './Console/Editors/Autocomplete'
@@ -39,10 +41,15 @@ type ConsoleEditorContextProps = {
   variablesValue: string
   setVariablesValue: Dispatch<SetStateAction<string>>
   formaterCodeExporterValue(): void
-  tabsData: tabsDataType
-  setTabsData: Dispatch<SetStateAction<tabsDataType>>
+  tabsData: tabsDataType | undefined
+  setTabsData: Dispatch<SetStateAction<tabsDataType | undefined>>
   schemaTabData: JSX.Element | undefined
   setSchemaTabData: Dispatch<SetStateAction<JSX.Element | undefined>>
+  value: MutableRefObject<string>
+  format: MutableRefObject<FormatterFunction | undefined>
+  handleFormat: () => void
+  handleChange: (input: string) => void
+  setFormatter: (func: FormatterFunction) => void
 }
 
 type ProviderProps = {
@@ -54,6 +61,8 @@ type tabsDataType = {
   color: 'blue' | 'red'
   content: JSX.Element
 }[]
+
+type FormatterFunction = (text: string) => string
 
 export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
   {} as ConsoleEditorContextProps
@@ -68,23 +77,12 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleResponseLoading, setconsoleResponseLoading] = useState(false)
   const router = useRouter()
   const [responseTime, setResponseTime] = useState<number>()
-  const { reload } = data.useData()
+  const { reload } = data.useSchemaManager()
   const [codeExporterValue, setCodeExporterValue] = useState('')
   const [variablesValue, setVariablesValue] = useState('')
 
   const [schemaTabData, setSchemaTabData] = useState<JSX.Element>()
-  const [tabsData, setTabsData] = useState<tabsDataType>([
-    {
-      title: 'Docs',
-      color: 'blue',
-      content: <div>Docs</div>
-    },
-    {
-      title: 'Schema',
-      color: 'red',
-      content: <div>{schemaTabData}</div>
-    }
-  ])
+  const [tabsData, setTabsData] = useState<tabsDataType>()
 
   const globalJavaScriptCompletions = javascriptLanguage.data.of({
     autocomplete: completeFromGlobalScope
@@ -92,19 +90,19 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
   async function loadParser() {
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/parser?parserName=${router.query.name}`,
+      const { data } = await utils.localApi.get(
+        utils.apiRoutes.local.parser(router.query.name as string),
         {
           headers: {
             Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
         }
       )
-      console.log('data.data', data.data)
       setdocumentationValue(data.data)
     } catch (err: any) {
-      if (err.response.status !== 404) {
-        utils.notification(err.message, 'error')
+      console.log(err)
+      if (err?.response?.status !== 404) {
+        utils.showError(err)
       }
     }
   }
@@ -132,22 +130,20 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         break
     }
 
-    setConsoleValue(
-      `{\n "action":"${action}",\n "object":{\n   "classUID": "${entity}",\n   "role": "ROLE_ADMIN"\n }\n}`
-    )
+    setConsoleValue(`{\n "action":"${action}",\n "${entity}":{\n  \n }\n}`)
   }
 
   async function runOperation() {
     try {
       setConsoleValueLastOperation(consoleValue)
       setconsoleResponseLoading(true)
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/interpreter`,
+      const { data } = await utils.localApi.post(
+        utils.apiRoutes.local.interpreter,
         {
           data: JSON.parse(consoleValue),
-          schema: router.query.name,
-          access_token: `${utils.getCookie('admin_access_token')}`,
-          'X-TenantID': utils.getCookie('X-TenantID')
+          access_token: `${utils.getCookie('access_token')}`,
+          'X-TenantID': utils.getCookie('X-TenantID'),
+          'X-TenantAC': utils.getCookie('X-TenantAC')
         },
         {
           headers: {
@@ -191,7 +187,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         utils.notification('object or objects not found.', 'error')
         return
       }
-      utils.notification(err.message, 'error')
+
+      utils.showError(err)
     }
   }
 
@@ -209,28 +206,26 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   }
 
   function formaterCodeExporterValue() {
-    const text = `  async function yc_persistence_service(jwt, tenantID, BODY) {
-    const result = await fetch('https://api.ycodify.com/api/interpreter-p/s', 
-    {
-      method: 'POST',
-      body: BODY,
-      headers: {
-      Authorization: 'Bearer '.concat(jwt),
-      'X-TenantID': tenantID,
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-      }
-    })
-    return await result.json()
-  }
-  
-  const jwt = '${getCookie('admin_access_token')}'
-  const tenantID = '${getCookie('X-TenantID')}'
-  const BODY = ${consoleValueLastOperation}
- 
-  yc_persistence_service(jwt, tenantID, BODY) 
-   
-  `
+    const text = `async function yc_persistence_service(jwt, tenantID, BODY) {
+  const result = await fetch('https://api.ycodify.com/api/interpreter-p/s', 
+  {
+    method: 'POST',
+    body: BODY,
+    headers: {
+    Authorization: 'Bearer '.concat(jwt),
+    'X-TenantID': tenantID,
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+    }
+  })
+  return await result.json()
+}
+
+const jwt = '${getCookie('admin_access_token')}'
+const tenantID = '${getCookie('X-TenantID')}'
+const BODY = ${consoleValueLastOperation}
+
+yc_persistence_service(jwt, tenantID, BODY)`
     setCodeExporterValue(text)
   }
 
@@ -249,14 +244,46 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           content: <div>Docs</div>
         },
         {
-          title: 'Schema',
-          color: 'red',
-          content: <div>{schemaTabData}</div>
+          title: 'Spec',
+          color: 'blue',
+          content: (
+            <div className="p-4 leading-5 rounded-lg bg-gray-50">
+              {schemaTabData}
+            </div>
+          )
         }
       ])
     }
   }, [schemaTabData])
 
+  const value = useRef<string>('')
+
+  const format = useRef<FormatterFunction>()
+
+  const handleFormat = useCallback(() => {
+    try {
+      value.current = format?.current ? format?.current(value.current) : ''
+      if (value.current !== consoleValue) setConsoleValue(value.current)
+      else {
+        // Edge case: Only formatting was changed (this would not trigger re-render)
+        // Use a dummy value to force update code
+        setConsoleValue(value.current + ' ')
+        // Then use delay to immidiately correct it
+        setTimeout(() => setConsoleValue(value.current.slice(0, -1)), 0)
+      }
+    } catch (error) {
+      console.log('error', error)
+      utils.notification('There was an error formatting', 'error')
+    }
+  }, [consoleValue])
+
+  const handleChange = useCallback((input: string) => {
+    value.current = input
+  }, [])
+
+  const setFormatter = useCallback((func: FormatterFunction) => {
+    format.current = func
+  }, [])
   return (
     <ConsoleEditorContext.Provider
       value={{
@@ -284,7 +311,12 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         tabsData,
         setTabsData,
         schemaTabData,
-        setSchemaTabData
+        setSchemaTabData,
+        value,
+        format,
+        handleFormat,
+        handleChange,
+        setFormatter
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 export { getCookie, parseCookies, setCookie, removeCookie } from './cookies'
-export { notification } from './notification'
+export { notification, showError } from './notification'
 export { api, localApi } from './api'
 export {
   BRLMoneyFormat,
@@ -28,3 +28,4 @@ export {
   RGFormat
 } from './formaters'
 export { ycl_transpiler } from './transpiler'
+export { apiRoutes } from './apiRoutes'

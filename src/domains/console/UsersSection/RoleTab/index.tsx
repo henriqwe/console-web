@@ -1,29 +1,25 @@
 import * as common from 'common'
 import * as consoleData from 'domains/console'
 import * as utils from 'utils'
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
 import { PlusIcon } from '@heroicons/react/outline'
 
 export function RoleTab() {
   const [loading, setLoading] = useState(true)
-  const { selectedTable } = consoleData.useData()
+  const { selectedEntity } = consoleData.useSchemaManager()
   const { reload, setSlideType, setOpenSlide, setRoles, roles } =
     consoleData.useUser()
 
   async function loadData() {
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/role`,
-        {
-          headers: {
-            'X-TenantID': utils.getCookie('X-TenantID') as string,
-            Accept: 'application/json',
-            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
-          }
+      const { data } = await utils.api.get(utils.apiRoutes.roles, {
+        headers: {
+          'X-TenantID': utils.getCookie('X-TenantID') as string,
+          Accept: 'application/json',
+          Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
         }
-      )
+      })
       setRoles(data)
     } catch (err: any) {
       console.log(err)
@@ -39,7 +35,7 @@ export function RoleTab() {
     setRoles(undefined)
     setLoading(true)
     loadData()
-  }, [selectedTable, reload])
+  }, [selectedEntity, reload])
 
   return (
     <div
@@ -53,7 +49,7 @@ export function RoleTab() {
             <common.Spinner />
           </div>
 
-          <p className="text-lg font-bold text-gray-700">Loading table data</p>
+          <p className="text-lg font-bold text-gray-700">Loading entity data</p>
         </div>
       ) : (
         <div className="w-full h-full bg-gray-100 rounded-b-lg overflow-y">
@@ -70,8 +66,8 @@ export function RoleTab() {
             </common.Buttons.Blue>
           </div>
           <common.Separator />
-          <common.Table
-            tableColumns={[
+          <common.Entity
+            entityColumns={[
               { name: 'name', displayName: 'Name' },
               { name: 'schema', displayName: 'Schema' },
               {

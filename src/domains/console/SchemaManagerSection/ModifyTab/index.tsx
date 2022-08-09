@@ -4,7 +4,6 @@ import * as common from 'common'
 import * as consoleSection from 'domains/console'
 import { XIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline'
 import { SetStateAction, useState, Dispatch } from 'react'
-import axios from 'axios'
 import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -17,14 +16,22 @@ export function ModifyTab({ loading }: ModifyTabProps) {
   const [submitLoading, setSubmitLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [openForm, setOpenForm] = useState(false)
-  const { tableData, selectedTable, setReload, reload, setSelectedTable } =
-    consoleSection.useData()
+  const {
+    entityData,
+    selectedEntity,
+    setReload,
+    reload,
+    setSelectedEntity,
+    schemaTables
+  } = consoleSection.useSchemaManager()
 
-  async function RemoveTable() {
+  async function RemoveEntity() {
     try {
       setSubmitLoading(true)
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
+      await utils.api.delete(
+        `${utils.apiRoutes.entity(
+          router.query.name as string
+        )}/${selectedEntity}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -33,13 +40,13 @@ export function ModifyTab({ loading }: ModifyTabProps) {
         }
       )
       setReload(!reload)
-      setSelectedTable(undefined)
+      setSelectedEntity(undefined)
       utils.notification(
-        `Table ${selectedTable} deleted successfully`,
+        `Entity ${selectedEntity} deleted successfully`,
         'success'
       )
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setSubmitLoading(false)
     }
@@ -60,19 +67,27 @@ export function ModifyTab({ loading }: ModifyTabProps) {
     <div
       className={`flex flex-col ${
         loading ? 'items-center justify-center' : 'items-start'
-      } rounded-b-md bg-white p-6 gap-2`}
+      } rounded-b-md bg-white dark:bg-gray-800 p-6 gap-2`}
     >
       <h3 className="text-lg">Columns:</h3>
-      {tableData?.map((data) => (
-        <Column key={data.name} data={data} />
-      ))}
+      {entityData
+        ?.filter((data) => {
+          const entities = Object.keys(schemaTables!)
+          if (entities.includes(data.type)) {
+            return false
+          }
+          return data.name !== '_conf'
+        })
+        .map((data) => (
+          <Column key={data.name} data={data} />
+        ))}
 
       {openForm && (
         <AttributeForm
           setOpenForm={setOpenForm}
           setReload={setReload}
           reload={reload}
-          selectedTable={selectedTable}
+          selectedEntity={selectedEntity}
         />
       )}
       <common.Separator />
@@ -104,7 +119,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
         setOpen={setOpenModal}
         loading={submitLoading}
         disabled={submitLoading}
-        title={`Remove ${selectedTable} entity?`}
+        title={`Remove ${selectedEntity} entity?`}
         description={
           <>
             <p className="text-sm text-gray-600">
@@ -116,7 +131,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           </>
         }
         buttonTitle="Remove entity"
-        handleSubmit={RemoveTable}
+        handleSubmit={RemoveEntity}
       />
     </div>
   )
@@ -126,12 +141,12 @@ function AttributeForm({
   setOpenForm,
   setReload,
   reload,
-  selectedTable
+  selectedEntity
 }: {
   setOpenForm: Dispatch<SetStateAction<boolean>>
   setReload: Dispatch<SetStateAction<boolean>>
   reload: boolean
-  selectedTable?: string
+  selectedEntity?: string
 }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -153,8 +168,11 @@ function AttributeForm({
         throw new Error('String length is required')
       }
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute`,
+      await utils.api.post(
+        utils.apiRoutes.attribute({
+          projectName: router.query.name as string,
+          entityName: selectedEntity as string
+        }),
         {
           name: data.ColumnName,
           comment: data.Comment,
@@ -178,7 +196,7 @@ function AttributeForm({
       )
     } catch (err: any) {
       console.log(err)
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }

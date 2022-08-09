@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { stringify } from 'qs'
-import axios from 'axios'
+import * as utils from 'utils'
 
 export default async function login(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -8,8 +8,8 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       const username = req.body.username
       const password = req.body.password
 
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/security/oauth/token`,
+      const { data } = await utils.api.post(
+        utils.apiRoutes.getUserToken,
         stringify({
           username,
           password,

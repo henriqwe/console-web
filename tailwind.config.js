@@ -27,6 +27,10 @@ module.exports = {
           ativo: '#111827',
           ativoEscuro: '#101623'
         }
+      },
+      fontSize: {
+        tiny: '.7rem',
+        'super-tiny': '.55rem'
       }
     }
   },

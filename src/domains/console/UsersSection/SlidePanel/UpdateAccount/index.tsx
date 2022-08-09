@@ -5,7 +5,6 @@ import {
   useForm
 } from 'react-hook-form'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
@@ -37,47 +36,44 @@ export function UpdateAccount() {
     Username: string
   }) => {
     setLoading(true)
-    await axios
-      .put(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/account/account/username/${selectedUser?.username}/version/${selectedUser?.version}`,
-        {
-          status: formData.Active.value,
-          email: formData.Email,
-          roles: formData.Roles
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-TenantID': utils.getCookie('X-TenantID') as string,
-            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`,
-            Accept: 'application/json'
-          }
-        }
-      )
-      .then(() => {
-        reset()
-        setReload(!reload)
-        setOpenSlide(false)
-        setLoading(false)
-        utils.notification('Operation performed successfully', 'success')
-      })
-      .catch((err) => {
-        utils.notification(err.message, 'error')
-      })
+    // await axios
+    //   .put(
+    //     `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/account/account/username/${selectedUser?.username}/version/${selectedUser?.version}`,
+    //     {
+    //       status: formData.Active.value,
+    //       email: formData.Email,
+    //       roles: formData.Roles
+    //     },
+    //     {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         'X-TenantID': utils.getCookie('X-TenantID') as string,
+    //         Authorization: `Bearer ${utils.getCookie('admin_access_token')}`,
+    //         Accept: 'application/json'
+    //       }
+    //     }
+    //   )
+    //   .then(() => {
+    //     reset()
+    //     setReload(!reload)
+    //     setOpenSlide(false)
+    //     setLoading(false)
+    //     utils.notification('Operation performed successfully', 'success')
+    //   })
+    //   .catch((err) => {
+    //     utils.notification(err.message, 'error')
+    //   })
   }
 
   async function loadData() {
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/role`,
-        {
-          headers: {
-            'X-TenantID': utils.getCookie('X-TenantID') as string,
-            Accept: 'application/json',
-            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
-          }
+      const { data } = await utils.api.get(utils.apiRoutes.roles, {
+        headers: {
+          'X-TenantID': utils.getCookie('X-TenantID') as string,
+          Accept: 'application/json',
+          Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
         }
-      )
+      })
       setRoles(data)
     } catch (err: any) {
       console.log(err)

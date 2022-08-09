@@ -1,4 +1,3 @@
-import axios from 'axios'
 import * as utils from 'utils'
 import * as common from 'common'
 import * as types from 'domains/console/types'
@@ -12,7 +11,7 @@ import { useRouter } from 'next/router'
 type FormData = {
   comment?: string
   isIndex?: boolean
-  isNullable?: boolean
+  nullable?: boolean
   isUnique?: boolean
   name?: string
   length?: number
@@ -28,7 +27,7 @@ export function FieldDetail({
   data,
   setShowDetails
 }: {
-  data: types.TableData
+  data: types.EntityData
   setShowDetails: Dispatch<SetStateAction<boolean>>
 }) {
   const router = useRouter()
@@ -41,8 +40,8 @@ export function FieldDetail({
     Index: true,
     Comment: true
   })
-  const { fieldSchema, selectedTable, setReload, reload } =
-    consoleData.useData()
+  const { fieldSchema, selectedEntity, setReload, reload } =
+    consoleData.useSchemaManager()
 
   const {
     watch,
@@ -51,34 +50,48 @@ export function FieldDetail({
   } = useForm({ resolver: yupResolver(fieldSchema) })
 
   async function Save(formData: FormData) {
-    await axios.put(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
+    try {
+      await utils.api.put(
+        `${utils.apiRoutes.attribute({
+          entityName: selectedEntity as string,
+          projectName: router.query.name as string
+        })}/${data.name}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
         }
-      }
-    )
-    setReload(!reload)
-    utils.notification('attribute updated successfully', 'success')
-    setShowDetails(false)
+      )
+      setReload(!reload)
+      utils.notification('attribute updated successfully', 'success')
+      setShowDetails(false)
+    } catch (err) {
+      utils.showError(err)
+    }
   }
 
   async function Remove() {
-    await axios.delete(
-      `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}/attribute/${data.name}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
+    try {
+      await utils.api.delete(
+        `${utils.apiRoutes.attribute({
+          projectName: router.query.name as string,
+          entityName: selectedEntity as string
+        })}/${data.name}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
         }
-      }
-    )
-    setReload(!reload)
-    utils.notification('attribute updated successfully', 'success')
-    setShowDetails(false)
+      )
+      setReload(!reload)
+      utils.notification('attribute updated successfully', 'success')
+      setShowDetails(false)
+    } catch (err) {
+      utils.showError(err)
+    }
   }
 
   return (
@@ -176,7 +189,7 @@ export function FieldDetail({
         </FormField>
         <FormField
           title="Nullable"
-          handleSubmit={() => Save({ isNullable: watch('Nullable').value })}
+          handleSubmit={() => Save({ nullable: watch('Nullable').value })}
           setActiveFields={setActiveFields}
         >
           <Controller

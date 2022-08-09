@@ -1,6 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
 import { useState } from 'react'
-import axios from 'axios'
 import * as consoleData from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
@@ -9,11 +8,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { CheckIcon } from '@heroicons/react/outline'
 
-export function UpdateTableName() {
+export function UpdateEntityName() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const { setOpenSlide, setReload, reload, selectedTable, setSelectedTable } =
-    consoleData.useData()
+  const { setOpenSlide, setReload, reload, selectedEntity, setSelectedEntity } =
+    consoleData.useSchemaManager()
 
   const yupSchema = yup.object().shape({ Name: yup.string().required() })
 
@@ -27,10 +26,13 @@ export function UpdateTableName() {
   const onSubmit = async (formData: any) => {
     try {
       setLoading(true)
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
+      await utils.api.put(
+        `${utils.apiRoutes.entity(
+          router.query.name as string
+        )}/${selectedEntity}`,
         {
-          name: formData.Name
+          name: formData.Name,
+          _conf: {}
         },
         {
           headers: {
@@ -41,13 +43,13 @@ export function UpdateTableName() {
       )
 
       reset()
-      setSelectedTable(formData.Name)
+      setSelectedEntity(formData.Name)
       setReload(!reload)
       setOpenSlide(false)
       setLoading(false)
       utils.notification('Operation performed successfully', 'success')
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
@@ -62,7 +64,7 @@ export function UpdateTableName() {
       <div className="flex flex-col w-full gap-2 mb-2">
         <Controller
           name="Name"
-          defaultValue={selectedTable}
+          defaultValue={selectedEntity}
           control={control}
           render={({ field: { onChange, value } }) => (
             <common.Input

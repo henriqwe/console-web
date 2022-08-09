@@ -1,7 +1,6 @@
 import * as utils from 'utils'
 import * as common from 'common'
 import * as consoleData from 'domains/console'
-import axios from 'axios'
 
 export function RowActions({ item }: { item: any }) {
   const { setReload, reload, setOpenSlide, setSlideType, setSelectedUser } =
@@ -21,9 +20,12 @@ export function RowActions({ item }: { item: any }) {
       title: 'Delete',
       handler: async () => {
         event?.preventDefault()
-        await axios
+        await utils.api
           .delete(
-            `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/caccount/account/username/${item.username}/version/${item.version}`,
+            utils.apiRoutes.deleteUserAccount({
+              username: item.username,
+              version: item.version
+            }),
             {
               headers: {
                 Authorization: `Bearer ${utils.getCookie(

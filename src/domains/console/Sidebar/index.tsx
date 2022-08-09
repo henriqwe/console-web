@@ -1,66 +1,41 @@
 import { useEffect } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
-import { DatabaseIcon } from '@heroicons/react/outline'
-import { useRouter } from 'next/router'
-import { routes } from 'domains/routes'
+type accordionsDatatype = {
+  id: number
+  title: 'Data Manager' | 'Schema Manager' | 'USERS'
+  content: JSX.Element
+  defaultOpen: boolean
+  action: () => void
+}[]
 
 export function SideBar() {
-  const router = useRouter()
-  const { selectedTab, setSelectedTab } = consoleSection.useSidebar()
-  const { setCurrentTab, currentTab } = consoleSection.useData()
+  const { selectedTab } = consoleSection.useSidebar()
+  const { setCurrentTab } = consoleSection.useSchemaManager()
 
   useEffect(() => {
-    setCurrentTab(selectedTab.name as 'API' | 'DATA')
+    setCurrentTab(selectedTab.name as 'Data Manager' | 'Schema Manager')
   }, [selectedTab])
 
+  const accordionsData: accordionsDatatype = [
+    {
+      id: 1,
+      title: 'Schema Manager',
+      content: <consoleSection.SchemaManagerTab />,
+      defaultOpen: true,
+      action: () => setCurrentTab('Schema Manager')
+    },
+    {
+      id: 2,
+      title: 'Data Manager',
+      content: <consoleSection.DataManagerTab />,
+      defaultOpen: false,
+      action: () => setCurrentTab('Data Manager')
+    }
+  ]
   return (
-    <div className="text-gray-600 rounded-lg w-[25%] h-full flex flex-col">
-      <div className="flex items-center w-full gap-2 my-6 bg-theme-primary">
-        <img
-          src="/assets/images/logoTextDark.png"
-          alt="Logo"
-          className="w-auto h-6"
-        />
-        <div
-          className="flex text-gray-600 cursor-pointer hover:text-blue-500"
-          onClick={() => {
-            router.push(routes.dashboard)
-          }}
-        >
-          <common.icons.ReturnIcon className="w-5 h-5" />
-        </div>
-      </div>
-      <div className="" data-tour="step-3">
-        <div className="flex items-center justify-between w-full rounded-t-lg bg-theme-primary">
-          <common.Tabs
-            tabs={[
-              {
-                name: 'DATA',
-                icon: DatabaseIcon
-              },
-              {
-                name: 'API',
-                icon: common.icons.ConsoleIcon
-              }
-            ]}
-            selectedTab={
-              currentTab !== 'USERS' ? selectedTab : { name: 'USERS' }
-            }
-            setSelectedTab={setSelectedTab}
-          />
-        </div>
-      </div>
-
-      {currentTab === 'API' ? (
-        <consoleSection.ApiTab />
-      ) : currentTab === 'DATA' ? (
-        <consoleSection.DataTab />
-      ) : (
-        <div className="flex flex-col h-full px-6 pt-2 overflow-y-auto bg-gray-100 rounded-b-lg">
-          <p>Select a tab to see data or api tab</p>
-        </div>
-      )}
+    <div className="text-gray-600 border-r border-white dark:border-gray-700/75   w-[20%] h-full flex flex-col bg-theme-primary dark:bg-gray-900">
+      <common.AccordionGroup accordionsData={accordionsData} />
     </div>
   )
 }
