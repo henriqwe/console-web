@@ -146,13 +146,7 @@ export function Editors() {
                   />
                 </button>
               </div>
-              <div className="flex items-center justify-end h-6 px-4 ">
-                {responseTime && (
-                  <div className="text-xs">
-                    Response time: {responseTime} ms
-                  </div>
-                )}
-              </div>
+              <div className="flex items-center justify-end h-6 px-4 "></div>
             </div>
           </div>
           <div
