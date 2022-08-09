@@ -64,8 +64,9 @@ export function Editors() {
   return (
     <div className="flex flex-col w-full h-full" data-tour="step-4">
       <common.ContentSection
+        noMargin
         title={
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-between w-full pb-3">
             <p className="text-sm text-gray-900 dark:text-text-primary">
               YCodi Console
             </p>
@@ -139,7 +140,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-4' : 'col-span-6'
             } h-full rounded-bl-lg flex`}
           >
-            <div className="flex relative flex-col w-full h-full overflow-x-auto rounded-bl-lg">
+            <div className="relative flex flex-col w-full h-full overflow-x-auto rounded-bl-lg">
               <CodeMirror
                 value={consoleValue}
                 className="flex w-full h-full max-h-screen"
@@ -160,7 +161,7 @@ export function Editors() {
                   type="button"
                   title="Format"
                   onClick={handleFormat}
-                  className="hover:bg-gray-200/50 rounded-full cursor-pointer w-7 h-7 flex items-center justify-center"
+                  className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7"
                 >
                   <Icon
                     icon="bxs:magic-wand"
@@ -176,7 +177,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-8' : 'col-span-6'
             }  h-full flex flex-col`}
           >
-            <div className="flex w-full h-full overflow-x-auto border-l border-gray-200 dark:border-gray-700 rounded-br-lg">
+            <div className="flex w-full h-full overflow-x-auto border-l border-gray-200 rounded-br-lg dark:border-gray-700">
               {consoleResponseLoading ? (
                 <div className="flex items-center justify-center w-full h-full">
                   <div className="flex items-center gap-2">
