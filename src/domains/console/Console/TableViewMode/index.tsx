@@ -10,6 +10,8 @@ type tableColumnType = {
   handler?: (key: any) => void
 }
 
+const keysToExcludeInFilter = ['_role', '_user']
+
 export function TableViewMode() {
   const { consoleResponse } = consoleEditor.useConsoleEditor()
   const [tableColumns, setTableColumns] = useState<tableColumnType[]>([])
@@ -25,31 +27,26 @@ export function TableViewMode() {
         : [consoleResponse]
       const columns: tableColumnType[] = []
       Object?.keys(value[0]).map((key) => {
-        if (
-          key !== '_classDef' &&
-          key !== 'role' &&
-          key !== 'classUID' &&
-          key !== 'user'
-        ) {
+        if (!keysToExcludeInFilter.includes(key)) {
           let data: tableColumnType = {
             name: key,
-            displayName: [key][0]
+            displayName: key
           }
           data.handler = (key) => key ?? 'null'
 
-          if (key === 'createdat' || key === 'updatedat') {
-            data.handler = (key) =>
-              key ? utils.ptBRtimeStamp(new Date(key)) : 'null'
+          if (key === '_createdat' || key === '_updatedat') {
+            data.handler = (value) =>
+              value ? utils.ptBRtimeStamp(new Date(Number(value))) : 'null'
           }
           columns.push(data)
         }
       })
       const columnsSorted = columns
         .sort((a, b) => {
-          if (a.name === 'id') {
+          if (a.name === '_id') {
             return 1
           }
-          if (a.name === 'version') {
+          if (a.name === '_version') {
             return -1
           }
           if (a.name > b.name) {
@@ -61,17 +58,17 @@ export function TableViewMode() {
           return 0
         })
         .sort((a, b) => {
-          if (a.name === 'updatedat') {
+          if (a.name === '_updatedat') {
             return -1
           }
-          if (a.name === 'createdat') {
+          if (a.name === '_createdat') {
             return -1
           }
 
-          if (a.name === 'id') {
+          if (a.name === '_id') {
             return -1
           }
-          if (a.name === 'version') {
+          if (a.name === '_version') {
             return 1
           }
           if (a.name > b.name) {
@@ -84,6 +81,7 @@ export function TableViewMode() {
       utils.showError(err)
     }
   }
+
   useEffect(() => {
     handleTableColumns()
   }, [consoleResponse])
