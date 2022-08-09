@@ -17,7 +17,7 @@ export const WhiteOutline = ({
       buttonColor="bg-white border-2 border-gray-300"
       hoverButtonColor="hover:bg-gray-50"
       disableButtonColor="disabled:bg-gray-200"
-      textColor="text-gray-800"
+      textColor="text-gray-800 dark:text-gray-800"
       iconPosition={iconPosition}
       icon={icon}
       {...props}

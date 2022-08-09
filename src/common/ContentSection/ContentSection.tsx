@@ -14,13 +14,13 @@ export function ContentSection({
   return (
     <div className="flex w-full h-full flex-col">
       <div
-        className={`flex items-center justify-between w-full px-4 h-12 rounded-t-lg dark:text-gray-200 ${
-          variant === 'normal' ? 'bg-gray-200 dark:bg-gray-800' : ''
+        className={`flex items-center justify-between w-full px-4 h-12 rounded-t-lg dark:text-text-primary ${
+          variant === 'normal' ? 'bg-gray-200 dark:bg-menu-primary' : ''
         }`}
       >
         {title}
       </div>
-      {children}
+      <div className="dark:text-text-primary p-4">{children}</div>
     </div>
   )
 }
