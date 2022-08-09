@@ -69,7 +69,29 @@ export function ModifyTab({ loading }: ModifyTabProps) {
         loading ? 'items-center justify-center' : 'items-start'
       } rounded-b-md bg-white dark:bg-gray-800 p-6 gap-2`}
     >
-      <h3 className="text-lg">Columns:</h3>
+      <div className="flex flex-row-reverse justify-between w-full gap-4 ">
+        <common.Buttons.Clean
+          type="button"
+          loading={submitLoading}
+          disabled={submitLoading}
+          onClick={() => setOpenModal(true)}
+          icon={<TrashIcon className="w-4 h-4" />}
+        >
+          Remove entity
+        </common.Buttons.Clean>
+        {!openForm && (
+          <common.Buttons.Clean
+            type="button"
+            loading={false}
+            disabled={false}
+            onClick={() => setOpenForm(true)}
+            icon={<PlusIcon className="w-3 h-3" />}
+          >
+            Add attribute
+          </common.Buttons.Clean>
+        )}
+      </div>
+      <common.Separator />
       {entityData
         ?.filter((data) => {
           const entities = Object.keys(schemaTables!)
@@ -90,30 +112,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           selectedEntity={selectedEntity}
         />
       )}
-      <common.Separator />
-      <div className="flex justify-between w-full gap-4 ">
-        <common.Buttons.Clean
-          type="button"
-          loading={submitLoading}
-          disabled={submitLoading}
-          onClick={() => setOpenModal(true)}
-          icon={<TrashIcon className="w-4 h-4" />}
-        >
-          Remove entity
-        </common.Buttons.Clean>
 
-        {!openForm && (
-          <common.Buttons.Clean
-            type="button"
-            loading={false}
-            disabled={false}
-            onClick={() => setOpenForm(true)}
-            icon={<PlusIcon className="w-3 h-3" />}
-          >
-            Add attribute
-          </common.Buttons.Clean>
-        )}
-      </div>
       <common.Modal
         open={openModal}
         setOpen={setOpenModal}

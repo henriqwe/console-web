@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
 type ContentSectionProps = {
-  title: ReactNode
+  title?: ReactNode
   children?: ReactNode
   variant?: 'normal' | 'WithoutTitleBackgroundColor'
 }
@@ -19,8 +19,8 @@ export function ContentSection({
         }`}
       >
         {title}
-      </div>
-      <div className="dark:text-text-primary h-full overflow-y-auto">
+      </div>}
+      <div className="h-full overflow-y-auto dark:text-text-primary">
         {children}
       </div>
     </div>

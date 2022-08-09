@@ -167,7 +167,7 @@ export function Editors() {
                   type="button"
                   title="Format"
                   onClick={handleFormat}
-                  className="hover:bg-gray-200/50 rounded-full cursor-pointer w-7 h-7 flex items-center justify-center"
+                  className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7"
                 >
                   <Icon
                     icon="bxs:magic-wand"

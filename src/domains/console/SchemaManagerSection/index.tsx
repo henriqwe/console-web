@@ -86,40 +86,30 @@ export function SchemaManagerSection() {
 
   return (
     <div data-tour="step-1" className="w-full h-full p-4">
-      <common.Card className="flex flex-col h-full gap-y-3">
-        <div className="flex w-full px-4">
-          <common.Breadcrumb pages={breadcrumbPages} />
+      <common.Card className="flex flex-col h-full">
+        <div className="flex justify-between w-full">
+          <div className="flex items-center">
+            <common.Breadcrumb pages={breadcrumbPages} />
+            <PencilIcon
+              className="w-3 h-3 text-gray-500 cursor-pointer"
+              onClick={() => {
+                setOpenSlide(true)
+                setSlideType('UPDATE ENTITY')
+              }}
+            />
+          </div>
+
+          <div className="w-1/3">
+            <common.Tabs
+              selectedTab={selectedEntityTab}
+              setSelectedTab={setSelectedEntityTab}
+              tabs={[{ name: 'Attributes' }, { name: 'Associations' }]}
+            />
+          </div>
         </div>
         <consoleSection.SlidePanel />
         <div className="bg-white rounded-md dark:bg-gray-800">
-          <common.ContentSection
-            variant="WithoutTitleBackgroundColor"
-            title={
-              <div className="flex items-center w-1/2 gap-2">
-                <p className="text-base font-semibold text-gray-900 dark:text-gray-200">
-                  {selectedEntity ? selectedEntity : 'Entities'}
-                </p>
-                {selectedEntity && (
-                  <>
-                    <div title="Edit entity name">
-                      <PencilIcon
-                        className="w-3 h-3 cursor-pointer"
-                        onClick={() => {
-                          setOpenSlide(true)
-                          setSlideType('UPDATE ENTITY')
-                        }}
-                      />
-                    </div>
-                    <common.Tabs
-                      selectedTab={selectedEntityTab}
-                      setSelectedTab={setSelectedEntityTab}
-                      tabs={[{ name: 'Attributes' }, { name: 'Associations' }]}
-                    />
-                  </>
-                )}
-              </div>
-            }
-          >
+          <common.ContentSection variant="WithoutTitleBackgroundColor">
             {selectedEntity ? (
               selectedEntityTab.name === 'Attributes' ? (
                 <consoleSection.ModifyTab loading={loading} />
