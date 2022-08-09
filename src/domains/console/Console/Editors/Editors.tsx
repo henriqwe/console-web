@@ -63,10 +63,17 @@ export function Editors() {
 
   return (
     <div className="flex flex-col w-full h-full" data-tour="step-4">
+      <common.Breadcrumb
+        pages={[
+          { name: 'Data manager', current: false },
+          { name: '', current: false }
+        ]}
+      />
       <common.ContentSection
+        variant="WithoutTitleBackgroundColor"
         title={
           <div className="flex items-center justify-between w-full">
-            <p className="text-sm text-gray-900 dark:text-text-primary">
+            <p className="text-sm text-gray-900 dark:text-text-primary ">
               YCodi Console
             </p>
             <p className="text-sm text-gray-900 dark:text-text-primary">
@@ -78,33 +85,33 @@ export function Editors() {
 
             <div className="flex items-center justify-end gap-4">
               {consoleValueLastOperation && (
-                <common.Buttons.Clean
+                <common.Buttons.White
                   type="button"
                   onClick={() => {
                     setSlideState({ open: true, type: 'CodeExporterView' })
                   }}
                 >
                   Code exporter
-                </common.Buttons.Clean>
+                </common.Buttons.White>
               )}
               {showTableViewMode ? (
-                <common.Buttons.Clean
+                <common.Buttons.White
                   type="button"
                   onClick={() => {
                     setShowTableViewMode(false)
                   }}
                 >
                   JSON mode
-                </common.Buttons.Clean>
+                </common.Buttons.White>
               ) : (
-                <common.Buttons.Clean
+                <common.Buttons.White
                   type="button"
                   onClick={() => {
                     setShowTableViewMode(true)
                   }}
                 >
                   Table mode
-                </common.Buttons.Clean>
+                </common.Buttons.White>
               )}
             </div>
           </div>
@@ -137,9 +144,9 @@ export function Editors() {
           <div
             className={`${
               showTableViewMode ? 'col-span-4' : 'col-span-6'
-            } h-full rounded-bl-lg flex`}
+            } h-full rounded-lg flex`}
           >
-            <div className="flex relative flex-col w-full h-full overflow-x-auto rounded-bl-lg">
+            <div className="flex relative flex-col w-full h-full overflow-x-auto rounded-l-lg">
               <CodeMirror
                 value={consoleValue}
                 className="flex w-full h-full max-h-screen"
@@ -176,7 +183,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-8' : 'col-span-6'
             }  h-full flex flex-col`}
           >
-            <div className="flex w-full h-full overflow-x-auto border-l border-gray-200 dark:border-gray-700 rounded-br-lg">
+            <div className="flex w-full h-full overflow-x-auto border-l border-gray-200 dark:border-gray-700 rounded-r-lg">
               {consoleResponseLoading ? (
                 <div className="flex items-center justify-center w-full h-full">
                   <div className="flex items-center gap-2">
