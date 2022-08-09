@@ -86,8 +86,8 @@ export function SchemaManagerSection() {
 
   return (
     <div data-tour="step-1" className="w-full h-full p-4">
-      <common.Card className="flex flex-col h-full gap-y-3">
-        <div className="flex justify-between w-full px-4">
+      <common.Card className="flex flex-col h-full">
+        <div className="flex justify-between w-full">
           <div className="flex items-center">
             <common.Breadcrumb pages={breadcrumbPages} />
             <PencilIcon
