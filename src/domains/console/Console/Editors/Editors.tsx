@@ -47,19 +47,21 @@ export function Editors() {
       <common.ContentSection
         variant="WithoutTitleBackgroundColor"
         title={
-          <div className="flex items-center justify-between w-full">
+          <div className="grid grid-cols-3 items-center justify-between w-full">
             <common.Breadcrumb
               pages={[
                 { name: 'Data manager', current: false },
-                { name: '', current: false }
+                { name: 'Console', current: true }
               ]}
             />
-            <p className="text-sm text-gray-900 dark:text-text-primary">
-              Schema status:{' '}
-              <span className="font-bold">
-                {schemaStatus === 2 ? 'Running' : 'Modeling'}
-              </span>
-            </p>
+            <div className="flex w-full justify-center">
+              <p className="text-sm text-gray-900 dark:text-text-primary">
+                Schema status:{' '}
+                <span className="font-bold">
+                  {schemaStatus === 2 ? 'Running' : 'Modeling'}
+                </span>
+              </p>
+            </div>
 
             <div className="flex items-center justify-end gap-4">
               {consoleValueLastOperation && (
@@ -79,7 +81,7 @@ export function Editors() {
                     setShowTableViewMode(false)
                   }}
                 >
-                  JSON mode
+                  JSON
                 </common.Buttons.White>
               ) : (
                 <common.Buttons.White
@@ -88,7 +90,7 @@ export function Editors() {
                     setShowTableViewMode(true)
                   }}
                 >
-                  Table mode
+                  Table
                 </common.Buttons.White>
               )}
             </div>
@@ -100,7 +102,7 @@ export function Editors() {
             title="Run"
             className={`absolute items-center justify-center mt-10 ${
               showTableViewMode ? 'left-1/3' : 'left-2/4'
-            } -translate-x-1/2 -translate-y-1/2 z-10 bg-gray-200 h-14 w-14 border-4 border-white rounded-full`}
+            } -translate-x-1/2 -translate-y-1/2 z-10 bg-gray-200  h-14 w-14 border-4 border-white dark:border-gray-900 rounded-full`}
             onClick={() => {
               if (schemaStatus !== 2) {
                 utils.notification(
@@ -114,17 +116,20 @@ export function Editors() {
             disabled={consoleResponseLoading}
           >
             <div className="flex items-center justify-center">
-              <Icon icon="fa-solid:play" className={`w-4 h-4 text-gray-700`} />
+              <Icon
+                icon="fa-solid:play"
+                className={`w-4 h-4 text-gray-700 dark:text-gray-800`}
+              />
             </div>
           </button>
         </div>
-        <div className="grid w-full h-full grid-cols-12 border border-gray-200 dark:border-gray-700">
+        <div className="grid w-full h-full grid-cols-12 border border-gray-200 dark:border-gray-700 ">
           <div
             className={`${
               showTableViewMode ? 'col-span-4' : 'col-span-6'
             } h-full rounded-lg flex`}
           >
-            <div className="flex relative flex-col w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  bg-red-500 overflow-x-auto rounded-l-lg">
+            <div className="flex relative flex-col w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]   overflow-hidden rounded-l-lg">
               <CodeMirror
                 value={consoleValue}
                 className="flex w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
@@ -161,7 +166,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-8' : 'col-span-6'
             }  h-full flex flex-col`}
           >
-            <div className="flex w-full h-full overflow-x-auto border-l border-gray-200 dark:border-gray-700 rounded-r-lg">
+            <div className="flex w-full h-full overflow-hidden border-l border-gray-200 dark:border-gray-700 rounded-r-lg">
               {consoleResponseLoading ? (
                 <div className="flex items-center justify-center w-full h-full">
                   <div className="flex items-center gap-2">
@@ -172,7 +177,7 @@ export function Editors() {
               ) : showTableViewMode ? (
                 <consoleSection.TableViewMode />
               ) : (
-                <div className="flex flex-col w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
+                <div className="flex flex-col w-full  h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
                   <CodeMirror
                     value={consoleResponseFormated}
                     className="flex w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]"
@@ -180,10 +185,13 @@ export function Editors() {
                     theme={isDark ? dracula : 'light'}
                     editable={false}
                     extensions={[javascript({ jsx: true })]}
+                    basicSetup={{
+                      lineNumbers: false
+                    }}
                   />
-                  <div className="flex items-center justify-end h-6 px-4 ">
+                  <div className="flex items-center justify-end px-4">
                     {responseTime && (
-                      <div className="text-xs">
+                      <div className="text-xs  h-8 flex items-center">
                         Response time: {responseTime} ms
                       </div>
                     )}
