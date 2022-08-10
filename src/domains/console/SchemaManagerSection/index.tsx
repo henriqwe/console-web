@@ -90,16 +90,17 @@ export function SchemaManagerSection() {
         <div className="flex justify-between w-full">
           <div className="flex items-center">
             <common.Breadcrumb pages={breadcrumbPages} />
-            <PencilIcon
-              className="w-3 h-3 text-gray-500 cursor-pointer"
-              onClick={() => {
-                setOpenSlide(true)
-                setSlideType('UPDATE ENTITY')
-              }}
-            />
+            {selectedEntity && (
+              <PencilIcon
+                className="w-3 h-3 text-gray-500 cursor-pointer"
+                onClick={() => {
+                  setOpenSlide(true)
+                  setSlideType('UPDATE ENTITY')
+                }}
+              />
+            )}
           </div>
-
-          <div className="w-1/3">
+          <div className={`${selectedEntity ? '' : 'invisible '} w-1/3 `}>
             <common.Tabs
               selectedTab={selectedEntityTab}
               setSelectedTab={setSelectedEntityTab}
