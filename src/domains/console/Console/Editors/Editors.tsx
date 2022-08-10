@@ -9,23 +9,12 @@ import * as consoleSection from 'domains/console'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { Slide } from '../Slide'
 import { EditorView } from '@codemirror/view'
-import usePrettier from 'domains/hooks/usePrettier'
+import usePrettier from 'hooks/usePrettier'
 import parserBabel from 'prettier/parser-babel'
-import { useEffect, useState } from 'react'
-
-function isDarkTheme() {
-  try {
-    const theme = window.localStorage.getItem('theme')
-
-    return theme === 'dark'
-  } catch (error) {
-    return false
-  }
-}
+import * as ThemeContext from 'contexts/ThemeContext'
 
 export function Editors() {
-  const [isDark, setIsDark] = useState(isDarkTheme())
-
+  const { isDark } = ThemeContext.useTheme()
   const {
     setShowTableViewMode,
     showTableViewMode,
@@ -51,31 +40,20 @@ export function Editors() {
     plugins: [parserBabel]
   })
 
-  useEffect(() => {
-    setIsDark(isDarkTheme())
-  }, [])
-
   if (!isReady) return null
-
-  window.onstorage = function () {
-    setIsDark(isDarkTheme())
-  }
 
   return (
     <div className="flex flex-col w-full h-full" data-tour="step-4">
-      <common.Breadcrumb
-        pages={[
-          { name: 'Data manager', current: false },
-          { name: '', current: false }
-        ]}
-      />
       <common.ContentSection
         variant="WithoutTitleBackgroundColor"
         title={
           <div className="flex items-center justify-between w-full">
-            <p className="text-sm text-gray-900 dark:text-text-primary ">
-              YCodi Console
-            </p>
+            <common.Breadcrumb
+              pages={[
+                { name: 'Data manager', current: false },
+                { name: '', current: false }
+              ]}
+            />
             <p className="text-sm text-gray-900 dark:text-text-primary">
               Schema status:{' '}
               <span className="font-bold">

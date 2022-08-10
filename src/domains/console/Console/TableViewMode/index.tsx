@@ -10,7 +10,7 @@ type tableColumnType = {
   handler?: (key: any) => void
 }
 
-const keysToExcludeInFilter = ['_role', '_user']
+const keysToExcludeInFilter = ['_role', '_user', '_version']
 
 export function TableViewMode() {
   const { consoleResponse } = consoleEditor.useConsoleEditor()
@@ -46,9 +46,7 @@ export function TableViewMode() {
           if (a.name === '_id') {
             return 1
           }
-          if (a.name === '_version') {
-            return -1
-          }
+
           if (a.name > b.name) {
             return -1
           }
@@ -68,9 +66,7 @@ export function TableViewMode() {
           if (a.name === '_id') {
             return -1
           }
-          if (a.name === '_version') {
-            return 1
-          }
+
           if (a.name > b.name) {
             return -1
           }

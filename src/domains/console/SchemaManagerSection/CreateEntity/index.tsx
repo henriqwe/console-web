@@ -8,7 +8,7 @@ import { PlusIcon, CheckIcon } from '@heroicons/react/outline'
 
 export function CreateEntity() {
   const router = useRouter()
-  const { setShowCreateEntitySection, setReload, reload } =
+  const { setShowCreateEntitySection, setReload, reload, breadcrumbPages } =
     consoleSection.useSchemaManager()
   const {
     control,
@@ -142,14 +142,10 @@ export function CreateEntity() {
 
   return (
     <common.Card className="flex flex-col w-full h-full">
-      <common.ContentSection
-        variant="WithoutTitleBackgroundColor"
-        title={
-          <p className="text-base font-semibold text-gray-900">
-            Create a new entity
-          </p>
-        }
-      >
+      <div className="flex w-full h-[3.3rem]">
+        <common.Breadcrumb pages={breadcrumbPages} />
+      </div>
+      <common.ContentSection variant="WithoutTitleBackgroundColor">
         <div className={`flex flex-col h-auto p-6  bg-white rounded-lg`}>
           <Controller
             name="Name"

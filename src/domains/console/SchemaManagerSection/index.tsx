@@ -75,17 +75,14 @@ export function SchemaManagerSection() {
 
   if (showCreateEntitySection) {
     return (
-      <div className="w-full h-full p-4">
-        <div className="flex w-full px-4">
-          <common.Breadcrumb pages={breadcrumbPages} />
-        </div>
+      <div className="w-full h-full py-4 px-8 ">
         <consoleSection.CreateEntity />
       </div>
     )
   }
 
   return (
-    <div data-tour="step-1" className="w-full h-full p-4">
+    <div data-tour="step-1" className="w-full h-full py-4 px-8 ">
       <common.Card className="flex flex-col h-full">
         <div className="flex justify-between w-full">
           <div className="flex items-center">

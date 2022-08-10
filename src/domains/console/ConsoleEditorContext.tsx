@@ -247,7 +247,7 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
           title: 'Spec',
           color: 'blue',
           content: (
-            <div className="p-4 leading-5 rounded-lg bg-gray-50">
+            <div className="p-4 leading-5 rounded-lg bg-gray-50 dark:bg-gray-900">
               {schemaTabData}
             </div>
           )
