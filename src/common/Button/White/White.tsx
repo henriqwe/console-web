@@ -17,7 +17,7 @@ export const White = ({
       buttonColor="bg-white"
       hoverButtonColor="hover:bg-gray-50"
       disableButtonColor="disabled:bg-gray-200"
-      textColor="text-gray-800"
+      textColor="text-gray-800 dark:text-gray-800"
       iconPosition={iconPosition}
       icon={icon}
       {...props}

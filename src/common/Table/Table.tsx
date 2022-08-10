@@ -28,12 +28,12 @@ export function Table({
               }`}
             >
               <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
-                <thead className="bg-gray-50 dark:bg-gray-800">
+                <thead className="bg-gray-50 dark:bg-menu-primary">
                   <tr>
                     {tableColumns.map((column) => (
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 dark:text-gray-200 sm:pl-6"
+                        className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 dark:text-text-primary sm:pl-6"
                         key={column.name}
                       >
                         {column.displayName}
@@ -42,28 +42,28 @@ export function Table({
                     {actions && (
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 dark:text-gray-200 sm:pl-6"
+                        className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 dark:text-text-primary sm:pl-6"
                       >
                         Actions
                       </th>
                     )}
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-gray-900">
+                <tbody className="bg-white dark:bg-menu-secondary">
                   {values ? (
                     values.map((value, index) => (
                       <tr
                         key={index}
-                        className={`dark:text-gray-300
+                        className={`dark:text-text-secondary
                           ${
                             index % 2 === 0
                               ? undefined
-                              : 'bg-gray-50 dark:bg-gray-800'
+                              : 'bg-gray-50 dark:bg-menu-primary'
                           }`}
                       >
                         {tableColumns.map((column, index) => (
                           <td
-                            className="py-4 pl-4 pr-3 text-xs font-medium text-gray-900 dark:text-gray-200 whitespace-nowrap sm:pl-6"
+                            className="py-4 pl-4 pr-3 text-xs font-medium text-gray-900 dark:text-text-primary whitespace-nowrap sm:pl-6"
                             key={value[column.name] || index}
                           >
                             {column.handler
@@ -75,7 +75,7 @@ export function Table({
                       </tr>
                     ))
                   ) : (
-                    <tr className="bg-white dark:bg-gray-800 intro-x ">
+                    <tr className="bg-white dark:bg-menuItem-primary intro-x ">
                       <td
                         colSpan={
                           actions

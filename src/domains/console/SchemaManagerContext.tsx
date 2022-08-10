@@ -75,7 +75,7 @@ const breadcrumbPagesData = {
   ],
   viewEntity: (entityName: string) => [
     { name: 'Schema manager', current: false },
-    { name: entityName, current: false }
+    { name: entityName, current: true }
   ],
   viewEntityRelationship: (entityName: string) => [
     { name: 'Schema manager', current: false },
@@ -158,7 +158,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         breadcrumbPagesData,
         updateAssociationSchema,
         schemaStatus,
-        setSchemaStatus,
+        setSchemaStatus
       }}
     >
       {children}

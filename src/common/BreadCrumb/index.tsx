@@ -9,15 +9,15 @@ type BreadcrumbProps = {
 export function Breadcrumb({ pages, showNumber = false }: BreadcrumbProps) {
   return (
     <nav className="flex" aria-label="Breadcrumb">
-      <ol role="list" className="flex items-center space-x-4">
+      <ol role="list" className="flex items-center space-x-2">
         {pages.map((page, index) => (
           <li key={page.name}>
             <div className="flex items-between">
               <p
-                className={`flex items-center gap-2 mr-4 text-sm font-medium text-center ${
+                className={`flex items-center gap-2 mr-2 text-sm font-medium text-center ${
                   page.current
-                    ? 'dark:text-white'
-                    : 'text-gray-500 dark:text-gray-400'
+                    ? 'dark:text-text-primary'
+                    : 'text-gray-500 dark:text-text-tertiary'
                 }`}
                 aria-current={page.current ? 'page' : undefined}
               >

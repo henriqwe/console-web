@@ -3,11 +3,11 @@ import React from 'react'
 import { SunIcon, MoonIcon } from '@heroicons/react/outline'
 
 type ToggleThemeProps = {
+  className?: string
   changeColor?: boolean
 }
 
 function setTheme(theme: string) {
-  console.log('setTheme', theme)
   const doc = document.documentElement
 
   doc.classList.forEach((className) => {
@@ -17,9 +17,13 @@ function setTheme(theme: string) {
   doc.classList.add(theme)
 
   window.localStorage.setItem('theme', theme)
+  window.dispatchEvent(new Event('storage'))
 }
 
-export function ToggleTheme({ changeColor = true }: ToggleThemeProps) {
+export function ToggleTheme({
+  className,
+  changeColor = true
+}: ToggleThemeProps) {
   const [enabled, setEnabled] = useState(false)
 
   function changeTheme(theme?: string) {
@@ -41,10 +45,12 @@ export function ToggleTheme({ changeColor = true }: ToggleThemeProps) {
   return (
     <div
       onClick={() => changeTheme()}
-      className={`${
+      className={`
+      ${className}
+      ${
         changeColor
-          ? 'dark:hover:bg-gray-800/50 hover:bg-gray-200/50 dark:text-white'
-          : 'text-white hover:bg-gray-700/40'
+          ? 'dark:hover:bg-menuItem-secondary/50 hover:bg-gray-200/50 dark:text-text-primary'
+          : 'text-white hover:bg-menuItem-secondary/40'
       } rounded-full p-2 cursor-pointer w-10 h-10`}
     >
       {enabled ? <SunIcon /> : <MoonIcon />}

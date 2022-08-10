@@ -56,18 +56,18 @@ export function Slide({
                 className={`z-50 w-screen pointer-events-auto ${slidePanelWidth}`}
               >
                 <div
-                  className={`border-l-gray-700 border-l flex flex-col h-full py-6 overflow-y-auto bg-white dark:bg-gray-800 shadow-xl`}
+                  className={`border-gray-200 border-l dark:border-menu-secondary/30 flex flex-col h-full py-6 overflow-y-auto bg-white dark:bg-menu-primary shadow-xl`}
                 >
                   <div className="px-4 mb-4 sm:px-6">
                     <div className="flex items-start justify-between">
-                      <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                      <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-text-primary">
                         {title}
                       </Dialog.Title>
 
                       <div className="flex items-center ml-3 h-7">
                         <button
                           type="button"
-                          className="text-gray-400 dark:text-gray-300 bg-white dark:bg-gray-800 rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          className="text-gray-400 dark:text-text-tertiary bg-white dark:bg-menu-primary rounded-md hover:text-text-tertiary dark:hover:text-text-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                           onClick={() => setOpen(false)}
                           title="Close"
                         >
@@ -79,7 +79,7 @@ export function Slide({
                   </div>
                   <common.Separator />
                   <div
-                    className={`relative dark:text-gray-200 flex-1 mt-6 ${
+                    className={`relative dark:text-text-primary flex-1 mt-6 ${
                       noPadding ? '' : 'px-4 sm:px-6'
                     }`}
                   >

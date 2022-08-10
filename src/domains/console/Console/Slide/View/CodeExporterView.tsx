@@ -4,8 +4,12 @@ import { javascript } from '@codemirror/lang-javascript'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { useEffect } from 'react'
 import * as utils from 'utils'
+import * as ThemeContext from 'contexts/ThemeContext'
+import { dracula } from '@uiw/codemirror-theme-dracula'
 
 export function CodeExporterView() {
+  const { isDark } = ThemeContext.useTheme()
+
   const {
     consoleValueLastOperation,
     formaterCodeExporterValue,
@@ -22,6 +26,7 @@ export function CodeExporterView() {
         value={codeExporterValue}
         className=" text-xs rounded-md break-all"
         editable={false}
+        theme={isDark ? dracula : 'light'}
         basicSetup={{
           lineNumbers: false,
           foldGutter: false

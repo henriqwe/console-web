@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
 type ContentSectionProps = {
-  title: ReactNode
+  title?: ReactNode
   children?: ReactNode
   variant?: 'normal' | 'WithoutTitleBackgroundColor'
 }
@@ -13,14 +13,18 @@ export function ContentSection({
 }: ContentSectionProps) {
   return (
     <div className="flex w-full h-full flex-col">
-      <div
-        className={`flex items-center justify-between w-full px-4 h-12 rounded-t-lg dark:text-gray-200 ${
-          variant === 'normal' ? 'bg-gray-200 dark:bg-gray-800' : ''
-        }`}
-      >
-        {title}
+      {title && (
+        <div
+          className={`flex items-center justify-between w-full h-12 rounded-t-lg dark:text-text-primary ${
+            variant === 'normal' ? 'bg-gray-200 dark:bg-menu-primary' : ''
+          }`}
+        >
+          {title}
+        </div>
+      )}
+      <div className="h-full overflow-y-auto dark:text-text-primary">
+        {children}
       </div>
-      {children}
     </div>
   )
 }

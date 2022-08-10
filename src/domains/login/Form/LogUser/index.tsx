@@ -11,8 +11,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { routes } from 'domains/routes'
+import * as ThemeContext from 'contexts/ThemeContext'
 
 export function LogUser() {
+  const { isDark } = ThemeContext.useTheme()
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { setFormType, logUserSchema } = login.useLogin()
@@ -50,13 +52,15 @@ export function LogUser() {
 
   return (
     <form
-      className="flex flex-col items-center w-1/3 bg-white rounded-lg"
+      className="flex flex-col items-center w-1/3 bg-white dark:bg-menu-primary dark:border-gray-500 border dark:text-text-primary rounded-lg"
       onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
     >
-      <div className="flex flex-col items-center w-full px-6 pt-6 bg-white rounded-lg">
+      <div className="flex flex-col items-center w-full px-6 pt-6 rounded-lg">
         <div className="flex flex-col items-center mb-10">
           <img
-            src="/assets/images/logoTextDark.png"
+            src={`/assets/images/${
+              isDark ? 'logoTextLight' : 'logoTextDark'
+            }.png`}
             alt="Logo"
             className="w-80"
           />
@@ -111,8 +115,8 @@ export function LogUser() {
         </div>
       </div>
 
-      <div className="w-full border" />
-      <p className="py-3 text-gray-700">
+      <div className="w-full border border-menuItem-secondary/50" />
+      <p className="py-3 text-gray-700 dark:text-text-primary">
         Don&lsquo;t have an account?{' '}
         <span
           className="text-blue-500 cursor-pointer"
