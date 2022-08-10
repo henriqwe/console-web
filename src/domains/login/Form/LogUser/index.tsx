@@ -9,22 +9,13 @@ import {
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { routes } from 'domains/routes'
-
-function isDarkTheme() {
-  try {
-    const theme = window.localStorage.getItem('theme')
-
-    return theme === 'dark'
-  } catch (error) {
-    return false
-  }
-}
+import * as ThemeContext from 'contexts/ThemeContext'
 
 export function LogUser() {
+  const { isDark } = ThemeContext.useTheme()
   const [loading, setLoading] = useState(false)
-  const [isDark, setIsDark] = useState(isDarkTheme())
   const router = useRouter()
   const { setFormType, logUserSchema } = login.useLogin()
   const {
@@ -58,14 +49,6 @@ export function LogUser() {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    setIsDark(isDarkTheme())
-
-    window.onstorage = function () {
-      setIsDark(isDarkTheme())
-    }
-  }, [])
 
   return (
     <form
