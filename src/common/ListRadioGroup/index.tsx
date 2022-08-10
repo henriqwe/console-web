@@ -50,6 +50,7 @@ export function ListRadioGroup({
                 ? 'flex gap-4 justify-start my-2 items-center flex-wrap'
                 : 'space-y-2'
             }
+            role="list-group"
           >
             {options.map((opcao, indice) => (
               <RadioGroup.Option

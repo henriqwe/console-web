@@ -11,6 +11,37 @@ describe('Dropdown', () => {
     expect(dropdownChildren).toBeInTheDocument()
   })
 
+  it('should render the Dropdown actions with roundend corners', () => {
+    render(
+      <Dropdown
+        actions={[
+          {
+            title: 'firstAction',
+            onClick: () => null
+          },
+          {
+            title: 'secondAction',
+            onClick: () => null
+          },
+          {
+            title: 'lastAction',
+            onClick: () => null
+          }
+        ]}
+      >
+        Dropdown
+      </Dropdown>
+    )
+
+    const dropdownButton = screen.getByTitle('open options')
+    fireEvent.click(dropdownButton)
+
+    const firstAction = screen.getByTitle('firstAction')
+    expect(firstAction.classList.contains('rounded-t-md'))
+    const lastAction = screen.getByTitle('lastAction')
+    expect(firstAction.classList.contains('rounded-b-md'))
+  })
+
   it('should handle an action on the dropdown', () => {
     let number = 5
     const { container } = render(
@@ -37,9 +68,7 @@ describe('Dropdown', () => {
 
     expect(actionTitle).toHaveClass('text-gray-900')
 
-  
     fireEvent.click(actionTitle)
     expect(number).toBe(6)
-  
   })
 })

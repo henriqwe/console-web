@@ -10,7 +10,10 @@ export function Dropdown({ actions, children }: DropdownProps) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="flex items-center px-2 py-1 text-gray-400 rounded-md dark:text-text-secondary hover:text-gray-600 dark:hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+        <Menu.Button
+          className="flex items-center px-2 py-1 text-gray-400 rounded-md dark:text-text-secondary hover:text-gray-600 dark:hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+          title="open options"
+        >
           <span className="sr-only">Open options</span>
           {children}
         </Menu.Button>
@@ -39,6 +42,7 @@ export function Dropdown({ actions, children }: DropdownProps) {
                   }
                   block px-4 py-2 text-sm cursor-pointer`}
                   onClick={action.onClick}
+                  title={action.title}
                 >
                   {action.title}
                 </a>

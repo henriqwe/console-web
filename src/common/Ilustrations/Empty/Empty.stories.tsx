@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { Empty } from '.'
+import { Empty } from '..'
 
 export default {
   title: 'Components/Illustrations',
