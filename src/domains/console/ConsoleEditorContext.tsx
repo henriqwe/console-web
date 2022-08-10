@@ -223,7 +223,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
 const tenantAC = '${getCookie('X-TenantAC')}'
 const tenantID = '${getCookie('X-TenantID')}'
-const BODY = ${consoleValueLastOperation}
+const BODY = ${JSON.stringify(consoleValueLastOperation)}
 
 yc_persistence_service(tenantAC, tenantID, BODY)`
     setCodeExporterValue(text)

@@ -124,10 +124,10 @@ export function Editors() {
               showTableViewMode ? 'col-span-4' : 'col-span-6'
             } h-full rounded-lg flex`}
           >
-            <div className="flex relative flex-col w-full h-full overflow-x-auto rounded-l-lg">
+            <div className="flex relative flex-col w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  bg-red-500 overflow-x-auto rounded-l-lg">
               <CodeMirror
                 value={consoleValue}
-                className="flex w-full h-full max-h-screen"
+                className="flex w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
                 width="100%"
                 onChange={(value, viewUpdate) => {
                   setConsoleValue(value)
@@ -140,7 +140,7 @@ export function Editors() {
                   EditorView.lineWrapping
                 ]}
               />
-              <div className="absolute bottom-7 right-2">
+              <div className="absolute bottom-1 right-3">
                 <button
                   type="button"
                   title="Format"
@@ -172,10 +172,10 @@ export function Editors() {
               ) : showTableViewMode ? (
                 <consoleSection.TableViewMode />
               ) : (
-                <div className="flex flex-col w-full">
+                <div className="flex flex-col w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
                   <CodeMirror
                     value={consoleResponseFormated}
-                    className="flex w-full h-full"
+                    className="flex w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]"
                     width="100%"
                     theme={isDark ? dracula : 'light'}
                     editable={false}
