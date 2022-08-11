@@ -25,7 +25,7 @@ export function Accordion({
         {({ open }) => (
           <>
             <Disclosure.Button
-              className={`flex w-full items-center justify-between px-6 py-2 text-left font-semibold text-gray-700 dark:text-text-primary ${
+              className={`flex w-full items-center justify-between px-6 py-2 text-left text-gray-700 dark:text-text-primary ${
                 open
                   ? 'bg-[#FFF3D5] dark:bg-menu-secondary border-b border-white dark:border-gray-500/50'
                   : 'hover:bg-[#FFF3D5] dark:hover:bg-menu-secondary bg-gray-200 dark:bg-menu-primary'
@@ -38,7 +38,7 @@ export function Accordion({
                 }
               }}
             >
-              <span className="text-md">{title}</span>
+              <span className="text-sm font-semibold">{title}</span>
               <ChevronUpIcon
                 className={`${
                   open ? 'rotate-180 transform' : ''

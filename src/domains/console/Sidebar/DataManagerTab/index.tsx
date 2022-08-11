@@ -101,7 +101,7 @@ function Operation({
             icon="bx:chevron-right"
             className={`w-4 h-4 transition ${active && 'rotate-90'}`}
           />
-          <p className="text-sm">{schema}</p>
+          <p className="text-sm font-light">{schema}</p>
         </div>
       </div>
       {active &&
@@ -121,7 +121,7 @@ function Operation({
                   {activeEntity === `${schema}${entity}` && <CheckIcon />}
                 </div>
 
-                <p className="text-sm">{entity}</p>
+                <p className="text-sm font-extralight">{entity}</p>
               </div>
             </div>
           )
