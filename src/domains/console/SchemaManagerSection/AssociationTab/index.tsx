@@ -221,7 +221,7 @@ function AttributeForm({
 
   return (
     <form
-      className="flex flex-col w-full gap-4 px-4 py-5 bg-gray-100 border border-gray-300 rounded-lg"
+      className="flex flex-col w-full gap-4 px-4 py-5 bg-gray-100 dark:bg-menu-primary border border-gray-300 dark:border-gray-600 rounded-lg"
       onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
     >
       <div className="flex items-center justify-between gap-4">

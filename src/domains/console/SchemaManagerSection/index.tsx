@@ -106,7 +106,7 @@ export function SchemaManagerSection() {
           </div>
         </div>
         <consoleSection.SlidePanel />
-        <div className="bg-white rounded-md dark:bg-gray-800">
+        <div className="bg-white rounded-md dark:bg-menu-primary w-full">
           <common.ContentSection variant="WithoutTitleBackgroundColor">
             {selectedEntity ? (
               selectedEntityTab.name === 'Attributes' ? (

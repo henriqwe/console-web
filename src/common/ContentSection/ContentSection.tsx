@@ -22,7 +22,7 @@ export function ContentSection({
           {title}
         </div>
       )}
-      <div className="h-full overflow-y-auto dark:text-text-primary">
+      <div className="h-full overflow-x-hidden overflow-y-auto dark:text-text-primary">
         {children}
       </div>
     </div>

@@ -135,7 +135,7 @@ export function Projects() {
       <div className="z-20 flex flex-col w-4/6 gap-y-8">
         <section className="flex justify-between w-full mx-auto">
           <div className="flex">
-            <h1 className="pr-4 mr-1 text-2xl font-semibold text-gray-900 border-r dark:text-gray-100 border-r-gray-300 dark:border-r-gray-600">
+            <h1 className="pr-4 mr-1 text-2xl font-semibold text-gray-900 border-r dark:text-text-primary border-r-gray-300 dark:border-r-gray-600">
               Projects
             </h1>
             <div className="flex items-center">
@@ -148,7 +148,7 @@ export function Projects() {
                   // router.push(routes.createProject)
                 }}
               >
-                <div className="flex items-center gap-2 dark:text-gray-100">
+                <div className="flex items-center gap-2 dark:text-text-primary">
                   <p className="text-xs ">New Project</p>
                   <PlusIcon className="w-3 h-3" />
                 </div>
@@ -156,7 +156,7 @@ export function Projects() {
             </div>
           </div>
           <div className="relative flex items-center">
-            <SearchIcon className="absolute w-4 h-4 text-gray-400 dark:text-gray-200 left-2" />
+            <SearchIcon className="absolute w-4 h-4 text-gray-400 dark:text-text-primary left-2" />
             <Controller
               name="search"
               control={control}
@@ -175,17 +175,19 @@ export function Projects() {
         <section className="flex flex-col w-full gap-8 mx-auto">
           {loadingSchemas ? (
             <div className="flex flex-col items-center justify-center gap-2 mt-32">
-              <div className="w-20 h-20 dark:text-white">
+              <div className="w-20 h-20 dark:text-text-primary">
                 <common.Spinner />
               </div>
-              <p className="dark:text-gray-200">Loading projects</p>
+              <p className="dark:text-text-primary">Loading projects</p>
             </div>
           ) : (showFiltered ? filteredSchemas : schemas).length === 0 ? (
             <div className="flex flex-col mt-16 text-center gap-y-6">
               <div className="m-auto w-80">
                 <common.illustrations.Empty />
               </div>
-              <p className="text-lg dark:text-gray-200">Projects not found</p>
+              <p className="text-lg dark:text-text-primary">
+                Projects not found
+              </p>
             </div>
           ) : (
             (showFiltered ? filteredSchemas : schemas).map((schema) => (
@@ -222,17 +224,19 @@ export function Project({
     >
       <div className="grid items-center justify-between flex-1 grid-cols-4 gap-4">
         <div>
-          <p className="text-2xl dark:text-white">{schema.name}</p>
-          <p className="text-xs text-gray-600 dark:text-gray-400">Standard</p>
+          <p className="text-2xl dark:text-text-primary">{schema.name}</p>
+          <p className="text-xs text-gray-600 dark:text-text-tertiary">
+            Standard
+          </p>
         </div>
-        <div className="dark:text-white">
+        <div className="dark:text-text-primary">
           <p>Project secret: </p>
           <div className="relative flex w-full h-full">
             <input
               disabled
               value={schema.tenantAc}
               type="password"
-              className="w-40 text-xs bg-transparent dark:text-slate-400"
+              className="w-40 text-xs bg-transparent dark:text-text-tertiary"
             />
             <CopyToClipboard
               text="Copy to clipboard"
@@ -248,7 +252,7 @@ export function Project({
                   <span className="absolute right-0 bottom-5">Copied!</span>
                 )}
                 <DocumentDuplicateIcon
-                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-300"
+                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
                   onClick={() => navigator.clipboard.writeText(schema.tenantAc)}
                 />
               </div>
@@ -257,8 +261,8 @@ export function Project({
         </div>
         <div className="flex items-center justify-around flex-1 col-span-1">
           <div className="p-2">
-            <p className="text-sm dark:text-white">Traffic: </p>
-            <p className="text-xs text-gray-600 dark:text-slate-400">
+            <p className="text-sm dark:text-text-primary">Traffic: </p>
+            <p className="text-xs text-gray-600 dark:text-text-tertiary">
               50.000 requests per day
             </p>
           </div>
@@ -279,7 +283,7 @@ export function Project({
               router.push(`${routes.console}/${schema.name}`)
             }}
           >
-            <PlayIcon className="w-6 h-6 text-green-700 dark:text-green-300" />
+            <PlayIcon className="w-6 h-6 text-iconGreen" />
           </button>
 
           <button
@@ -288,7 +292,7 @@ export function Project({
               onConfigClick(schema)
             }}
           >
-            <CogIcon className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+            <CogIcon className="w-6 h-6 text-gray-600 dark:text-text-secondary" />
           </button>
           {/* <button
           className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
