@@ -63,7 +63,7 @@ export function SchemaManagerTab() {
           }}
         >
           Entities &#40; {entities.length} &#41;{' '}
-          <CheckCircleIcon className="w-4 h-4 text-green-600" />
+          <CheckCircleIcon className="w-4 h-4 text-iconGreen" />
         </div>
       </div>
       <common.Separator className="dark:border-gray-500/50" />
@@ -84,7 +84,7 @@ export function SchemaManagerTab() {
             <div key={entity}>
               <div
                 className={`flex items-center gap-2 pb-2 cursor-pointer ${
-                  selectedEntity === `${entity}` && 'text-orange-400'
+                  selectedEntity === `${entity}` && 'text-text-highlight'
                 }`}
                 onClick={() => {
                   setSelectedEntity(`${entity}`)

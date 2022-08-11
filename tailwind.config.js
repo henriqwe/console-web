@@ -26,7 +26,8 @@ module.exports = {
           secondary: '#5f82ba',
           ativo: '#111827',
           ativoEscuro: '#101623'
-        }
+        },
+        iconGreen: '#16a34a'
       },
       fontSize: {
         tiny: '.7rem',
