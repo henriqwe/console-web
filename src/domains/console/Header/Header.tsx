@@ -30,7 +30,7 @@ export function Header() {
             </div>
           </div>
           <div className="flex items-center ">
-            <span className="text-xl font-semi-bold leading-none">
+            <span className="text-xl font-bold leading-none">
               {router.query.name}
             </span>
           </div>

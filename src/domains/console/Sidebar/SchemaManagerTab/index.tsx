@@ -55,7 +55,7 @@ export function SchemaManagerTab() {
     <div className="flex flex-col h-full gap-1 px-4 pt-3 overflow-y-auto">
       <div className="flex items-center w-full">
         <div
-          className="flex items-center gap-2 font-semibold hover:cursor-pointer"
+          className="flex items-center gap-2 font-light text-sm hover:cursor-pointer"
           onClick={() => {
             setShowCreateEntitySection(false)
             setSelectedEntity(undefined)
@@ -93,7 +93,7 @@ export function SchemaManagerTab() {
                 }}
               >
                 <Icon icon="bi:entity" className="w-4 h-4" />
-                <p className="text-sm">{entity}</p>
+                <p className="text-sm font-extralight">{entity}</p>
               </div>
             </div>
           ))}
