@@ -8,7 +8,7 @@ type SelectProps = {
     value: any
     name: any
   }[]
-  value: {
+  value?: {
     value: any
     name: any
   }
@@ -77,7 +77,7 @@ export const Select = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white dark:bg-menu-primary rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg dark:bg-menu-primary max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {options.map((option) => (
                   <Listbox.Option
                     key={option.name}
@@ -90,18 +90,19 @@ export const Select = ({
                     }
                     value={option}
                   >
-                    {({ selected, active }) => (
+                    {({ active }) => (
                       <>
                         <span
                           className={`
-                            ${selected ? 'font-semibold' : 'font-normal'}
+                            ${selected?.name === option.name ? 'font-semibold' : 'font-normal'}
                             block truncate
                           `}
+                          title={option.name}
                         >
                           {option.name}
                         </span>
 
-                        {selected ? (
+                        {selected?.name === option.name ? (
                           <span
                             className={`
                               ${
@@ -111,6 +112,7 @@ export const Select = ({
                               }
                               absolute inset-y-0 right-0 flex items-center pr-4
                             `}
+                            role="checkicon"
                           >
                             <CheckIcon className="w-5 h-5" aria-hidden="true" />
                           </span>
