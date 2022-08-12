@@ -76,7 +76,7 @@ export function SchemaManagerTab() {
         </div>
       ) : entities.length === 0 ? (
         <div>
-          <p>Entities not found</p>
+          <p className="font-extralight">Entities not found</p>
         </div>
       ) : (
         <div>

@@ -101,7 +101,9 @@ export function Template({ children }: TemplateProps) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col flex-1 md:pl-64">
+
+        <div className="fixed w-full h-screen bg-gray-200 dark:bg-bg-page" />
+        <div className="flex flex-col flex-1 md:pl-64 h-full w-full">
           <div className="sticky top-0 z-10 pt-1 pl-1 bg-gray-100 md:hidden sm:pl-3 sm:pt-3">
             <button
               type="button"
@@ -112,9 +114,7 @@ export function Template({ children }: TemplateProps) {
               <MenuIcon className="w-6 h-6" aria-hidden="true" />
             </button>
           </div>
-          <main className="h-full pb-8 dark:bg-bg-page bg-gray-200 pt-10">
-            {children}
-          </main>
+          <main className="h-full pb-8 pt-10">{children}</main>
         </div>
       </div>
     </>

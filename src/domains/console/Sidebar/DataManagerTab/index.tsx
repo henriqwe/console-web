@@ -58,7 +58,7 @@ export function DataManagerTab() {
         </div>
       ) : operations.length === 0 ? (
         <div>
-          <p>Operations not found</p>
+          <p className="font-extralight">Operations not found</p>
         </div>
       ) : (
         operations.map((schema) => (
