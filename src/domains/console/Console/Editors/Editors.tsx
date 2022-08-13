@@ -1,18 +1,18 @@
 import CodeMirror from '@uiw/react-codemirror'
+import parserBabel from 'prettier/parser-babel'
+import usePrettier from 'hooks/usePrettier'
 
-import { Icon } from '@iconify/react'
-import { dracula } from '@uiw/codemirror-theme-dracula'
-import { javascript } from '@codemirror/lang-javascript'
 import * as common from 'common'
+import * as ThemeContext from 'contexts/ThemeContext'
+import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import * as utils from 'utils'
 import * as consoleSection from 'domains/console'
-import * as consoleEditor from 'domains/console/ConsoleEditorContext'
+
+import { javascript } from '@codemirror/lang-javascript'
+import { dracula } from '@uiw/codemirror-theme-dracula'
 import { Slide } from '../Slide'
 import { EditorView } from '@codemirror/view'
-import usePrettier from 'hooks/usePrettier'
-import parserBabel from 'prettier/parser-babel'
-import * as ThemeContext from 'contexts/ThemeContext'
-import { DotsVerticalIcon } from '@heroicons/react/outline'
+import { Icon } from '@iconify/react'
 
 export function Editors() {
   const { isDark } = ThemeContext.useTheme()

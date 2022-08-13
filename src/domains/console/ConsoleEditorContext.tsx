@@ -45,7 +45,7 @@ type ConsoleEditorContextProps = {
   setTabsData: Dispatch<SetStateAction<tabsDataType | undefined>>
   schemaTabData: JSX.Element | undefined
   setSchemaTabData: Dispatch<SetStateAction<JSX.Element | undefined>>
-  value: MutableRefObject<string>
+  valueToFormat: MutableRefObject<string>
   format: MutableRefObject<FormatterFunction | undefined>
   handleFormat: () => void
   handleChange: (input: string) => void
@@ -80,10 +80,38 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const { reload } = data.useSchemaManager()
   const [codeExporterValue, setCodeExporterValue] = useState('')
   const [variablesValue, setVariablesValue] = useState('')
-
   const [schemaTabData, setSchemaTabData] = useState<JSX.Element>()
   const [tabsData, setTabsData] = useState<tabsDataType>()
+  const format = useRef<FormatterFunction>()
+  const valueToFormat = useRef<string>('')
 
+  const handleFormat = useCallback(() => {
+    try {
+      valueToFormat.current = format?.current
+        ? format?.current(valueToFormat.current)
+        : ''
+      if (valueToFormat.current !== consoleValue)
+        setConsoleValue(valueToFormat.current)
+      else {
+        // Edge case: Only formatting was changed (this would not trigger re-render)
+        // Use a dummy value to force update code
+        setConsoleValue(valueToFormat.current + ' ')
+        // Then use delay to immidiately correct it
+        setTimeout(() => setConsoleValue(valueToFormat.current.slice(0, -1)), 0)
+      }
+    } catch (error) {
+      console.log('error', error)
+      utils.notification('There was an error formatting', 'error')
+    }
+  }, [consoleValue])
+
+  const handleChange = useCallback((input: string) => {
+    valueToFormat.current = input
+  }, [])
+
+  const setFormatter = useCallback((func: FormatterFunction) => {
+    format.current = func
+  }, [])
   const globalJavaScriptCompletions = javascriptLanguage.data.of({
     autocomplete: completeFromGlobalScope
   })
@@ -129,8 +157,14 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         action = 'READ'
         break
     }
+    let value: string
+    value = `{\n "action":"${action}",\n "data":[{\n"${entity}":{\n  \n }\n}]\n}`
+    if (action === 'READ') {
+      value = `{\n "action":"${action}",\n "${entity}":{\n  \n }\n}`
+    }
 
-    setConsoleValue(`{\n "action":"${action}",\n "${entity}":{\n  \n }\n}`)
+    const formatedValue = format?.current ? format?.current(value) : value
+    setConsoleValue(formatedValue)
   }
 
   async function runOperation() {
@@ -151,28 +185,12 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           }
         }
       )
-      let text = ''
-      if (data?.data) {
-        setConsoleResponse(data?.data)
-        if (Array.isArray(data.data)) {
-          text = '[\n'
-          for (const textData of data.data) {
-            const formatedResponse = await formatResponse(
-              JSON.stringify(textData)
-            )
-            text += ` ${formatedResponse},\n`
-          }
-          text += ']'
-        }
-        if (!Array.isArray(data.data)) {
-          const formatedResponse = await formatResponse(
-            JSON.stringify(data.data)
-          )
-          text = `${formatedResponse}`
-        }
-      }
-
-      setConsoleResponseFormated(text)
+      let formatedValue = ''
+      formatedValue = format?.current
+        ? format?.current(JSON.stringify(data.data, null, 4))
+        : data.data
+      setConsoleResponse(data?.data)
+      setConsoleResponseFormated(formatedValue)
       setResponseTime(data.responseTimeMs)
       setconsoleResponseLoading(false)
 
@@ -190,19 +208,6 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
       utils.showError(err)
     }
-  }
-
-  async function formatResponse(value: string) {
-    let text = value
-    const operations = [
-      { searchValue: ',', replaceValue: ',\n  ' },
-      { searchValue: '{', replaceValue: '{\n  ' },
-      { searchValue: '}', replaceValue: '\n}' }
-    ]
-    operations.forEach((op) => {
-      text = text.replaceAll(op.searchValue, op.replaceValue)
-    })
-    return text
   }
 
   function formaterCodeExporterValue() {
@@ -256,34 +261,6 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
     }
   }, [schemaTabData])
 
-  const value = useRef<string>('')
-
-  const format = useRef<FormatterFunction>()
-
-  const handleFormat = useCallback(() => {
-    try {
-      value.current = format?.current ? format?.current(value.current) : ''
-      if (value.current !== consoleValue) setConsoleValue(value.current)
-      else {
-        // Edge case: Only formatting was changed (this would not trigger re-render)
-        // Use a dummy value to force update code
-        setConsoleValue(value.current + ' ')
-        // Then use delay to immidiately correct it
-        setTimeout(() => setConsoleValue(value.current.slice(0, -1)), 0)
-      }
-    } catch (error) {
-      console.log('error', error)
-      utils.notification('There was an error formatting', 'error')
-    }
-  }, [consoleValue])
-
-  const handleChange = useCallback((input: string) => {
-    value.current = input
-  }, [])
-
-  const setFormatter = useCallback((func: FormatterFunction) => {
-    format.current = func
-  }, [])
   return (
     <ConsoleEditorContext.Provider
       value={{
@@ -312,7 +289,7 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
         setTabsData,
         schemaTabData,
         setSchemaTabData,
-        value,
+        valueToFormat,
         format,
         handleFormat,
         handleChange,
