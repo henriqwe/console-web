@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
 type TableProps = {
-  tableColumns: {
+  tableColumns?: {
     name: string
     displayName: string
     handler?: (value: any) => void
@@ -26,6 +26,7 @@ export function Table({
               className={`overflow-hidden shadow ring-1 ring-black dark:ring-gray-600 ring-opacity-5 ${
                 rounded ? 'rounded-lg' : ''
               }`}
+              role="tableWrapper"
             >
               <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
                 <thead className="bg-gray-50 dark:bg-menu-primary">
@@ -60,11 +61,12 @@ export function Table({
                               ? undefined
                               : 'bg-gray-50 dark:bg-menu-primary'
                           }`}
+                        data-testid={'tr' + index}
                       >
-                        {tableColumns.map((column, index) => (
+                        {tableColumns.map((column) => (
                           <td
                             className="py-4 pl-4 pr-3 text-xs font-medium text-gray-900 dark:text-text-primary whitespace-nowrap sm:pl-6"
-                            key={value[column.name] || index}
+                            key={value[column.name]}
                           >
                             {column.handler
                               ? column.handler(value[column.name])

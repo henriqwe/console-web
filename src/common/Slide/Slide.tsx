@@ -31,8 +31,6 @@ export function Slide({
     case 'fullPage':
       slidePanelWidth = 'max-w-[80%]'
       break
-    default:
-      break
   }
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -40,6 +38,7 @@ export function Slide({
         as="div"
         className="fixed inset-0 z-50 overflow-hidden"
         onClose={() => null}
+        role="dialog"
       >
         <div className="absolute inset-0 overflow-hidden">
           <div className="fixed inset-y-0 right-0 flex justify-end max-w-full pl-10 pointer-events-none">
@@ -54,6 +53,7 @@ export function Slide({
             >
               <Dialog.Panel
                 className={`z-50 w-screen pointer-events-auto ${slidePanelWidth}`}
+                role="slider"
               >
                 <div
                   className={`border-gray-200 border-l dark:border-menu-secondary/30 flex flex-col h-full py-6 overflow-y-auto bg-white dark:bg-menu-primary shadow-xl`}
@@ -67,7 +67,7 @@ export function Slide({
                       <div className="flex items-center ml-3 h-7">
                         <button
                           type="button"
-                          className="text-gray-400 dark:text-text-tertiary bg-white dark:bg-menu-primary rounded-md hover:text-text-tertiary dark:hover:text-text-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          className="text-gray-400 bg-white rounded-md dark:text-text-tertiary dark:bg-menu-primary hover:text-text-tertiary dark:hover:text-text-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                           onClick={() => setOpen(false)}
                           title="Close"
                         >

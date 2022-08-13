@@ -12,7 +12,7 @@ type SlideWithTabsProps = {
 type tabsDataType = {
   title: string
   color: 'blue' | 'red'
-  content: JSX.Element
+  content: ReactNode
 }
 
 type slideDataType = {
@@ -36,8 +36,6 @@ export function SlideWithTabs({
       break
     case 'fullPage':
       slidePanelWidth = 'max-w-[80%]'
-      break
-    default:
       break
   }
   const [slideData, setSlideData] = useState<slideDataType>({
@@ -90,6 +88,7 @@ export function SlideWithTabs({
           as="div"
           className="fixed inset-0 z-10 overflow-hidden "
           onClose={() => null}
+          role="dialog"
         >
           <div className="absolute inset-0 overflow-hidden ">
             <div className="fixed inset-y-0 right-0 flex justify-end max-w-full pl-10 pointer-events-none ">
@@ -104,6 +103,7 @@ export function SlideWithTabs({
               >
                 <Dialog.Panel
                   className={`w-screen flex pointer-events-auto ${slidePanelWidth} `}
+                  role="slider"
                 >
                   <div
                     className={`sticky flex flex-col inset-y-0 right-0 z-10 ${slidePanelWidth} w-0 items-end justify-end space-y-5 my-24 `}
