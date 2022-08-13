@@ -55,7 +55,7 @@ type ProviderProps = {
 
 type slideState = {
   open: boolean
-  type: 'CodeExporterView'
+  type: 'CodeExporterView' | 'EndpointAndResquestHeadersView'
 }
 
 type breadcrumbPageType = { name: string; current: boolean }

@@ -12,6 +12,7 @@ import { EditorView } from '@codemirror/view'
 import usePrettier from 'hooks/usePrettier'
 import parserBabel from 'prettier/parser-babel'
 import * as ThemeContext from 'contexts/ThemeContext'
+import { DotsVerticalIcon } from '@heroicons/react/outline'
 
 export function Editors() {
   const { isDark } = ThemeContext.useTheme()
@@ -48,12 +49,25 @@ export function Editors() {
         variant="WithoutTitleBackgroundColor"
         title={
           <div className="grid grid-cols-3 items-center justify-between w-full">
-            <common.Breadcrumb
-              pages={[
-                { name: 'Data manager', current: false },
-                { name: 'Console', current: true }
-              ]}
-            />
+            <div className="flex items-center">
+              <common.Breadcrumb
+                pages={[
+                  { name: 'Data manager', current: false },
+                  { name: 'Console', current: true }
+                ]}
+              />
+              <div title="Endpoint and request headers">
+                <common.icons.DotsVerticalIcon
+                  className="w-3 h-3 cursor-pointer"
+                  onClick={() => {
+                    setSlideState({
+                      open: true,
+                      type: 'EndpointAndResquestHeadersView'
+                    })
+                  }}
+                />
+              </div>
+            </div>
             <div className="flex w-full justify-center">
               <p className="text-sm text-gray-900 dark:text-text-primary">
                 Schema status:{' '}
