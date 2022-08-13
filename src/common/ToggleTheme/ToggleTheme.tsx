@@ -53,7 +53,11 @@ export function ToggleTheme({
           : 'text-white hover:bg-menuItem-secondary/40'
       } rounded-full p-2 cursor-pointer w-10 h-10`}
     >
-      {enabled ? <SunIcon /> : <MoonIcon />}
+      {enabled ? (
+        <SunIcon data-testid="sunIcon" />
+      ) : (
+        <MoonIcon data-testid="moonIcon" />
+      )}
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react'
 
 type TabsProps = {
   tabs: Tab[]
-  selectedTab: Tab
+  selectedTab?: Tab
   setSelectedTab: Dispatch<SetStateAction<Tab>>
   onchange?: () => void
 }
@@ -58,6 +58,7 @@ export function Tabs({
                     onchange()
                   }
                 }}
+                title={tab.name}
               >
                 {tab.icon && (
                   <tab.icon
