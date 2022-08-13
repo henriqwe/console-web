@@ -67,18 +67,21 @@ export const SchemaManagerContext = createContext<SchemaManagerContextProps>(
 const breadcrumbPagesData = {
   home: [
     { name: 'Schema manager', current: false },
-    { name: 'Home', current: true }
+    { name: 'Entities', current: true }
   ],
   createEntity: [
     { name: 'Schema manager', current: false },
-    { name: 'Create entity', current: true }
+    { name: 'Entities', current: false },
+    { name: 'Create', current: true }
   ],
   viewEntity: (entityName: string) => [
     { name: 'Schema manager', current: false },
+    { name: 'Entities', current: false },
     { name: entityName, current: true }
   ],
   viewEntityRelationship: (entityName: string) => [
     { name: 'Schema manager', current: false },
+    { name: 'Entities', current: false },
     { name: entityName, current: false },
     { name: 'Relationship', current: true }
   ]
