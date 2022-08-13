@@ -4,27 +4,48 @@ import CodeMirror from '@uiw/react-codemirror'
 import { javascript } from '@codemirror/lang-javascript'
 import * as ThemeContext from 'contexts/ThemeContext'
 import { dracula } from '@uiw/codemirror-theme-dracula'
+import { useRouter } from 'next/router'
+import * as common from 'common'
 
 export function SchemaFormater() {
   const { documentationValue, setSchemaTabData } =
     consoleEditor.useConsoleEditor()
   const { isDark } = ThemeContext.useTheme()
+  const router = useRouter()
 
   const documentationValueParsed =
     utils.ycl_transpiler.parse(documentationValue)
 
+  const downloadTxtFile = () => {
+    const element = document.createElement('a')
+    const file = new Blob([documentationValue], {
+      type: 'text/plain'
+    })
+    element.href = URL.createObjectURL(file)
+    element.download = `schema ${router.query.name}.txt`
+    document.body.appendChild(element)
+    element.click()
+  }
+
   return (
-    <CodeMirror
-      value={documentationValue}
-      className=" text-xs rounded-md break-all"
-      editable={false}
-      theme={isDark ? dracula : 'light'}
-      basicSetup={{
-        lineNumbers: false,
-        foldGutter: false
-      }}
-      extensions={[javascript({ jsx: true })]}
-    />
+    <div className="relative">
+      <CodeMirror
+        value={documentationValue}
+        className=" text-xs rounded-md break-all"
+        editable={false}
+        theme={isDark ? dracula : 'light'}
+        basicSetup={{
+          lineNumbers: false,
+          foldGutter: false
+        }}
+        extensions={[javascript({ jsx: true })]}
+      />
+      <div className="absolute bottom-1 right-3" title={'Download schema'}>
+        <button onClick={downloadTxtFile}>
+          <common.icons.DownloadIcon className="w-5 h-5 text-gray-600 dark:text-text-primary" />
+        </button>
+      </div>
+    </div>
   )
   // return (
   //   <div>
