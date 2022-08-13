@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react'
 import { Switch } from '@headlessui/react'
 
 type ToggleProps = {

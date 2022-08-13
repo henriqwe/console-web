@@ -16,7 +16,7 @@ type SelectProps = {
   errors?: DeepMap<FieldValues, FieldError> & { message?: string }
   disabled?: boolean
   label?: string
-  edit: boolean
+  edit?: boolean
 }
 
 export const MultiSelect = ({
@@ -53,15 +53,15 @@ export const MultiSelect = ({
     setSelectedItens(removedSelection)
   }
 
-  function disableSelectItem(item: typeof options[0] | undefined) {
-    const selectItens = selectedItens.map((item) => item.value)
+  // function disableSelectItem(item: typeof options[0] | undefined) {
+  //   const selectItens = selectedItens.map((item) => item.value)
 
-    if (selectItens.includes(item?.value)) {
-      return true
-    }
+  //   if (selectItens.includes(item?.value)) {
+  //     return true
+  //   }
 
-    return false
-  }
+  //   return false
+  // }
 
   useEffect(() => {
     if (edit && selectedItens.length === 0) {
@@ -88,12 +88,15 @@ export const MultiSelect = ({
           )}
           <div className="relative">
             <Listbox.Button
-              className="relative w-full py-2 pl-3 pr-10 text-left transition bg-white dark:bg-menu-primary border border-gray-300 dark:border-gray-600 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="relative w-full py-2 pl-3 pr-10 text-left transition bg-white border border-gray-300 rounded-md shadow-sm cursor-default dark:bg-menu-primary dark:border-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
               aria-disabled={disabled}
               disabled={disabled}
+              role="button"
             >
               {selectedItens?.length > 0 ? (
-                <span className="block truncate dark:text-text-primary">
+                <span
+                  className="block truncate dark:text-text-primary"
+                >
                   {selectedItens.map((item) => item.name).join(', ')}
                 </span>
               ) : (
@@ -116,7 +119,7 @@ export const MultiSelect = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 w-full mt-1 overflow-auto text-base bg-white dark:bg-menu-primary rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute z-10 w-full mt-1 overflow-auto text-base bg-white rounded-md shadow-lg dark:bg-menu-primary max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {options.map((option) => {
                   const selected = isSelected(option)
                   return (
@@ -138,6 +141,7 @@ export const MultiSelect = ({
                             ${selected ? 'font-semibold' : 'font-normal'}
                             block truncate
                           `}
+                          title={option.name}
                           >
                             {option.name}
                           </span>
@@ -152,6 +156,7 @@ export const MultiSelect = ({
                               }
                               absolute inset-y-0 right-0 flex items-center pr-4
                             `}
+                            role="checkicon"
                             >
                               <CheckIcon
                                 className="w-5 h-5"

@@ -1,6 +1,6 @@
 import * as common from 'common'
 import router from 'next/router'
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 
 type ActionsRowProps = {
   actions: AcoesProps[]
@@ -11,7 +11,7 @@ type AcoesProps = {
   url?: string
 
   handler?: any
-  icon: JSX.Element
+  icon: ReactNode
 }
 
 export function ActionsRow({ actions }: ActionsRowProps) {
