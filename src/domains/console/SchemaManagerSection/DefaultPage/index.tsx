@@ -91,7 +91,7 @@ export function DefaultPage() {
       <div className="flex items-center justify-between">
         <div>
           <p className="font-semibold">Publish console version</p>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-text-tertiary">
             Active the toggle button to publish all modifications in a new
             version
           </p>
@@ -110,7 +110,7 @@ export function DefaultPage() {
       <common.Separator />
 
       <p className="mt-5 text-lg font-medium">Lorem ipsum dolor sit amet</p>
-      <p className="my-5 text-base text-gray-600">
+      <p className="my-5 text-base text-gray-600  dark:text-text-tertiary">
         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa nostrum
         laborum ea molestias corporis rerum iusto? Iure, sapiente velit? Alias
         possimus natus voluptas hic perferendis quae, consequuntur optio.

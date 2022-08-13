@@ -146,7 +146,9 @@ export function CreateEntity() {
         <common.Breadcrumb pages={breadcrumbPages} />
       </div>
       <common.ContentSection variant="WithoutTitleBackgroundColor">
-        <div className={`flex flex-col h-auto p-6  bg-white rounded-lg`}>
+        <div
+          className={`flex flex-col h-auto p-6 bg-white dark:bg-menu-primary rounded-lg`}
+        >
           <Controller
             name="Name"
             control={control}

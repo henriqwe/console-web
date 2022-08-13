@@ -58,7 +58,7 @@ export function DataManagerTab() {
         </div>
       ) : operations.length === 0 ? (
         <div>
-          <p>Operations not found</p>
+          <p className="font-extralight">Operations not found</p>
         </div>
       ) : (
         operations.map((schema) => (
@@ -101,7 +101,7 @@ function Operation({
             icon="bx:chevron-right"
             className={`w-4 h-4 transition ${active && 'rotate-90'}`}
           />
-          <p className="text-sm">{schema}</p>
+          <p className="text-sm font-light">{schema}</p>
         </div>
       </div>
       {active &&
@@ -110,7 +110,7 @@ function Operation({
             <div key={entity}>
               <div
                 className={`flex items-center gap-2  ml-2 cursor-pointer ${
-                  activeEntity === `${schema}${entity}` && 'text-orange-400'
+                  activeEntity === `${schema}${entity}` && 'text-text-highlight'
                 }`}
                 onClick={() => {
                   setActiveEntity(`${schema}${entity}`)
@@ -121,7 +121,7 @@ function Operation({
                   {activeEntity === `${schema}${entity}` && <CheckIcon />}
                 </div>
 
-                <p className="text-sm">{entity}</p>
+                <p className="text-sm font-extralight">{entity}</p>
               </div>
             </div>
           )

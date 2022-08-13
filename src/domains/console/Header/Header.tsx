@@ -16,9 +16,9 @@ export function Header() {
             alt="Workflow"
           />
         </div>
-        <div className="flex flex-col h-full justify-center text-gray-300 -space-y-0.5">
+        <div className="flex flex-col h-full justify-center text-gray-300 gap-y-1">
           <div className="flex gap-2 items-center z-20">
-            <p className="text-xs  leading-none">Dashboard</p>
+            <p className="text-xs leading-none">Dashboard</p>
             <div
               className="flex items-center gap-1 bg-gray-600 rounded-sm px-1 text-super-tiny text-gray-300 cursor-pointer hover:bg-gray-600 hover:text-gray-200"
               onClick={() => {
@@ -30,7 +30,7 @@ export function Header() {
             </div>
           </div>
           <div className="flex items-center ">
-            <span className="text-3xl font-semi-bold  leading-none ">
+            <span className="text-xl font-bold leading-none">
               {router.query.name}
             </span>
           </div>

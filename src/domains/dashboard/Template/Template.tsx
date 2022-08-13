@@ -43,9 +43,9 @@ export function Template({ children }: TemplateProps) {
     <>
       <div>
         {/* Static sidebar for desktop */}
-        <div className="bg-gray-900 z-20 hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
+        <div className="bg-bg-navigation z-20 hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex flex-col flex-1 min-h-0 bg-gray-800/50 border-r-gray-700 border-r">
+          <div className="flex flex-col flex-1 min-h-0 border-r-gray-700 border-r">
             <div className="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto mx-4">
               <div className="flex items-center justify-between flex-shrink-0 px-4 my-10">
                 <img
@@ -64,15 +64,15 @@ export function Template({ children }: TemplateProps) {
                     href={item.href}
                     className={`group flex items-center px-2 py-2 text-xs font-medium rounded-md transition ${
                       item.current
-                        ? 'bg-gray-900 text-white'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        ? 'bg-menuItem-ativoEscuro text-text-primary'
+                        : 'text-text-tertiary hover:bg-gray-700 hover:text-text-primary'
                     }`}
                   >
                     <item.icon
                       className={`mr-4 flex-shrink-0 h-6 w-6 ${
                         item.current
-                          ? 'text-gray-300'
-                          : 'text-gray-400 group-hover:text-gray-300'
+                          ? 'text-text-primary'
+                          : 'text-text-tertiary group-hover:text-text-primary'
                       }`}
                       aria-hidden="true"
                     />
@@ -81,10 +81,10 @@ export function Template({ children }: TemplateProps) {
                 ))}
               </nav>
               <div
-                className={`mb-6 flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:text-white cursor-pointer mx-2 transition`}
+                className={`mb-6 flex items-center px-2 py-2 text-sm font-medium rounded-md text-text-secondary hover:text-primary cursor-pointer mx-2 transition`}
               ></div>
               <div
-                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-red-700 hover:text-white cursor-pointer mx-2 transition`}
+                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md text-text-secondary hover:bg-red-700 hover:text-primary cursor-pointer mx-2 transition`}
                 onClick={() => {
                   removeCookie('X-TenantID')
                   removeCookie('admin_access_token')
@@ -93,7 +93,7 @@ export function Template({ children }: TemplateProps) {
                 }}
               >
                 <LogoutIcon
-                  className={`mr-3 text-xs flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-300`}
+                  className={`mr-3 text-xs flex-shrink-0 h-6 w-6 text-text-secondary group-hover:text-text-secondary`}
                   aria-hidden="true"
                 />
                 Logout
@@ -101,7 +101,9 @@ export function Template({ children }: TemplateProps) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col flex-1 md:pl-64">
+
+        <div className="fixed w-full h-screen bg-gray-200 dark:bg-bg-page" />
+        <div className="flex flex-col flex-1 md:pl-64 h-full w-full">
           <div className="sticky top-0 z-10 pt-1 pl-1 bg-gray-100 md:hidden sm:pl-3 sm:pt-3">
             <button
               type="button"
@@ -112,9 +114,7 @@ export function Template({ children }: TemplateProps) {
               <MenuIcon className="w-6 h-6" aria-hidden="true" />
             </button>
           </div>
-          <main className="h-screen dark:bg-gray-900 bg-gray-200 pt-10">
-            {children}
-          </main>
+          <main className="h-full pb-8 pt-10">{children}</main>
         </div>
       </div>
     </>

@@ -37,16 +37,19 @@ export function Tabs({
         </select>
       </div>
       <div className="hidden sm:block">
-        <div className="border-b border-gray-200">
-          <nav className="flex justify-center w-full -mb-px" aria-label="Tabs roudend-t-md">
+        <div className="border-b border-gray-200 dark:border-menu-primary">
+          <nav
+            className="flex justify-center w-full -mb-px"
+            aria-label="Tabs roudend-t-md"
+          >
             {tabs.map((tab) => (
               <button
                 key={tab.name}
                 type="button"
                 className={`${
                   tab.name === selectedTab.name
-                    ? 'border-transparent text-indigo-500 bg-white'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-text-tertiary dark:hover:text-indigo-200 dark:hover:border-indigo-200 bg-gray-200'
+                    ? 'border-transparent text-indigo-500 bg-white dark:bg-menu-primary dark:text-text-primary'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:bg-menu-secondary/30 hover:border-gray-300 dark:text-text-tertiary dark:hover:text-text-primary dark:hover:border-menu-secondary/70 bg-gray-200'
                 }
                   group inline-flex items-center py-4 px-1 border-b-2 font-medium text-xs cursor-pointer justify-center flex-1`}
                 aria-current={

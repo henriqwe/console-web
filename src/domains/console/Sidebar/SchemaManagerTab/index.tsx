@@ -55,7 +55,7 @@ export function SchemaManagerTab() {
     <div className="flex flex-col h-full gap-1 px-4 pt-3 overflow-y-auto">
       <div className="flex items-center w-full">
         <div
-          className="flex items-center gap-2 font-semibold hover:cursor-pointer"
+          className="flex items-center gap-2 font-light text-sm hover:cursor-pointer"
           onClick={() => {
             setShowCreateEntitySection(false)
             setSelectedEntity(undefined)
@@ -63,7 +63,7 @@ export function SchemaManagerTab() {
           }}
         >
           Entities &#40; {entities.length} &#41;{' '}
-          <CheckCircleIcon className="w-4 h-4 text-green-600" />
+          <CheckCircleIcon className="w-4 h-4 text-iconGreen" />
         </div>
       </div>
       <common.Separator className="dark:border-gray-500/50" />
@@ -76,7 +76,7 @@ export function SchemaManagerTab() {
         </div>
       ) : entities.length === 0 ? (
         <div>
-          <p>Entities not found</p>
+          <p className="font-extralight">Entities not found</p>
         </div>
       ) : (
         <div>
@@ -84,7 +84,7 @@ export function SchemaManagerTab() {
             <div key={entity}>
               <div
                 className={`flex items-center gap-2 pb-2 cursor-pointer ${
-                  selectedEntity === `${entity}` && 'text-orange-400'
+                  selectedEntity === `${entity}` && 'text-text-highlight'
                 }`}
                 onClick={() => {
                   setSelectedEntity(`${entity}`)
@@ -93,7 +93,7 @@ export function SchemaManagerTab() {
                 }}
               >
                 <Icon icon="bi:entity" className="w-4 h-4" />
-                <p className="text-sm">{entity}</p>
+                <p className="text-sm font-extralight">{entity}</p>
               </div>
             </div>
           ))}
