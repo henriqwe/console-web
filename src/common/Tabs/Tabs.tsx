@@ -51,7 +51,7 @@ export function Tabs({
                     ? 'border-transparent text-indigo-500 bg-white dark:bg-menu-primary dark:text-text-primary'
                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:bg-menu-secondary/30 hover:border-gray-300 dark:text-text-tertiary dark:hover:text-text-primary dark:hover:border-menu-secondary/70 bg-gray-200'
                 }
-                  group inline-flex items-center py-4 px-1 border-b-2 font-medium text-xs cursor-pointer justify-center flex-1`}
+                  group inline-flex items-center py-5 px-1 border-b-2 font-medium text-xs cursor-pointer justify-center flex-1`}
                 aria-current={
                   tab.name === selectedTab.name ? 'page' : undefined
                 }

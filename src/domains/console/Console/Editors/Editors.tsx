@@ -48,7 +48,7 @@ export function Editors() {
       <common.ContentSection
         variant="WithoutTitleBackgroundColor"
         title={
-          <div className="grid grid-cols-3 items-center justify-between w-full">
+          <div className="grid grid-cols-2 items-center justify-between w-full">
             <div className="flex items-center">
               <common.Breadcrumb
                 pages={[
@@ -67,14 +67,6 @@ export function Editors() {
                   }}
                 />
               </div>
-            </div>
-            <div className="flex w-full justify-center">
-              <p className="text-sm text-gray-900 dark:text-text-primary">
-                Schema status:{' '}
-                <span className="font-bold">
-                  {schemaStatus === 2 ? 'Running' : 'Modeling'}
-                </span>
-              </p>
             </div>
 
             <div className="flex items-center justify-end gap-4">

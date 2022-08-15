@@ -13,10 +13,63 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
 
+const plans = {
+  'Caixa de areia': {
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
+    features: [
+      'Ambiente de testes',
+      'Modelo de dados ilimitado',
+      'Elasticidade ilimitada',
+      'Tráfego limitado a 500 MB/dia',
+      'Armazenamento limitado a 1 GB',
+      'Sem custos adicionais'
+    ]
+  },
+  Padrao: {
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
+    features: [
+      'Ambiente de produção',
+      'Modelo de dados ilimitado',
+      'Elasticidade ilimitada',
+      'Tráfego de dados ilimitado',
+      'Armazenamento limitado a 10 GB',
+      'Sem custos adicionais'
+    ]
+  },
+  'Plano sem nome': {
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
+    features: [
+      'Placeholder',
+      'Placeholder',
+      'Placeholder',
+      'Placeholder',
+      'Placeholder',
+      'Placeholder'
+    ]
+  },
+  Enterprise: {
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
+    features: [
+      'Ambiente de produção',
+      'Modelo de dados ilimitado',
+      'Elasticidade ilimitada',
+      'Tráfego de dados ilimitado',
+      'Armazenamento ilimitado',
+      'Custos sob medida'
+    ]
+  }
+}
+
 export function Create() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [plan, setPlan] = useState<'Sandbox' | 'Dedicated'>()
+  const [plan, setPlan] = useState<
+    'Caixa de Areia' | 'Padrão' | 'Plano sem nome' | 'Enterprise'
+  >()
   const { createProjectSchema, setReload, reload } = dashboard.useData()
 
   const {
@@ -110,12 +163,12 @@ export function Create() {
       <common.ListRadioGroup
         options={[
           {
-            value: 'Sandbox',
+            value: 'Caixa de Areia',
             content: (
               <div>
-                <div>
-                  <p className="font-bold dark:text-gray-200">Sandbox</p>
-                  {plan === 'Sandbox' && (
+                <div className="flex flex-col gap-y-1">
+                  <p className="font-bold dark:text-gray-200">Caixa de Areia</p>
+                  {plan === 'Caixa de Areia' && (
                     <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
                       <p className="flex items-center gap-1 text-white ">
                         Selected{' '}
@@ -125,34 +178,20 @@ export function Create() {
                       </p>
                     </div>
                   )}
-                  <div className="my-2">
-                    <common.Separator className="border-gray-400" />
-                  </div>
                   <p className="text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Dolorem perferendis possimus ipsam harum alias quidem
-                    recusandae iusto quis cupiditate maiores fugiat, optio
+                    {plans['Caixa de areia'].description}
                   </p>
-                  <div className="my-2">
-                    <common.Separator className="border-gray-400" />
-                  </div>
-                  <p className="text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Dolorem perferendis possimus ipsam harum alias
-                  </p>
-                  <div className="my-2">
-                    <common.Separator className="border-gray-400" />
-                  </div>
+                  <common.Separator />
 
                   <div>
                     <p className="font-bold">Features</p>
                     <ul>
-                      {[1, 2, 3].map((item) => (
-                        <li className="flex items-center gap-1" key={item}>
+                      {plans['Caixa de areia'].features.map((feature) => (
+                        <li className="flex items-center gap-1" key={feature}>
                           <div className="w-5 h-5 text-blue-500">
                             <CheckCircleIcon />
                           </div>
-                          abc
+                          {feature}
                         </li>
                       ))}
                     </ul>
@@ -162,14 +201,14 @@ export function Create() {
             )
           },
           {
-            value: 'Dedicated',
+            value: 'Padrão',
             content: (
               <div>
-                <div>
-                  <p className="font-bold dark:text-gray-200">Dedicated</p>
-                  {plan === 'Dedicated' && (
+                <div className="flex flex-col gap-y-1">
+                  <p className="font-bold dark:text-gray-200">Padrão</p>
+                  {plan === 'Padrão' && (
                     <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
-                      <p className="flex items-center gap-1 text-white">
+                      <p className="flex items-center gap-1 text-white ">
                         Selected{' '}
                         <span className="w-5 h-5">
                           <CheckCircleIcon />
@@ -177,50 +216,95 @@ export function Create() {
                       </p>
                     </div>
                   )}
-
-                  <div className="my-2">
-                    <common.Separator className="border-gray-400" />
-                  </div>
-                  <p className="text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Dolorem perferendis possimus ipsam harum alias quidem
-                    recusandae iusto quis cupiditate maiores fugiat, optio
-                  </p>
-                  <div className="my-2">
-                    <common.Separator className="border-gray-400" />
-                  </div>
-                  <p className="text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Dolorem perferendis possimus ipsam harum alias
-                  </p>
-                  <div className="my-2">
-                    <common.Separator className="border-gray-400" />
-                  </div>
+                  <p className="text-sm">{plans['Padrao'].description}</p>
+                  <common.Separator />
 
                   <div>
                     <p className="font-bold">Features</p>
-                    <div className="grid justify-between w-full grid-cols-2">
-                      <ul>
-                        {[1, 2, 3].map((item) => (
-                          <li className="flex items-center gap-1" key={item}>
-                            <div className="w-5 h-5 text-blue-500">
-                              <CheckCircleIcon />
-                            </div>
-                            abc
-                          </li>
-                        ))}
-                      </ul>
-                      <ul>
-                        {[1, 2, 3].map((item) => (
-                          <li className="flex items-center gap-1" key={item}>
-                            <div className="w-5 h-5 text-blue-500">
-                              <CheckCircleIcon />
-                            </div>
-                            abc
-                          </li>
-                        ))}
-                      </ul>
+                    <ul>
+                      {plans['Padrao'].features.map((feature) => (
+                        <li className="flex items-center gap-1" key={feature}>
+                          <div className="w-5 h-5 text-blue-500">
+                            <CheckCircleIcon />
+                          </div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )
+          },
+          {
+            value: 'Plano sem nome',
+            content: (
+              <div>
+                <div className="flex flex-col gap-y-1">
+                  <p className="font-bold dark:text-gray-200">Plano sem nome</p>
+                  {plan === 'Plano sem nome' && (
+                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
+                      <p className="flex items-center gap-1 text-white ">
+                        Selected{' '}
+                        <span className="w-5 h-5">
+                          <CheckCircleIcon />
+                        </span>
+                      </p>
                     </div>
+                  )}
+                  <p className="text-sm">
+                    {plans['Plano sem nome'].description}
+                  </p>
+                  <common.Separator />
+
+                  <div>
+                    <p className="font-bold">Features</p>
+                    <ul>
+                      {plans['Plano sem nome'].features.map((feature) => (
+                        <li className="flex items-center gap-1" key={feature}>
+                          <div className="w-5 h-5 text-blue-500">
+                            <CheckCircleIcon />
+                          </div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )
+          },
+          {
+            value: 'Enterprise',
+            content: (
+              <div>
+                <div className="flex flex-col gap-y-1">
+                  <p className="font-bold dark:text-gray-200">Enterprise</p>
+                  {plan === 'Enterprise' && (
+                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
+                      <p className="flex items-center gap-1 text-white ">
+                        Selected{' '}
+                        <span className="w-5 h-5">
+                          <CheckCircleIcon />
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                  <p className="text-sm">{plans['Enterprise'].description}</p>
+                  <common.Separator />
+
+                  <div>
+                    <p className="font-bold">Features</p>
+                    <ul>
+                      {plans['Enterprise'].features.map((feature) => (
+                        <li className="flex items-center gap-1" key={feature}>
+                          <div className="w-5 h-5 text-blue-500">
+                            <CheckCircleIcon />
+                          </div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -232,7 +316,7 @@ export function Create() {
         setSelectedOption={setPlan as Dispatch<SetStateAction<string>>}
       />
 
-      <common.Separator />
+      <common.Separator className="mb-7" />
 
       <common.Buttons.Clean
         disabled={loading}

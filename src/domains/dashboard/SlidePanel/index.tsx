@@ -10,7 +10,7 @@ export function SlidePanel() {
     <common.Slide
       title={
         slideType === 'CREATE'
-          ? 'Create schema'
+          ? 'New Project'
           : (selectedSchema?.name as string)
       }
       open={openSlide}

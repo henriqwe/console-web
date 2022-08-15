@@ -6,6 +6,7 @@ import * as utils from 'utils'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
+import { PlusIcon } from '@heroicons/react/solid'
 
 export function SchemaManagerSection() {
   const [selectedEntityTab, setSelectedEntityTab] = useState({
@@ -20,7 +21,10 @@ export function SchemaManagerSection() {
     showCreateEntitySection,
     setSlideType,
     breadcrumbPages,
-    setSchemaStatus
+    setSchemaStatus,
+    breadcrumbPagesData,
+    setBreadcrumbPages,
+    setShowCreateEntitySection
   } = consoleSection.useSchemaManager()
   const [loading, setLoading] = useState(true)
 
@@ -84,20 +88,36 @@ export function SchemaManagerSection() {
   return (
     <div data-tour="step-1" className="w-full h-full py-4 px-8 ">
       <common.Card className="flex flex-col h-full">
-        <div className="flex justify-between w-full">
-          <div className="flex items-center">
-            <common.Breadcrumb pages={breadcrumbPages} />
-            {selectedEntity && (
-              <PencilIcon
-                className="w-3 h-3 text-gray-500 cursor-pointer"
+        <div className="flex w-full h-[3.3rem]">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items  -center">
+              <common.Breadcrumb pages={breadcrumbPages} />
+              {selectedEntity && (
+                <PencilIcon
+                  className="w-3 h-3 text-gray-500 cursor-pointer"
+                  onClick={() => {
+                    setOpenSlide(true)
+                    setSlideType('UPDATE ENTITY')
+                  }}
+                />
+              )}
+            </div>
+            {!selectedEntity && (
+              <common.Buttons.White
+                type="button"
                 onClick={() => {
-                  setOpenSlide(true)
-                  setSlideType('UPDATE ENTITY')
+                  setShowCreateEntitySection(true)
+                  setBreadcrumbPages(breadcrumbPagesData.createEntity)
                 }}
-              />
+              >
+                <div className="flex items-center gap-2">
+                  <p className="text-xs">Create entity</p>
+                  <PlusIcon className="w-3 h-3" />
+                </div>
+              </common.Buttons.White>
             )}
           </div>
-          <div className={`${selectedEntity ? '' : 'invisible '} w-1/3 `}>
+          <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
             <common.Tabs
               selectedTab={selectedEntityTab}
               setSelectedTab={setSelectedEntityTab}

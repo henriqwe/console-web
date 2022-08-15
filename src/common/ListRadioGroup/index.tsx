@@ -58,6 +58,8 @@ export function ListRadioGroup({
                 value={opcao}
                 className={({ active }) =>
                   `
+                  min-w-[200px] md:min-w-[300px]
+
                   ${
                     disabled && !(opcao.value === selected?.value)
                       ? '!bg-gray-400 dark:bg-menu-secondary cursor-not-allowed'

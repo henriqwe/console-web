@@ -147,21 +147,19 @@ export function CreateEntity() {
       </div>
       <common.ContentSection variant="WithoutTitleBackgroundColor">
         <div
-          className={`flex flex-col h-auto p-6 bg-white dark:bg-menu-primary rounded-lg`}
+          className={`flex flex-col h-auto p-6 gap-y-2 bg-white dark:bg-menu-primary rounded-lg`}
         >
           <Controller
             name="Name"
             control={control}
             render={({ field: { onChange, value } }) => (
-              <div className="mb-2">
-                <common.Input
-                  placeholder="Entity name"
-                  label="Entity name"
-                  value={value}
-                  onChange={onChange}
-                  errors={errors.Name}
-                />
-              </div>
+              <common.Input
+                placeholder="Entity name"
+                label="Entity name"
+                value={value}
+                onChange={onChange}
+                errors={errors.Name}
+              />
             )}
           />
 
