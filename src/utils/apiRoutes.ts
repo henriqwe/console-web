@@ -1,5 +1,5 @@
 export const apiRoutes = {
-  schemas: `v0/modeler/project-name`,
+  schemas: `v0/modeling/project-name`,
   association: ({
     projectName,
     entityName
@@ -7,12 +7,12 @@ export const apiRoutes = {
     projectName: string
     entityName: string
   }) =>
-    `v0/modeler/project-name/${projectName}/schema/sql/entity/${entityName}/association`,
+    `v0/modeling/project-name/${projectName}/schema/sql/entity/${entityName}/association`,
   userAccount: 'v0/i-id/account',
   roles: '/caccount/role',
   deleteRole: (name: string) => `/caccount/role/name/${name}`,
   getUserToken: 'v0/i-id-auth/oauth/token',
-  interpreter: 'v0/interpreter-p/s/no-ac',
+  interpreter: 'v0/persistence/s/no-ac',
   deleteUserAccount: ({
     username,
     version
@@ -22,16 +22,16 @@ export const apiRoutes = {
   }) => `/caccount/account/username/${username}/version/${version}`,
   createAdminAccount: (
     projectName: string
-  ) => `v0/modeler/project-name/${projectName}/schema/create-admin-account
+  ) => `v0/modeling/project-name/${projectName}/schema/create-admin-account
   `,
   getAdminToken: '/csecurity/oauth/token',
   adminData: '/caccount/account',
   parseReverse: (projectName: string) =>
-    `v0/modeler/project-name/${projectName}/parser/reverse`,
+    `v0/modeling/project-name/${projectName}/parser/reverse`,
   entityList: (projectName: string) =>
-    `v0/modeler/project-name/${projectName}/schema/sql`,
+    `v0/modeling/project-name/${projectName}/schema/sql`,
   entity: (projectName: string) =>
-    `v0/modeler/project-name/${projectName}/schema/sql/entity`,
+    `v0/modeling/project-name/${projectName}/schema/sql/entity`,
   attribute: ({
     projectName,
     entityName
@@ -39,7 +39,7 @@ export const apiRoutes = {
     projectName: string
     entityName: string
   }) =>
-    `v0/modeler/project-name/${projectName}/schema/sql/entity/${entityName}/attribute`,
+    `v0/modeling/project-name/${projectName}/schema/sql/entity/${entityName}/attribute`,
   local: {
     adminLogin: '/adminLogin',
     createAccount: '/createAccount',
