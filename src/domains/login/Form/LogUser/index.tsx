@@ -8,15 +8,13 @@ import {
   Controller
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { routes } from 'domains/routes'
 import * as ThemeContext from 'contexts/ThemeContext'
+import { signIn } from 'next-auth/react'
 
 export function LogUser() {
   const { isDark } = ThemeContext.useTheme()
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
   const { setFormType, logUserSchema } = login.useLogin()
   const {
     formState: { errors },
@@ -27,18 +25,17 @@ export function LogUser() {
   async function Submit(formData: { userName: string; password: string }) {
     setLoading(true)
     try {
-      const { data } = await utils.localApi.post(
-        utils.apiRoutes.local.userLogin,
-        {
-          username: formData.userName,
-          password: formData.password
-        }
-      )
-      utils.setCookie('access_token', data.data.access_token)
+      await signIn('credentials', {
+        username: formData.userName,
+        password: formData.password,
+        callbackUrl: '/'
+      })
+
+      // utils.setCookie('access_token', data.data.access_token)
       utils.notification('Login successfully', 'success')
-      router.push(routes.dashboard)
+      // router.push(routes.dashboard)
     } catch (err: any) {
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         return utils.notification(
           'Ops! Incorrect username or password',
           'error'
