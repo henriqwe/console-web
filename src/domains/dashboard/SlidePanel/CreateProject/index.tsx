@@ -121,6 +121,17 @@ export function Create() {
         }
       )
 
+      const { data: schemaData } = await utils.api.get(
+        `${utils.apiRoutes.schemas}/${data.ProjectName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
+
+      utils.setCookie('X-TenantID', schemaData.tenantId)
+      utils.setCookie('X-TenantAC', schemaData.tenantAc)
       setReload(!reload)
       utils.notification(
         `Project ${data.ProjectName} created successfully`,
