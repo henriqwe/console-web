@@ -159,9 +159,6 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     }
     let value: string
     value = `{\n "action":"${action}",\n "data":[{\n"${entity}":{\n  \n }\n}]\n}`
-    if (action === 'READ') {
-      value = `{\n "action":"${action}",\n "${entity}":{\n  \n }\n}`
-    }
 
     const formatedValue = format?.current ? format?.current(value) : value
     setConsoleValue(formatedValue)
