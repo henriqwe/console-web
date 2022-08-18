@@ -1,6 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, ReactNode, useState, useEffect } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
+import { ReactNode, useState } from 'react'
 import {
   LogoutIcon,
   InformationCircleIcon,
@@ -9,13 +8,12 @@ import {
   BookOpenIcon,
   MenuIcon,
   UserIcon,
-  XIcon,
   DocumentTextIcon
 } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import { removeCookie } from 'utils'
-import { routes } from 'domains/routes'
 import { ToggleTheme } from 'common'
+import { signOut } from 'next-auth/react'
 
 const navigation = [
   { name: 'Projects', href: '#', icon: HomeIcon, current: true },
@@ -36,7 +34,6 @@ type TemplateProps = {
 }
 
 export function Template({ children }: TemplateProps) {
-  const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -89,7 +86,7 @@ export function Template({ children }: TemplateProps) {
                   removeCookie('X-TenantID')
                   removeCookie('admin_access_token')
                   removeCookie('access_token')
-                  router.push(routes.login)
+                  signOut()
                 }}
               >
                 <LogoutIcon

@@ -1,18 +1,17 @@
-// eslint-disable-next-line @next/next/no-server-import-in-page
 import { NextRequest, NextResponse } from 'next/server'
 
-import { validateAuth } from 'utils/auth'
+import { getToken } from 'next-auth/jwt'
 
 const whitelist = ['/api/', '/assets/']
+const secret = process.env.NEXTAUTH_SECRET
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   for (const path of whitelist) {
     if (req.nextUrl.pathname.includes(path)) {
       return
     }
   }
-
-  const token = validateAuth(req)
+  const token = await getToken({ req, secret })
   if (req.nextUrl.pathname === '/login') {
     if (!token) {
       return
