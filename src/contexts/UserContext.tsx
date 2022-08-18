@@ -10,14 +10,6 @@ export type UserType = {
   email?: string
   image?: string
   accessToken?: string
-  access_token: string
-  id: number
-  jti: string
-  refresh_token: string
-  scope: string
-  status: number
-  token_type: string
-  username: string
 }
 
 type UserContextProps = {

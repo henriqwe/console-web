@@ -3,7 +3,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import * as ThemeContext from 'contexts/ThemeContext'
 import * as common from 'common'
-
+import * as utils from 'utils'
 import { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { UserProvider, useUser } from 'contexts/UserContext'
@@ -51,8 +51,10 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (session) {
+      utils.setCookie('access_token', session?.accessToken as string)
       setUser({
-        ...(session.user as UserType)
+        ...(session.user as UserType),
+        accessToken: session?.accessToken as string
       })
     }
   }, [session])

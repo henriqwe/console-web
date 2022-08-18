@@ -11,6 +11,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useState } from 'react'
 import * as ThemeContext from 'contexts/ThemeContext'
 import { signIn } from 'next-auth/react'
+import { routes } from 'domains/routes'
+import router from 'next/router'
 
 export function LogUser() {
   const { isDark } = ThemeContext.useTheme()
@@ -25,15 +27,23 @@ export function LogUser() {
   async function Submit(formData: { userName: string; password: string }) {
     setLoading(true)
     try {
-      await signIn('credentials', {
+      const res = await signIn('credentials', {
         username: formData.userName,
         password: formData.password,
-        callbackUrl: '/'
+        redirect: false
       })
-
-      // utils.setCookie('access_token', data.data.access_token)
-      utils.notification('Login successfully', 'success')
-      // router.push(routes.dashboard)
+      if (res?.status === 401) {
+        return utils.notification(
+          'Ops! Incorrect username or password',
+          'error'
+        )
+      }
+      if (res?.ok && res?.status === 200) {
+        utils.notification('Login successfully', 'success')
+        router.push(routes.dashboard)
+        return
+      }
+      return utils.notification('Ops! Something went wrong', 'error')
     } catch (err: any) {
       if (err.response?.status === 401) {
         return utils.notification(
