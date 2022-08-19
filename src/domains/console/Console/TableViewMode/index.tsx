@@ -22,9 +22,7 @@ export function TableViewMode() {
         setTableColumns([])
         return
       }
-      const value = Array.isArray(consoleResponse)
-        ? consoleResponse
-        : [consoleResponse]
+      const value = consoleResponse?.[0]?.data ?? []
       const columns: tableColumnType[] = []
       Object?.keys(value[0]).map((key) => {
         if (!keysToExcludeInFilter.includes(key)) {
@@ -94,9 +92,7 @@ export function TableViewMode() {
   ) : (
     <common.Table
       tableColumns={tableColumns}
-      values={
-        Array.isArray(consoleResponse) ? consoleResponse : [consoleResponse]
-      }
+      values={consoleResponse?.[0]?.data ?? []}
     />
   )
 }
