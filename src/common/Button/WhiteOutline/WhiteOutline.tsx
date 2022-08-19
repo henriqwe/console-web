@@ -7,6 +7,7 @@ export const WhiteOutline = ({
   children,
   iconPosition,
   icon,
+  type,
   ...props
 }: ButtonProps) => {
   return (
@@ -20,6 +21,7 @@ export const WhiteOutline = ({
       textColor="text-gray-800 dark:text-gray-800"
       iconPosition={iconPosition}
       icon={icon}
+      type={type}
       {...props}
     >
       {children}

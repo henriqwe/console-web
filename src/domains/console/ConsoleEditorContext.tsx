@@ -209,7 +209,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
   function formaterCodeExporterValue() {
     const text = `async function yc_persistence_service(tenantAC, tenantID, BODY) {
-  const result = await fetch('https://api.ycodify.com/api/v0/interpreter-p/s/no-ac', 
+  const result = await fetch('https://api.ycodify.com/v0/persistence/s/no-ac', 
   {
     method: 'POST',
     body: BODY,

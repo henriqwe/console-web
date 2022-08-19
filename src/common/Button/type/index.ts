@@ -6,6 +6,7 @@ export type ButtonProps = {
   onClick?: () => void
   iconPosition?: 'left' | 'right'
   icon?: ReactNode
+  type?: 'button' | 'submit'
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 export type BaseButtonProps = {
@@ -17,4 +18,5 @@ export type BaseButtonProps = {
   loading?: boolean
   iconPosition?: 'left' | 'right'
   icon?: ReactNode
+  type?: 'button' | 'submit'
 } & React.ButtonHTMLAttributes<HTMLButtonElement>

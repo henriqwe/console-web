@@ -34,7 +34,7 @@ export const Input = ({
         {...props}
         type={type}
         id={label}
-        className={`pl-4 border border-gray-300 dark:border-gray-600 dark:bg-menu-primary  outline-1 outline-blue-300 dark:outline-blue-700 h-10 text-sm text-gray-700 dark:text-text-primary w-full disabled:bg-gray-300 disabled:cursor-not-allowed transition ${
+        className={`pl-4 border border-gray-300 dark:border-gray-600 dark:bg-menu-primary  outline-1 outline-blue-300 dark:outline-blue-700 h-10 text-sm text-gray-700 dark:text-text-primary w-full dark:disabled:bg-menu-secondary disabled:bg-gray-300 disabled:cursor-not-allowed transition ${
           icon ? 'rounded-r-md' : 'rounded-md'
         } ${props.className}`}
       />
