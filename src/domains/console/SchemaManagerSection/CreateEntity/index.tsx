@@ -208,7 +208,6 @@ export function CreateEntity() {
                         <common.Select
                           options={[
                             { name: 'String', value: 'String' },
-                            { name: 'Text', value: 'Text' },
                             { name: 'Integer', value: 'Integer' },
                             { name: 'Long', value: 'Long' },
                             { name: 'Boolean', value: 'Boolean' },
