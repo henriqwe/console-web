@@ -8,9 +8,9 @@ import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import * as utils from 'utils'
 import * as consoleSection from 'domains/console'
 
-import { javascript } from '@codemirror/lang-javascript'
+import { json } from '@codemirror/lang-json'
 import { dracula } from '@uiw/codemirror-theme-dracula'
-import { Slide } from '../Slide'
+import { Slide } from 'domains/console/Console/Slide'
 import { EditorView } from '@codemirror/view'
 import { Icon } from '@iconify/react'
 
@@ -146,7 +146,7 @@ export function Editors() {
                 }}
                 theme={isDark ? dracula : 'light'}
                 extensions={[
-                  javascript({ jsx: true }),
+                  json(),
                   globalJavaScriptCompletions,
                   EditorView.lineWrapping
                 ]}
@@ -190,7 +190,7 @@ export function Editors() {
                     width="100%"
                     theme={isDark ? dracula : 'light'}
                     editable={false}
-                    extensions={[javascript({ jsx: true })]}
+                    extensions={[json()]}
                     basicSetup={{
                       lineNumbers: false
                     }}
