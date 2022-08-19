@@ -19,6 +19,8 @@ import * as data from 'domains/console'
 
 import * as utils from 'utils'
 
+type actioncType = 'CREATE' | 'UPDATE' | 'DELETE' | 'READ'
+
 type ConsoleEditorContextProps = {
   consoleValue: string
   setConsoleValue: Dispatch<SetStateAction<string>>
@@ -136,7 +138,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   }
 
   function formatQueryOrMutation(type: string, entity: string) {
-    let action: string
+    let action: actioncType
+
     switch (type) {
       case 'insert':
         action = 'CREATE'
@@ -157,10 +160,42 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         action = 'READ'
         break
     }
-    let value: string
-    value = `{\n "action":"${action}",\n "data":[{\n"${entity}":{\n  \n }\n}]\n}`
 
-    const formatedValue = format?.current ? format?.current(value) : value
+    const baseValue = { action: action, data: [{ [entity]: {} }] }
+
+    let value: { action: actioncType; data: any[] }
+
+    try {
+      value = JSON.parse(consoleValue)
+
+      const entityDuplicated = value.data.filter((dataEntity) =>
+        Object.keys(dataEntity).includes(entity)
+      )
+
+      // add entity
+      if (!entityDuplicated.length) {
+        value.data.push({ [entity]: {} })
+      }
+
+      // remove entity
+      if (entityDuplicated.length && value.action === action) {
+        const valueDataSet = new Set(value.data)
+        for (const includeEntity of entityDuplicated) {
+          valueDataSet.delete(includeEntity)
+        }
+        value.data = [...valueDataSet]
+      }
+      value.action = action
+    } catch (err) {
+      value = baseValue
+    }
+
+    const valueStringify = JSON.stringify(value, null, 4)
+
+    const formatedValue = format?.current
+      ? format?.current(valueStringify)
+      : valueStringify
+
     setConsoleValue(formatedValue)
   }
 
@@ -209,7 +244,9 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
   function formaterCodeExporterValue() {
     const text = `async function yc_persistence_service(tenantAC, tenantID, BODY) {
-  const result = await fetch('https://api.ycodify.com/v0/persistence/s/no-ac', 
+  const result = await fetch('${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/${
+      utils.apiRoutes.interpreter
+    }', 
   {
     method: 'POST',
     body: BODY,
