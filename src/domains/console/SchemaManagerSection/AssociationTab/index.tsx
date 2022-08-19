@@ -103,7 +103,6 @@ export function AssociationTab({ loading }: AssociationTabProps) {
           {/* <AssociationCard /> */}
         </div>
       </div>
-
       {openForm && (
         <>
           <common.Separator />

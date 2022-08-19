@@ -95,15 +95,15 @@ export function FieldDetail({
   }
 
   return (
-    <common.Card className="p-6 bg-white border border-gray-300">
-      <div className="flex gap-4">
-        <button
+    <common.Card className="p-6 bg-white dark:bg-menu-primary border border-gray-300">
+      <div className="flex gap-4 items-center">
+        <common.Buttons.Clean
           className="px-1 py-1 text-sm bg-white border border-gray-300 rounded-md"
           type="button"
           onClick={() => setShowDetails(false)}
         >
           Close
-        </button>
+        </common.Buttons.Clean>
         <p className="font-bold">{data.name}</p>
       </div>
       <section className="flex flex-col gap-4 mt-4">

@@ -7,6 +7,7 @@ export const YellowOutline = ({
   children,
   iconPosition,
   icon,
+  type,
   ...props
 }: ButtonProps) => {
   return (
@@ -20,6 +21,7 @@ export const YellowOutline = ({
       textColor="text-yellow-500"
       iconPosition={iconPosition}
       icon={icon}
+      type={type}
       {...props}
     >
       {children}

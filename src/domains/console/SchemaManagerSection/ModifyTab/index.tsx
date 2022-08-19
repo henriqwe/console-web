@@ -202,7 +202,7 @@ function AttributeForm({
   }
   return (
     <form
-      className="grid grid-cols-12 gap-4 px-4 py-5 bg-white border border-gray-300 rounded-lg"
+      className="grid grid-cols-12 gap-4 px-4 py-5 bg-white dark:bg-menu-primary border border-gray-300 rounded-lg"
       onSubmit={handleSubmit(Submit)}
     >
       <Controller

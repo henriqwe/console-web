@@ -26,12 +26,12 @@ export function AssociationCard({
       ) : (
         <>
           <div className="flex items-center gap-2 mb-2">
-            <common.Buttons.WhiteOutline
+            <common.Buttons.Clean
               type="button"
               onClick={() => setShowDetails(true)}
             >
               Edit
-            </common.Buttons.WhiteOutline>
+            </common.Buttons.Clean>
             <p>{attribute}</p>
           </div>
           <p className="flex gap-4 text-sm text-gray-500">

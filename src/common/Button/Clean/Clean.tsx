@@ -7,6 +7,7 @@ export const Clean = ({
   children,
   iconPosition,
   icon,
+  type,
   ...props
 }: ButtonProps) => {
   return (
@@ -20,6 +21,7 @@ export const Clean = ({
       textColor=""
       iconPosition={iconPosition}
       icon={icon}
+      type={type}
       {...props}
     >
       {children}

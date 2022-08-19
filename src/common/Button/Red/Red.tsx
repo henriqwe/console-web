@@ -7,6 +7,7 @@ export const Red = ({
   children,
   iconPosition,
   icon,
+  type,
   ...props
 }: ButtonProps) => {
   return (
@@ -20,6 +21,7 @@ export const Red = ({
       textColor="text-white"
       iconPosition={iconPosition}
       icon={icon}
+      type={type}
       {...props}
     >
       {children}

@@ -48,7 +48,7 @@ export const Select = ({
           )}
           <div className="relative">
             <Listbox.Button
-              className="relative w-full py-2 pl-3 min-h-[2.5rem] pr-10 text-left transition bg-white dark:bg-menu-primary border border-gray-300 dark:border-gray-600 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="relative w-full py-2 pl-3 min-h-[2.5rem] pr-10 text-left transition bg-white dark:bg-menu-primary border border-gray-300 dark:border-gray-600 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:disabled:bg-menu-secondary disabled:bg-gray-300 disabled:cursor-not-allowed"
               aria-disabled={disabled}
               disabled={disabled}
             >
@@ -94,7 +94,11 @@ export const Select = ({
                       <>
                         <span
                           className={`
-                            ${selected?.name === option.name ? 'font-semibold' : 'font-normal'}
+                            ${
+                              selected?.name === option.name
+                                ? 'font-semibold'
+                                : 'font-normal'
+                            }
                             block truncate
                           `}
                           title={option.name}

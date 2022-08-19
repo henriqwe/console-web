@@ -8,9 +8,10 @@ export const BaseButton = ({
   buttonColor,
   hoverButtonColor,
   disableButtonColor,
-  textColor,
+  textColor = 'dark:text-text-primary',
   iconPosition = 'right',
   icon,
+  type = 'button',
   ...props
 }: BaseButtonProps) => {
   return (
