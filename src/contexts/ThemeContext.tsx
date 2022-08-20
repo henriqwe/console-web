@@ -19,12 +19,13 @@ export const ThemeContext = createContext<ThemeContextProps>(
 )
 
 export const ThemeProvider = ({ children }: ProviderProps) => {
-  const [isDark, setIsDark] = useState(isDarkTheme())
+  const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
     window.onstorage = function () {
       setIsDark(isDarkTheme())
     }
+    setIsDark(isDarkTheme())
   }, [])
 
   function isDarkTheme() {
