@@ -19,7 +19,7 @@ export default async function interpreter(
             Accept: 'application/json',
             Authorization: `Bearer ${req.body.access_token}`,
             'X-TenantID': `${req.body['X-TenantID']}`,
-            'X-TenantAC': `${req.body['X-TenantAC']}`,
+            'X-TenantAC': `${req.body['X-TenantAC']}`
           }
         }
       )
@@ -30,13 +30,13 @@ export default async function interpreter(
       return res
         .status(200)
         .json({ data: data.data ? data.data : data, responseTimeMs })
-    } catch (err) {
-      console.log(err)
-      return res.status(404).json({ err: err })
+    } catch (err: any) {
+      return res
+        .status(err.response.status)
+        .json({ err: err.response.data })
     }
   }
   return res.status(404).json({ message: 'Not found! :(' })
 }
-
 
 // mesmo q atributo mudando para association
