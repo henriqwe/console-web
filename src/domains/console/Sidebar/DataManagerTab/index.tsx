@@ -2,21 +2,38 @@ import { Icon } from '@iconify/react'
 import { SetStateAction, useEffect, useState } from 'react'
 import * as common from 'common'
 import * as utils from 'utils'
-import * as consoleEditor from '../../ConsoleEditorContext'
+import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { useRouter } from 'next/router'
 import { CheckIcon } from '@heroicons/react/outline'
+import type {
+  attributesType,
+  handleFormatQueryOrMutationEntityType
+} from 'domains/console/ConsoleEditorContext'
 
+type schemaEntitiesType = {
+  name: string
+  data: {
+    [attribute: string]: {
+      createdat: number
+      nullable: boolean
+      type: attributesType
+      unique: boolean
+      length?: number
+      comment: string
+    }
+  }
+}
 export function DataManagerTab() {
   const router = useRouter()
-  const [operations, setOperations] = useState<string[]>([])
+  const [schemaEntities, setSchemaEntities] = useState<schemaEntitiesType[]>()
   const [loading, setLoading] = useState(false)
   const [activeEntity, setActiveEntity] = useState<string>()
-  const { formatQueryOrMutation } = consoleEditor.useConsoleEditor()
+  const { handleFormatQueryOrMutationEntity } = consoleEditor.useConsoleEditor()
 
-  async function loadOperations() {
+  async function loadSchema() {
     try {
-      const operations = []
       setLoading(true)
+      const _schemaEntities: schemaEntitiesType[] = []
 
       const response = await utils.api
         .get(`${utils.apiRoutes.entityList(router.query.name as string)}`, {
@@ -28,10 +45,12 @@ export function DataManagerTab() {
         })
         .catch(() => null)
 
-      for (const table of Object.keys(response!.data)) {
-        operations.push(`${table}`)
+      for (const entity of Object.keys(response?.data)) {
+        delete response?.data[entity]?._conf
+        _schemaEntities.push({ name: entity, data: response?.data[entity] })
       }
-      setOperations(operations)
+
+      setSchemaEntities(_schemaEntities)
     } catch (err: any) {
       if (err?.response?.status !== 404) {
         utils.showError(err)
@@ -43,7 +62,7 @@ export function DataManagerTab() {
 
   useEffect(() => {
     if (router.query.name) {
-      loadOperations()
+      loadSchema()
     }
   }, [router.query.name])
 
@@ -56,17 +75,19 @@ export function DataManagerTab() {
           </div>
           <div>Loading...</div>
         </div>
-      ) : operations.length === 0 ? (
+      ) : !schemaEntities?.length ? (
         <div>
-          <p className="font-extralight">Operations not found</p>
+          <p className="font-extralight">Entities not found</p>
         </div>
       ) : (
-        operations.map((schema) => (
+        schemaEntities?.map((entity, idx) => (
           <Operation
-            key={schema}
-            schema={schema}
+            key={idx}
+            entity={entity}
             activeEntity={activeEntity}
-            formatQueryOrMutation={formatQueryOrMutation}
+            handleFormatQueryOrMutationEntity={
+              handleFormatQueryOrMutationEntity
+            }
             setActiveEntity={setActiveEntity}
           />
         ))
@@ -76,18 +97,21 @@ export function DataManagerTab() {
 }
 
 function Operation({
-  schema,
+  entity,
   activeEntity,
-  formatQueryOrMutation,
+  handleFormatQueryOrMutationEntity,
   setActiveEntity
 }: {
-  schema: string
+  entity: schemaEntitiesType
   activeEntity: string | undefined
-  formatQueryOrMutation: (type: string, entity: string) => void
+  handleFormatQueryOrMutationEntity({
+    entity,
+    attribute,
+    attributeType
+  }: handleFormatQueryOrMutationEntityType): void
   setActiveEntity: (value: SetStateAction<string | undefined>) => void
 }) {
   const [active, setActive] = useState(false)
-
   return (
     <div className="flex flex-col gap-2 mb-2 ">
       <div
@@ -101,31 +125,39 @@ function Operation({
             icon="bx:chevron-right"
             className={`w-4 h-4 transition ${active && 'rotate-90'}`}
           />
-          <p className="text-sm font-light">{schema}</p>
+          <p className="text-sm font-light">{entity.name}</p>
         </div>
       </div>
       {active &&
-        ['insert', 'update', 'delete', 'select', 'select by pk'].map(
-          (entity) => (
-            <div key={entity}>
-              <div
-                className={`flex items-center gap-2  ml-2 cursor-pointer ${
-                  activeEntity === `${schema}${entity}` && 'text-text-highlight'
-                }`}
-                onClick={() => {
-                  setActiveEntity(`${schema}${entity}`)
-                  formatQueryOrMutation(entity, schema)
-                }}
-              >
-                <div className="w-4 h-4">
-                  {activeEntity === `${schema}${entity}` && <CheckIcon />}
-                </div>
-
-                <p className="text-sm font-extralight">{entity}</p>
+        Object.keys(entity.data).map((attribute, idx) => (
+          <div key={idx}>
+            <div
+              className={`flex items-center gap-2  ml-2 cursor-pointer ${
+                activeEntity === `${entity}${attribute}` &&
+                'text-text-highlight'
+              }`}
+              onClick={() => {
+                setActiveEntity(`${entity}${attribute}`)
+                handleFormatQueryOrMutationEntity({
+                  entity: entity.name,
+                  attribute,
+                  attributeType: entity.data[attribute].type
+                })
+              }}
+            >
+              <div className="w-4 h-4">
+                {activeEntity === `${entity.name}${attribute}` && <CheckIcon />}
               </div>
+
+              <p className="text-sm font-extralight">
+                {attribute}:{' '}
+                <span className="text-gray-400">
+                  {entity.data[attribute].type}
+                </span>
+              </p>
             </div>
-          )
-        )}
+          </div>
+        ))}
     </div>
   )
 }

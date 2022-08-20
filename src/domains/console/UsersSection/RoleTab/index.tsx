@@ -66,7 +66,7 @@ export function RoleTab() {
             </common.Buttons.Blue>
           </div>
           <common.Separator />
-          <common.Entity
+          {/* <common.Entity
             entityColumns={[
               { name: 'name', displayName: 'Name' },
               { name: 'schema', displayName: 'Schema' },
@@ -83,7 +83,7 @@ export function RoleTab() {
             ]}
             values={roles}
             actions={RowActions}
-          />
+          /> */}
         </div>
       )}
     </div>

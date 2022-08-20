@@ -19,7 +19,23 @@ import * as data from 'domains/console'
 
 import * as utils from 'utils'
 
-type actioncType = 'CREATE' | 'UPDATE' | 'DELETE' | 'READ'
+export type actionType = 'CREATE' | 'UPDATE' | 'DELETE' | 'READ'
+export type attributesType =
+  | 'Text'
+  | 'Boolean'
+  | 'Double'
+  | 'Integer'
+  | 'Long'
+  | 'String'
+  | 'Timestamp'
+export type handleFormatQueryOrMutationActionType = {
+  action: actionType
+}
+export type handleFormatQueryOrMutationEntityType = {
+  entity: string
+  attribute: string
+  attributeType: attributesType
+}
 
 type ConsoleEditorContextProps = {
   consoleValue: string
@@ -27,7 +43,11 @@ type ConsoleEditorContextProps = {
   consoleValueLastOperation: string
   setConsoleValueLastOperation: Dispatch<SetStateAction<string>>
   globalJavaScriptCompletions: any
-  formatQueryOrMutation(type: string, entity: string): void
+  handleFormatQueryOrMutationEntity({
+    entity,
+    attribute,
+    attributeType
+  }: handleFormatQueryOrMutationEntityType): void
   consoleResponse: any[]
   setConsoleResponse: Dispatch<SetStateAction<never[]>>
   runOperation(): Promise<void>
@@ -52,6 +72,9 @@ type ConsoleEditorContextProps = {
   handleFormat: () => void
   handleChange: (input: string) => void
   setFormatter: (func: FormatterFunction) => void
+  handleFormatQueryOrMutationAction({
+    action
+  }: handleFormatQueryOrMutationActionType): void
 }
 
 type ProviderProps = {
@@ -137,59 +160,70 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     }
   }
 
-  function formatQueryOrMutation(type: string, entity: string) {
-    let action: actioncType
-
-    switch (type) {
-      case 'insert':
-        action = 'CREATE'
-        break
-      case 'update':
-        action = 'UPDATE'
-        break
-      case 'delete':
-        action = 'DELETE'
-        break
-      case 'select':
-        action = 'READ'
-        break
-      case 'select by pk':
-        action = 'READ'
-        break
-      default:
-        action = 'READ'
-        break
-    }
-
-    const baseValue = { action: action, data: [{ [entity]: {} }] }
-
-    let value: { action: actioncType; data: any[] }
+  function handleFormatQueryOrMutationEntity({
+    entity,
+    attribute,
+    attributeType
+  }: handleFormatQueryOrMutationEntityType) {
+    let value: { action: actionType; data: any[] }
 
     try {
       value = JSON.parse(consoleValue)
 
-      const entityDuplicated = value.data.filter((dataEntity) =>
-        Object.keys(dataEntity).includes(entity)
+      //Verifica  se existe a entidade
+      const existingEntity = value.data.filter((valueDataEntity) =>
+        Object.keys(valueDataEntity).includes(entity)
       )
 
-      // add entity
-      if (!entityDuplicated.length) {
-        value.data.push({ [entity]: {} })
+      // Adiciona a entidade e atributo caso não existam
+      if (!existingEntity.length) {
+        value.data.push({ [entity]: { [attribute]: '' } })
       }
 
-      // remove entity
-      if (entityDuplicated.length && value.action === action) {
-        const valueDataSet = new Set(value.data)
-        for (const includeEntity of entityDuplicated) {
-          valueDataSet.delete(includeEntity)
+      if (existingEntity.length) {
+        // Lindando com os atributos se existir remove, senão adiciona
+        for (const [index, valueDataEntity] of value.data.entries()) {
+          if (Object.keys(valueDataEntity).includes(entity)) {
+            if (Object.keys(valueDataEntity[entity]).includes(attribute)) {
+              delete valueDataEntity[entity][attribute]
+
+              //Caso a entidade seja um objeto vazio remove
+              if (!Object.keys(valueDataEntity[entity]).length) {
+                value.data.splice(index, 1)
+              }
+              break
+            }
+            valueDataEntity[entity][attribute] = ''
+          }
         }
-        value.data = [...valueDataSet]
       }
-      value.action = action
     } catch (err) {
-      value = baseValue
+      value = { action: 'READ', data: [{ [entity]: { [attribute]: '' } }] }
     }
 
+    formatValueToSetInConsole(value)
+  }
+
+  function handleFormatQueryOrMutationAction({
+    action
+  }: handleFormatQueryOrMutationActionType) {
+    let value: { action: actionType; data: any[] }
+
+    try {
+      value = JSON.parse(consoleValue)
+
+      value.action = action
+    } catch (err) {
+      value = { action, data: [] }
+    }
+
+    formatValueToSetInConsole(value)
+  }
+
+  function formatValueToSetInConsole(value: {
+    action: actionType
+    data: any[]
+  }) {
     const valueStringify = JSON.stringify(value, null, 4)
 
     const formatedValue = format?.current
@@ -301,7 +335,7 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
         consoleValue,
         setConsoleValue,
         globalJavaScriptCompletions,
-        formatQueryOrMutation,
+        handleFormatQueryOrMutationEntity,
         consoleResponse,
         setConsoleResponse,
         runOperation,
@@ -327,7 +361,8 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
         format,
         handleFormat,
         handleChange,
-        setFormatter
+        setFormatter,
+        handleFormatQueryOrMutationAction
       }}
     >
       {children}
