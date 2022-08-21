@@ -16,7 +16,7 @@ export function AssociationCard({
   const [showDetails, setShowDetails] = useState(false)
 
   return (
-    <div className="px-4 py-2 border border-t-0">
+    <div>
       {showDetails ? (
         <FieldDetail
           attribute={attribute}
@@ -33,12 +33,12 @@ export function AssociationCard({
               Edit
             </common.Buttons.Clean>
             <p>{attribute}</p>
+            <p className="flex gap-4 ml-4 text-sm text-gray-500">
+              {selectedEntity} . {attribute}{' '}
+              <ArrowNarrowRightIcon className="w-5" />
+              {schemaTables![selectedEntity as string][attribute].type}
+            </p>
           </div>
-          <p className="flex gap-4 text-sm text-gray-500">
-            {selectedEntity} . {attribute}{' '}
-            <ArrowNarrowRightIcon className="w-5" />
-            {schemaTables![selectedEntity as string][attribute].type}
-          </p>
         </>
       )}
     </div>
