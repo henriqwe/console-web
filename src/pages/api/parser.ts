@@ -18,9 +18,8 @@ export default async function schemas(
         }
       )
       return res.status(200).json({ data })
-    } catch (err) {
-      console.log(err)
-      return res.status(404).json({ err: err })
+    } catch (err: any) {
+      return res.status(err.response.status).json({ err: err })
     }
   }
   return res.status(404).json({ message: 'Not found! :(' })

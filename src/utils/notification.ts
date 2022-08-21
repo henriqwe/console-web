@@ -18,7 +18,19 @@ function notification(
 }
 
 function showError(err: any) {
-  notification(err?.response?.data?.message, 'error')
+  if (err.response) {
+    if (err.response?.data) {
+      notification(
+        err?.response?.data?.err?.message ?? err?.response?.data?.message,
+        'error'
+      )
+      return
+    }
+
+    notification(err.response.message, 'error')
+    return
+  }
+  notification(err?.message, 'error')
 }
 
 export { notification, showError }
