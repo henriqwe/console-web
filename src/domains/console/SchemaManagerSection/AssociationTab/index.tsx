@@ -74,49 +74,7 @@ export function AssociationTab({ loading }: AssociationTabProps) {
     <div
       className={`flex flex-col items-start rounded-b-md bg-white dark:bg-gray-800 p-6 gap-2`}
     >
-      <div className="flex justify-between w-full">
-        <div className="flex-1 border border-y-0 border-x-0">
-          <div className="px-4 py-2 bg-gray-100 border dark:bg-gray-700 dark:border-gray-600 rounded-tl-xl">
-            <p className="text-sm">Object associations</p>
-          </div>
-          {Object.keys(schemaTables![selectedEntity as string])
-            .filter((attribute) => {
-              const entities = Object.keys(schemaTables!)
-              return entities.includes(
-                schemaTables![selectedEntity as string][attribute].type
-              )
-            })
-            .map((attribute) => (
-              <AssociationCard
-                key={attribute}
-                attribute={attribute}
-                schemaTables={schemaTables}
-                selectedEntity={selectedEntity}
-              />
-            ))}
-        </div>
-
-        <div className="flex-1 border border-y-0 border-x-0">
-          <div className="px-4 py-2 bg-gray-100 border dark:bg-gray-700 dark:border-gray-600 rounded-tr-xl">
-            <p className="text-sm">Array associations</p>
-          </div>
-          {/* <AssociationCard /> */}
-        </div>
-      </div>
-      {openForm && (
-        <>
-          <common.Separator />
-          <AttributeForm
-            setOpenForm={setOpenForm}
-            setReload={setReload}
-            reload={reload}
-            selectedEntity={selectedEntity}
-            schemaTables={schemaTables}
-          />
-        </>
-      )}
-      <common.Separator />
-      <div className="flex justify-end w-full gap-4 ">
+      <div className="flex justify-between w-full gap-4 ">
         {!openForm && (
           <common.Buttons.Clean
             type="button"
@@ -129,6 +87,48 @@ export function AssociationTab({ loading }: AssociationTabProps) {
           </common.Buttons.Clean>
         )}
       </div>
+      <common.Separator />
+      {Object.keys(schemaTables![selectedEntity as string])
+        .filter((attribute) => {
+          const entities = Object.keys(schemaTables!)
+          return entities.includes(
+            schemaTables![selectedEntity as string][attribute].type
+          )
+        })
+        .map((attribute) => (
+          <AssociationCard
+            key={attribute}
+            attribute={attribute}
+            schemaTables={schemaTables}
+            selectedEntity={selectedEntity}
+          />
+        ))}
+      {/* <div className="flex justify-between w-full">
+        <div className="flex-1 border border-y-0 border-x-0">
+          <div className="px-4 py-2 bg-gray-100 border dark:bg-gray-700 dark:border-gray-600 rounded-tl-xl">
+            <p className="text-sm">Object associations</p>
+          </div>
+        </div>
+
+        <div className="flex-1 border border-y-0 border-x-0">
+          <div className="px-4 py-2 bg-gray-100 border dark:bg-gray-700 dark:border-gray-600 rounded-tr-xl">
+            <p className="text-sm">Array associations</p>
+          </div> */}
+          {/* <AssociationCard /> */}
+        {/* </div>
+      </div> */}
+      {openForm && (
+        <>
+          <common.Separator />
+          <AttributeForm
+            setOpenForm={setOpenForm}
+            setReload={setReload}
+            reload={reload}
+            selectedEntity={selectedEntity}
+            schemaTables={schemaTables}
+          />
+        </>
+      )}
       <common.Modal
         open={openModal}
         setOpen={setOpenModal}
@@ -220,7 +220,7 @@ function AttributeForm({
 
   return (
     <form
-      className="flex flex-col w-full gap-4 px-4 py-5 bg-gray-100 dark:bg-menu-primary border border-gray-300 dark:border-gray-600 rounded-lg"
+      className="flex flex-col w-full gap-4 px-4 py-5 bg-gray-100 border border-gray-300 rounded-lg dark:bg-menu-primary dark:border-gray-600"
       onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
     >
       <div className="flex items-center justify-between gap-4">
