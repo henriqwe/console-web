@@ -1,21 +1,32 @@
 import { Fragment, ReactNode } from 'react'
 import { Menu, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/solid'
 
 type DropdownProps = {
   actions: { title: string; onClick: () => void }[]
   children: ReactNode
+  withoutChevronDownIcon?: boolean
 }
 
-export function Dropdown({ actions, children }: DropdownProps) {
+export function Dropdown({
+  actions,
+  children,
+  withoutChevronDownIcon = false
+}: DropdownProps) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button
-          className="flex items-center px-2 py-1 text-gray-400 rounded-md dark:text-text-secondary hover:text-gray-600 dark:hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+          className="flex items-center px-2 py-1  rounded-md dark:text-text-secondary hover:text-gray-800 dark:hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 font-medium"
           title="open options"
         >
-          <span className="sr-only">Open options</span>
           {children}
+          {!withoutChevronDownIcon && (
+            <ChevronDownIcon
+              className="-mr-1 ml-2 h-5 w-5"
+              aria-hidden="true"
+            />
+          )}
         </Menu.Button>
       </div>
 

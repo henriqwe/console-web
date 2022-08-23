@@ -153,6 +153,8 @@ function Operation({
                 {attribute}:{' '}
                 <span className="text-gray-400">
                   {entity.data[attribute].type}
+                  {entity.data[attribute].type === 'String' &&
+                    entity.data[attribute].length}
                 </span>
               </p>
             </div>
