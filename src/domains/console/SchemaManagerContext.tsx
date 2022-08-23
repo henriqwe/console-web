@@ -47,6 +47,7 @@ type SchemaManagerContextProps = {
   }
   schemaStatus?: number
   setSchemaStatus: Dispatch<SetStateAction<number | undefined>>
+  returnToEntitiesPage(): void
 }
 
 type ProviderProps = {
@@ -58,34 +59,15 @@ type slideState = {
   type: 'CodeExporterView' | 'EndpointAndResquestHeadersView'
 }
 
-type breadcrumbPageType = { name: string; current: boolean }
+type breadcrumbPageType = {
+  name: string
+  current: boolean
+  action?: () => void
+}
 
 export const SchemaManagerContext = createContext<SchemaManagerContextProps>(
   {} as SchemaManagerContextProps
 )
-
-const breadcrumbPagesData = {
-  home: [
-    { name: 'Schema manager', current: false },
-    { name: 'Entities', current: true }
-  ],
-  createEntity: [
-    { name: 'Schema manager', current: false },
-    { name: 'Entities', current: false },
-    { name: 'Create', current: true }
-  ],
-  viewEntity: (entityName: string) => [
-    { name: 'Schema manager', current: false },
-    { name: 'Entities', current: false },
-    { name: entityName, current: true }
-  ],
-  viewEntityRelationship: (entityName: string) => [
-    { name: 'Schema manager', current: false },
-    { name: 'Entities', current: false },
-    { name: entityName, current: false },
-    { name: 'Relationship', current: true }
-  ]
-}
 
 export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const [openSlide, setOpenSlide] = useState(false)
@@ -106,9 +88,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     open: false,
     type: 'CodeExporterView'
   })
-  const [breadcrumbPages, setBreadcrumbPages] = useState<breadcrumbPageType[]>(
-    breadcrumbPagesData.home
-  )
+
   const [schemaStatus, setSchemaStatus] = useState<number>()
 
   const fieldSchema = yup.object().shape({
@@ -128,6 +108,49 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     AssociationName: yup.string().required('This field is required'),
     ReferenceEntity: yup.object().required('This field is required')
   })
+
+  function returnToEntitiesPage() {
+    setShowCreateEntitySection(false)
+    setSelectedEntity(undefined)
+    setBreadcrumbPages(breadcrumbPagesData?.home)
+  }
+  const breadcrumbPagesData = {
+    home: [
+      { name: 'Schema manager', current: false },
+      { name: 'Entities', current: true }
+    ],
+    createEntity: [
+      { name: 'Schema manager', current: false },
+      {
+        name: 'Entities',
+        current: false,
+        action: returnToEntitiesPage
+      },
+      { name: 'Create', current: true }
+    ],
+    viewEntity: (entityName: string) => [
+      { name: 'Schema manager', current: false },
+      {
+        name: 'Entities',
+        current: false,
+        action: returnToEntitiesPage
+      },
+      { name: entityName, current: true }
+    ],
+    viewEntityRelationship: (entityName: string) => [
+      { name: 'Schema manager', current: false },
+      {
+        name: 'Entities',
+        current: false,
+        action: returnToEntitiesPage
+      },
+      { name: entityName, current: false },
+      { name: 'Relationship', current: true }
+    ]
+  }
+  const [breadcrumbPages, setBreadcrumbPages] = useState<breadcrumbPageType[]>(
+    breadcrumbPagesData.home
+  )
 
   return (
     <SchemaManagerContext.Provider
@@ -161,7 +184,8 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         breadcrumbPagesData,
         updateAssociationSchema,
         schemaStatus,
-        setSchemaStatus
+        setSchemaStatus,
+        returnToEntitiesPage
       }}
     >
       {children}

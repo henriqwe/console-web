@@ -2,7 +2,7 @@
 import { ChevronRightIcon } from '@heroicons/react/solid'
 
 type BreadcrumbProps = {
-  pages: { name: string; current: boolean }[]
+  pages: { name: string; current: boolean; action?: () => void }[]
   showNumber?: boolean
 }
 
@@ -11,7 +11,11 @@ export function Breadcrumb({ pages, showNumber = false }: BreadcrumbProps) {
     <nav className="flex" aria-label="Breadcrumb">
       <ol role="list" className="flex items-center space-x-2">
         {pages.map((page, index) => (
-          <li key={page.name}>
+          <li
+            key={page.name}
+            onClick={() => page.action?.()}
+            className={`${page.action ? 'hover:cursor-pointer' : ''}`}
+          >
             <div className="flex items-between">
               <p
                 className={`flex items-center gap-2 mr-2 text-sm font-medium text-center ${
