@@ -16,7 +16,8 @@ export function SchemaManagerTab() {
     setShowCreateEntitySection,
     setBreadcrumbPages,
     breadcrumbPagesData,
-    setSchemaTables
+    setSchemaTables,
+    returnToEntitiesPage
   } = consoleSection.useSchemaManager()
   const [entities, setEntities] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
@@ -56,11 +57,7 @@ export function SchemaManagerTab() {
       <div className="flex items-center w-full">
         <div
           className="flex items-center gap-2 font-light text-sm hover:cursor-pointer"
-          onClick={() => {
-            setShowCreateEntitySection(false)
-            setSelectedEntity(undefined)
-            setBreadcrumbPages(breadcrumbPagesData.home)
-          }}
+          onClick={returnToEntitiesPage}
         >
           Entities &#40; {entities.length} &#41;{' '}
           <CheckCircleIcon className="w-4 h-4 text-iconGreen" />
