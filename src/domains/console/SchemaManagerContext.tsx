@@ -60,7 +60,7 @@ type slideState = {
 }
 
 type breadcrumbPageType = {
-  name: string
+  content: string
   current: boolean
   action?: () => void
 }
@@ -116,36 +116,36 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   }
   const breadcrumbPagesData = {
     home: [
-      { name: 'Schema manager', current: false },
-      { name: 'Entities', current: true }
+      { content: 'Schema manager', current: false },
+      { content: 'Entities', current: true }
     ],
     createEntity: [
-      { name: 'Schema manager', current: false },
+      { content: 'Schema manager', current: false },
       {
-        name: 'Entities',
+        content: 'Entities',
         current: false,
         action: returnToEntitiesPage
       },
-      { name: 'Create', current: true }
+      { content: 'Create', current: true }
     ],
     viewEntity: (entityName: string) => [
-      { name: 'Schema manager', current: false },
+      { content: 'Schema manager', current: false },
       {
-        name: 'Entities',
+        content: 'Entities',
         current: false,
         action: returnToEntitiesPage
       },
-      { name: entityName, current: true }
+      { content: entityName, current: true }
     ],
     viewEntityRelationship: (entityName: string) => [
-      { name: 'Schema manager', current: false },
+      { content: 'Schema manager', current: false },
       {
-        name: 'Entities',
+        content: 'Entities',
         current: false,
         action: returnToEntitiesPage
       },
-      { name: entityName, current: false },
-      { name: 'Relationship', current: true }
+      { content: entityName, current: false },
+      { content: 'Relationship', current: true }
     ]
   }
   const [breadcrumbPages, setBreadcrumbPages] = useState<breadcrumbPageType[]>(

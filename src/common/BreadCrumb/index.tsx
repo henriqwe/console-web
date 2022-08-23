@@ -1,8 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { ChevronRightIcon } from '@heroicons/react/solid'
+import { ReactNode } from 'react'
 
 type BreadcrumbProps = {
-  pages: { name: string; current: boolean; action?: () => void }[]
+  pages: { content: ReactNode; current: boolean; action?: () => void }[]
   showNumber?: boolean
 }
 
@@ -12,12 +13,12 @@ export function Breadcrumb({ pages, showNumber = false }: BreadcrumbProps) {
       <ol role="list" className="flex items-center space-x-2">
         {pages.map((page, index) => (
           <li
-            key={page.name}
+            key={index}
             onClick={() => page.action?.()}
             className={`${page.action ? 'hover:cursor-pointer' : ''}`}
           >
             <div className="flex items-between">
-              <p
+              <div
                 className={`flex items-center gap-2 mr-2 text-sm font-medium text-center ${
                   page.current
                     ? 'dark:text-text-primary'
@@ -34,8 +35,8 @@ export function Breadcrumb({ pages, showNumber = false }: BreadcrumbProps) {
                     {index + 1}
                   </span>
                 )}
-                {page.name}
-              </p>
+                {page.content}
+              </div>
               {index + 1 !== pages.length && (
                 <ChevronRightIcon
                   className="flex-shrink-0 w-5 h-5 text-gray-400"

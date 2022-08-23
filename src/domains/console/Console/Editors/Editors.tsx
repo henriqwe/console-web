@@ -13,9 +13,13 @@ import { dracula } from '@uiw/codemirror-theme-dracula'
 import { Slide } from 'domains/console/Console/Slide'
 import { EditorView } from '@codemirror/view'
 import { Icon } from '@iconify/react'
+import { useState } from 'react'
+
+import type { actionType } from 'domains/console/ConsoleEditorContext'
 
 export function Editors() {
   const { isDark } = ThemeContext.useTheme()
+  const [currentAction, setCurrentAction] = useState<actionType>('READ')
   const {
     setShowTableViewMode,
     showTableViewMode,
@@ -33,7 +37,8 @@ export function Editors() {
     responseTime,
     consoleValueLastOperation,
     handleFormat,
-    handleChange
+    handleChange,
+    handleFormatQueryOrMutationAction
   } = consoleEditor.useConsoleEditor()
 
   const isReady = usePrettier({
@@ -43,33 +48,64 @@ export function Editors() {
 
   if (!isReady) return null
 
+  const dropdownActions = [
+    {
+      title: 'Read',
+      onClick: () => {
+        handleFormatQueryOrMutationAction({ action: 'READ' })
+        setCurrentAction('READ')
+        return
+      }
+    },
+    {
+      title: 'Create',
+      onClick: () => {
+        handleFormatQueryOrMutationAction({ action: 'CREATE' })
+        setCurrentAction('CREATE')
+        return
+      }
+    },
+    {
+      title: 'Update',
+      onClick: () => {
+        handleFormatQueryOrMutationAction({ action: 'UPDATE' })
+        setCurrentAction('UPDATE')
+        return
+      }
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        handleFormatQueryOrMutationAction({ action: 'DELETE' })
+        setCurrentAction('DELETE')
+        return
+      }
+    }
+  ]
   return (
     <div className="flex flex-col w-full h-full" data-tour="step-4">
       <common.ContentSection
         variant="WithoutTitleBackgroundColor"
         title={
           <div className="grid grid-cols-2 items-center justify-between w-full">
-            <div className="flex items-center">
+            <div className="flex items-center z-50">
               <common.Breadcrumb
                 pages={[
-                  { name: 'Data manager', current: false },
-                  { name: 'Console', current: true }
+                  { content: 'Data manager', current: false },
+                  { content: 'Console', current: false },
+                  {
+                    content: (
+                      <common.Dropdown actions={dropdownActions}>
+                        {utils.capitalizeWord(currentAction)}
+                      </common.Dropdown>
+                    ),
+                    current: true
+                  }
                 ]}
               />
-              <div title="Endpoint and request headers">
-                <common.icons.DotsVerticalIcon
-                  className="w-3 h-3 cursor-pointer"
-                  onClick={() => {
-                    setSlideState({
-                      open: true,
-                      type: 'EndpointAndResquestHeadersView'
-                    })
-                  }}
-                />
-              </div>
             </div>
 
-            <div className="flex items-center justify-end gap-4">
+            <div className="flex items-center justify-end gap-2">
               {consoleValueLastOperation && (
                 <common.Buttons.White
                   type="button"
@@ -99,6 +135,17 @@ export function Editors() {
                   Table
                 </common.Buttons.White>
               )}
+              <div title="Endpoint and request headers">
+                <common.icons.DotsVerticalIcon
+                  className="w-5 h-5 cursor-pointer"
+                  onClick={() => {
+                    setSlideState({
+                      open: true,
+                      type: 'EndpointAndResquestHeadersView'
+                    })
+                  }}
+                />
+              </div>
             </div>
           </div>
         }
