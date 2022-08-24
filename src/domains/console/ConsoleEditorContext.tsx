@@ -166,7 +166,34 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     attributeType
   }: handleFormatQueryOrMutationEntityType) {
     let value: { action: actionType; data: any[] }
+    let attributeTypeValue: any
 
+    switch (attributeType) {
+      case 'String':
+        attributeTypeValue = ''
+        break
+      case 'Text':
+        attributeTypeValue = ''
+        break
+      case 'Timestamp':
+        attributeTypeValue = ''
+        break
+      case 'Boolean':
+        attributeTypeValue = false
+        break
+      case 'Integer':
+        attributeTypeValue = 0
+        break
+      case 'Long':
+        attributeTypeValue = 0
+        break
+      case 'Double':
+        attributeTypeValue = 0.0
+        break
+      default:
+        attributeTypeValue = { [attributeType]: {} }
+        break
+    }
     try {
       value = JSON.parse(consoleValue)
 
@@ -177,7 +204,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
       // Adiciona a entidade e atributo caso não existam
       if (!existingEntity.length) {
-        value.data.push({ [entity]: { [attribute]: '' } })
+        value.data.push({ [entity]: { [attribute]: attributeTypeValue } })
       }
 
       if (existingEntity.length) {
@@ -193,12 +220,15 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
               }
               break
             }
-            valueDataEntity[entity][attribute] = ''
+            valueDataEntity[entity][attribute] = attributeTypeValue
           }
         }
       }
     } catch (err) {
-      value = { action: 'READ', data: [{ [entity]: { [attribute]: '' } }] }
+      value = {
+        action: 'READ',
+        data: [{ [entity]: { [attribute]: attributeTypeValue } }]
+      }
     }
 
     formatValueToSetInConsole(value)
