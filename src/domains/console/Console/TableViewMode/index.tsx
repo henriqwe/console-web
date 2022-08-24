@@ -15,16 +15,20 @@ const keysToExcludeInFilter = ['_role', '_user', '_version']
 export function TableViewMode() {
   const { consoleResponse } = consoleEditor.useConsoleEditor()
   const [tableColumns, setTableColumns] = useState<tableColumnType[]>([])
-
+  const [tableValues, setTableValues] = useState()
   function handleTableColumns() {
     try {
       if (consoleResponse?.length === 0) {
         setTableColumns([])
         return
       }
-      const value = consoleResponse?.[0]?.data ?? []
+      const firstEntity = consoleResponse?.[0] ?? []
+
+      const firstEntityKey = Object.keys(firstEntity)[0]
+
+      setTableValues(firstEntity[firstEntityKey])
       const columns: tableColumnType[] = []
-      Object?.keys(value[0]).map((key) => {
+      Object?.keys(firstEntity[firstEntityKey][0]).map((key) => {
         if (!keysToExcludeInFilter.includes(key)) {
           let data: tableColumnType = {
             name: key,
@@ -41,7 +45,7 @@ export function TableViewMode() {
       })
       const columnsSorted = columns
         .sort((a, b) => {
-          if (a.name === '_id') {
+          if (a.name === 'id') {
             return 1
           }
 
@@ -61,7 +65,7 @@ export function TableViewMode() {
             return -1
           }
 
-          if (a.name === '_id') {
+          if (a.name === 'id') {
             return -1
           }
 
@@ -90,9 +94,6 @@ export function TableViewMode() {
       </div>
     </div>
   ) : (
-    <common.Table
-      tableColumns={tableColumns}
-      values={consoleResponse?.[0]?.data ?? []}
-    />
+    <common.Table tableColumns={tableColumns} values={tableValues ?? []} />
   )
 }
