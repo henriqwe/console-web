@@ -1,16 +1,14 @@
-import { Icon } from '@iconify/react'
-import { SetStateAction, useEffect, useState } from 'react'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
-import { useRouter } from 'next/router'
-import { CheckIcon } from '@heroicons/react/outline'
-import type {
-  attributesType,
-  handleFormatQueryOrMutationEntityType
-} from 'domains/console/ConsoleEditorContext'
 
-type schemaEntitiesType = {
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { Operations } from 'domains/console/Sidebar/DataManagerTab/Operations'
+
+import type { attributesType } from 'domains/console/ConsoleEditorContext'
+
+export type schemaEntitiesType = {
   name: string
   data: {
     [attribute: string]: {
@@ -27,8 +25,8 @@ export function DataManagerTab() {
   const router = useRouter()
   const [schemaEntities, setSchemaEntities] = useState<schemaEntitiesType[]>()
   const [loading, setLoading] = useState(false)
-  const [activeEntity, setActiveEntity] = useState<string>()
-  const { handleFormatQueryOrMutationEntity } = consoleEditor.useConsoleEditor()
+  const { handleFormatQueryOrMutationEntity, activeEntitiesSidebar } =
+    consoleEditor.useConsoleEditor()
 
   async function loadSchema() {
     try {
@@ -81,85 +79,16 @@ export function DataManagerTab() {
         </div>
       ) : (
         schemaEntities?.map((entity, idx) => (
-          <Operation
+          <Operations
             key={idx}
             entity={entity}
-            activeEntity={activeEntity}
+            activeEntitiesSidebar={activeEntitiesSidebar}
             handleFormatQueryOrMutationEntity={
               handleFormatQueryOrMutationEntity
             }
-            setActiveEntity={setActiveEntity}
           />
         ))
       )}
-    </div>
-  )
-}
-
-function Operation({
-  entity,
-  activeEntity,
-  handleFormatQueryOrMutationEntity,
-  setActiveEntity
-}: {
-  entity: schemaEntitiesType
-  activeEntity: string | undefined
-  handleFormatQueryOrMutationEntity({
-    entity,
-    attribute,
-    attributeType
-  }: handleFormatQueryOrMutationEntityType): void
-  setActiveEntity: (value: SetStateAction<string | undefined>) => void
-}) {
-  const [active, setActive] = useState(false)
-  return (
-    <div className="flex flex-col gap-2 mb-2 ">
-      <div
-        className={`flex items-center gap-2 cursor-pointer justify-between`}
-        onClick={() => {
-          setActive(!active)
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <Icon
-            icon="bx:chevron-right"
-            className={`w-4 h-4 transition ${active && 'rotate-90'}`}
-          />
-          <p className="text-sm font-light">{entity.name}</p>
-        </div>
-      </div>
-      {active &&
-        Object.keys(entity.data).map((attribute, idx) => (
-          <div key={idx}>
-            <div
-              className={`flex items-center gap-2  ml-2 cursor-pointer ${
-                activeEntity === `${entity}${attribute}` &&
-                'text-text-highlight'
-              }`}
-              onClick={() => {
-                setActiveEntity(`${entity}${attribute}`)
-                handleFormatQueryOrMutationEntity({
-                  entity: entity.name,
-                  attribute,
-                  attributeType: entity.data[attribute].type
-                })
-              }}
-            >
-              <div className="w-4 h-4">
-                {activeEntity === `${entity.name}${attribute}` && <CheckIcon />}
-              </div>
-
-              <p className="text-sm font-extralight">
-                {attribute}:{' '}
-                <span className="text-gray-400">
-                  {entity.data[attribute].type}
-                  {entity.data[attribute].type === 'String' &&
-                    entity.data[attribute].length}
-                </span>
-              </p>
-            </div>
-          </div>
-        ))}
     </div>
   )
 }

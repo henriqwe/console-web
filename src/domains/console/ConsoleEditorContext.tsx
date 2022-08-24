@@ -75,6 +75,8 @@ type ConsoleEditorContextProps = {
   handleFormatQueryOrMutationAction({
     action
   }: handleFormatQueryOrMutationActionType): void
+  activeEntitiesSidebar: Set<string>
+  setActiveEntitiesSidebar: Dispatch<SetStateAction<Set<string>>>
 }
 
 type ProviderProps = {
@@ -109,6 +111,9 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [tabsData, setTabsData] = useState<tabsDataType>()
   const format = useRef<FormatterFunction>()
   const valueToFormat = useRef<string>('')
+  const [activeEntitiesSidebar, setActiveEntitiesSidebar] = useState(
+    new Set<string>()
+  )
 
   const handleFormat = useCallback(() => {
     try {
@@ -392,7 +397,9 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
         handleFormat,
         handleChange,
         setFormatter,
-        handleFormatQueryOrMutationAction
+        handleFormatQueryOrMutationAction,
+        activeEntitiesSidebar,
+        setActiveEntitiesSidebar
       }}
     >
       {children}
