@@ -40,10 +40,7 @@ export function Operations({
         Object.keys(entity.data).map((attribute, idx) => (
           <div key={idx}>
             <div
-              className={`flex items-center gap-2  ml-2 cursor-pointer ${
-                activeEntitiesSidebar.has(`${entity}-${attribute}`) &&
-                'text-text-highlight'
-              }`}
+              className={`flex items-center gap-2  ml-2 cursor-pointer`}
               onClick={() => {
                 handleFormatQueryOrMutationEntity({
                   entity: entity.name,
