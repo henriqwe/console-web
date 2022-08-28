@@ -14,7 +14,7 @@ import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
 
 const plans = {
-  'Caixa de areia': {
+  'Free': {
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
     features: [
@@ -26,7 +26,7 @@ const plans = {
       'Sem custos adicionais'
     ]
   },
-  Padrao: {
+  Pro: {
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
     features: [
@@ -38,37 +38,13 @@ const plans = {
       'Sem custos adicionais'
     ]
   },
-  'Plano sem nome': {
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
-    features: [
-      'Placeholder',
-      'Placeholder',
-      'Placeholder',
-      'Placeholder',
-      'Placeholder',
-      'Placeholder'
-    ]
-  },
-  Enterprise: {
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
-    features: [
-      'Ambiente de produção',
-      'Modelo de dados ilimitado',
-      'Elasticidade ilimitada',
-      'Tráfego de dados ilimitado',
-      'Armazenamento ilimitado',
-      'Custos sob medida'
-    ]
-  }
 }
 
 export function Create() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [plan, setPlan] = useState<
-    'Caixa de Areia' | 'Padrão' | 'Plano sem nome' | 'Enterprise'
+    'Free' | 'Pro' | 'Plano sem nome' | 'Enterprise'
   >()
   const { createProjectSchema, setReload, reload } = dashboard.useData()
 
@@ -174,12 +150,12 @@ export function Create() {
       <common.ListRadioGroup
         options={[
           {
-            value: 'Caixa de Areia',
+            value: 'Free',
             content: (
               <div>
                 <div className="flex flex-col gap-y-1">
-                  <p className="font-bold dark:text-gray-200">Caixa de Areia</p>
-                  {plan === 'Caixa de Areia' && (
+                  <p className="font-bold dark:text-gray-200">Free</p>
+                  {plan === 'Free' && (
                     <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
                       <p className="flex items-center gap-1 text-white ">
                         Selected{' '}
@@ -190,14 +166,14 @@ export function Create() {
                     </div>
                   )}
                   <p className="text-sm">
-                    {plans['Caixa de areia'].description}
+                    {plans['Free'].description}
                   </p>
                   <common.Separator />
 
                   <div>
                     <p className="font-bold">Features</p>
                     <ul>
-                      {plans['Caixa de areia'].features.map((feature) => (
+                      {plans['Free'].features.map((feature) => (
                         <li className="flex items-center gap-1" key={feature}>
                           <div className="w-5 h-5 text-blue-500">
                             <CheckCircleIcon />
@@ -212,12 +188,12 @@ export function Create() {
             )
           },
           {
-            value: 'Padrão',
+            value: 'Pro',
             content: (
               <div>
                 <div className="flex flex-col gap-y-1">
-                  <p className="font-bold dark:text-gray-200">Padrão</p>
-                  {plan === 'Padrão' && (
+                  <p className="font-bold dark:text-gray-200">Pro</p>
+                  {plan === 'Pro' && (
                     <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
                       <p className="flex items-center gap-1 text-white ">
                         Selected{' '}
@@ -227,87 +203,13 @@ export function Create() {
                       </p>
                     </div>
                   )}
-                  <p className="text-sm">{plans['Padrao'].description}</p>
+                  <p className="text-sm">{plans['Pro'].description}</p>
                   <common.Separator />
 
                   <div>
                     <p className="font-bold">Features</p>
                     <ul>
-                      {plans['Padrao'].features.map((feature) => (
-                        <li className="flex items-center gap-1" key={feature}>
-                          <div className="w-5 h-5 text-blue-500">
-                            <CheckCircleIcon />
-                          </div>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )
-          },
-          {
-            value: 'Plano sem nome',
-            content: (
-              <div>
-                <div className="flex flex-col gap-y-1">
-                  <p className="font-bold dark:text-gray-200">Plano sem nome</p>
-                  {plan === 'Plano sem nome' && (
-                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
-                      <p className="flex items-center gap-1 text-white ">
-                        Selected{' '}
-                        <span className="w-5 h-5">
-                          <CheckCircleIcon />
-                        </span>
-                      </p>
-                    </div>
-                  )}
-                  <p className="text-sm">
-                    {plans['Plano sem nome'].description}
-                  </p>
-                  <common.Separator />
-
-                  <div>
-                    <p className="font-bold">Features</p>
-                    <ul>
-                      {plans['Plano sem nome'].features.map((feature) => (
-                        <li className="flex items-center gap-1" key={feature}>
-                          <div className="w-5 h-5 text-blue-500">
-                            <CheckCircleIcon />
-                          </div>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )
-          },
-          {
-            value: 'Enterprise',
-            content: (
-              <div>
-                <div className="flex flex-col gap-y-1">
-                  <p className="font-bold dark:text-gray-200">Enterprise</p>
-                  {plan === 'Enterprise' && (
-                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
-                      <p className="flex items-center gap-1 text-white ">
-                        Selected{' '}
-                        <span className="w-5 h-5">
-                          <CheckCircleIcon />
-                        </span>
-                      </p>
-                    </div>
-                  )}
-                  <p className="text-sm">{plans['Enterprise'].description}</p>
-                  <common.Separator />
-
-                  <div>
-                    <p className="font-bold">Features</p>
-                    <ul>
-                      {plans['Enterprise'].features.map((feature) => (
+                      {plans['Pro'].features.map((feature) => (
                         <li className="flex items-center gap-1" key={feature}>
                           <div className="w-5 h-5 text-blue-500">
                             <CheckCircleIcon />

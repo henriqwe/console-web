@@ -17,7 +17,7 @@ describe('Breadcrumb', () => {
         pages={[
           {
             current: true,
-            name: 'home'
+            content: 'home'
           }
         ]}
       />
@@ -34,7 +34,7 @@ describe('Breadcrumb', () => {
         pages={[
           {
             current: false,
-            name: 'home'
+            content: 'home'
           }
         ]}
       />
@@ -51,7 +51,7 @@ describe('Breadcrumb', () => {
         pages={[
           {
             current: false,
-            name: 'home'
+            content: 'home'
           }
         ]}
         showNumber
@@ -69,11 +69,11 @@ describe('Breadcrumb', () => {
         pages={[
           {
             current: true,
-            name: 'home'
+            content: 'home'
           },
           {
             current: true,
-            name: 'dashboard'
+            content: 'dashboard'
           }
         ]}
         showNumber
@@ -84,7 +84,32 @@ describe('Breadcrumb', () => {
 
     expect(pageNumber).toBeInTheDocument()
   })
+
+  it('should handle the action inside the breadcrumb', () => {
+    const action = jest.fn()
+    render(
+      <Breadcrumb
+        pages={[
+          {
+            current: true,
+            content: 'home',
+            action
+          },
+          {
+            current: true,
+            content: 'dashboard'
+          }
+        ]}
+        showNumber
+      />
+    )
+
+    const olList = screen.getByRole('list')
+    fireEvent.click(olList.firstChild as ChildNode)
+
+    expect(action).toBeCalled()
+  })
 })
 
-// pages: { name: string; current: boolean }[]
+// pages: { content: string; current: boolean }[]
 // showNumber?: boolean

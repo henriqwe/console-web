@@ -12,7 +12,6 @@ describe('BaseButton', () => {
         buttonColor="bg-blue-500"
         hoverButtonColor="hover:bg-blue-600"
         disableButtonColor="disabled:bg-blue-400"
-        textColor="text-white"
         iconPosition={'left'}
         icon={<div data-testid="icon"/>}
       >
@@ -25,6 +24,7 @@ describe('BaseButton', () => {
     expect(icon).toBeInTheDocument()
 
     expect(buttonChildren).toBeInTheDocument()
+    expect(buttonChildren).toHaveClass('bg-blue-500 hover:bg-blue-600 disabled:bg-blue-400')
   })
 
   it('should execute the click event', () => {

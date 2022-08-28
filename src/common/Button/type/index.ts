@@ -14,7 +14,7 @@ export type BaseButtonProps = {
   buttonColor: string
   hoverButtonColor: string
   disableButtonColor: string
-  textColor: string
+  textColor?: string
   loading?: boolean
   iconPosition?: 'left' | 'right'
   icon?: ReactNode

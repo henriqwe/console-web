@@ -80,7 +80,7 @@ export function EditableTable({
                                     finalValue = onChangeModifier(finalValue)
                                   }
                                   e = finalValue
-                                  onChange(e.target.value)
+                                  onChange(e)
                                 }}
                               />
                             )}
@@ -107,6 +107,7 @@ export function EditableTable({
                                 className={`w-full h-full truncate peer focus:outline-none bg-transparent disabled:cursor-not-allowed border-0 text-sm ${
                                   item.icon ? 'pl-0' : ''
                                 }`}
+                                role="checkbox"
                                 disabled={disabled}
                                 placeholder={inputPlaceholder || ''}
                                 checked={value}
@@ -116,7 +117,7 @@ export function EditableTable({
                                     finalValue = onChangeModifier(finalValue)
                                   }
                                   e = finalValue
-                                  onChange(e.target.value)
+                                  onChange(e)
                                 }}
                               />
                             )}
@@ -155,7 +156,7 @@ export function EditableTable({
                                     finalValue = onChangeModifier(finalValue)
                                   }
                                   e = finalValue
-                                  onChange(e.target.value)
+                                  onChange(e)
                                 }}
                               />
                             )}

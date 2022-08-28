@@ -1,5 +1,3 @@
-import { DeepMap, FieldError, FieldValues } from 'react-hook-form'
-
 type LabelProps = {
   text?: string
   size?: 'small' | 'medium' | 'large'

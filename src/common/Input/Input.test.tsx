@@ -19,4 +19,12 @@ describe('Input', () => {
     const inputError = screen.getByText('test error')
     expect(inputError).toBeInTheDocument()
   })
+
+  it('should render the Input with an icon', () => {
+    const { container } = render(<Input label="inputTest" icon={'icon'} />)
+    const icon = screen.getByText('icon')
+    const input = container.querySelector('#inputTest')
+    expect(icon).toBeInTheDocument()
+    expect(input).toHaveClass('rounded-r-md')
+  })
 })
