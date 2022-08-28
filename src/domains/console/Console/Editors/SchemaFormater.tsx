@@ -1,20 +1,25 @@
+import CodeMirror from '@uiw/react-codemirror'
+
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import * as utils from 'utils'
-import CodeMirror from '@uiw/react-codemirror'
-import { javascript } from '@codemirror/lang-javascript'
+import * as common from 'common'
 import * as ThemeContext from 'contexts/ThemeContext'
+
+import { javascript } from '@codemirror/lang-javascript'
 import { dracula } from '@uiw/codemirror-theme-dracula'
 import { useRouter } from 'next/router'
-import * as common from 'common'
+import { useState, useEffect } from 'react'
 
 export function SchemaFormater() {
+  const [documentationValueParsed, setDocumentationValueParsed] = useState<{
+    code: string
+    schema: {}
+    src: any
+  }>()
   const { documentationValue, setSchemaTabData } =
     consoleEditor.useConsoleEditor()
   const { isDark } = ThemeContext.useTheme()
   const router = useRouter()
-
-  const documentationValueParsed =
-    utils.ycl_transpiler.parse(documentationValue)
 
   const downloadTxtFile = () => {
     const element = document.createElement('a')
@@ -26,6 +31,17 @@ export function SchemaFormater() {
     document.body.appendChild(element)
     element.click()
   }
+
+  useEffect(() => {
+    if (documentationValue) {
+      try {
+        const parse = utils.ycl_transpiler.parse(documentationValue)
+        setDocumentationValueParsed(parse)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  }, [documentationValue])
 
   return (
     <div className="relative">

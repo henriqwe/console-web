@@ -1,48 +1,58 @@
 import * as common from 'common'
+import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 
 import { Icon } from '@iconify/react'
 import { useState } from 'react'
 
-import type { handleFormatQueryOrMutationEntityType } from 'domains/console/ConsoleEditorContext'
 import type { schemaEntitiesType } from 'domains/console/Sidebar/DataManagerTab'
 
-export function Operations({
-  entity,
-  activeEntitiesSidebar,
-  handleFormatQueryOrMutationEntity
-}: {
-  entity: schemaEntitiesType
-  activeEntitiesSidebar: Set<string>
-  handleFormatQueryOrMutationEntity({
-    entity,
-    attribute,
-    attributeType
-  }: handleFormatQueryOrMutationEntityType): void
-}) {
+export function Operations({ entity }: { entity: schemaEntitiesType }) {
   const [active, setActive] = useState(false)
+  const {
+    handleFormatQueryOrMutationEntityAndAttribute,
+    handleFormatQueryOrMutationEntity,
+    activeEntitiesSidebar
+  } = consoleEditor.useConsoleEditor()
   return (
     <div className="flex flex-col gap-2 mb-2 ">
-      <div
-        className={`flex items-center gap-2 cursor-pointer justify-between`}
-        onClick={() => {
-          setActive(!active)
-        }}
-      >
-        <div className="flex items-center gap-2">
+      <div className={`flex items-center gap-2 `}>
+        <div
+          onClick={() => {
+            handleFormatQueryOrMutationEntity({
+              entity: entity.name
+            })
+            if (activeEntitiesSidebar.has(`${entity.name}`)) {
+              activeEntitiesSidebar.delete(`${entity.name}`)
+              return
+            }
+            activeEntitiesSidebar.add(`${entity.name}`)
+          }}
+          className=" cursor-pointer"
+        >
+          <common.icons.RadioCheckIcon
+            checked={activeEntitiesSidebar.has(`${entity.name}`)}
+          />
+        </div>
+        <div
+          className="flex items-center gap-1  cursor-pointer"
+          onClick={() => {
+            setActive(!active)
+          }}
+        >
+          <p className="text-sm font-light">{entity.name}</p>
           <Icon
             icon="bx:chevron-right"
             className={`w-4 h-4 transition ${active && 'rotate-90'}`}
           />
-          <p className="text-sm font-light">{entity.name}</p>
         </div>
       </div>
       {active &&
         Object.keys(entity.data).map((attribute, idx) => (
           <div key={idx}>
             <div
-              className={`flex items-center gap-2  ml-2 cursor-pointer`}
+              className={`flex items-center gap-2  ml-6 cursor-pointer`}
               onClick={() => {
-                handleFormatQueryOrMutationEntity({
+                handleFormatQueryOrMutationEntityAndAttribute({
                   entity: entity.name,
                   attribute,
                   attributeType: entity.data[attribute].type
@@ -51,6 +61,7 @@ export function Operations({
                   activeEntitiesSidebar.delete(`${entity.name}-${attribute}`)
                   return
                 }
+                activeEntitiesSidebar.add(`${entity.name}`)
                 activeEntitiesSidebar.add(`${entity.name}-${attribute}`)
               }}
             >
@@ -66,6 +77,7 @@ export function Operations({
                   {entity.data[attribute].type}
                   {entity.data[attribute].type === 'String' &&
                     entity.data[attribute].length}
+                  {!entity.data[attribute].nullable && '!'}
                 </span>
               </div>
             </div>

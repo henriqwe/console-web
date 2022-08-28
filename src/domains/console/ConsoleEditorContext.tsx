@@ -1,5 +1,4 @@
 import { getCookie } from 'utils'
-
 import {
   createContext,
   ReactNode,
@@ -15,11 +14,12 @@ import {
 import { javascriptLanguage } from '@codemirror/lang-javascript'
 import { completeFromGlobalScope } from './Console/Editors/Autocomplete'
 import { useRouter } from 'next/router'
-import * as data from 'domains/console'
 
+import * as data from 'domains/console'
 import * as utils from 'utils'
 
 export type actionType = 'CREATE' | 'UPDATE' | 'DELETE' | 'READ'
+export type consoleValueParsedType = { action: actionType; data: any[] }
 export type attributesType =
   | 'Text'
   | 'Boolean'
@@ -31,7 +31,7 @@ export type attributesType =
 export type handleFormatQueryOrMutationActionType = {
   action: actionType
 }
-export type handleFormatQueryOrMutationEntityType = {
+export type handleFormatQueryOrMutationEntityAndAttributeType = {
   entity: string
   attribute: string
   attributeType: attributesType
@@ -43,11 +43,11 @@ type ConsoleEditorContextProps = {
   consoleValueLastOperation: string
   setConsoleValueLastOperation: Dispatch<SetStateAction<string>>
   globalJavaScriptCompletions: any
-  handleFormatQueryOrMutationEntity({
+  handleFormatQueryOrMutationEntityAndAttribute({
     entity,
     attribute,
     attributeType
-  }: handleFormatQueryOrMutationEntityType): void
+  }: handleFormatQueryOrMutationEntityAndAttributeType): void
   consoleResponse: any[]
   setConsoleResponse: Dispatch<SetStateAction<never[]>>
   runOperation(): Promise<void>
@@ -77,6 +77,10 @@ type ConsoleEditorContextProps = {
   }: handleFormatQueryOrMutationActionType): void
   activeEntitiesSidebar: Set<string>
   setActiveEntitiesSidebar: Dispatch<SetStateAction<Set<string>>>
+  currentEditorAction: actionType
+  setCurrentEditorAction: Dispatch<SetStateAction<actionType>>
+  debounceEditor(): void
+  handleFormatQueryOrMutationEntity({ entity }: { entity: string }): void
 }
 
 type ProviderProps = {
@@ -114,6 +118,8 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [activeEntitiesSidebar, setActiveEntitiesSidebar] = useState(
     new Set<string>()
   )
+  const [currentEditorAction, setCurrentEditorAction] =
+    useState<actionType>('READ')
 
   const handleFormat = useCallback(() => {
     try {
@@ -165,12 +171,12 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     }
   }
 
-  function handleFormatQueryOrMutationEntity({
+  function handleFormatQueryOrMutationEntityAndAttribute({
     entity,
     attribute,
     attributeType
-  }: handleFormatQueryOrMutationEntityType) {
-    let value: { action: actionType; data: any[] }
+  }: handleFormatQueryOrMutationEntityAndAttributeType) {
+    let value: consoleValueParsedType
     let attributeTypeValue: any
 
     switch (attributeType) {
@@ -214,15 +220,10 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
       if (existingEntity.length) {
         // Lindando com os atributos se existir remove, senão adiciona
-        for (const [index, valueDataEntity] of value.data.entries()) {
+        for (const valueDataEntity of value.data) {
           if (Object.keys(valueDataEntity).includes(entity)) {
             if (Object.keys(valueDataEntity[entity]).includes(attribute)) {
               delete valueDataEntity[entity][attribute]
-
-              //Caso a entidade seja um objeto vazio remove
-              if (!Object.keys(valueDataEntity[entity]).length) {
-                value.data.splice(index, 1)
-              }
               break
             }
             valueDataEntity[entity][attribute] = attributeTypeValue
@@ -239,10 +240,44 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     formatValueToSetInConsole(value)
   }
 
+  function handleFormatQueryOrMutationEntity({ entity }: { entity: string }) {
+    let value: consoleValueParsedType
+
+    try {
+      value = JSON.parse(consoleValue)
+
+      //Verifica  se existe a entidade
+      const existingEntity = value.data.filter((valueDataEntity) =>
+        Object.keys(valueDataEntity).includes(entity)
+      )
+
+      // Adiciona a entidade caso não existam
+      if (!existingEntity.length) {
+        value.data.push({ [entity]: {} })
+      }
+
+      if (existingEntity.length) {
+        // removendo a entidade caso existam
+        for (const [index, valueDataEntity] of value.data.entries()) {
+          if (Object.keys(valueDataEntity).includes(entity)) {
+            value.data.splice(index, 1)
+          }
+        }
+      }
+    } catch (err) {
+      value = {
+        action: 'READ',
+        data: [{ [entity]: {} }]
+      }
+    }
+
+    formatValueToSetInConsole(value)
+  }
+
   function handleFormatQueryOrMutationAction({
     action
   }: handleFormatQueryOrMutationActionType) {
-    let value: { action: actionType; data: any[] }
+    let value: consoleValueParsedType
 
     try {
       value = JSON.parse(consoleValue)
@@ -337,6 +372,65 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
     setCodeExporterValue(text)
   }
 
+  function debounceEditor() {
+    try {
+      const consoleValueParsed: consoleValueParsedType =
+        JSON.parse(consoleValue)
+
+      debounceEditorHandleAction(consoleValueParsed)
+      debounceEditorEntities(consoleValueParsed)
+    } catch (err: any) {
+      setCurrentEditorAction('READ')
+      setActiveEntitiesSidebar(new Set<string>())
+      utils.notification(err.message, 'error')
+    }
+  }
+
+  function debounceEditorHandleAction(
+    consoleValueParsed: consoleValueParsedType
+  ) {
+    const actionTypes = new Set(['READ', 'CREATE', 'UPDATE', 'DELETE'])
+
+    if (!consoleValueParsed.action) {
+      throw new Error(`The action key is missing`)
+    }
+    if (actionTypes.has(consoleValueParsed.action?.toLocaleUpperCase())) {
+      if (
+        currentEditorAction !== consoleValueParsed.action.toLocaleUpperCase()
+      ) {
+        setCurrentEditorAction(
+          consoleValueParsed.action.toLocaleUpperCase() as actionType
+        )
+      }
+
+      return
+    }
+    throw new Error(
+      `Unknow action, "${consoleValueParsed.action}". Please enter "READ", "CREATE", "UPDATE", "DELETE" `
+    )
+  }
+
+  function debounceEditorEntities(consoleValueParsed: consoleValueParsedType) {
+    if (!consoleValueParsed.data) {
+      throw new Error(`The data key is missing`)
+    }
+
+    const arrayToValidate = new Set<string>()
+    for (const valueDataEntity of consoleValueParsed.data) {
+      Object.keys(valueDataEntity).map((entity) => {
+        arrayToValidate.add(`${entity}`)
+        Object.keys(valueDataEntity[entity]).map((attribute) => {
+          arrayToValidate.add(`${entity}-${attribute}`)
+        })
+      })
+    }
+    if (arrayToValidate !== activeEntitiesSidebar) {
+      setActiveEntitiesSidebar(arrayToValidate)
+    }
+
+    return
+  }
+
   useEffect(() => {
     if (router.query.name) {
       loadParser()
@@ -370,7 +464,7 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
         consoleValue,
         setConsoleValue,
         globalJavaScriptCompletions,
-        handleFormatQueryOrMutationEntity,
+        handleFormatQueryOrMutationEntityAndAttribute,
         consoleResponse,
         setConsoleResponse,
         runOperation,
@@ -399,7 +493,11 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
         setFormatter,
         handleFormatQueryOrMutationAction,
         activeEntitiesSidebar,
-        setActiveEntitiesSidebar
+        setActiveEntitiesSidebar,
+        currentEditorAction,
+        setCurrentEditorAction,
+        debounceEditor,
+        handleFormatQueryOrMutationEntity
       }}
     >
       {children}
