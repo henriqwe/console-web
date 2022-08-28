@@ -1,6 +1,5 @@
 import * as common from 'common'
 import * as utils from 'utils'
-import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -25,8 +24,6 @@ export function DataManagerTab() {
   const router = useRouter()
   const [schemaEntities, setSchemaEntities] = useState<schemaEntitiesType[]>()
   const [loading, setLoading] = useState(false)
-  const { handleFormatQueryOrMutationEntity, activeEntitiesSidebar } =
-    consoleEditor.useConsoleEditor()
 
   async function loadSchema() {
     try {
@@ -65,7 +62,7 @@ export function DataManagerTab() {
   }, [router.query.name])
 
   return (
-    <div className="flex-1 h-full gap-1 px-4 pt-3 overflow-y-auto rounded-b-lg">
+    <div className="flex flex-col flex-1 h-full gap-1 px-4 pt-3 overflow-y-auto rounded-b-lg">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <div className="w-8 h-8 mr-8">
@@ -79,14 +76,7 @@ export function DataManagerTab() {
         </div>
       ) : (
         schemaEntities?.map((entity, idx) => (
-          <Operations
-            key={idx}
-            entity={entity}
-            activeEntitiesSidebar={activeEntitiesSidebar}
-            handleFormatQueryOrMutationEntity={
-              handleFormatQueryOrMutationEntity
-            }
-          />
+          <Operations key={idx} entity={entity} />
         ))
       )}
     </div>

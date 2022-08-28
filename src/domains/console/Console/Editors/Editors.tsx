@@ -13,13 +13,10 @@ import { dracula } from '@uiw/codemirror-theme-dracula'
 import { Slide } from 'domains/console/Console/Slide'
 import { EditorView } from '@codemirror/view'
 import { Icon } from '@iconify/react'
-import { useState } from 'react'
-
-import type { actionType } from 'domains/console/ConsoleEditorContext'
+import { useEffect } from 'react'
 
 export function Editors() {
   const { isDark } = ThemeContext.useTheme()
-  const [currentAction, setCurrentAction] = useState<actionType>('READ')
   const {
     setShowTableViewMode,
     showTableViewMode,
@@ -38,13 +35,22 @@ export function Editors() {
     consoleValueLastOperation,
     handleFormat,
     handleChange,
-    handleFormatQueryOrMutationAction
+    handleFormatQueryOrMutationAction,
+    debounceEditor,
+    currentEditorAction
   } = consoleEditor.useConsoleEditor()
 
   const isReady = usePrettier({
     parser: 'json',
     plugins: [parserBabel]
   })
+
+  useEffect(() => {
+    if (consoleValue) {
+      const timeoutId = setTimeout(() => debounceEditor(), 1000)
+      return () => clearTimeout(timeoutId)
+    }
+  }, [consoleValue])
 
   if (!isReady) return null
 
@@ -53,7 +59,6 @@ export function Editors() {
       title: 'Read',
       onClick: () => {
         handleFormatQueryOrMutationAction({ action: 'READ' })
-        setCurrentAction('READ')
         return
       }
     },
@@ -61,7 +66,6 @@ export function Editors() {
       title: 'Create',
       onClick: () => {
         handleFormatQueryOrMutationAction({ action: 'CREATE' })
-        setCurrentAction('CREATE')
         return
       }
     },
@@ -69,7 +73,6 @@ export function Editors() {
       title: 'Update',
       onClick: () => {
         handleFormatQueryOrMutationAction({ action: 'UPDATE' })
-        setCurrentAction('UPDATE')
         return
       }
     },
@@ -77,11 +80,11 @@ export function Editors() {
       title: 'Delete',
       onClick: () => {
         handleFormatQueryOrMutationAction({ action: 'DELETE' })
-        setCurrentAction('DELETE')
         return
       }
     }
   ]
+
   return (
     <div className="flex flex-col w-full h-full" data-tour="step-4">
       <common.ContentSection
@@ -96,7 +99,7 @@ export function Editors() {
                   {
                     content: (
                       <common.Dropdown actions={dropdownActions}>
-                        {utils.capitalizeWord(currentAction)}
+                        {utils.capitalizeWord(currentEditorAction)}
                       </common.Dropdown>
                     ),
                     current: true
