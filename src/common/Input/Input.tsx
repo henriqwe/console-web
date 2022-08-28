@@ -24,9 +24,9 @@ export const Input = ({
         {label}
       </label>
     )}
-    <div className="flex  rounded-md">
+    <div className="flex rounded-md">
       {icon && (
-        <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-800  text-gray-500 dark:text-text-primary sm:text-sm dark:border-gray-600">
+        <span className="inline-flex items-center px-3 text-gray-500 border border-r-0 border-gray-300 rounded-l-md bg-gray-50 dark:bg-gray-800 dark:text-text-primary sm:text-sm dark:border-gray-600">
           {icon}
         </span>
       )}
