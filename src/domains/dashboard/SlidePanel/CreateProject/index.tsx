@@ -82,12 +82,36 @@ export function Create() {
             }
           )
 
+          for (const entity of schemaParsed.schema.entities) {
+            await utils.api.post(
+              utils.apiRoutes.entity(schemaParsed.schema.name as string),
+              {
+                name: entity.name,
+                attributes: entity.attributes.map(attribute => {
+                  console.log('attribute',attribute)
+                  return{
+                    ...attribute,
+                    type: attribute._conf.type.value
+                  }
+                }),
+                associations: entity.associations ?? []
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${utils.getCookie('access_token')}`
+                }
+              }
+            )
+          }
+
           utils.setCookie('X-TenantID', schemaData.tenantId)
           utils.setCookie('X-TenantAC', schemaData.tenantAc)
           utils.notification(
             `Project ${schemaParsed.schema.name} created successfully`,
             'success'
           )
+
           router.push(routes.console + '/' + schemaParsed.schema.name)
         })
 
