@@ -1,42 +1,23 @@
+import * as utils from 'utils'
 /*
-{"password":"0OnG4AHqfRX0U65Z","username":"tester@biblioteca"}
-{"password":"X7wAcm3BkV0Bpcq0","username":"jango@biblioteca"}
+{"password":"1234567","username":"tester@academia"}
+tester@biblioteca   OXrrnKZgQ2jgEEon
+tester@natalnet  RP2AhXDO0AiDL46v
 
-sdAjZtjTd1jjCTLo
-
-tester@locadora: p1oWDA9CRioiJ1N7
+{
+  "dcovid": [{
+    "file":"covid.csv",
+    "mode": "all",
+    "delimiter": ",",
+    "map":{
+      "cases":"casos"
+    }
+  }]
+}
  */
 
-import { attributeType, callbackType, entityType } from './transpiler'
-
-type endpointType = {
-  url: string
-  headers: {
-    'Content-Type': string
-    Authorization: string
-  }
-  httpMessageType: string
-}
-
-type dataType =
-  | {
-      _conf: {
-        indexKey?: string[]
-        uniqueKey?: string[]
-        extension?: string
-        accessControl?: {
-          read: string[]
-          write: string[]
-        }
-        concurrencyControl?: boolean
-      }
-    }
-  | entityType
-  | attributeType
-  | string
-  | null
-export const PROTOCOL = 'http'
-export const baas_address = 'api.ycodify.com:8080'
+const PROTOCOL = 'https'
+const baas_address = 'api.ycodify.com'
 export const api = {
   credentials: {
     password: '',
@@ -44,7 +25,7 @@ export const api = {
   },
   endpoint: {
     auth: {
-      url: PROTOCOL + '://' + baas_address + '/api/security/oauth/token',
+      url: PROTOCOL + '://' + baas_address + '/v0/auth/oauth/token',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: 'Basic '.concat(
@@ -55,7 +36,7 @@ export const api = {
     },
     account: {
       create: {
-        url: PROTOCOL + '://' + baas_address + '/api/account/account',
+        url: PROTOCOL + '://' + baas_address + '/v0/id/account',
         headers: {
           'X-TenantID': '',
           'Content-Type': 'application/json'
@@ -67,7 +48,7 @@ export const api = {
           PROTOCOL +
           '://' +
           baas_address +
-          '/api/account/account/username/{username}/version/{version}',
+          '/v0/id/account/username/{username}/version/{version}',
         headers: {
           'X-TenantID': '',
           'Content-Type': 'application/json',
@@ -81,7 +62,7 @@ export const api = {
           PROTOCOL +
           '://' +
           baas_address +
-          '/api/account/account/username/{username}/version/{version}/update-password',
+          '/v0/id/account/username/{username}/version/{version}/update-password',
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
@@ -98,7 +79,7 @@ export const api = {
               PROTOCOL +
               '://' +
               baas_address +
-              '/api/s-monitor/log/error/operation/{operation}/time/{time}/{op}',
+              '/v0/r-monitor/log/error/operation/{operation}/time/{time}/{op}',
             headers: {
               Authorization: 'Bearer {TOKEN}',
               'X-TenantID': '',
@@ -112,7 +93,7 @@ export const api = {
     backend: {
       ds: {
         data_backup: {
-          url: PROTOCOL + '://' + baas_address + '/api/ds/data-bakcup',
+          url: PROTOCOL + '://' + baas_address + '/v0/ds/data-bakcup',
           headers: {
             'X-TenantID': '',
             'Content-Type': 'application/json',
@@ -121,9 +102,25 @@ export const api = {
           httpMessageType: 'POST'
         },
         data_restore: {
-          url: PROTOCOL + '://' + baas_address + '/api/ds/data-restore',
+          url:
+            PROTOCOL +
+            '://' +
+            baas_address +
+            '/v0/ds/project-owner/{projectOwner}/project-name/{projectName}/data-restore',
           headers: {
             'X-TenantID': '',
+            'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer {TOKEN}'
+          },
+          httpMessageType: 'POST'
+        },
+        schema_populate: {
+          url:
+            PROTOCOL +
+            '://' +
+            baas_address +
+            '/v0/ds-nosql/project-owner/{projectOwner}/project-name/{projectName}/entity-name/{entityName}/onrm/insert/batch',
+          headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: 'Bearer {TOKEN}'
           },
@@ -132,102 +129,106 @@ export const api = {
       },
       account: {
         create: {
-          url: PROTOCOL + '://' + baas_address + '/api/caccount/account',
+          url: PROTOCOL + '://' + baas_address + '/v0/id/account/create',
           headers: {
-            'X-TenantID': '',
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: 'Bearer {TOKEN}'
+            'X-TenantID': '{TenantID}'
           },
           httpMessageType: 'POST'
         },
         get_all: {
-          url: PROTOCOL + '://' + baas_address + '/api/caccount/account',
+          url: PROTOCOL + '://' + baas_address + '/v0/id/account/get-all',
           headers: {
-            'X-TenantID': '',
-            Accept: 'application/json',
-            Authorization: 'Bearer {TOKEN}'
-          },
-          httpMessageType: 'GET'
-        },
-        update: {
-          url: PROTOCOL + '://' + baas_address + '/api/caccount/account',
-          headers: {
-            'X-TenantID': '',
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: 'Bearer {TOKEN}'
+            'X-TenantID': '{TenantID}'
           },
-          httpMessageType: 'PUT'
+          httpMessageType: 'POST'
+        },
+        get: {
+          url: PROTOCOL + '://' + baas_address + '/v0/id/account/get',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'X-TenantID': '{TenantID}'
+          },
+          httpMessageType: 'POST'
+        },
+        update: {
+          url: PROTOCOL + '://' + baas_address + '/v0/id/account/update',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'X-TenantID': '{TenantID}'
+          },
+          httpMessageType: 'POST'
         },
         updatePassword: {
           url:
-            PROTOCOL + '://' + baas_address + '/api/caccount/account/password',
+            PROTOCOL + '://' + baas_address + '/v0/id/account/update-password',
           headers: {
-            'X-TenantID': '',
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: 'Bearer {TOKEN}'
+            'X-TenantID': '{TenantID}'
           },
-          httpMessageType: 'PUT'
-        },
-        delete: {
-          url:
-            PROTOCOL +
-            '://' +
-            baas_address +
-            '/api/caccount/account/username/{username}/version/{version}',
-          headers: {
-            'X-TenantID': '',
-            Authorization: 'Bearer {TOKEN}'
-          },
-          httpMessageType: 'DELETE'
+          httpMessageType: 'POST'
         }
       },
       role: {
         create: {
-          url: PROTOCOL + '://' + baas_address + '/api/caccount/role',
+          url: PROTOCOL + '://' + baas_address + '/v0/id/role/create',
           headers: {
-            'X-TenantID': '',
             'Content-Type': 'application/json',
-            Authorization: 'Bearer {TOKEN}'
+            Authorization: 'Bearer {TOKEN}',
+            'X-TenantID': '{TenantID}'
           },
           httpMessageType: 'POST'
         },
         get_all: {
-          url: PROTOCOL + '://' + baas_address + '/api/caccount/role',
+          url: PROTOCOL + '://' + baas_address + '/v0/id/role/get-all',
           headers: {
-            'X-TenantID': '',
+            'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: 'Bearer {TOKEN}'
+            Authorization: 'Bearer {TOKEN}',
+            'X-TenantID': '{TenantID}'
           },
-          httpMessageType: 'GET'
+          httpMessageType: 'POST'
+        },
+        get_one: {
+          url: PROTOCOL + '://' + baas_address + '/v0/id/role/get',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: 'Bearer {TOKEN}',
+            'X-TenantID': '{TenantID}'
+          },
+          httpMessageType: 'POST'
         },
         update: {
-          url:
-            PROTOCOL + '://' + baas_address + '/api/caccount/role/name/{name}',
+          url: PROTOCOL + '://' + baas_address + '/v0/id/role/update',
           headers: {
-            'X-TenantID': '',
             'Content-Type': 'application/json',
-            Authorization: 'Bearer {TOKEN}'
+            Authorization: 'Bearer {TOKEN}',
+            'X-TenantID': '{TenantID}'
           },
-          httpMessageType: 'PUT'
+          httpMessageType: 'POST'
         },
         delete: {
-          url:
-            PROTOCOL + '://' + baas_address + '/api/caccount/role/name/{name}',
+          url: PROTOCOL + '://' + baas_address + '/v0/id/role/delete',
           headers: {
-            'X-TenantID': '',
-            Authorization: 'Bearer {TOKEN}'
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer {TOKEN}',
+            'X-TenantID': '{TenantID}'
           },
-          httpMessageType: 'DELETE'
+          httpMessageType: 'POST'
         }
       }
     },
     modeling: {
       parser: {
         parse: {
-          url: PROTOCOL + '://' + baas_address + '/api/modeler/parser/parse',
+          url: PROTOCOL + '://' + baas_address + '/v0/modeling/parser/parse',
           headers: {
             'Content-Type': 'text/plain',
             Authorization: 'Bearer {TOKEN}'
@@ -239,7 +240,7 @@ export const api = {
             PROTOCOL +
             '://' +
             baas_address +
-            '/api/modeler/parser/generate-cli',
+            '/v0/modeling/parser/generate-cli',
           headers: {
             'Content-Type': 'text/plain',
             Authorization: 'Bearer {TOKEN}'
@@ -251,7 +252,7 @@ export const api = {
             PROTOCOL +
             '://' +
             baas_address +
-            '/api/modeler/parser/generate-scripts/{script-type}',
+            '/v0/modeling/parser/generate-scripts/{script-type}',
           headers: {
             'Content-Type': 'text/plain',
             Authorization: 'Bearer {TOKEN}'
@@ -263,7 +264,7 @@ export const api = {
             PROTOCOL +
             '://' +
             baas_address +
-            '/api/modeler/parser/reverse/{path-to-object}',
+            '/v0/modeling/project-name/{projectName}/type/{type}/parser/reverse',
           headers: {
             Authorization: 'Bearer {TOKEN}',
             Accept: 'text/plain'
@@ -278,7 +279,7 @@ export const api = {
               PROTOCOL +
               '://' +
               baas_address +
-              '/api/modeler/schema/{schemaName}/tag-with/{tag}',
+              '/v0/modeling/project-name/{projectName}/schema/tag-with/{tag}',
             headers: {
               'Content-Type': 'application/json',
               Authorization: 'Bearer {TOKEN}'
@@ -290,7 +291,7 @@ export const api = {
               PROTOCOL +
               '://' +
               baas_address +
-              '/api/modeler/schema/{schemaName}/tagged-by/{tag}',
+              '/v0/modeling/project-name/{projectName}/schema/tagged-by/{tag}',
             headers: {
               Accept: 'application/json',
               Authorization: 'Bearer {TOKEN}'
@@ -302,7 +303,7 @@ export const api = {
               PROTOCOL +
               '://' +
               baas_address +
-              '/api/modeler/schema/{schemaName}/taggeds',
+              '/v0/modeling/project-name/{projectName}/schema/taggeds',
             headers: {
               Accept: 'application/json',
               Authorization: 'Bearer {TOKEN}'
@@ -314,7 +315,7 @@ export const api = {
               PROTOCOL +
               '://' +
               baas_address +
-              '/api/modeler/schema/{schemaName}/tagged-by/{tag}',
+              '/v0/modeling/project-name/{projectName}/schema/tagged-by/{tag}',
             headers: {
               Authorization: 'Bearer {TOKEN}'
             },
@@ -322,7 +323,7 @@ export const api = {
           }
         },
         create: {
-          url: PROTOCOL + '://' + baas_address + '/api/modeler/schema',
+          url: PROTOCOL + '://' + baas_address + '/v0/modeling/project-name',
           headers: {
             'Content-Type': 'application/json',
             Authorization: 'Bearer {TOKEN}'
@@ -330,7 +331,11 @@ export const api = {
           httpMessageType: 'POST'
         },
         read: {
-          url: PROTOCOL + '://' + baas_address + '/api/modeler/schema/sql',
+          url:
+            PROTOCOL +
+            '://' +
+            baas_address +
+            '/v0/modeling/project-name/{projectName}',
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
@@ -343,7 +348,7 @@ export const api = {
             PROTOCOL +
             '://' +
             baas_address +
-            '/api/modeler/schema/{schemaName}/sql',
+            '/v0/modeling/project-name/{projectName}/schema/sql/detailed',
           headers: {
             Accept: 'application/json',
             Authorization: 'Bearer {TOKEN}'
@@ -355,7 +360,7 @@ export const api = {
             PROTOCOL +
             '://' +
             baas_address +
-            '/api/modeler/schema/{schemaName}',
+            '/v0/modeling/project-name/{projectName}',
           headers: {
             'Content-Type': 'application/json',
             Authorization: 'Bearer {TOKEN}'
@@ -367,7 +372,7 @@ export const api = {
             PROTOCOL +
             '://' +
             baas_address +
-            '/api/modeler/schema/{schemaName}/sql',
+            '/v0/modeling/project-name/{projectName}',
           headers: {
             'Content-Type': 'application/json',
             Authorization: 'Bearer {TOKEN}'
@@ -379,7 +384,7 @@ export const api = {
             PROTOCOL +
             '://' +
             baas_address +
-            '/api/modeler/schema/{schemaName}/create-admin-account',
+            '/v0/modeling/project-name/{projectName}/schema/create-admin-account',
           headers: {
             'Content-Type': 'application/json',
             Authorization: 'Bearer {TOKEN}'
@@ -391,7 +396,7 @@ export const api = {
             PROTOCOL +
             '://' +
             baas_address +
-            '/api/modeler/schema/{schemaName}/for-graphical-view/show-attributes/{hasAttr}',
+            '/v0/modeling/project-name/{projectName}/schema/for-graphical-view/show-attributes/{showAttributes}',
           headers: {
             Accept: 'text/plain',
             Authorization: 'Bearer {TOKEN}'
@@ -404,7 +409,19 @@ export const api = {
               PROTOCOL +
               '://' +
               baas_address +
-              '/api/modeler/schema/{schemaName}/sql/entity',
+              '/v0/modeling/project-name/{projectName}/schema/sql/entity',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer {TOKEN}'
+            },
+            httpMessageType: 'POST'
+          },
+          createNoSQL: {
+            url:
+              PROTOCOL +
+              '://' +
+              baas_address +
+              '/v0/modeling/project-name/{projectName}/schema/nosql-columnar/entity',
             headers: {
               'Content-Type': 'application/json',
               Authorization: 'Bearer {TOKEN}'
@@ -416,7 +433,7 @@ export const api = {
               PROTOCOL +
               '://' +
               baas_address +
-              '/api/modeler/schema/{schemaName}/sql/entity/{entityName}',
+              '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}',
             headers: {
               'Content-Type': 'application/json',
               Authorization: 'Bearer {TOKEN}'
@@ -428,7 +445,19 @@ export const api = {
               PROTOCOL +
               '://' +
               baas_address +
-              '/api/modeler/schema/{schemaName}/sql/entity/{entityName}',
+              '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer {TOKEN}'
+            },
+            httpMessageType: 'PUT'
+          },
+          updateNoSQL: {
+            url:
+              PROTOCOL +
+              '://' +
+              baas_address +
+              '/v0/modeling/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}',
             headers: {
               'Content-Type': 'application/json',
               Authorization: 'Bearer {TOKEN}'
@@ -440,7 +469,19 @@ export const api = {
               PROTOCOL +
               '://' +
               baas_address +
-              '/api/modeler/schema/{schemaName}/sql/entity/{entityName}',
+              '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer {TOKEN}'
+            },
+            httpMessageType: 'DELETE'
+          },
+          deleteNoSQL: {
+            url:
+              PROTOCOL +
+              '://' +
+              baas_address +
+              '/v0/modeling/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}',
             headers: {
               'Content-Type': 'application/json',
               Authorization: 'Bearer {TOKEN}'
@@ -453,7 +494,7 @@ export const api = {
                 PROTOCOL +
                 '://' +
                 baas_address +
-                '/api/modeler/schema/{schemaName}/sql/entity/{entityName}/attribute',
+                '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}/attribute',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer {TOKEN}'
@@ -465,7 +506,7 @@ export const api = {
                 PROTOCOL +
                 '://' +
                 baas_address +
-                '/api/modeler/schema/{schemaName}/sql/entity/{entityName}/attribute/{attributeName}',
+                '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}/attribute/{attributeName}',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer {TOKEN}'
@@ -477,7 +518,43 @@ export const api = {
                 PROTOCOL +
                 '://' +
                 baas_address +
-                '/api/modeler/schema/{schemaName}/sql/entity/{entityName}/attribute/{attributeName}',
+                '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}/attribute/{attributeName}',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer {TOKEN}'
+              },
+              httpMessageType: 'DELETE'
+            },
+            createNoSQL: {
+              url:
+                PROTOCOL +
+                '://' +
+                baas_address +
+                '/v0/modeling/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}/attribute',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer {TOKEN}'
+              },
+              httpMessageType: 'POST'
+            },
+            updateNoSQL: {
+              url:
+                PROTOCOL +
+                '://' +
+                baas_address +
+                '/v0/modeling/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}/attribute/{attributeName}',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer {TOKEN}'
+              },
+              httpMessageType: 'PUT'
+            },
+            deleteNoSQL: {
+              url:
+                PROTOCOL +
+                '://' +
+                baas_address +
+                '/v0/modeling/project-name/{projectName}/schema/nosql-columnar/entity/{entityName}/attribute/{attributeName}',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer {TOKEN}'
@@ -491,7 +568,7 @@ export const api = {
                 PROTOCOL +
                 '://' +
                 baas_address +
-                '/api/modeler/schema/{schemaName}/sql/entity/{entityName}/association',
+                '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}/association',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer {TOKEN}'
@@ -503,7 +580,7 @@ export const api = {
                 PROTOCOL +
                 '://' +
                 baas_address +
-                '/api/modeler/schema/{schemaName}/sql/entity/{entityName}/association/{relationshipName}',
+                '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}/association/{relationshipName}',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer {TOKEN}'
@@ -515,7 +592,7 @@ export const api = {
                 PROTOCOL +
                 '://' +
                 baas_address +
-                '/api/modeler/schema/{schemaName}/sql/entity/{entityName}/association/{relationshipName}/type/{relationshipType}',
+                '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}/association/{relationshipName}/type/{relationshipType}',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer {TOKEN}'
@@ -558,73 +635,75 @@ export const _gtools_lib = {
       'Date'
     ]
   },
-  //   copy_clipboard: function (id, value) {
-  //     if (id) {
-  //       var element = document.getElementById(id)
-  //       element.select()
-  //       text = new String(element.value)
-  //     }
+  copy_clipboard: function (id, value) {
+    if (id) {
+      var element = document.getElementById(id)
+      element.select()
+      text = new String(element.value)
+    }
 
-  //     var $temp = $('<input>')
-  //     $('body').append($temp)
-  //     $temp.val(value).select()
-  //     document.execCommand('copy')
-  //     $temp.remove()
-  //     console.log('in!')
-  //   },
-  //   date_format: function (date) {
-  //     let _date = new Date(date)
-  //     let dd = String(_date.getDate()).padStart(2, '0')
-  //     let mm = String(_date.getMonth() + 1).padStart(2, '0')
-  //     let yyyy = _date.getFullYear()
+    var $temp = $('<input>')
+    $('body').append($temp)
+    $temp.val(value).select()
+    document.execCommand('copy')
+    $temp.remove()
+  },
+  date_format: function (date) {
+    let _date = new Date(date)
+    let dd = String(_date.getDate()).padStart(2, '0')
+    let mm = String(_date.getMonth() + 1).padStart(2, '0')
+    let yyyy = _date.getFullYear()
 
-  //     return dd + '/' + mm + '/' + yyyy
-  //   },
-  //   populate: function (frm, data) {
-  //     $.each(data, function (key, value) {
-  //       $('[name=' + key + ']', frm).val(value)
-  //     })
-  //   },
-  request: function (
-    endpoint: endpointType,
-    data: dataType,
-    callback: callbackType,
-    type?: string
-  ) {
+    return dd + '/' + mm + '/' + yyyy
+  },
+  populate: function (frm, data) {
+    $.each(data, function (key, value) {
+      $('[name=' + key + ']', frm).val(value)
+    })
+  },
+  request: function (endpoint, data, callback, type) {
     let xhttp = new XMLHttpRequest()
     if (type == 'login') {
-      /*
-            callback({
+      /*callback({
                 http: {
                     status: 200
                 },
                 data: JSON.stringify({
-                    access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ0ZXN0ZXIiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwibmFtZSI6bnVsbCwiaWQiOiI4OSIsImV4cCI6MTY1NDA5NjA1NCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9DTElFTlQiXSwianRpIjoiNTNjMjA4ZDAtNzc0NS00ODFkLWE1NTMtNmY1MGUxMDJhM2ZhIiwiZW1haWwiOiJ0ZXN0ZXJAeWMuY29tIiwiY2xpZW50X2lkIjoieWMiLCJ1c2VybmFtZSI6InRlc3RlciIsInN0YXR1cyI6MX0.gOcRPOEhZCrFrpclKKAPBTwEeHCfsYRqLpxIvcrbhHA",
+                    access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ0ZXN0ZXIiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwibmFtZSI6bnVsbCwiaWQiOjg5LCJleHAiOjE2NTkwMTg5MDYsImF1dGhvcml0aWVzIjpbIlJPTEVfQ0xJRU5UIl0sImp0aSI6ImU5MmIwN2QzLTNiOTgtNGE0MS1hYmYzLTc2NWE1OGQxZWVjNCIsImVtYWlsIjoidGVzdGVyQHljLmNvbSIsImNsaWVudF9pZCI6InljIiwidXNlcm5hbWUiOiJ0ZXN0ZXIiLCJzdGF0dXMiOjF9.ltC3w9vqyhnPypKkeR-ZoeC6ciuvf7cimgWRSoYS80E",
                     username: 'tester'
                 })
             });
             return;
-             */
+            /* */
+
       xhttp.open(endpoint.httpMessageType, endpoint.url, true)
       xhttp.setRequestHeader('Content-Type', endpoint.headers['Content-Type'])
       xhttp.setRequestHeader('Authorization', endpoint.headers['Authorization'])
       xhttp.send(data)
     } else {
-      xhttp.open(endpoint.httpMessageType, endpoint.url, true)
-      xhttp.setRequestHeader('Content-Type', endpoint.headers['Content-Type'])
+      if (
+        endpoint.httpMessageType == 'POST' ||
+        endpoint.httpMessageType == 'PUT'
+      ) {
+        xhttp.open(endpoint.httpMessageType, endpoint.url, true)
+      } else {
+        xhttp.open(endpoint.httpMessageType, endpoint.url)
+      }
       if (endpoint.headers['Authorization']) {
+        xhttp.setRequestHeader('Content-Type', endpoint.headers['Content-Type'])
         xhttp.setRequestHeader(
           'Authorization',
           endpoint.headers['Authorization'].replace(
             '{TOKEN}',
-            api.credentials.access_token
+            utils.getCookie('access_token')
+            // api.credentials.access_token
           )
         )
       }
       if (endpoint.headers['Content-Type'] == 'application/json') {
         xhttp.send(JSON.stringify(data))
       } else {
-        xhttp.send(data)
+        xhttp.send()
       }
     }
 
@@ -657,277 +736,292 @@ export const _gtools_lib = {
         callback(response)
       }
     }
+  },
+  baas: {
+    request: function (tenantID, jwtoken, data, callback, type, endpoint) {
+      let xhttp = new XMLHttpRequest()
+      if (type == 'login') {
+        xhttp.open(
+          'POST',
+          PROTOCOL + '://' + baas_address + '/v0/auth/oauth/token',
+          true
+        )
+        xhttp.setRequestHeader(
+          'Content-Type',
+          'application/x-www-form-urlencoded'
+        )
+        xhttp.setRequestHeader(
+          'Authorization',
+          'Basic '.concat(btoa('yc:c547d72d-607c-429c-81e2-0baec7dd068b'))
+        )
+        xhttp.send(data)
+        endpoint = {
+          headers: {}
+        }
+        endpoint.headers['Accept'] = 'application/json'
+      } else if (type == 'data') {
+        const URL = PROTOCOL + '://' + baas_address + '/v0/persistence/s'
+        xhttp.open('POST', URL, true)
+        xhttp.setRequestHeader('X-TenantID', tenantID)
+        xhttp.setRequestHeader('Content-Type', 'application/json')
+        xhttp.setRequestHeader('Authorization', 'Bearer '.concat(jwtoken))
+        xhttp.send(JSON.stringify(data))
+        endpoint = {
+          headers: {
+            Accept: 'application/json'
+          }
+        }
+      } else if (type == 'accounts_and_roles') {
+        xhttp.open(endpoint.httpMessageType, endpoint.url, true)
+        xhttp.setRequestHeader('X-TenantID', tenantID)
+        if (
+          endpoint.httpMessageType == 'POST' ||
+          endpoint.httpMessageType == 'PUT'
+        ) {
+          xhttp.setRequestHeader('Content-Type', 'application/json')
+          xhttp.send(JSON.stringify(data))
+        } else if (
+          endpoint.httpMessageType == 'GET' ||
+          endpoint.httpMessageType == 'DELETE'
+        ) {
+          if (endpoint.headers['Content-Type']) {
+            xhttp.setRequestHeader('Accept', endpoint.headers['Content-Type'])
+          }
+          xhttp.send()
+        }
+      }
+
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState == 4) {
+          let response = null
+          try {
+            let _data = ''
+            if (
+              xhttp.responseText != null &&
+              xhttp.responseText.trim().length > 0
+            ) {
+              if (endpoint.headers['Accept'] == 'application/json') {
+                _data = JSON.parse(xhttp.responseText)
+              } else {
+                _data = xhttp.responseText
+              }
+            }
+            response = {
+              http: {
+                status: xhttp.status
+              },
+              data: _data
+            }
+          } catch (err) {
+            console.log(err.message + ' in ' + xhttp.responseText)
+          }
+          callback(response)
+        }
+      }
+    },
+    ds_data_backup_request: function (tenantID, jwtoken, data, callback) {
+      let xhttp = new XMLHttpRequest()
+      xhttp.open(
+        api.endpoint.backend.ds.data_backup.httpMessageType,
+        api.endpoint.backend.ds.data_backup.url,
+        true
+      )
+      xhttp.responseType = 'arraybuffer'
+      xhttp.setRequestHeader('X-TenantID', tenantID)
+      xhttp.setRequestHeader(
+        'Content-Type',
+        api.endpoint.backend.ds.data_backup.headers['Content-Type']
+      )
+      xhttp.setRequestHeader('Authorization', 'Bearer '.concat(jwtoken))
+      xhttp.onload = function () {
+        if (this.status === 200) {
+          var filename = ''
+          var disposition = xhttp.getResponseHeader('Content-Disposition')
+          if (disposition && disposition.indexOf('attachment') !== -1) {
+            var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+            var matches = filenameRegex.exec(disposition)
+            if (matches != null && matches[1]) {
+              filename = matches[1].replace(/['"]/g, '')
+            }
+          }
+          var type = xhttp.getResponseHeader('Content-Type')
+
+          var blob = new Blob([this.response], { type: type })
+          if (typeof window.navigator.msSaveBlob !== 'undefined') {
+            window.navigator.msSaveBlob(blob, filename)
+            callback({
+              status: 200
+            })
+          } else {
+            var URL = window.URL || window.webkitURL
+            var downloadUrl = URL.createObjectURL(blob)
+
+            if (filename) {
+              var a = document.createElement('a')
+              if (typeof a.download === 'undefined') {
+                window.location = downloadUrl
+              } else {
+                a.href = downloadUrl
+                a.download = filename
+                document.body.appendChild(a)
+                a.click()
+              }
+            } else {
+              window.location = downloadUrl
+            }
+
+            setTimeout(function () {
+              URL.revokeObjectURL(downloadUrl)
+            }, 500)
+            callback({
+              status: 200
+            })
+          }
+        } else {
+          callback({
+            status: xhttp.status,
+            data: xhttp.responseText
+          })
+        }
+      }
+      xhttp.send(JSON.stringify(data))
+    },
+    ds_data_restore_request: function (tenantID, jwtoken, data, callback) {
+      let xhttp = new XMLHttpRequest()
+      xhttp.open(
+        api.endpoint.backend.ds.data_restore.httpMessageType,
+        api.endpoint.backend.ds.data_restore.url,
+        true
+      )
+      xhttp.setRequestHeader('X-TenantID', tenantID)
+      xhttp.setRequestHeader('Authorization', 'Bearer '.concat(jwtoken))
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState == 4) {
+          callback({
+            http: {
+              status: xhttp.status
+            },
+            data: xhttp.responseText
+          })
+        } else console.log(xhttp.readyState)
+      }
+      xhttp.send(data)
+    },
+    ds_entity_populate_request: function (
+      projectOwner,
+      projectName,
+      entityName,
+      jwtoken,
+      data,
+      callback
+    ) {
+      let xhttp = new XMLHttpRequest()
+      xhttp.open(
+        api.endpoint.backend.ds.schema_populate.httpMessageType,
+        api.endpoint.backend.ds.schema_populate.url
+          .replace('{projectOwner}', projectOwner)
+          .replace('{projectName}', projectName)
+          .replace('{entityName}', entityName),
+        true
+      )
+      //xhttp.setRequestHeader('Content-Type', 'multipart/form-data');
+      xhttp.setRequestHeader('UserIDToken', 'Bearer '.concat(jwtoken))
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState == 4) {
+          callback({
+            http: {
+              status: xhttp.status
+            },
+            data: xhttp.responseText
+          })
+        }
+      }
+      xhttp.send(data)
+    }
   }
-  //   baas: {
-  //     request: function (tenantID, jwtoken, data, callback, type, endpoint) {
-  //       let xhttp = new XMLHttpRequest()
-  //       if (type == 'login') {
-  //         xhttp.open(
-  //           'POST',
-  //           PROTOCOL + '://' + baas_address + '/api/csecurity/oauth/token',
-  //           true
-  //         )
-  //         xhttp.setRequestHeader(
-  //           'Content-Type',
-  //           'application/x-www-form-urlencoded'
-  //         )
-  //         xhttp.setRequestHeader(
-  //           'Authorization',
-  //           'Basic '.concat(btoa('yc:c547d72d-607c-429c-81e2-0baec7dd068b'))
-  //         )
-  //         xhttp.send(data)
-  //         endpoint = {
-  //           headers: {}
-  //         }
-  //         endpoint.headers['Accept'] = 'application/json'
-  //       } else if (type == 'data') {
-  //         const URL = PROTOCOL + '://' + baas_address + '/api/interpreter-p/s'
-  //         console.log(URL)
-
-  //         xhttp.open('POST', URL, true)
-  //         xhttp.setRequestHeader('X-TenantID', tenantID)
-  //         xhttp.setRequestHeader('Content-Type', 'application/json')
-  //         xhttp.setRequestHeader('Authorization', 'Bearer '.concat(jwtoken))
-  //         console.log('data: ', data)
-  //         xhttp.send(JSON.stringify(data))
-  //         endpoint = {
-  //           headers: {
-  //             Accept: 'application/json'
-  //           }
-  //         }
-  //       } else if (type == 'accounts_and_roles') {
-  //         xhttp.open(endpoint.httpMessageType, endpoint.url, true)
-  //         xhttp.setRequestHeader('X-TenantID', tenantID)
-  //         xhttp.setRequestHeader('Authorization', 'Bearer '.concat(jwtoken))
-  //         if (
-  //           endpoint.httpMessageType == 'POST' ||
-  //           endpoint.httpMessageType == 'PUT'
-  //         ) {
-  //           xhttp.setRequestHeader('Content-Type', 'application/json')
-  //           xhttp.send(JSON.stringify(data))
-  //         } else if (
-  //           endpoint.httpMessageType == 'GET' ||
-  //           endpoint.httpMessageType == 'DELETE'
-  //         ) {
-  //           if (endpoint.headers['Content-Type']) {
-  //             xhttp.setRequestHeader('Accept', endpoint.headers['Content-Type'])
-  //           }
-  //           xhttp.send()
-  //         }
-  //       }
-
-  //       xhttp.onreadystatechange = function () {
-  //         if (xhttp.readyState == 4) {
-  //           let response = null
-  //           try {
-  //             let _data = ''
-  //             if (
-  //               xhttp.responseText != null &&
-  //               xhttp.responseText.trim().length > 0
-  //             ) {
-  //               if (endpoint.headers['Accept'] == 'application/json') {
-  //                 _data = JSON.parse(xhttp.responseText)
-  //               } else {
-  //                 _data = xhttp.responseText
-  //               }
-  //             }
-  //             response = {
-  //               http: {
-  //                 status: xhttp.status
-  //               },
-  //               data: _data
-  //             }
-  //           } catch (err) {
-  //             console.log(err.message + ' in ' + xhttp.responseText)
-  //           }
-  //           callback(response)
-  //         }
-  //       }
-  //     },
-  //     ds_data_backup_request: function (tenantID, jwtoken, data, callback) {
-  //       let xhttp = new XMLHttpRequest()
-  //       xhttp.open(
-  //         api.endpoint.backend.ds.data_backup.httpMessageType,
-  //         api.endpoint.backend.ds.data_backup.url,
-  //         true
-  //       )
-  //       xhttp.responseType = 'arraybuffer'
-  //       xhttp.setRequestHeader('X-TenantID', tenantID)
-  //       xhttp.setRequestHeader(
-  //         'Content-Type',
-  //         api.endpoint.backend.ds.data_backup.headers['Content-Type']
-  //       )
-  //       xhttp.setRequestHeader('Authorization', 'Bearer '.concat(jwtoken))
-  //       xhttp.onload = function () {
-  //         if (this.status === 200) {
-  //           var filename = ''
-  //           var disposition = xhttp.getResponseHeader('Content-Disposition')
-  //           if (disposition && disposition.indexOf('attachment') !== -1) {
-  //             var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
-  //             var matches = filenameRegex.exec(disposition)
-  //             if (matches != null && matches[1]) {
-  //               filename = matches[1].replace(/['"]/g, '')
-  //             }
-  //           }
-  //           var type = xhttp.getResponseHeader('Content-Type')
-
-  //           var blob = new Blob([this.response], { type: type })
-  //           if (typeof window.navigator.msSaveBlob !== 'undefined') {
-  //             window.navigator.msSaveBlob(blob, filename)
-  //             callback({
-  //               status: 200
-  //             })
-  //           } else {
-  //             var URL = window.URL || window.webkitURL
-  //             var downloadUrl = URL.createObjectURL(blob)
-
-  //             if (filename) {
-  //               var a = document.createElement('a')
-  //               if (typeof a.download === 'undefined') {
-  //                 window.location = downloadUrl
-  //               } else {
-  //                 a.href = downloadUrl
-  //                 a.download = filename
-  //                 document.body.appendChild(a)
-  //                 a.click()
-  //               }
-  //             } else {
-  //               window.location = downloadUrl
-  //             }
-
-  //             setTimeout(function () {
-  //               URL.revokeObjectURL(downloadUrl)
-  //             }, 500)
-  //             callback({
-  //               status: 200
-  //             })
-  //           }
-  //         } else {
-  //           callback({
-  //             status: xhttp.status,
-  //             data: xhttp.responseText
-  //           })
-  //         }
-  //       }
-  //       xhttp.send(JSON.stringify(data))
-  //     },
-  //     ds_data_restore_request: function (tenantID, jwtoken, data, callback) {
-  //       let xhttp = new XMLHttpRequest()
-  //       xhttp.open(
-  //         api.endpoint.backend.ds.data_restore.httpMessageType,
-  //         api.endpoint.backend.ds.data_restore.url,
-  //         true
-  //       )
-  //       xhttp.setRequestHeader('X-TenantID', tenantID)
-  //       xhttp.setRequestHeader('Authorization', 'Bearer '.concat(jwtoken))
-  //       xhttp.onreadystatechange = function () {
-  //         if (xhttp.readyState == 4) {
-  //           callback({
-  //             http: {
-  //               status: xhttp.status
-  //             },
-  //             data: xhttp.responseText
-  //           })
-  //         } else console.log(xhttp.readyState)
-  //       }
-  //       xhttp.send(data)
-  //     }
-  //   }
 }
 
-// /*
-// Plugin Name: Simple Menu
-// Developer: Prashen Jeet Roy
-// Version: 1
-// functionality: onclick dropdown, body click hide,
-// */
-// ;(function ($) {
-//   $.fn.simpleMenu = function (options) {
-//     'use strict'
-//     var $a = $(this),
-//       $b = $(this).find('a').next()
-//     $a.on('click', 'a', function (e) {
-//       e.stopPropagation()
-//       var $c = $(this).next().hasClass('sub-menu')
-//       if ($c === true) {
-//         e.preventDefault()
-//       }
+/*
+Plugin Name: Simple Menu
+Developer: Prashen Jeet Roy
+Version: 1
+functionality: onclick dropdown, body click hide, 
+*/
+// (function($) {
+//     $.fn.simpleMenu = function(options) {
+//         "use strict";
+//         var $a = $(this), $b = $(this).find('a').next();
+//         $a.on('click', 'a', function(e) {
+//             e.stopPropagation();
+//             var $c = $(this).next().hasClass('sub-menu');
+//             if ($c === true) {
+//                 e.preventDefault();
+//             }
 
-//       $(this)
-//         .next()
-//         .slideToggle(300)
-//         .parent()
-//         .siblings()
-//         .children('ul')
-//         .not($(this).next())
-//         .hide()
-//     })
-//     $(document).on('click', $b, function (e) {
-//       $b.hide(200)
-//     })
-//   }
-// })(jQuery)
+//             $(this).next().slideToggle(300)
+//                 .parent().siblings().children('ul')
+//                 .not($(this).next()).hide()
+//         });
+//         $(document).on('click', $b, function(e) {
+//             $b.hide(200);
+//         });
+//     }
+// }(jQuery));
 
-// $('.simple-menu').simpleMenu()
+// $('.simple-menu').simpleMenu();
 
-// $('.simple-menu .sub-menu a').click(function (e) {
-//   $('.sub-menu').hide(200)
-// })
+// $('.simple-menu .sub-menu a').click(function(e) {
+//     $('.sub-menu').hide(200);
+// });
 
-// String.prototype.replaceAll = function (search, replacement) {
-//   return this.split(search).join(replacement)
-// }
+// String.prototype.replaceAll = function(search, replacement) {
+//     return this.split(search).join(replacement);
+// };
 
-// String.prototype.isAlphaNumeric = function () {
-//   var regExp = /^[A-Za-z0-9]+$/
-//   return this.match(regExp)
-// }
+// String.prototype.isAlphaNumeric = function() {
+//     var regExp = /^[A-Za-z0-9]+$/;
+//     return (this.match(regExp));
+// };
 
 // if (!Array.prototype.clear) {
-//   Array.prototype.clear = function () {
-//     this.splice(0, this.length)
-//   }
+//     Array.prototype.clear = function() {
+//         this.splice(0, this.length);
+//     };
 // }
 
 // /* *************** *
 //  * Confirme Dialog *
 //  * *************** */
 
-// export const ui = {
-//   confirm: async (message) => createConfirmDialog(message)
+// const ui = {
+//     confirm: async (message) => createConfirmDialog(message)
 // }
 
-// export const createConfirmDialog = (message) => {
-//   return new Promise((complete, failed) => {
-//     $('#confirmMessage').text(message)
+// const createConfirmDialog = (message) => {
+//     return new Promise((complete, failed) => {
+//         $('#confirmMessage').text(message)
 
-//     $('#confirmYes').off('click')
-//     $('#confirmNo').off('click')
+//         $('#confirmYes').off('click');
+//         $('#confirmNo').off('click');
 
-//     $('#confirmYes').on('click', () => {
-//       $('.confirm').hide()
-//       complete(true)
-//     })
-//     $('#confirmNo').on('click', () => {
-//       $('.confirm').hide()
-//       complete(false)
-//     })
+//         $('#confirmYes').on('click', () => { $('.confirm').hide(); complete(true); });
+//         $('#confirmNo').on('click', () => { $('.confirm').hide(); complete(false); });
 
-//     $('.confirm').show()
-//   })
+//         $('.confirm').show();
+//     });
 // }
 
-// export const launchConfirmDialog = async (message) => {
-//   const confirm = await ui.confirm(message)
+// const launchConfirmDialog = async (message) => {
+//     const confirm = await ui.confirm(message);
 
-//   if (confirm) {
-//     alert('yes clicked')
-//   } else {
-//     alert('no clicked')
-//   }
+//     if (confirm) {
+//         alert('yes clicked');
+//     } else {
+//         alert('no clicked');
+//     }
 // }
 
-// export function copyToClipboard(value) {
-//   $('#to_clipboard').val(value).select()
-//   document.execCommand('copy')
+// function copyToClipboard(value) {
+//     $('#to_clipboard').val(value).select();
+//     document.execCommand("copy");
 // }

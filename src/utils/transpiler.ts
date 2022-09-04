@@ -1,3 +1,5 @@
+import { api, _gtools_lib } from "./tools"
+
 const code =
   'schema locadora (\n' +
   '  enabled\n' +
@@ -65,7 +67,6 @@ const ycl_reserved_words = [
   'extends',
   'nullable',
   'unique',
-  'comment',
   'concurrencyControl',
   'businessRule',
   'accessControl',
@@ -93,7 +94,13 @@ const ycl_reserved_words = [
   'columnar',
   'partitionKeys',
   'clusteringColumns',
-  'Text'
+  'Text',
+  'id',
+  'role',
+  'user',
+  'createdat',
+  'updatedat',
+  'version'
 ]
 
 export const ycl_transpiler = {
@@ -257,9 +264,6 @@ export const ycl_transpiler = {
               ']'
           )
         }
-        console.log('>>> >> > from: ', from)
-        console.log('>>> >> > tokens[' + index + ']: ', tokens[index])
-        console.log('>>> >> > code: ', code)
       } else if (
         from == 1 &&
         tokens[index].symbol == '(' &&
@@ -423,20 +427,9 @@ export const ycl_transpiler = {
           schema.entities.push(actual_entity)
           if (actual_entity.command == 'd') {
             index++
-            console.log('> >>> >> > index: ', index)
-            console.log('> >>> >> > tokens[' + index + ']: ', tokens[index])
-            console.log(
-              '> >>> >> > actual_entity: ',
-              JSON.stringify(actual_entity)
-            )
             while (++index < tokens.length) {
               if (tokens[index].symbol == '(') {
-                console.log('> >>> >> > tokens[' + index + ']: ', tokens[index])
                 while (tokens[++index].symbol != ')') {
-                  console.log(
-                    '> >>> >> > tokens[' + index + ']: ',
-                    tokens[index]
-                  )
                   if (tokens[index].symbol == 'sql') {
                     ycl_transpiler.db_type = tokens[index].symbol
                     actual_entity._conf.dbType = ycl_transpiler.db_type
@@ -446,7 +439,6 @@ export const ycl_transpiler = {
                   }
                 }
                 ++index
-                console.log('> >>> >> > actual_entity: ', actual_entity)
               }
               if (tokens[index].symbol == '}') {
                 // avaliar se após a declaração de remoção da entidade vem outra entidade
@@ -1108,25 +1100,33 @@ export const ycl_transpiler = {
                 code_body = code_body + ' ' + tokens[index].symbol + '\n'
                 index++
                 while (tokens[index].symbol != ')') {
-                  /* if (tokens[index].symbol == 'unique' || tokens[index].symbol == '!unique'
-                                        || tokens[index].symbol == 'u:unique' || tokens[index].symbol == 'u:!unique') {
-                                        {
-                                            let aux = tokens[index].symbol.split(':');
-                                            if (aux.length == 2) {
-                                                actual_attribute._conf.unique = {
-                                                    value: aux[1] == 'unique',
-                                                    command: aux[0]
-                                                };
-                                            } else {
-                                                actual_attribute._conf.unique = {
-                                                    value: aux[0] == 'unique',
-                                                    command: ''
-                                                };
-                                            }
-                                        }
-                                        code_body = code_body + '      ' + tokens[index].symbol.replace('u:','') + '\n';
-                                        index++;
-                                    } else */ if (
+                  if (
+                    tokens[index].symbol == 'unique' ||
+                    tokens[index].symbol == '!unique' ||
+                    tokens[index].symbol == 'u:unique' ||
+                    tokens[index].symbol == 'u:!unique'
+                  ) {
+                    {
+                      let aux = tokens[index].symbol.split(':')
+                      if (aux.length == 2) {
+                        actual_attribute._conf.unique = {
+                          value: aux[1] == 'unique',
+                          command: aux[0]
+                        }
+                      } else {
+                        actual_attribute._conf.unique = {
+                          value: aux[0] == 'unique',
+                          command: ''
+                        }
+                      }
+                    }
+                    code_body =
+                      code_body +
+                      '      ' +
+                      tokens[index].symbol.replace('u:', '') +
+                      '\n'
+                    index++
+                  } else if (
                     tokens[index].symbol == 'nullable' ||
                     tokens[index].symbol == '!nullable' ||
                     tokens[index].symbol == 'u:nullable' ||
@@ -1315,7 +1315,8 @@ export const ycl_transpiler = {
                         ycl_transpiler.types.includes(
                           tokens[index + 1].symbol
                         ) ||
-                        /* || tokens[index + 1].symbol == 'unique' || tokens[index + 1].symbol == '!unique' */
+                        tokens[index + 1].symbol == 'unique' ||
+                        tokens[index + 1].symbol == '!unique' ||
                         tokens[index + 1].symbol == 'nullable' ||
                         tokens[index + 1].symbol == '!nullable' ||
                         tokens[index + 1].symbol == 'comment' ||
@@ -1369,7 +1370,8 @@ export const ycl_transpiler = {
                         ycl_transpiler.types.includes(
                           tokens[index + 1].symbol
                         ) ||
-                        /* || tokens[index + 1].symbol == 'unique' || tokens[index + 1].symbol == '!unique' */
+                        tokens[index + 1].symbol == 'unique' ||
+                        tokens[index + 1].symbol == '!unique' ||
                         tokens[index + 1].symbol == 'nullable' ||
                         tokens[index + 1].symbol == '!nullable' ||
                         tokens[index + 1].symbol == 'comment' ||
@@ -1608,9 +1610,7 @@ export const ycl_transpiler = {
                 entity_idx++
               ) {
                 let entity = schema.entities[entity_idx]
-                console.log('> entity: ', entity)
                 if (source.entity_name == entity.name) {
-                  console.log('> source: ', source)
                   let attribute_idx = 0
                   for (
                     ;
@@ -1618,17 +1618,12 @@ export const ycl_transpiler = {
                     attribute_idx++
                   ) {
                     let attribute = entity.attributes[attribute_idx]
-                    console.log('> attribute: ', attribute)
-                    console.log(
-                      '> : ' + source.attribute_name + ' == ' + attribute.name
-                    )
                     if (source.attribute_name == attribute.name) {
                       flag = false
                       break
                     }
                   }
                 }
-                console.log(' ')
               }
               toRemove.push({
                 entity_idx: entity_idx,
@@ -1649,8 +1644,6 @@ export const ycl_transpiler = {
                 delete schema.entities[item.entity_idx].attributes[item.attribute_idx];
             }
         }*/
-
-    console.log('refs: ', refs)
 
     let entities = schema.entities
     for (let ref_idx = 0; ref_idx < refs.length; ref_idx++) {
@@ -1920,9 +1913,16 @@ export const ycl_transpiler = {
                         'nullable'
                       ].value
                   }
-                  /* if (model['entities'][key2]['attributes'][key4]['_conf']['unique']) {
-                                    attribute_.unique = model['entities'][key2]['attributes'][key4]['_conf']['unique'].value
-                                } */
+                  if (
+                    model['entities'][key2]['attributes'][key4]['_conf'][
+                      'unique'
+                    ]
+                  ) {
+                    attribute_.unique =
+                      model['entities'][key2]['attributes'][key4]['_conf'][
+                        'unique'
+                      ].value
+                  }
                   if (
                     model['entities'][key2]['attributes'][key4]['_conf'][
                       'source'
@@ -1961,9 +1961,16 @@ export const ycl_transpiler = {
                         'nullable'
                       ].value
                   }
-                  /* if (model['entities'][key2]['attributes'][key4]['_conf']['unique']) {
-                                    association_.unique = model['entities'][key2]['attributes'][key4]['_conf']['unique'].value
-                                } */
+                  if (
+                    model['entities'][key2]['attributes'][key4]['_conf'][
+                      'unique'
+                    ]
+                  ) {
+                    association_.unique =
+                      model['entities'][key2]['attributes'][key4]['_conf'][
+                        'unique'
+                      ].value
+                  }
                   entity.associations.push(association_)
                 }
               }
@@ -1976,7 +1983,6 @@ export const ycl_transpiler = {
             }
             control.value = false
           } else if (model['entities'][key2]['command'] == 'd') {
-            console.log('>>> >> > entity: ')
             if (entity._conf.dbType == 'nosql(columnar)') {
               ycl_transpiler.deleteNoSQLEntity(
                 schema.name,
@@ -2257,9 +2263,16 @@ export const ycl_transpiler = {
                             'nullable'
                           ].value
                       }
-                      /* if (model['entities'][key2]['attributes'][key4]['_conf']['unique']) {
-                                            attribute_.unique = model['entities'][key2]['attributes'][key4]['_conf']['unique'].value
-                                        } */
+                      if (
+                        model['entities'][key2]['attributes'][key4]['_conf'][
+                          'unique'
+                        ]
+                      ) {
+                        attribute_.unique =
+                          model['entities'][key2]['attributes'][key4]['_conf'][
+                            'unique'
+                          ].value
+                      }
                       if (
                         model['entities'][key2]['attributes'][key4]['_conf'][
                           'source'
@@ -2444,13 +2457,28 @@ export const ycl_transpiler = {
                         )
                       }
                       control.value = false
-                    } /* else if (model['entities'][key2]['attributes'][key4]['_conf']['unique']
-                                        && model['entities'][key2]['attributes'][key4]['_conf']['unique']['command'] == 'u') {
-                                        ycl_transpiler.updateAttribute(schema.name, entity.name, attribute.name, {
-                                            unique: model['entities'][key2]['attributes'][key4]['_conf']['unique']['value']
-                                        }, callback);
-                                        control.value = false;
-                                    } */ else if (
+                    } else if (
+                      model['entities'][key2]['attributes'][key4]['_conf'][
+                        'unique'
+                      ] &&
+                      model['entities'][key2]['attributes'][key4]['_conf'][
+                        'unique'
+                      ]['command'] == 'u'
+                    ) {
+                      ycl_transpiler.updateAttribute(
+                        schema.name,
+                        entity.name,
+                        attribute_.name,
+                        {
+                          unique:
+                            model['entities'][key2]['attributes'][key4][
+                              '_conf'
+                            ]['unique']['value']
+                        },
+                        callback
+                      )
+                      control.value = false
+                    } else if (
                       model['entities'][key2]['attributes'][key4]['_conf'][
                         'extension'
                       ] &&
