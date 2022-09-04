@@ -28,4 +28,5 @@ export {
   RGFormat
 } from './formaters'
 export { ycl_transpiler } from './transpiler'
+export { api as toolApi } from './tools'
 export { apiRoutes } from './apiRoutes'

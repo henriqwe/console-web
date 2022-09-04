@@ -183,7 +183,7 @@ export function ViewSchema() {
             setOpenModal(true)
           }}
         >
-          <div className="flex">Delete schema</div>
+          <p className="flex">Delete schema</p>
         </common.Buttons.RedOutline>
         {/* <common.Buttons.Blue disabled={loading} loading={loading}>
           <div className="flex">Update admin password</div>

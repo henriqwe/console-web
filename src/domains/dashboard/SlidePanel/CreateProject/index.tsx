@@ -1,3 +1,4 @@
+import CodeMirror from '@uiw/react-codemirror'
 import {
   Controller,
   FieldValues,
@@ -8,13 +9,16 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { CheckCircleIcon, CheckIcon } from '@heroicons/react/outline'
 import * as common from 'common'
 import * as utils from 'utils'
+import * as ThemeContext from 'contexts/ThemeContext'
 import * as dashboard from 'domains/dashboard'
+import { dracula } from '@uiw/codemirror-theme-dracula'
+import { EditorView } from '@codemirror/view'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
 
 const plans = {
-  'Free': {
+  Free: {
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
     features: [
@@ -37,7 +41,7 @@ const plans = {
       'Armazenamento limitado a 10 GB',
       'Sem custos adicionais'
     ]
-  },
+  }
 }
 
 export function Create() {
@@ -46,13 +50,15 @@ export function Create() {
   const [plan, setPlan] = useState<
     'Free' | 'Pro' | 'Plano sem nome' | 'Enterprise'
   >()
+  const [submittedSchema, setSubmittedSchema] = useState<string>()
   const { createProjectSchema, setReload, reload } = dashboard.useData()
+  const { isDark } = ThemeContext.useTheme()
 
   const {
     control,
     handleSubmit,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(createProjectSchema) })
+  } = useForm({ resolver: yupResolver(createProjectSchema(submittedSchema)) })
 
   async function Submit(data: { ProjectName: string }) {
     try {
@@ -62,6 +68,31 @@ export function Create() {
       }
 
       const spaceValidation = new RegExp(/\s/g)
+
+      if (submittedSchema) {
+        const schemaParsed = utils.ycl_transpiler.parse(submittedSchema)
+        utils.ycl_transpiler.deploy(schemaParsed.schema, async () => {
+          setReload(!reload)
+          const { data: schemaData } = await utils.api.get(
+            `${utils.apiRoutes.schemas}/${schemaParsed.schema.name}`,
+            {
+              headers: {
+                Authorization: `Bearer ${utils.getCookie('access_token')}`
+              }
+            }
+          )
+
+          utils.setCookie('X-TenantID', schemaData.tenantId)
+          utils.setCookie('X-TenantAC', schemaData.tenantAc)
+          utils.notification(
+            `Project ${schemaParsed.schema.name} created successfully`,
+            'success'
+          )
+          router.push(routes.console + '/' + schemaParsed.schema.name)
+        })
+
+        return
+      }
       if (spaceValidation.test(data.ProjectName)) {
         throw new Error('Project name cannot contain spaces')
       }
@@ -127,23 +158,89 @@ export function Create() {
       data-testid="editForm"
       className="flex flex-col items-end"
     >
-      <div className="flex flex-col w-full gap-2 mb-2">
-        <Controller
-          name={'ProjectName'}
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <div className="col-span-3">
-              <common.Input
-                placeholder="Project name"
-                label="Project name"
-                value={value}
-                onChange={onChange}
-                errors={errors.ProjectName}
-              />
-            </div>
-          )}
-        />
+      <div
+        className={`flex ${
+          submittedSchema ? 'justify-between' : 'justify-end'
+        }  w-full gap-2 mb-2`}
+      >
+        {submittedSchema && (
+          <common.Buttons.RedOutline
+            disabled={loading}
+            loading={loading}
+            onClick={() => {
+              setSubmittedSchema(undefined)
+            }}
+          >
+            <p>Cancel</p>
+          </common.Buttons.RedOutline>
+        )}
+        <div>
+          <label
+            htmlFor="file"
+            className={`border px-2 py-2 text-xs transition disabled:cursor-not-allowed hover:cursor-pointer rounded-md flex gap-2 items-center justify-center`}
+          >
+            Import schema
+          </label>
+          <input
+            type="file"
+            id="file"
+            accept=".txt"
+            className="hidden"
+            onChange={(e) => {
+              try {
+                const file = e.target.files![0]
+                if (file.type !== 'text/plain') {
+                  throw new Error('Tipo de arquivo não aceito')
+                }
+
+                const reader = new FileReader()
+                reader.addEventListener('load', (event) => {
+                  console.log('event', event)
+                  setSubmittedSchema(event?.target?.result as string)
+                })
+                reader.readAsText(file)
+              } catch (err) {
+                utils.showError(err)
+              }
+            }}
+          />
+        </div>
       </div>
+
+      {!submittedSchema && (
+        <div className="flex flex-col w-full gap-2 mb-2">
+          <Controller
+            name={'ProjectName'}
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <div className="col-span-3">
+                <common.Input
+                  placeholder="Project name"
+                  label="Project name"
+                  value={value}
+                  onChange={onChange}
+                  errors={errors.ProjectName}
+                />
+              </div>
+            )}
+          />
+        </div>
+      )}
+      {submittedSchema && (
+        <div className="w-full my-2">
+          <CodeMirror
+            value={submittedSchema}
+            className="flex w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
+            width="100%"
+            onChange={(value) => {
+              setSubmittedSchema(value)
+            }}
+            theme={isDark ? dracula : 'light'}
+            extensions={[EditorView.lineWrapping]}
+          />
+        </div>
+      )}
+      <common.Separator />
       <p className="w-full text-sm font-medium dark:text-gray-200">
         Select a plan
       </p>
@@ -165,9 +262,7 @@ export function Create() {
                       </p>
                     </div>
                   )}
-                  <p className="text-sm">
-                    {plans['Free'].description}
-                  </p>
+                  <p className="text-sm">{plans['Free'].description}</p>
                   <common.Separator />
 
                   <div>

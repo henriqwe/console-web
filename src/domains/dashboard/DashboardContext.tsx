@@ -13,7 +13,7 @@ type DataContextProps = {
   setSelectedSchema: Dispatch<SetStateAction<Schemas | undefined>>
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
-  createProjectSchema: yup.AnyObjectSchema
+  createProjectSchema: (submittedSchema?: string) => yup.AnyObjectSchema
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
   slideType: 'CREATE' | 'VIEW'
@@ -29,7 +29,6 @@ type Schemas = {
   tenantAc: string
   tenantId: string
 }
-
 
 type ProviderProps = {
   children: ReactNode
@@ -48,12 +47,16 @@ export const DataProvider = ({ children }: ProviderProps) => {
   const [reload, setReload] = useState(false)
   const [selectedSchema, setSelectedSchema] = useState<Schemas>()
 
-  const createProjectSchema = yup.object().shape({
-    ProjectName: yup
-      .string()
-      .matches(/^[A-Za-z ]*$/, 'Please enter valid name')
-      .required('Project name is a required field')
-  })
+  const createProjectSchema = (submittedSchema?: string) => {
+    return yup.object().shape({
+      ProjectName: submittedSchema
+        ? yup.string().nullable()
+        : yup
+            .string()
+            .matches(/^[A-Za-z ]*$/, 'Please enter valid name')
+            .required('Project name is a required field')
+    })
+  }
 
   return (
     <DataContext.Provider
