@@ -87,7 +87,7 @@ export function FieldDetail({
   }
 
   return (
-    <common.Card className="p-3 bg-gray-100 dark:bg-menu-primary border border-gray-300">
+    <common.Card className="p-3 bg-gray-100 border border-gray-300 dark:bg-menu-primary">
       <div className="flex flex-col">
         <div>
           <common.Buttons.Clean
