@@ -185,10 +185,10 @@ export function Editors() {
               showTableViewMode ? 'col-span-4' : 'col-span-6'
             } h-full rounded-lg flex`}
           >
-            <div className="flex relative flex-col w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]   overflow-hidden rounded-l-lg">
+            <div className="flex relative flex-col w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]   overflow-hidden rounded-l-lg">
               <CodeMirror
                 value={consoleValue}
-                className="flex w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
+                className="flex w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
                 width="100%"
                 onChange={(value, viewUpdate) => {
                   setConsoleValue(value)
@@ -233,10 +233,10 @@ export function Editors() {
               ) : showTableViewMode ? (
                 <consoleSection.TableViewMode />
               ) : (
-                <div className="flex flex-col w-full  h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
+                <div className="flex flex-col w-full  h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
                   <CodeMirror
                     value={consoleResponseFormated}
-                    className="flex w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]"
+                    className="flex w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]"
                     width="100%"
                     theme={isDark ? dracula : 'light'}
                     editable={false}
