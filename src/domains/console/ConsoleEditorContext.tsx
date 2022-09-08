@@ -81,6 +81,8 @@ type ConsoleEditorContextProps = {
   setCurrentEditorAction: Dispatch<SetStateAction<actionType>>
   debounceEditor(): void
   handleFormatQueryOrMutationEntity({ entity }: { entity: string }): void
+  consoleFormaterMensageError: string | undefined
+  setConsoleFormaterMensageError: Dispatch<SetStateAction<string | undefined>>
 }
 
 type ProviderProps = {
@@ -101,6 +103,8 @@ export const ConsoleEditorContext = createContext<ConsoleEditorContextProps>(
 
 export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleValue, setConsoleValue] = useState('')
+  const [consoleFormaterMensageError, setConsoleFormaterMensageError] =
+    useState<string>()
   const [consoleValueLastOperation, setConsoleValueLastOperation] = useState('')
   const [documentationValue, setdocumentationValue] = useState('')
   const [consoleResponse, setConsoleResponse] = useState([])
@@ -379,9 +383,11 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
 
       debounceEditorHandleAction(consoleValueParsed)
       debounceEditorEntities(consoleValueParsed)
+      setConsoleFormaterMensageError(undefined)
     } catch (err: any) {
       setCurrentEditorAction('READ')
       setActiveEntitiesSidebar(new Set<string>())
+      setConsoleFormaterMensageError(err.message)
       utils.notification(err.message, 'error')
     }
   }
@@ -402,9 +408,9 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
           consoleValueParsed.action.toLocaleUpperCase() as actionType
         )
       }
-
       return
     }
+
     throw new Error(
       `Unknow action, "${consoleValueParsed.action}". Please enter "READ", "CREATE", "UPDATE", "DELETE" `
     )
@@ -414,7 +420,6 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
     if (!consoleValueParsed.data) {
       throw new Error(`The data key is missing`)
     }
-
     const arrayToValidate = new Set<string>()
     for (const valueDataEntity of consoleValueParsed.data) {
       Object.keys(valueDataEntity).map((entity) => {
@@ -497,7 +502,9 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
         currentEditorAction,
         setCurrentEditorAction,
         debounceEditor,
-        handleFormatQueryOrMutationEntity
+        handleFormatQueryOrMutationEntity,
+        consoleFormaterMensageError,
+        setConsoleFormaterMensageError
       }}
     >
       {children}

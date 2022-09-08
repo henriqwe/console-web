@@ -20,6 +20,7 @@ export const BaseButton = ({
         iconPosition === 'right' ? 'flex-row-reverse' : ''
       }`}
       {...props}
+      type={type}
     >
       {loading ? <common.Spinner className="w-5 h-5" /> : icon ?? null}
       {children}

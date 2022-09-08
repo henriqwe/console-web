@@ -37,7 +37,8 @@ export function Editors() {
     handleChange,
     handleFormatQueryOrMutationAction,
     debounceEditor,
-    currentEditorAction
+    currentEditorAction,
+    consoleFormaterMensageError
   } = consoleEditor.useConsoleEditor()
 
   const isReady = usePrettier({
@@ -109,35 +110,6 @@ export function Editors() {
             </div>
 
             <div className="flex items-center justify-end gap-2">
-              {consoleValueLastOperation && (
-                <common.Buttons.White
-                  type="button"
-                  onClick={() => {
-                    setSlideState({ open: true, type: 'CodeExporterView' })
-                  }}
-                >
-                  Code exporter
-                </common.Buttons.White>
-              )}
-              {showTableViewMode ? (
-                <common.Buttons.White
-                  type="button"
-                  onClick={() => {
-                    setShowTableViewMode(false)
-                  }}
-                >
-                  JSON
-                </common.Buttons.White>
-              ) : (
-                <common.Buttons.White
-                  type="button"
-                  onClick={() => {
-                    setShowTableViewMode(true)
-                  }}
-                >
-                  Table
-                </common.Buttons.White>
-              )}
               <div title="Endpoint and request headers">
                 <common.icons.DotsVerticalIcon
                   className="w-5 h-5 cursor-pointer"
@@ -185,10 +157,10 @@ export function Editors() {
               showTableViewMode ? 'col-span-4' : 'col-span-6'
             } h-full rounded-lg flex`}
           >
-            <div className="flex relative flex-col w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]   overflow-hidden rounded-l-lg">
+            <div className="flex relative flex-col w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] rounded-l-lg">
               <CodeMirror
                 value={consoleValue}
-                className="flex w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
+                className="flex w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
                 width="100%"
                 onChange={(value, viewUpdate) => {
                   setConsoleValue(value)
@@ -201,7 +173,18 @@ export function Editors() {
                   EditorView.lineWrapping
                 ]}
               />
-              <div className="absolute bottom-1 right-3">
+              <div className="absolute bottom-2 right-3 flex gap-1">
+                {consoleFormaterMensageError && (
+                  <div
+                    className="flex items-center justify-center rounded-full cursor-pointer  w-7 h-7 "
+                    title={consoleFormaterMensageError}
+                  >
+                    <Icon
+                      icon="eva:alert-circle-fill"
+                      className="w-6 h-6 text-red-600 dark:text-text-primary"
+                    />
+                  </div>
+                )}
                 <button
                   type="button"
                   title="Format"
@@ -213,8 +196,19 @@ export function Editors() {
                     className="w-5 h-5 text-gray-600 dark:text-text-primary"
                   />
                 </button>
+
+                <button
+                  type="button"
+                  title="Code exporter"
+                  onClick={() => {
+                    setSlideState({ open: true, type: 'CodeExporterView' })
+                  }}
+                  className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7"
+                >
+                  <common.icons.DownloadIcon className="w-5 h-5 text-gray-600 dark:text-text-primary" />
+                </button>
               </div>
-              <div className="flex items-center justify-end h-6 px-4 "></div>
+              <div className="flex items-center h-6 px-2"></div>
             </div>
           </div>
           <div
@@ -222,7 +216,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-8' : 'col-span-6'
             }  h-full flex flex-col`}
           >
-            <div className="flex w-full h-full overflow-hidden border-l border-gray-200 dark:border-gray-700 rounded-r-lg">
+            <div className="flex relative w-full h-full overflow-hidden border-l border-gray-200 dark:border-gray-700 rounded-r-lg">
               {consoleResponseLoading ? (
                 <div className="flex items-center justify-center w-full h-full">
                   <div className="flex items-center gap-2">
@@ -233,10 +227,10 @@ export function Editors() {
               ) : showTableViewMode ? (
                 <consoleSection.TableViewMode />
               ) : (
-                <div className="flex flex-col w-full  h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
+                <div className="flex  flex-col w-full  h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
                   <CodeMirror
                     value={consoleResponseFormated}
-                    className="flex w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]"
+                    className="flex w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]"
                     width="100%"
                     theme={isDark ? dracula : 'light'}
                     editable={false}
@@ -245,7 +239,8 @@ export function Editors() {
                       lineNumbers: false
                     }}
                   />
-                  <div className="flex items-center justify-end px-4">
+
+                  <div className="flex items-center justify-end h-6 px-2">
                     {responseTime && (
                       <div className="text-xs  h-8 flex items-center">
                         Response time: {responseTime} ms
@@ -254,6 +249,38 @@ export function Editors() {
                   </div>
                 </div>
               )}
+              <div className="absolute bottom-10 right-3">
+                {consoleResponseFormated &&
+                  (showTableViewMode ? (
+                    <button
+                      type="button"
+                      title="JSON View"
+                      onClick={() => {
+                        setShowTableViewMode(false)
+                      }}
+                      className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7 bg-white dark:bg-gray-900"
+                    >
+                      <Icon
+                        icon="ph:brackets-curly-bold"
+                        className="w-4 h-4 text-gray-600 dark:text-text-primary "
+                      />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      title="Table View"
+                      onClick={() => {
+                        setShowTableViewMode(true)
+                      }}
+                      className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7"
+                    >
+                      <Icon
+                        icon="bi:table"
+                        className="w-4 h-4 text-gray-600 dark:text-text-primary"
+                      />
+                    </button>
+                  ))}
+              </div>
             </div>
           </div>
         </div>
