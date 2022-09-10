@@ -354,6 +354,7 @@ export function Create() {
         disabled={loading}
         loading={loading}
         icon={<CheckIcon className="w-4 h-4" />}
+        type="submit"
       >
         Create project
       </common.Buttons.Clean>
