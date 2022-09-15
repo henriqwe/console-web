@@ -19,11 +19,26 @@ function notification(
 
 function showError(err: any) {
   if (err.response) {
-    if (err.response?.data) {
-      notification(
-        err?.response?.data?.err?.message ?? err?.response?.data?.message,
-        'error'
-      )
+    if (err.response.data) {
+      const knownError = err.response.data.err ? false : true;
+
+      /* 
+        se o erro for conhecido, o campo 'data' virá no formato
+        {message: '....', ...}
+
+        caso contrário, virá no formato
+        {err: {...}}
+      */
+
+      if (knownError) {
+        notification(
+          err?.response?.data?.message,
+          'error'
+        )
+        return
+      }
+
+      notification('Oops! Something went wrong', 'error')
       return
     }
 

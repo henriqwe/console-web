@@ -342,7 +342,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
       setConsoleResponse([])
 
       if (err?.request?.status === 404) {
-        utils.notification('object or objects not found.', 'error')
+        utils.notification('Object or objects not found.', 'error')
         return
       }
 
