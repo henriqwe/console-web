@@ -25,7 +25,8 @@ export function ViewSchema() {
   const [adminUser, setAdminUser] = useState<AdminUser>()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-  const [showCopyText, setShowCopyText] = useState(false)
+  const [showCopyIdText, setShowCopyIdText] = useState(false)
+  const [showCopyAcText, setShowCopyAcText] = useState(false)
 
   const yupSchema = yup.object().shape({ Name: yup.string().required() })
 
@@ -111,6 +112,8 @@ export function ViewSchema() {
   //   loadAdminUser()
   // }, [])
 
+  console.log('selectedSchema', selectedSchema)
+
   return (
     <div
       onSubmit={handleSubmit(onSubmit)}
@@ -132,7 +135,7 @@ export function ViewSchema() {
           <p className="text-sm text-gray-600 dark:text-gray-400">Status:</p>
           <p className="text-sm dark:text-gray-300">{selectedSchema?.status}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Project secret:
+            Project tenantAc:
           </p>
           <div className="flex w-full">
             <input
@@ -144,9 +147,9 @@ export function ViewSchema() {
             <CopyToClipboard
               text="Copy to clipboard"
               onCopy={() => {
-                setShowCopyText(true)
+                setShowCopyAcText(true)
                 setTimeout(() => {
-                  setShowCopyText(false)
+                  setShowCopyAcText(false)
                 }, 800)
               }}
             >
@@ -161,14 +164,44 @@ export function ViewSchema() {
                 />
               </div>
             </CopyToClipboard>
+            {showCopyAcText && (
+              <span className="ml-2 dark:text-gray-400">Copied!</span>
+            )}
           </div>
-          {showCopyText && <span className="dark:text-gray-400">Copied!</span>}
-        </div>
-        <div className="text-right">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Admin user</p>
-          <p className="font-bold dark:text-gray-300">
-            {adminUser ? adminUser.username : `tester@${selectedSchema?.name}`}
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Project tenantId:
           </p>
+          <div className="flex w-full">
+            <input
+              value={selectedSchema?.tenantId}
+              disabled
+              type="password"
+              className="w-40 text-xs bg-transparent dark:text-gray-300"
+            />
+            <CopyToClipboard
+              text="Copy to clipboard"
+              onCopy={() => {
+                setShowCopyIdText(true)
+                setTimeout(() => {
+                  setShowCopyIdText(false)
+                }, 800)
+              }}
+            >
+              <div className="flex items-center">
+                <DocumentDuplicateIcon
+                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-300"
+                  onClick={() =>
+                    navigator.clipboard.writeText(
+                      selectedSchema?.tenantId as string
+                    )
+                  }
+                />
+              </div>
+            </CopyToClipboard>
+            {showCopyIdText && (
+              <span className="ml-2 dark:text-gray-400">Copied!</span>
+            )}
+          </div>
         </div>
       </div>
 
