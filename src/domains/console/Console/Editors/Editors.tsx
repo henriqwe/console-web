@@ -134,7 +134,7 @@ export function Editors() {
             onClick={() => {
               if (schemaStatus !== 2) {
                 utils.notification(
-                  'you need to publish the schema to run the operation',
+                  'You need to publish the schema to run the operation',
                   'error'
                 )
                 return
