@@ -4,7 +4,7 @@ import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
 import { PlusIcon } from '@heroicons/react/outline'
-import { SetStateAction, useState, Dispatch, useEffect } from 'react'
+import { SetStateAction, useState, Dispatch } from 'react'
 import { useRouter } from 'next/router'
 import {
   Controller,
@@ -103,6 +103,30 @@ export function AssociationTab({ loading }: AssociationTabProps) {
             selectedEntity={selectedEntity}
           />
         ))}
+      {Object.keys(schemaTables!)
+        .map((entity) => {
+          if (entity !== selectedEntity) {
+            const attributes = Object.keys(schemaTables![entity])
+            for (const attribute of attributes) {
+              if (schemaTables![entity][attribute].type === selectedEntity) {
+                return { attribute, entity }
+              }
+            }
+          }
+        })
+        .filter((entity) => entity)
+        .map(({ attribute, entity }: { attribute: string; entity: string }) => {
+          return (
+            <AssociationCard
+              key={attribute}
+              attribute={attribute}
+              schemaTables={schemaTables}
+              selectedEntity={entity}
+              noEdit
+              reverse
+            />
+          )
+        })}
       {/* <div className="flex justify-between w-full">
         <div className="flex-1 border border-y-0 border-x-0">
           <div className="px-4 py-2 bg-gray-100 border dark:bg-gray-700 dark:border-gray-600 rounded-tl-xl">
@@ -114,8 +138,8 @@ export function AssociationTab({ loading }: AssociationTabProps) {
           <div className="px-4 py-2 bg-gray-100 border dark:bg-gray-700 dark:border-gray-600 rounded-tr-xl">
             <p className="text-sm">Array associations</p>
           </div> */}
-          {/* <AssociationCard /> */}
-        {/* </div>
+      {/* <AssociationCard /> */}
+      {/* </div>
       </div> */}
       {openForm && (
         <>
