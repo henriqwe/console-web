@@ -181,7 +181,7 @@ export function Editors() {
                   >
                     <Icon
                       icon="eva:alert-circle-fill"
-                      className="w-6 h-6 text-red-600 dark:text-text-primary"
+                      className="w-6 h-6 text-red-600 dark:text-red-600"
                     />
                   </div>
                 )}

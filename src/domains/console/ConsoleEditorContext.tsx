@@ -388,7 +388,6 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
       setCurrentEditorAction('READ')
       setActiveEntitiesSidebar(new Set<string>())
       setConsoleFormaterMensageError(err.message)
-      utils.notification(err.message, 'error')
     }
   }
 
