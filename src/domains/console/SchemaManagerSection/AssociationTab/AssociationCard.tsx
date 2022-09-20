@@ -7,11 +7,15 @@ import { ArrowNarrowRightIcon } from '@heroicons/react/outline'
 export function AssociationCard({
   attribute,
   schemaTables,
-  selectedEntity
+  selectedEntity,
+  noEdit = false,
+  reverse = false
 }: {
   attribute: string
   selectedEntity?: string
   schemaTables?: types.SchemaTable
+  noEdit?: boolean
+  reverse?: boolean
 }) {
   const [showDetails, setShowDetails] = useState(false)
 
@@ -25,19 +29,26 @@ export function AssociationCard({
         />
       ) : (
         <>
-          <div className="flex items-center gap-2 mb-2">
-            <common.Buttons.Clean
-              type="button"
-              onClick={() => setShowDetails(true)}
-            >
-              Edit
-            </common.Buttons.Clean>
+          <div className="flex items-center gap-4 mb-2">
+            {!noEdit && (
+              <common.Buttons.Clean
+                type="button"
+                onClick={() => setShowDetails(true)}
+              >
+                Edit
+              </common.Buttons.Clean>
+            )}
             <p>{attribute}</p>
-            <p className="flex gap-4 ml-4 text-sm text-gray-500">
-              {selectedEntity} . {attribute}{' '}
+
+            <div
+              className={`flex items-center gap-4 text-sm text-gray-500 ${
+                reverse ? 'flex-row-reverse' : ''
+              }`}
+            >
+              {selectedEntity} . {attribute}
               <ArrowNarrowRightIcon className="w-5" />
-              {schemaTables![selectedEntity as string][attribute].type}
-            </p>
+              {schemaTables![selectedEntity as string][attribute]?.type}
+            </div>
           </div>
         </>
       )}
