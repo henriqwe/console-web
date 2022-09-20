@@ -357,7 +357,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     }', 
   {
     method: 'POST',
-    body: BODY,
+    body: JSON.stringify(BODY),
     headers: {
     'X-TenantAC': tenantAC,
     'X-TenantID': tenantID,
@@ -370,7 +370,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
 const tenantAC = '${getCookie('X-TenantAC')}'
 const tenantID = '${getCookie('X-TenantID')}'
-const BODY = ${JSON.stringify(consoleValueLastOperation)}
+const BODY = ${consoleValueLastOperation}
 
 yc_persistence_service(tenantAC, tenantID, BODY)`
     setCodeExporterValue(text)
