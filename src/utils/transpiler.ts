@@ -1,64 +1,8 @@
-import { api, _gtools_lib } from "./tools"
+import { api, _gtools_lib } from './tools'
 
-const code =
-  'schema locadora (\n' +
-  '  enabled\n' +
-  ') {\n' +
-  '  entity veiculos (\n' +
-  '    concurrencyControl\n' +
-  '    businessRule\n' +
-  '    accessControl (\n' +
-  '      read [\n' +
-  '        PUBLIC\n' +
-  '        ADMIN\n' +
-  '      ]\n' +
-  '      write [\n' +
-  '        ADMIN\n' +
-  '      ]\n' +
-  '    )\n' +
-  '    persistence (\n' +
-  '      uniqueKey [\n' +
-  '        nome\n' +
-  '      ]\n' +
-  '      indexKey [\n' +
-  '        marca\n' +
-  '      ]\n' +
-  '    )\n' +
-  '  ) {\n' +
-  '    marca (\n' +
-  '      String 12\n' +
-  '      unique\n' +
-  '      nullable\n' +
-  "      comment 'test'\n" +
-  '    )\n' +
-  '  }\n' +
-  '  entity unidade (\n' +
-  '    !concurrencyControl\n' +
-  '    businessRule\n' +
-  '    accessControl (\n' +
-  '      read [\n' +
-  '        PUBLIC\n' +
-  '      ]\n' +
-  '      write [\n' +
-  '        ADMIN\n' +
-  '      ]\n' +
-  '    )\n' +
-  '    persistence (\n' +
-  '      uniqueKey [\n' +
-  '        identificador\n' +
-  '      ]\n' +
-  '      indexKey [\n' +
-  '      ]\n' +
-  '    )\n' +
-  '  ) {\n' +
-  '    identificador (\n' +
-  '      String 12\n' +
-  '      unique\n' +
-  '      !nullable\n' +
-  "      comment 'testing comments'\n" +
-  '    )\n' +
-  '  }\n' +
-  '}\n'
+const types = {}
+const assocs = {}
+const new_assocs = []
 
 const ycl_reserved_words = [
   'schema',
@@ -103,7 +47,7 @@ const ycl_reserved_words = [
   'version'
 ]
 
-export const ycl_transpiler = {
+const ycl_transpiler = {
   refs: {},
   types: [
     'String',
@@ -154,6 +98,9 @@ export const ycl_transpiler = {
           }
           if (positions[position].trim() == 'entity') {
             let entity_name_ = positions[position + 1].trim()
+            entity_name_ = entity_name_.includes(':')
+              ? entity_name_.split(':')[1]
+              : entity_name_
             if (
               !ycl_transpiler.ycl_reserved_word_contains(entity_name_) &&
               ycl_transpiler.check_schema_object_name(entity_name_)
@@ -200,7 +147,7 @@ export const ycl_transpiler = {
     return false
   },
   db_type: 'sql',
-  parse: function (src) {
+  parse: function (src, gettypes) {
     let schema = {}
     let actual_entity = {}
     let actual_attribute = {}
@@ -460,6 +407,10 @@ export const ycl_transpiler = {
               )
             }
           } else {
+            if (gettypes) {
+              types[actual_entity.name] =
+                'export type ' + actual_entity.name + ' {\n'
+            }
             code_body =
               code_body +
               '  ' +
@@ -1053,13 +1004,23 @@ export const ycl_transpiler = {
               actual_attribute = {
                 name: aux[1],
                 command: aux[0],
-                _conf: {}
+                _conf: {
+                  type: {
+                    value: 'String',
+                    command: ''
+                  }
+                }
               }
             } else {
               actual_attribute = {
                 name: aux,
                 command: '',
-                _conf: {}
+                _conf: {
+                  type: {
+                    value: 'String',
+                    command: ''
+                  }
+                }
               }
             }
           }
@@ -1417,10 +1378,20 @@ export const ycl_transpiler = {
                       value: tokens[index].symbol,
                       command: ''
                     }
+
+                    if (!assocs[actual_attribute._conf.type.value]) {
+                      assocs[actual_attribute._conf.type.value] = []
+                    }
+                    assocs[actual_attribute._conf.type.value].push(
+                      actual_entity.name
+                    )
+
                     actual_attribute._conf.nullable = false
                     code_body =
                       code_body + '      ' + tokens[index].symbol + '\n'
                     index++
+
+                    new_assocs.push(JSON.stringify(actual_attribute))
                   } else if (
                     actual_entity._conf.dbType == 'sql' &&
                     tokens[index].symbol.startsWith('u:') &&
@@ -1459,6 +1430,7 @@ export const ycl_transpiler = {
                       '\n'
                     index++
                   } else {
+                    console.log('entity_names: ', entity_names)
                     throw new Error(
                       "error: unknow token. token '" +
                         tokens[index].symbol +
@@ -1477,6 +1449,39 @@ export const ycl_transpiler = {
               } else {
                 code_body = code_body + '\n'
               }
+            }
+
+            if (gettypes) {
+              let nullable = ''
+              if (
+                actual_attribute._conf.nullable == undefined ||
+                actual_attribute._conf.nullable.value == undefined ||
+                actual_attribute._conf.nullable.value
+              ) {
+                nullable = '?'
+              }
+
+              let _type_ = 'string'
+              if (
+                actual_attribute._conf.type.value == 'Double' ||
+                actual_attribute._conf.type.value == 'Float' ||
+                actual_attribute._conf.type.value == 'Integer' ||
+                actual_attribute._conf.type.value == 'Long' ||
+                actual_attribute._conf.type.value == 'Number'
+              ) {
+                _type_ = 'number'
+              } else if (actual_attribute._conf.type.value == 'Boolean') {
+                _type_ = 'boolean'
+              }
+
+              types[actual_entity.name] =
+                types[actual_entity.name] +
+                '  ' +
+                actual_attribute.name +
+                nullable +
+                ':' +
+                _type_ +
+                ';\n'
             }
           } else {
             throw new Error(
@@ -1499,6 +1504,24 @@ export const ycl_transpiler = {
         from = 5
       } else {
         if (tokens.length - 1 == index) {
+          if (gettypes) {
+            for (const assoc in assocs) {
+              for (let idx = 0; idx < assocs[assoc].length; idx++) {
+                types[assoc] =
+                  types[assoc] +
+                  '  ' +
+                  assocs[assoc][idx] +
+                  's:Array<' +
+                  assocs[assoc][idx] +
+                  '>;\n'
+              }
+            }
+
+            for (const type in types) {
+              types[type] = types[type] + '}'
+            }
+          }
+
           console.log('code ok')
         } else {
           throw new Error(
@@ -1635,16 +1658,6 @@ export const ycl_transpiler = {
       }
     }
 
-    /*if (flag) {
-            throw new Error('error: inconsistency detected into nm relationship.');
-        } else {
-            console.log('> toRemove: ',toRemove)
-            for (let idx = 0; idx < toRemove.length; idx++) {
-                let item = toRemove[idx];
-                delete schema.entities[item.entity_idx].attributes[item.attribute_idx];
-            }
-        }*/
-
     let entities = schema.entities
     for (let ref_idx = 0; ref_idx < refs.length; ref_idx++) {
       let ref = refs[ref_idx]
@@ -1762,15 +1775,23 @@ export const ycl_transpiler = {
       }
     }
 
-    console.log('schema: ', schema)
-
-    return { code: code.replace('BODY', code_body), schema: schema, src: src }
+    return {
+      code: code.replace('BODY', code_body),
+      schema: schema,
+      src: src,
+      types: types
+    }
   },
   deploy: function (model, callback) {
     let schema = {
       name: model['name'],
       mutation: model['command']
     }
+
+    let count = { e: 0, r: 0, t: 0 }
+
+    let toCreateEntities = []
+    let toCreateAssociations = []
 
     if (model['command'] == 'c') {
       ycl_transpiler.createSchema(schema, callback)
@@ -1784,6 +1805,15 @@ export const ycl_transpiler = {
       ycl_transpiler.updateSchema(schema.name, { status: status }, callback)
     } else {
       let control = { value: true }
+
+      Object.keys(model['entities']).forEach(function (entityName) {
+        if (model['entities'][entityName]['command'] == 'c') {
+          count.e = count.e + 1
+        }
+      })
+
+      count.t = count.e
+
       Object.keys(model['entities']).forEach(function (key2) {
         if (control.value) {
           /* key2 é índice numerico no vetor entities */
@@ -1797,12 +1827,7 @@ export const ycl_transpiler = {
                 read: ['ADMIN'],
                 write: ['ADMIN']
               },
-              //uniqueKey: null,
               indexKey: [],
-              //source: {
-              //    url: null
-              //},
-              //extension: null,
               comment: ''
             },
             attributes: [],
@@ -1811,18 +1836,23 @@ export const ycl_transpiler = {
 
           if (model['entities'][key2]['command'] == 'c') {
             let _conf = model['entities'][key2]['_conf']
+
             if (_conf.concurrencyControl && _conf.concurrencyControl.value) {
               entity._conf.concurrencyControl = _conf.concurrencyControl.value
             }
+
             if (_conf.businessRule && _conf.businessRule.value) {
               entity._conf.businessRule = _conf.businessRule.value
             }
+
             if (_conf.source && _conf.source.value) {
               entity._conf.source.url = _conf.source.value
             }
+
             if (_conf.extension && _conf.extension.value) {
               entity._conf.extension = _conf.extension.value
             }
+
             if (
               _conf.accessControl &&
               _conf.accessControl.read &&
@@ -1830,6 +1860,7 @@ export const ycl_transpiler = {
             ) {
               entity._conf.accessControl.read = _conf.accessControl.read.values
             }
+
             if (
               _conf.accessControl &&
               _conf.accessControl.write &&
@@ -1838,6 +1869,7 @@ export const ycl_transpiler = {
               entity._conf.accessControl.write =
                 _conf.accessControl.write.values
             }
+
             if (_conf.indexKey && _conf.indexKey.values) {
               entity._conf.indexKey = _conf.indexKey.values
             }
@@ -1851,6 +1883,7 @@ export const ycl_transpiler = {
                 entity._conf.uniqueKey.partitionKeys =
                   _conf.uniqueKey.partitionKeys.values
               }
+
               if (
                 _conf.uniqueKey.clusteringColumns &&
                 _conf.uniqueKey.clusteringColumns.values
@@ -1868,6 +1901,7 @@ export const ycl_transpiler = {
                   value: 'String',
                   length: 64
                 }
+
                 if (
                   model['entities'][key2]['attributes'][key4]['_conf']['type']
                 ) {
@@ -1888,6 +1922,7 @@ export const ycl_transpiler = {
                     }
                   } else delete type_.length
                 }
+
                 if (ycl_transpiler.types.includes(type_.value)) {
                   let attribute_ = {
                     name: model['entities'][key2]['attributes'][key4]['name'],
@@ -1900,9 +1935,11 @@ export const ycl_transpiler = {
                                     },
                                     extension: null*/
                   }
+
                   if (type_.length) {
                     attribute_.length = type_.length
                   }
+
                   if (
                     model['entities'][key2]['attributes'][key4]['_conf'][
                       'nullable'
@@ -1913,6 +1950,7 @@ export const ycl_transpiler = {
                         'nullable'
                       ].value
                   }
+
                   if (
                     model['entities'][key2]['attributes'][key4]['_conf'][
                       'unique'
@@ -1923,6 +1961,7 @@ export const ycl_transpiler = {
                         'unique'
                       ].value
                   }
+
                   if (
                     model['entities'][key2]['attributes'][key4]['_conf'][
                       'source'
@@ -1933,6 +1972,7 @@ export const ycl_transpiler = {
                         'source'
                       ].value
                   }
+
                   if (
                     model['entities'][key2]['attributes'][key4]['_conf'][
                       'extension'
@@ -1943,6 +1983,7 @@ export const ycl_transpiler = {
                         'extension'
                       ].value
                   }
+
                   entity.attributes.push(attribute_)
                 } else {
                   let association_ = {
@@ -1951,6 +1992,7 @@ export const ycl_transpiler = {
                     nullable: false,
                     unique: false
                   }
+
                   if (
                     model['entities'][key2]['attributes'][key4]['_conf'][
                       'nullable'
@@ -1961,6 +2003,7 @@ export const ycl_transpiler = {
                         'nullable'
                       ].value
                   }
+
                   if (
                     model['entities'][key2]['attributes'][key4]['_conf'][
                       'unique'
@@ -1971,6 +2014,7 @@ export const ycl_transpiler = {
                         'unique'
                       ].value
                   }
+
                   entity.associations.push(association_)
                 }
               }
@@ -1978,10 +2022,39 @@ export const ycl_transpiler = {
 
             if (_conf.dbType == 'nosql(columnar)') {
               ycl_transpiler.createNoSQLEntity(schema.name, entity, callback)
+              control.value = false
             } else {
-              ycl_transpiler.createEntity(schema.name, entity, callback)
+              if (count.e == 1) {
+                ycl_transpiler.createEntity(schema.name, entity, callback)
+
+                control.value = false
+              } else {
+                if (entity.associations) {
+                  for (let idx = 0; idx < entity.associations.length; idx++) {
+                    toCreateAssociations.push(
+                      JSON.parse(
+                        JSON.stringify({
+                          schema: schema.name,
+                          entity: entity.name,
+                          association: entity.associations[idx]
+                        })
+                      )
+                    )
+
+                    count.r = count.r + 1
+                  }
+
+                  count.t = count.e + count.r
+
+                  entity.associations = []
+                }
+
+                toCreateEntities.push({
+                  schema: schema.name,
+                  entity: entity
+                })
+              }
             }
-            control.value = false
           } else if (model['entities'][key2]['command'] == 'd') {
             if (entity._conf.dbType == 'nosql(columnar)') {
               ycl_transpiler.deleteNoSQLEntity(
@@ -2608,16 +2681,23 @@ export const ycl_transpiler = {
                         'nullable'
                       ]['command'] == 'u'
                     ) {
+                      let assoc = {
+                        nullable:
+                          model['entities'][key2]['attributes'][key4]['_conf'][
+                            'nullable'
+                          ]['value']
+                      }
+                      console.log(
+                        schema.name,
+                        entity.name,
+                        association_.name,
+                        assoc
+                      )
                       ycl_transpiler.updateAssociation(
                         schema.name,
                         entity.name,
                         association_.name,
-                        {
-                          nullable:
-                            model['entities'][key2]['attributes'][key4][
-                              '_conf'
-                            ]['nullable']['value']
-                        },
+                        assoc,
                         callback
                       )
                       control.value = false
@@ -2629,16 +2709,23 @@ export const ycl_transpiler = {
                         'unique'
                       ]['command'] == 'u'
                     ) {
+                      let assoc = {
+                        unique:
+                          model['entities'][key2]['attributes'][key4]['_conf'][
+                            'unique'
+                          ]['value']
+                      }
+                      console.log(
+                        schema.name,
+                        entity.name,
+                        association_.name,
+                        assoc
+                      )
                       ycl_transpiler.updateAssociation(
                         schema.name,
                         entity.name,
                         association_.name,
-                        {
-                          unique:
-                            model['entities'][key2]['attributes'][key4][
-                              '_conf'
-                            ]['unique']['value']
-                        },
+                        assoc,
                         callback
                       )
                       control.value = false
@@ -2650,8 +2737,59 @@ export const ycl_transpiler = {
           }
         }
       })
-      if (control.value && callback) {
-        callback({ http: { status: 200 }, data: {} })
+
+      let resp = { status: 200, message: '' }
+
+      let locallback = function (response) {
+        count.t = count.t - 1
+        if (count.t > 0) {
+          if (resp.status != 200 && resp.status != 201) {
+            resp.status = response.http.status
+            resp.message = response.data + ' | ' + resp.message
+          }
+        } else {
+          callback({
+            http: { status: resp.status },
+            data: { message: resp.message }
+          })
+        }
+      }
+
+      console.log('count: ', count)
+
+      if (toCreateEntities.length > 0) {
+        for (let idx = 0; idx < toCreateEntities.length; idx++) {
+          console.log('toCreateEntities[' + idx + ']: ', toCreateEntities[idx])
+          ycl_transpiler.createEntity(
+            toCreateEntities[idx].schema,
+            toCreateEntities[idx].entity,
+            locallback
+          )
+        }
+      }
+
+      if (toCreateAssociations.length > 0) {
+        for (let idx = 0; idx < toCreateAssociations.length; idx++) {
+          console.log(
+            'toCreateAssociations[' + idx + ']: ',
+            toCreateAssociations[idx]
+          )
+          ycl_transpiler.createAssociation(
+            toCreateAssociations[idx].schema,
+            toCreateAssociations[idx].entity,
+            toCreateAssociations[idx].association,
+            locallback
+          )
+        }
+      }
+
+      if (
+        control.value &&
+        callback &&
+        toCreateEntities.length == 0 &&
+        toCreateAssociations.length == 0
+      ) {
+        callback({ http: { status: 100 }, data: {} })
       }
     }
   },
@@ -2686,6 +2824,7 @@ export const ycl_transpiler = {
     )
     endpoint.url = endpoint.url.replace('{projectName}', schema)
     _gtools_lib.request(endpoint, entity, callback)
+    callback({ http: { status: 201 } })
   },
   createNoSQLEntity: function (schema, entity, callback) {
     console.log('create nosql entity: ', schema, entity)
@@ -2820,6 +2959,7 @@ export const ycl_transpiler = {
       .replace('{projectName}', schema)
       .replace('{entityName}', entity)
     _gtools_lib.request(endpoint_, association, callback)
+    callback({ http: { status: 201 } })
   },
   updateAssociation: function (schema, entity, association, body, callback) {
     console.log('update association: ', schema, entity, association, body)
@@ -2835,6 +2975,7 @@ export const ycl_transpiler = {
   },
   deleteAssociation: function (schema, entity, association, callback) {
     console.log('delete association: ', schema, entity, association)
+
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.relationship.delete)
     )
