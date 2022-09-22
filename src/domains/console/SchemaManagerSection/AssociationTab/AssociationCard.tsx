@@ -31,12 +31,12 @@ export function AssociationCard({
         <>
           <div className="flex items-center gap-4 mb-2">
             {!noEdit && (
-              <common.Buttons.Clean
+              <common.Buttons.WhiteOutline
                 type="button"
                 onClick={() => setShowDetails(true)}
               >
                 Edit
-              </common.Buttons.Clean>
+              </common.Buttons.WhiteOutline>
             )}
             <p>{attribute}</p>
 

@@ -280,7 +280,7 @@ export function CreateEntity() {
           <div className="flex items-end justify-between w-full">
             <div>
               {!loading && (
-                <common.Buttons.Clean
+                <common.Buttons.WhiteOutline
                   onClick={() => {
                     setColumnsGroup([...columnsGroup, lastNumber + 1])
                   }}
@@ -289,17 +289,17 @@ export function CreateEntity() {
                   icon={<PlusIcon className="w-3 h-3" />}
                 >
                   Add column
-                </common.Buttons.Clean>
+                </common.Buttons.WhiteOutline>
               )}
             </div>
-            <common.Buttons.Clean
+            <common.Buttons.WhiteOutline
               onClick={handleSubmit(Submit)}
               loading={loading}
               disabled={loading}
               icon={<CheckIcon className="w-3 h-3" />}
             >
               Create entity
-            </common.Buttons.Clean>
+            </common.Buttons.WhiteOutline>
           </div>
         </div>
       </common.ContentSection>

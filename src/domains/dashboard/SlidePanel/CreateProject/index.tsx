@@ -87,9 +87,9 @@ export function Create() {
               utils.apiRoutes.entity(schemaParsed.schema.name as string),
               {
                 name: entity.name,
-                attributes: entity.attributes.map(attribute => {
-                  console.log('attribute',attribute)
-                  return{
+                attributes: entity.attributes.map((attribute) => {
+                  console.log('attribute', attribute)
+                  return {
                     ...attribute,
                     type: attribute._conf.type.value
                   }
@@ -350,14 +350,14 @@ export function Create() {
 
       <common.Separator className="mb-7" />
 
-      <common.Buttons.Clean
+      <common.Buttons.WhiteOutline
         disabled={loading}
         loading={loading}
         icon={<CheckIcon className="w-4 h-4" />}
         type="submit"
       >
         Create project
-      </common.Buttons.Clean>
+      </common.Buttons.WhiteOutline>
     </form>
   )
 }

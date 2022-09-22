@@ -70,7 +70,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
       } rounded-b-md bg-white dark:bg-gray-800 p-6 gap-2`}
     >
       <div className="flex flex-row-reverse justify-between w-full gap-4 ">
-        <common.Buttons.Clean
+        <common.Buttons.WhiteOutline
           type="button"
           loading={submitLoading}
           disabled={submitLoading}
@@ -78,9 +78,9 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           icon={<TrashIcon className="w-4 h-4" />}
         >
           Remove entity
-        </common.Buttons.Clean>
+        </common.Buttons.WhiteOutline>
         {!openForm && (
-          <common.Buttons.Clean
+          <common.Buttons.WhiteOutline
             type="button"
             loading={false}
             disabled={false}
@@ -88,7 +88,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
             icon={<PlusIcon className="w-3 h-3" />}
           >
             Add attribute
-          </common.Buttons.Clean>
+          </common.Buttons.WhiteOutline>
         )}
       </div>
       <common.Separator />
@@ -290,22 +290,22 @@ function AttributeForm({
       />
 
       <div className="flex items-center justify-around w-full col-span-2">
-        <common.Buttons.Red
+        <common.Buttons.RedOutline
           type="button"
           disabled={loading}
           onClick={() => setOpenForm(false)}
         >
-          <XIcon className="w-5 h-5 text-white" />
-        </common.Buttons.Red>
+          <XIcon className="w-5 h-5 " />
+        </common.Buttons.RedOutline>
 
-        <common.Buttons.Green
+        <common.Buttons.GreenOutline
           type="submit"
           loading={loading}
           disabled={loading}
           onClick={() => setOpenForm(true)}
         >
-          <PlusIcon className="w-5 h-5 text-white" />
-        </common.Buttons.Green>
+          <PlusIcon className="w-5 h-5 " />
+        </common.Buttons.GreenOutline>
       </div>
     </form>
   )

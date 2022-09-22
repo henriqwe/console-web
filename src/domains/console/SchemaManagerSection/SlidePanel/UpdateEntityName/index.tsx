@@ -77,13 +77,13 @@ export function UpdateEntityName() {
         />
       </div>
       <common.Separator />
-      <common.Buttons.Clean
+      <common.Buttons.WhiteOutline
         disabled={loading}
         loading={loading}
         icon={<CheckIcon className="w-3 h-3" />}
       >
         Update
-      </common.Buttons.Clean>
+      </common.Buttons.WhiteOutline>
     </form>
   )
 }
