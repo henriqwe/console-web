@@ -76,7 +76,7 @@ export function AssociationTab({ loading }: AssociationTabProps) {
     >
       <div className="flex justify-between w-full gap-4 ">
         {!openForm && (
-          <common.Buttons.Clean
+          <common.Buttons.WhiteOutline
             type="button"
             loading={false}
             disabled={false}
@@ -84,7 +84,7 @@ export function AssociationTab({ loading }: AssociationTabProps) {
             icon={<PlusIcon className="w-3 h-3" />}
           >
             Add Association
-          </common.Buttons.Clean>
+          </common.Buttons.WhiteOutline>
         )}
       </div>
       <common.Separator />
@@ -315,22 +315,22 @@ function AttributeForm({
       </div>
 
       <div className="flex items-center justify-between w-full col-span-2">
-        <common.Buttons.White
+        <common.Buttons.WhiteOutline
           type="button"
           disabled={loading}
           onClick={() => setOpenForm(false)}
         >
           Close
-        </common.Buttons.White>
+        </common.Buttons.WhiteOutline>
 
-        <common.Buttons.Yellow
+        <common.Buttons.YellowOutline
           type="submit"
           loading={loading}
           disabled={loading}
           onClick={() => setOpenForm(true)}
         >
           Create
-        </common.Buttons.Yellow>
+        </common.Buttons.YellowOutline>
       </div>
     </form>
   )

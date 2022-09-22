@@ -97,13 +97,12 @@ export function FieldDetail({
   return (
     <common.Card className="p-6 bg-white dark:bg-menu-primary border border-gray-300">
       <div className="flex gap-4 items-center">
-        <common.Buttons.Clean
-          className="px-1 py-1 text-sm bg-white border border-gray-300 rounded-md"
+        <common.Buttons.WhiteOutline
           type="button"
           onClick={() => setShowDetails(false)}
         >
           Close
-        </common.Buttons.Clean>
+        </common.Buttons.WhiteOutline>
         <p className="font-bold">{data.name}</p>
       </div>
       <section className="flex flex-col gap-4 mt-4">
@@ -294,14 +293,14 @@ export function FieldDetail({
           />
         </FormField>
         <div className="flex gap-4 mt-4">
-          <common.Buttons.Red
+          <common.Buttons.RedOutline
             type="button"
             loading={false}
             disabled={false}
             onClick={() => setOpenModal(true)}
           >
             Remove attribute
-          </common.Buttons.Red>
+          </common.Buttons.RedOutline>
         </div>
       </section>
       <common.Modal
@@ -358,7 +357,7 @@ function FormField({
       <div className="flex items-center w-full gap-4">
         {children}
         {!activeEdit ? (
-          <common.Buttons.Green
+          <common.Buttons.GreenOutline
             type="button"
             onClick={() => {
               setActiveFields((old) => {
@@ -373,10 +372,10 @@ function FormField({
             <div className="w-5 h-5">
               <PencilIcon />
             </div>
-          </common.Buttons.Green>
+          </common.Buttons.GreenOutline>
         ) : (
           <div className="flex gap-2">
-            <common.Buttons.Red
+            <common.Buttons.RedOutline
               type="button"
               onClick={() => {
                 setActiveFields((old) => {
@@ -391,12 +390,12 @@ function FormField({
               <div className="w-5 h-5">
                 <XIcon />
               </div>
-            </common.Buttons.Red>
-            <common.Buttons.Green>
+            </common.Buttons.RedOutline>
+            <common.Buttons.GreenOutline>
               <div className="w-5 h-5">
                 <CheckIcon />
               </div>
-            </common.Buttons.Green>
+            </common.Buttons.GreenOutline>
           </div>
         )}
       </div>

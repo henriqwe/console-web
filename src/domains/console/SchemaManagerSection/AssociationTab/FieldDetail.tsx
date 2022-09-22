@@ -90,13 +90,12 @@ export function FieldDetail({
     <common.Card className="p-3 bg-gray-100 border border-gray-300 dark:bg-menu-primary">
       <div className="flex flex-col">
         <div>
-          <common.Buttons.Clean
-            className="px-1 py-1 text-sm bg-white border border-gray-300 rounded-md"
+          <common.Buttons.WhiteOutline
             type="button"
             onClick={() => setShowDetails(false)}
           >
             Close
-          </common.Buttons.Clean>
+          </common.Buttons.WhiteOutline>
         </div>
 
         <p className="flex gap-4 my-2 text-sm text-gray-500">
@@ -125,17 +124,21 @@ export function FieldDetail({
           )}
         />
         <div className="flex justify-between gap-4">
-          <common.Buttons.Red
+          <common.Buttons.RedOutline
             type="button"
             loading={false}
             disabled={false}
             onClick={() => setOpenModal(true)}
           >
             Remove
-          </common.Buttons.Red>
-          <common.Buttons.Yellow type="submit" loading={false} disabled={false}>
+          </common.Buttons.RedOutline>
+          <common.Buttons.YellowOutline
+            type="submit"
+            loading={false}
+            disabled={false}
+          >
             Save
-          </common.Buttons.Yellow>
+          </common.Buttons.YellowOutline>
         </div>
       </form>
       <common.Modal

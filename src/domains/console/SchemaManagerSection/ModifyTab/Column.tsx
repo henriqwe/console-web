@@ -11,9 +11,12 @@ export function Column({ data }: { data: types.EntityData }) {
   }
   return (
     <div className="flex gap-4 items-center">
-      <common.Buttons.Clean type="button" onClick={() => setShowDetails(true)}>
+      <common.Buttons.WhiteOutline
+        type="button"
+        onClick={() => setShowDetails(true)}
+      >
         Edit
-      </common.Buttons.Clean>
+      </common.Buttons.WhiteOutline>
       <p className="font-bold">
         {data.name} -{' '}
         <span className="font-normal text-gray-700 dark:text-gray-400">
