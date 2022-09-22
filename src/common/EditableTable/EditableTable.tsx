@@ -28,10 +28,10 @@ export function EditableTable({
     <div className="flex flex-col my-4">
       <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 dark:ring-white md:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-200">
-              <thead className="bg-gray-50 dark:bg-darkmode-300">
-                <tr className="divide-x divide-gray-200">
+          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 dark:ring-gray-600 md:rounded-lg">
+            <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
+              <thead className="bg-gray-50 dark:bg-menu-primary">
+                <tr className="divide-x divide-gray-200 dark:divide-gray-600">
                   {columns.map((column, index) => (
                     <th
                       scope="col"
@@ -43,16 +43,19 @@ export function EditableTable({
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200 dark:bg-darkmode-800">
+              <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-600 dark:bg-menu-primary">
                 {collection.map((item: any, index: number) => (
-                  <tr key={index} className="divide-x divide-gray-200">
+                  <tr
+                    key={index}
+                    className="divide-x divide-gray-200 dark:divide-gray-600"
+                  >
                     {columns.map((column) =>
                       column.type === 'input' ? (
                         <td
                           className={`py-2 text-sm font-medium text-gray-800  first:pr-4 last:pr-4 whitespace-nowrap first:sm:pl-6 last:sm:pr-6 dark:text-gray-100 ${
                             !disabled && column.type === 'input'
-                              ? 'bg-white dark:bg-darkmode-600'
-                              : 'bg-gray-100 dark:bg-darkmode-800'
+                              ? 'bg-white dark:bg-menu-primary'
+                              : 'bg-gray-100 dark:bg-menu-secondary'
                           }`}
                           key={`${item[column.key]}-${column.title}`}
                         >
@@ -90,8 +93,8 @@ export function EditableTable({
                         <td
                           className={`py-2 text-sm font-medium text-gray-800  first:pr-4 last:pr-4 whitespace-nowrap first:sm:pl-6 last:sm:pr-6 dark:text-gray-100 ${
                             !disabled
-                              ? 'bg-white dark:bg-darkmode-600'
-                              : 'bg-gray-100 dark:bg-darkmode-800'
+                              ? 'bg-white dark:bg-menu-primary'
+                              : 'bg-gray-100 dark:bg-menu-secondary'
                           }`}
                           key={`${item[column.key]}-${column.title}`}
                         >
@@ -127,8 +130,8 @@ export function EditableTable({
                         <td
                           className={`py-2 text-sm font-medium text-gray-800  first:pr-4 last:pr-4 whitespace-nowrap first:sm:pl-6 last:sm:pr-6 dark:text-gray-100 ${
                             !disabled
-                              ? 'bg-white dark:bg-darkmode-600'
-                              : 'bg-gray-100 dark:bg-darkmode-800'
+                              ? 'bg-white dark:bg-menu-primary'
+                              : 'bg-gray-100 dark:bg-menu-secondary'
                           }`}
                           key={`${item[column.key]}-${column.title}`}
                         >
@@ -164,7 +167,7 @@ export function EditableTable({
                         </td>
                       ) : (
                         <td
-                          className="py-2 pl-4 text-sm text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-darkmode-800 first:pr-4 last:pr-4 whitespace-nowrap first:sm:pl-6 last:sm:pr-6"
+                          className="py-2 pl-4 text-sm text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-menu-secondary first:pr-4 last:pr-4 whitespace-nowrap first:sm:pl-6 last:sm:pr-6"
                           key={`${item[column.key]}-${column.title}`}
                         >
                           {item[column.key]}
