@@ -7,11 +7,11 @@ import * as utils from 'utils'
 const options = {
   jwt: {
     // Seconds - How long until an idle session expires and is no longer valid.
-    maxAge: 15 * 60 // 15 minutes
+    maxAge: 24 * 60 * 60 // 24 hours
   },
   session: {
     // Seconds - How long until an idle session expires and is no longer valid.
-    maxAge: 15 * 60 // 15 minutes
+    maxAge: 24 * 60 * 60 // 24 hours
   },
   pages: {
     signIn: '/login'
