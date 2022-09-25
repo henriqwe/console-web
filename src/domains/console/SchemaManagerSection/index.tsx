@@ -103,18 +103,16 @@ export function SchemaManagerSection() {
               )}
             </div>
             {!selectedEntity && (
-              <common.Buttons.White
+              <common.Buttons.WhiteOutline
                 type="button"
                 onClick={() => {
                   setShowCreateEntitySection(true)
                   setBreadcrumbPages(breadcrumbPagesData.createEntity)
                 }}
+                icon={<PlusIcon className="w-3 h-3" />}
               >
-                <div className="flex items-center gap-2">
-                  <p className="text-xs">Create entity</p>
-                  <PlusIcon className="w-3 h-3" />
-                </div>
-              </common.Buttons.White>
+                Create entity
+              </common.Buttons.WhiteOutline>
             )}
           </div>
           <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
