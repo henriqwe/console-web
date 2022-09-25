@@ -16,11 +16,30 @@ type DataContextProps = {
   createProjectSchema: (submittedSchema?: string) => yup.AnyObjectSchema
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
-  slideType: 'CREATE' | 'VIEW'
-  setSlideType: Dispatch<SetStateAction<'CREATE' | 'VIEW'>>
-  slideSize: 'normal' | 'halfPage' | 'fullPage'
-  setSlideSize: Dispatch<SetStateAction<'normal' | 'halfPage' | 'fullPage'>>
+  slideType: SlideType
+  setSlideType: Dispatch<SetStateAction<SlideType>>
+  slideSize: SlideSize
+  setSlideSize: Dispatch<SetStateAction<SlideSize>>
+  currentSection: Sections
+  setCurrentSection: Dispatch<SetStateAction<Sections>>
+  schemas: Schemas[]
+  setSchemas: Dispatch<SetStateAction<Schemas[]>>
+  createTicketSchema: yup.AnyObjectSchema
+  tickets: Tickets[]
+  setTickets: Dispatch<SetStateAction<Tickets[]>>
+  selectedTicket?: Tickets
+  setSelectedTicket: Dispatch<SetStateAction<Tickets | undefined>>
 }
+
+type Sections =
+  | 'projects'
+  | 'helpAndSupport'
+  | 'tutorialsAndDocs'
+  | 'myAccount'
+  | 'billing'
+
+type SlideType = 'createProject' | 'viewProject' | 'createTicket'
+type SlideSize = 'normal' | 'halfPage' | 'fullPage'
 
 type Schemas = {
   createdat: number
@@ -28,6 +47,15 @@ type Schemas = {
   status: string
   tenantAc: string
   tenantId: string
+}
+
+type Tickets = {
+  ticketId: string
+  project: string
+  category: string
+  message: string
+  title: string
+  status: string
 }
 
 type ProviderProps = {
@@ -39,13 +67,15 @@ export const DataContext = createContext<DataContextProps>(
 )
 
 export const DataProvider = ({ children }: ProviderProps) => {
+  const [currentSection, setCurrentSection] = useState<Sections>('projects')
   const [openSlide, setOpenSlide] = useState(false)
-  const [slideType, setSlideType] = useState<'CREATE' | 'VIEW'>('CREATE')
-  const [slideSize, setSlideSize] = useState<
-    'normal' | 'halfPage' | 'fullPage'
-  >('normal')
+  const [slideType, setSlideType] = useState<SlideType>('createProject')
+  const [slideSize, setSlideSize] = useState<SlideSize>('normal')
+  const [schemas, setSchemas] = useState<Schemas[]>([])
   const [reload, setReload] = useState(false)
   const [selectedSchema, setSelectedSchema] = useState<Schemas>()
+  const [tickets, setTickets] = useState<Tickets[]>([])
+  const [selectedTicket, setSelectedTicket] = useState<Tickets>()
 
   const createProjectSchema = (submittedSchema?: string) => {
     return yup.object().shape({
@@ -57,6 +87,14 @@ export const DataProvider = ({ children }: ProviderProps) => {
             .required('Project name is a required field')
     })
   }
+
+  const createTicketSchema = yup.object().shape({
+    Project: yup.object().required('This field is required'),
+    Priority: yup.object().required('This field is required'),
+    Category: yup.object().required('This field is required'),
+    Title: yup.string().required('This field is required'),
+    Content: yup.string().required('This field is required')
+  })
 
   return (
     <DataContext.Provider
@@ -71,7 +109,16 @@ export const DataProvider = ({ children }: ProviderProps) => {
         selectedSchema,
         setSelectedSchema,
         slideSize,
-        setSlideSize
+        setSlideSize,
+        currentSection,
+        setCurrentSection,
+        schemas,
+        setSchemas,
+        createTicketSchema,
+        tickets,
+        setTickets,
+        selectedTicket,
+        setSelectedTicket
       }}
     >
       {children}
