@@ -1,6 +1,8 @@
 import {
   createContext,
+  Dispatch,
   ReactNode,
+  SetStateAction,
   useContext,
   useEffect,
   useState
@@ -8,6 +10,8 @@ import {
 
 type ThemeContextProps = {
   isDark: boolean
+  setIsDark: Dispatch<SetStateAction<boolean>>
+  isDarkTheme: () => boolean
 }
 
 type ProviderProps = {
@@ -38,7 +42,9 @@ export const ThemeProvider = ({ children }: ProviderProps) => {
   }
 
   return (
-    <ThemeContext.Provider value={{ isDark }}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={{ isDark, setIsDark, isDarkTheme }}>
+      {children}
+    </ThemeContext.Provider>
   )
 }
 

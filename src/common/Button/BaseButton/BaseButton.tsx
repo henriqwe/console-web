@@ -16,7 +16,7 @@ export const BaseButton = ({
 }: BaseButtonProps) => {
   return (
     <button
-      className={`border px-2 py-2 text-xs transition ${buttonColor} ${hoverButtonColor} ${disableButtonColor} disabled:cursor-not-allowed hover:cursor-pointer rounded-md flex gap-2 items-center justify-center ${textColor} ${
+      className={`border px-2 py-2 text-xs transition ${className} ${buttonColor} ${hoverButtonColor} ${disableButtonColor} disabled:cursor-not-allowed hover:cursor-pointer rounded-md flex gap-2 items-center justify-center ${textColor} ${
         iconPosition === 'right' ? 'flex-row-reverse' : ''
       }`}
       {...props}

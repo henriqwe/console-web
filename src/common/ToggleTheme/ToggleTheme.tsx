@@ -51,7 +51,7 @@ export function ToggleTheme({
         changeColor
           ? 'dark:hover:bg-menuItem-secondary/50 hover:bg-gray-200/50 dark:text-text-primary'
           : 'text-white hover:bg-menuItem-secondary/40'
-      } rounded-full p-2 cursor-pointer w-10 h-10`}
+      } rounded-full p-2 cursor-pointer w-10 h-10 z-[10000]`}
     >
       {enabled ? (
         <SunIcon data-testid="sunIcon" />
