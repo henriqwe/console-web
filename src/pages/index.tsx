@@ -9,9 +9,24 @@ export default function Dashboard() {
 }
 
 function Page() {
+  const { currentSection } = dashboard.useData()
+
+  let component = <div />
+  switch (currentSection) {
+    case 'projects':
+      component = <dashboard.Projects />
+      break
+    case 'helpAndSupport':
+      component = <dashboard.HelpAndSupport />
+      break
+    case 'tutorialsAndDocs':
+      break
+    case 'myAccount':
+      break
+  }
   return (
     <dashboard.Template>
-      <dashboard.Projects />
+      {component}
     </dashboard.Template>
   )
 }

@@ -9,13 +9,15 @@ type TableProps = {
   values?: any[]
   actions?: (item: { item: { title: string; fieldName: string } }) => ReactNode
   rounded?: boolean
+  notFoundMessage?: string
 }
 
 export function Table({
   tableColumns = [],
   values,
   actions,
-  rounded = false
+  rounded = false,
+  notFoundMessage = 'Data not found!'
 }: TableProps) {
   return (
     <div className="w-full ">
@@ -51,7 +53,7 @@ export function Table({
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-menu-secondary">
-                  {values ? (
+                  {values && values?.length > 0 ? (
                     values.map((value, index) => (
                       <tr
                         key={index}
@@ -77,7 +79,11 @@ export function Table({
                       </tr>
                     ))
                   ) : (
-                    <tr className="bg-white dark:bg-menuItem-primary intro-x ">
+                    <tr
+                      className={
+                        'bg-white dark:text-white dark:bg-menuItem-primary intro-x '
+                      }
+                    >
                       <td
                         colSpan={
                           actions
@@ -86,7 +92,7 @@ export function Table({
                         }
                         className="py-2 text-center"
                       >
-                        Data not found!
+                        {notFoundMessage}
                       </td>
                     </tr>
                   )}

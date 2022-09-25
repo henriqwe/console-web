@@ -32,11 +32,12 @@ export function Projects() {
     setSlideType,
     setSlideSize,
     setSelectedSchema,
-    reload
+    reload,
+    schemas,
+    setSchemas
   } = dashboard.useData()
   const [showFiltered, setShowFiltered] = useState(false)
   const [filteredSchemas, setFilteredSchemas] = useState<Schemas[]>([])
-  const [schemas, setSchemas] = useState<Schemas[]>([])
   const [loadingSchemas, setLoadingSchemas] = useState(true)
 
   async function loadSchemas() {
@@ -56,30 +57,6 @@ export function Projects() {
     } finally {
       setLoadingSchemas(false)
     }
-  }
-
-  async function downloadSchema(schema: string) {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/parserToJSON?parserName=${schema}`,
-      {
-        headers: {
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
-        }
-      }
-    )
-  }
-
-  async function formatResponse(value: string) {
-    let text = value
-    const operations = [
-      { searchValue: ',', replaceValue: ',\n  ' },
-      { searchValue: '{', replaceValue: '{\n  ' },
-      { searchValue: '}', replaceValue: '\n}' }
-    ]
-    operations.forEach((op) => {
-      text = text.replaceAll(op.searchValue, op.replaceValue)
-    })
-    return text
   }
 
   const match = (value: string) => {
@@ -103,7 +80,7 @@ export function Projects() {
 
   function onConfigClick(schema: Schemas) {
     setOpenSlide(true)
-    setSlideType('VIEW')
+    setSlideType('viewProject')
     setSlideSize('normal')
     setSelectedSchema(schema)
   }
@@ -143,7 +120,7 @@ export function Projects() {
                 className="px-2 py-2"
                 onClick={() => {
                   setOpenSlide(true)
-                  setSlideType('CREATE')
+                  setSlideType('createProject')
                   setSlideSize('halfPage')
                   // router.push(routes.createProject)
                 }}
