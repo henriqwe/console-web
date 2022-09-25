@@ -6,7 +6,11 @@ import {
   useForm
 } from 'react-hook-form'
 import { Dispatch, SetStateAction, useState } from 'react'
-import { CheckCircleIcon, CheckIcon } from '@heroicons/react/outline'
+import {
+  CheckCircleIcon,
+  CheckIcon,
+  UploadIcon
+} from '@heroicons/react/outline'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as ThemeContext from 'contexts/ThemeContext'
@@ -47,9 +51,6 @@ const plans = {
 export function Create() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [plan, setPlan] = useState<
-    'Free' | 'Pro' | 'Plano sem nome' | 'Enterprise'
-  >()
   const [submittedSchema, setSubmittedSchema] = useState<string>()
   const { createProjectSchema, setReload, reload } = dashboard.useData()
   const { isDark } = ThemeContext.useTheme()
@@ -63,10 +64,6 @@ export function Create() {
   async function Submit(data: { ProjectName: string }) {
     try {
       setLoading(true)
-      if (!plan) {
-        throw new Error('Select a plan to create a new project')
-      }
-
       const spaceValidation = new RegExp(/\s/g)
 
       if (submittedSchema) {
@@ -182,55 +179,6 @@ export function Create() {
       data-testid="editForm"
       className="flex flex-col items-end"
     >
-      <div
-        className={`flex ${
-          submittedSchema ? 'justify-between' : 'justify-end'
-        }  w-full gap-2 mb-2`}
-      >
-        {submittedSchema && (
-          <common.Buttons.RedOutline
-            disabled={loading}
-            loading={loading}
-            onClick={() => {
-              setSubmittedSchema(undefined)
-            }}
-          >
-            <p>Cancel</p>
-          </common.Buttons.RedOutline>
-        )}
-        <div>
-          <label
-            htmlFor="file"
-            className={`border px-2 py-2 text-xs transition disabled:cursor-not-allowed hover:cursor-pointer rounded-md flex gap-2 items-center justify-center`}
-          >
-            Import schema
-          </label>
-          <input
-            type="file"
-            id="file"
-            accept=".txt"
-            className="hidden"
-            onChange={(e) => {
-              try {
-                const file = e.target.files![0]
-                if (file.type !== 'text/plain') {
-                  throw new Error('Unsupported file type')
-                }
-
-                const reader = new FileReader()
-                reader.addEventListener('load', (event) => {
-                  console.log('event', event)
-                  setSubmittedSchema(event?.target?.result as string)
-                })
-                reader.readAsText(file)
-              } catch (err) {
-                utils.showError(err)
-              }
-            }}
-          />
-        </div>
-      </div>
-
       {!submittedSchema && (
         <div className="flex flex-col w-full gap-2 mb-2">
           <Controller
@@ -239,7 +187,7 @@ export function Create() {
             render={({ field: { onChange, value } }) => (
               <div className="col-span-3">
                 <common.Input
-                  placeholder="Project name"
+                  placeholder="Name"
                   label="Project name"
                   value={value}
                   onChange={onChange}
@@ -254,7 +202,7 @@ export function Create() {
         <div className="w-full my-2">
           <CodeMirror
             value={submittedSchema}
-            className="flex w-full h-[31rem] max-h-[31rem] min-h-[31rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
+            className="flex w-full h-[25rem] max-h-[25rem] min-h-[25rem] 2lx:h-[45rem] 2xl:max-h-[45rem] 2xl:min-h-[45rem] "
             width="100%"
             onChange={(value) => {
               setSubmittedSchema(value)
@@ -264,100 +212,68 @@ export function Create() {
           />
         </div>
       )}
-      <common.Separator />
-      <p className="w-full text-sm font-medium dark:text-gray-200">
-        Select a plan
-      </p>
-      <common.ListRadioGroup
-        options={[
-          {
-            value: 'Free',
-            content: (
-              <div>
-                <div className="flex flex-col gap-y-1">
-                  <p className="font-bold dark:text-gray-200">Free</p>
-                  {plan === 'Free' && (
-                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
-                      <p className="flex items-center gap-1 text-white ">
-                        Selected{' '}
-                        <span className="w-5 h-5">
-                          <CheckCircleIcon />
-                        </span>
-                      </p>
-                    </div>
-                  )}
-                  <p className="text-sm">{plans['Free'].description}</p>
-                  <common.Separator />
-
-                  <div>
-                    <p className="font-bold">Features</p>
-                    <ul>
-                      {plans['Free'].features.map((feature) => (
-                        <li className="flex items-center gap-1" key={feature}>
-                          <div className="w-5 h-5 text-blue-500">
-                            <CheckCircleIcon />
-                          </div>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )
-          },
-          {
-            value: 'Pro',
-            content: (
-              <div>
-                <div className="flex flex-col gap-y-1">
-                  <p className="font-bold dark:text-gray-200">Pro</p>
-                  {plan === 'Pro' && (
-                    <div className="absolute top-0 right-0 p-2 bg-green-400 border-b border-l border-green-500 rounded-tr-lg rounded-bl-lg dark:bg-green-600">
-                      <p className="flex items-center gap-1 text-white ">
-                        Selected{' '}
-                        <span className="w-5 h-5">
-                          <CheckCircleIcon />
-                        </span>
-                      </p>
-                    </div>
-                  )}
-                  <p className="text-sm">{plans['Pro'].description}</p>
-                  <common.Separator />
-
-                  <div>
-                    <p className="font-bold">Features</p>
-                    <ul>
-                      {plans['Pro'].features.map((feature) => (
-                        <li className="flex items-center gap-1" key={feature}>
-                          <div className="w-5 h-5 text-blue-500">
-                            <CheckCircleIcon />
-                          </div>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )
-          }
-        ]}
-        showCheckIcon={false}
-        horizontal
-        setSelectedOption={setPlan as Dispatch<SetStateAction<string>>}
-      />
 
       <common.Separator className="mb-7" />
+      <div className="flex justify-between w-full">
+        <div>
+          <div
+            className={`flex ${
+              submittedSchema ? 'justify-between' : 'justify-end'
+            }  w-full gap-4`}
+          >
+            {submittedSchema && (
+              <common.Buttons.RedOutline
+                disabled={loading}
+                loading={loading}
+                onClick={() => {
+                  setSubmittedSchema(undefined)
+                }}
+              >
+                <p>Cancel</p>
+              </common.Buttons.RedOutline>
+            )}
+            <div>
+              <label
+                htmlFor="file"
+                className={`border px-2 py-2 text-xs transition disabled:cursor-not-allowed hover:cursor-pointer rounded-md flex gap-2 items-center justify-center`}
+              >
+                Import schema <UploadIcon className="w-5 h-5" />
+              </label>
+              <input
+                type="file"
+                id="file"
+                accept=".txt"
+                className="hidden"
+                onChange={(e) => {
+                  try {
+                    const file = e.target.files![0]
+                    if (file.type !== 'text/plain') {
+                      throw new Error('Unsupported file type')
+                    }
 
-      <common.Buttons.WhiteOutline
-        disabled={loading}
-        loading={loading}
-        icon={<CheckIcon className="w-4 h-4" />}
-        type="submit"
-      >
-        Create project
-      </common.Buttons.WhiteOutline>
+                    const reader = new FileReader()
+                    reader.addEventListener('load', (event) => {
+                      console.log('event', event)
+                      setSubmittedSchema(event?.target?.result as string)
+                    })
+                    reader.readAsText(file)
+                  } catch (err) {
+                    utils.showError(err)
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        <common.Buttons.WhiteOutline
+          disabled={loading}
+          loading={loading}
+          icon={<CheckIcon className="w-4 h-4" />}
+          type="submit"
+        >
+          Create project
+        </common.Buttons.WhiteOutline>
+      </div>
     </form>
   )
 }

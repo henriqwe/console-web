@@ -70,7 +70,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
       } rounded-b-md bg-white dark:bg-gray-800 p-6 gap-2`}
     >
       <div className="flex flex-row-reverse justify-between w-full gap-4 ">
-        <common.Buttons.WhiteOutline
+        <common.Buttons.RedOutline
           type="button"
           loading={submitLoading}
           disabled={submitLoading}
@@ -78,7 +78,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           icon={<TrashIcon className="w-4 h-4" />}
         >
           Remove entity
-        </common.Buttons.WhiteOutline>
+        </common.Buttons.RedOutline>
         {!openForm && (
           <common.Buttons.WhiteOutline
             type="button"
