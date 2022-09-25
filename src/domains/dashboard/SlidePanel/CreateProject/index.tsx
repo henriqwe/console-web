@@ -214,7 +214,7 @@ export function Create() {
               try {
                 const file = e.target.files![0]
                 if (file.type !== 'text/plain') {
-                  throw new Error('Tipo de arquivo não aceito')
+                  throw new Error('Unsupported file type')
                 }
 
                 const reader = new FileReader()
