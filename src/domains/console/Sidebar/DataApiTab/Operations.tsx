@@ -4,7 +4,7 @@ import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { Icon } from '@iconify/react'
 import { useState } from 'react'
 
-import type { schemaEntitiesType } from 'domains/console/Sidebar/DataManagerTab'
+import type { schemaEntitiesType } from 'domains/console/Sidebar/DataApiTab'
 
 export function Operations({ entity }: { entity: schemaEntitiesType }) {
   const [active, setActive] = useState(false)

@@ -54,7 +54,12 @@ export function SchemaManagerTab() {
 
   return (
     <div className="flex flex-col h-full gap-1 px-4 pt-3 overflow-y-auto">
-      <div className="flex items-center w-full">
+      <div className="flex flex-col w-full">
+        <div className="flex items-center gap-2 font-light text-sm hover:cursor-pointer">
+          Modeler <Icon icon="bi:boxes" />
+        </div>
+        <common.Separator className="dark:border-gray-500/50" />
+
         <div
           className="flex items-center gap-2 font-light text-sm hover:cursor-pointer"
           onClick={returnToEntitiesPage}

@@ -3,7 +3,7 @@ import * as utils from 'utils'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Operations } from 'domains/console/Sidebar/DataManagerTab/Operations'
+import { Operations } from 'domains/console/Sidebar/DataApiTab/Operations'
 
 import type { attributesType } from 'domains/console/ConsoleEditorContext'
 
@@ -20,7 +20,7 @@ export type schemaEntitiesType = {
     }
   }
 }
-export function DataManagerTab() {
+export function DataApiTab() {
   const router = useRouter()
   const [schemaEntities, setSchemaEntities] = useState<schemaEntitiesType[]>()
   const [loading, setLoading] = useState(false)

@@ -10,7 +10,7 @@ import * as consoleSection from 'domains/console'
 
 import { json } from '@codemirror/lang-json'
 import { dracula } from '@uiw/codemirror-theme-dracula'
-import { Slide } from 'domains/console/Console/Slide'
+import { Slide } from 'domains/console/DataApiSection/Console/Slide'
 import { EditorView } from '@codemirror/view'
 import { Icon } from '@iconify/react'
 import { useEffect } from 'react'
@@ -95,7 +95,7 @@ export function Editors() {
             <div className="flex items-center z-50">
               <common.Breadcrumb
                 pages={[
-                  { content: 'Data manager', current: false },
+                  { content: 'Data Api', current: false },
                   { content: 'Console', current: false },
                   {
                     content: (

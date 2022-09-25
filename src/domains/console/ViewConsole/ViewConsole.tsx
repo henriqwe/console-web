@@ -4,7 +4,7 @@ import * as consoleSection from 'domains/console'
 import { useTour } from '@reactour/tour'
 import { useEffect } from 'react'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
-import { SchemaFormater } from 'domains/console/Console/Editors/SchemaFormater'
+import { SchemaFormater } from 'domains/console/DataApiSection/Console/Editors/SchemaFormater'
 
 export function ViewConsole() {
   const { currentTab } = consoleSection.useSchemaManager()
@@ -12,13 +12,13 @@ export function ViewConsole() {
   const { tabsData, documentationValue, setSchemaTabData } =
     consoleEditor.useConsoleEditor()
 
-  let tab = <consoleSection.DataManagerSection />
+  let tab = <consoleSection.DataApiSection />
   switch (currentTab) {
-    case 'Schema Manager':
+    case 'Schema':
       tab = <consoleSection.SchemaManagerSection />
       break
-    case 'Schema Manager':
-      tab = <consoleSection.DataManagerSection />
+    case 'Data Api':
+      tab = <consoleSection.DataApiSection />
       break
     case 'USERS':
       tab = <consoleSection.UsersSection />

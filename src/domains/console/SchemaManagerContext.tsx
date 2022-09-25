@@ -9,11 +9,10 @@ import {
 import * as yup from 'yup'
 import * as types from 'domains/console/types'
 
+export type currentTabType = 'Data Api' | 'Schema' | 'USERS'
 type SchemaManagerContextProps = {
-  currentTab: 'Data Manager' | 'Schema Manager' | 'USERS'
-  setCurrentTab: Dispatch<
-    SetStateAction<'Data Manager' | 'Schema Manager' | 'USERS'>
-  >
+  currentTab: currentTabType
+  setCurrentTab: Dispatch<SetStateAction<currentTabType>>
   selectedEntity?: string
   setSelectedEntity: Dispatch<SetStateAction<string | undefined>>
   reload: boolean
@@ -78,9 +77,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const [reload, setReload] = useState(false)
   const [showCreateEntitySection, setShowCreateEntitySection] = useState(false)
   const [showTableViewMode, setShowTableViewMode] = useState(false)
-  const [currentTab, setCurrentTab] = useState<
-    'Data Manager' | 'Schema Manager' | 'USERS'
-  >('Schema Manager')
+  const [currentTab, setCurrentTab] = useState<currentTabType>('Schema')
   const [selectedEntity, setSelectedEntity] = useState<string>()
   const [entityData, setEntityData] = useState<types.EntityData[]>()
   const [schemaTables, setSchemaTables] = useState<types.SchemaTable>()
@@ -116,11 +113,11 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   }
   const breadcrumbPagesData = {
     home: [
-      { content: 'Schema manager', current: false },
+      { content: 'Schema', current: false },
       { content: 'Entities', current: true }
     ],
     createEntity: [
-      { content: 'Schema manager', current: false },
+      { content: 'Schema', current: false },
       {
         content: 'Entities',
         current: false,
@@ -129,7 +126,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
       { content: 'Create', current: true }
     ],
     viewEntity: (entityName: string) => [
-      { content: 'Schema manager', current: false },
+      { content: 'Schema', current: false },
       {
         content: 'Entities',
         current: false,
@@ -138,7 +135,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
       { content: entityName, current: true }
     ],
     viewEntityRelationship: (entityName: string) => [
-      { content: 'Schema manager', current: false },
+      { content: 'Schema', current: false },
       {
         content: 'Entities',
         current: false,

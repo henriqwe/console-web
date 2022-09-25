@@ -12,7 +12,7 @@ import {
   MutableRefObject
 } from 'react'
 import { javascriptLanguage } from '@codemirror/lang-javascript'
-import { completeFromGlobalScope } from './Console/Editors/Autocomplete'
+import { completeFromGlobalScope } from './DataApiSection/Console/Editors/Autocomplete'
 import { useRouter } from 'next/router'
 
 import * as data from 'domains/console'

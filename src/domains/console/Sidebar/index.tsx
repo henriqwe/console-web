@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
+import type { currentTabType } from 'domains/console/SchemaManagerContext'
 type accordionsDatatype = {
   id: number
-  title: 'Data Manager' | 'Schema Manager' | 'USERS'
+  title: currentTabType
   content: JSX.Element
   defaultOpen: boolean
   action: () => void
@@ -14,23 +15,23 @@ export function SideBar() {
   const { setCurrentTab } = consoleSection.useSchemaManager()
 
   useEffect(() => {
-    setCurrentTab(selectedTab.name as 'Data Manager' | 'Schema Manager')
+    setCurrentTab(selectedTab.name)
   }, [selectedTab])
 
   const accordionsData: accordionsDatatype = [
     {
       id: 1,
-      title: 'Schema Manager',
+      title: 'Schema',
       content: <consoleSection.SchemaManagerTab />,
       defaultOpen: true,
-      action: () => setCurrentTab('Schema Manager')
+      action: () => setCurrentTab('Schema')
     },
     {
       id: 2,
-      title: 'Data Manager',
-      content: <consoleSection.DataManagerTab />,
+      title: 'Data Api',
+      content: <consoleSection.DataApiTab />,
       defaultOpen: false,
-      action: () => setCurrentTab('Data Manager')
+      action: () => setCurrentTab('Data Api')
     }
   ]
   return (
