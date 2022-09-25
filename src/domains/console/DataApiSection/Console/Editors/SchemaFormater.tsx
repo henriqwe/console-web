@@ -35,7 +35,7 @@ export function SchemaFormater() {
   useEffect(() => {
     if (documentationValue) {
       try {
-        const parse = utils.ycl_transpiler.parse(documentationValue)
+        const parse = utils.ycl_transpiler.parse(documentationValue, false)
         setDocumentationValueParsed(parse)
       } catch (err) {
         console.error(err)

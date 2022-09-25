@@ -10,9 +10,13 @@ import * as yup from 'yup'
 import * as types from 'domains/console/types'
 
 export type currentTabType = 'Data Api' | 'Schema' | 'USERS'
+export type currentTabSchemaType = 'Modeler' | 'Databases' | 'Users and Roles'
+
 type SchemaManagerContextProps = {
   currentTab: currentTabType
   setCurrentTab: Dispatch<SetStateAction<currentTabType>>
+  currentTabSchema: currentTabSchemaType
+  setCurrentTabSchema: Dispatch<SetStateAction<currentTabSchemaType>>
   selectedEntity?: string
   setSelectedEntity: Dispatch<SetStateAction<string | undefined>>
   reload: boolean
@@ -46,7 +50,8 @@ type SchemaManagerContextProps = {
   }
   schemaStatus?: number
   setSchemaStatus: Dispatch<SetStateAction<number | undefined>>
-  returnToEntitiesPage(): void
+  goToEntitiesPage(): void
+  goToModelerPage(): void
 }
 
 type ProviderProps = {
@@ -78,6 +83,9 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const [showCreateEntitySection, setShowCreateEntitySection] = useState(false)
   const [showTableViewMode, setShowTableViewMode] = useState(false)
   const [currentTab, setCurrentTab] = useState<currentTabType>('Schema')
+  const [currentTabSchema, setCurrentTabSchema] =
+    useState<currentTabSchemaType>('Databases')
+
   const [selectedEntity, setSelectedEntity] = useState<string>()
   const [entityData, setEntityData] = useState<types.EntityData[]>()
   const [schemaTables, setSchemaTables] = useState<types.SchemaTable>()
@@ -106,22 +114,33 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     ReferenceEntity: yup.object().required('This field is required')
   })
 
-  function returnToEntitiesPage() {
+  function goToEntitiesPage() {
     setShowCreateEntitySection(false)
     setSelectedEntity(undefined)
     setBreadcrumbPages(breadcrumbPagesData?.home)
+    setCurrentTabSchema('Databases')
+  }
+  function goToModelerPage() {
+    setShowCreateEntitySection(false)
+    setSelectedEntity(undefined)
+    setBreadcrumbPages(breadcrumbPagesData?.modeler)
+    setCurrentTabSchema('Modeler')
   }
   const breadcrumbPagesData = {
     home: [
       { content: 'Schema', current: false },
       { content: 'Entities', current: true }
     ],
+    modeler: [
+      { content: 'Schema', current: false },
+      { content: 'Modeler', current: true }
+    ],
     createEntity: [
       { content: 'Schema', current: false },
       {
         content: 'Entities',
         current: false,
-        action: returnToEntitiesPage
+        action: goToEntitiesPage
       },
       { content: 'Create', current: true }
     ],
@@ -130,7 +149,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
       {
         content: 'Entities',
         current: false,
-        action: returnToEntitiesPage
+        action: goToEntitiesPage
       },
       { content: entityName, current: true }
     ],
@@ -139,7 +158,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
       {
         content: 'Entities',
         current: false,
-        action: returnToEntitiesPage
+        action: goToEntitiesPage
       },
       { content: entityName, current: false },
       { content: 'Relationship', current: true }
@@ -182,7 +201,10 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         updateAssociationSchema,
         schemaStatus,
         setSchemaStatus,
-        returnToEntitiesPage
+        goToEntitiesPage,
+        goToModelerPage,
+        currentTabSchema,
+        setCurrentTabSchema
       }}
     >
       {children}

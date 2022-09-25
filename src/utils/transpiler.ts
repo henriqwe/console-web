@@ -47,7 +47,7 @@ const ycl_reserved_words = [
   'version'
 ]
 
-const ycl_transpiler = {
+export const ycl_transpiler = {
   refs: {},
   types: [
     'String',

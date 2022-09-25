@@ -67,7 +67,7 @@ export function Create() {
       const spaceValidation = new RegExp(/\s/g)
 
       if (submittedSchema) {
-        const schemaParsed = utils.ycl_transpiler.parse(submittedSchema)
+        const schemaParsed = utils.ycl_transpiler.parse(submittedSchema, false)
         utils.ycl_transpiler.deploy(schemaParsed.schema, async () => {
           setReload(!reload)
           const { data: schemaData } = await utils.api.get(

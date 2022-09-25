@@ -24,7 +24,8 @@ export function SchemaManagerSection() {
     setSchemaStatus,
     breadcrumbPagesData,
     setBreadcrumbPages,
-    setShowCreateEntitySection
+    setShowCreateEntitySection,
+    currentTabSchema
   } = consoleSection.useSchemaManager()
   const [loading, setLoading] = useState(true)
 
@@ -102,7 +103,7 @@ export function SchemaManagerSection() {
                 />
               )}
             </div>
-            {!selectedEntity && (
+            {!selectedEntity && currentTabSchema === 'Databases' && (
               <common.Buttons.WhiteOutline
                 type="button"
                 onClick={() => {
@@ -126,14 +127,22 @@ export function SchemaManagerSection() {
         <consoleSection.SlidePanel />
         <div className="bg-white rounded-md dark:bg-menu-primary w-full">
           <common.ContentSection variant="WithoutTitleBackgroundColor">
-            {selectedEntity ? (
-              selectedEntityTab.name === 'Attributes' ? (
-                <consoleSection.ModifyTab loading={loading} />
+            {currentTabSchema === 'Databases' ? (
+              selectedEntity ? (
+                selectedEntityTab.name === 'Attributes' ? (
+                  <consoleSection.ModifyTab loading={loading} />
+                ) : (
+                  <consoleSection.AssociationTab loading={loading} />
+                )
               ) : (
-                <consoleSection.AssociationTab loading={loading} />
+                <consoleSection.DefaultPage />
               )
+            ) : currentTabSchema === 'Modeler' ? (
+              <consoleSection.Modeler />
+            ) : currentTabSchema === 'Users and Roles' ? (
+              <div />
             ) : (
-              <consoleSection.DefaultPage />
+              <div />
             )}
           </common.ContentSection>
         </div>
