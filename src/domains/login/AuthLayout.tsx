@@ -1,6 +1,6 @@
 import { ToggleTheme } from 'common'
 import * as ThemeContext from 'contexts/ThemeContext'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import * as login from 'domains/login'
 
 const backgroundImage = '/assets/images/bg-green-2-darker.jpg'
@@ -11,11 +11,17 @@ type AuthLayoutProps = {
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   const { formType, setFormType } = login.useLogin()
-  const { isDark, setIsDark, isDarkTheme } = ThemeContext.useTheme()
+  const { isDark } = ThemeContext.useTheme()
+  const [logoImgSrc, setLogoImgSrc] = useState<string>('')
 
   useEffect(() => {
-    setIsDark(isDarkTheme())
-  }, [])
+    setLogoImgSrc(
+      isDark
+        ? '/assets/images/logoTextLight.png'
+        : '/assets/images/logoTextDark.png'
+    )
+  }, [isDark])
+
   return (
     <>
       <div className="justify-cenfer relative flex h-screen px-0">
@@ -29,9 +35,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
                   className="cursor-pointer w-max"
                 >
                   <img
-                    src={`/assets/images/${
-                      isDark ? 'logoTextLight' : 'logoTextDark'
-                    }.png`}
+                    src={logoImgSrc}
                     alt="Logo"
                     className="h-10 object-contain self-start"
                   />
