@@ -27,7 +27,8 @@ module.exports = {
           ativo: '#111827',
           ativoEscuro: '#101623'
         },
-        iconGreen: '#16a34a'
+        iconGreen: '#16a34a',
+        ycodify: '#b1c901'
       },
       fontSize: {
         tiny: '.7rem',
