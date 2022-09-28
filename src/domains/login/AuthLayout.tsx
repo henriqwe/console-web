@@ -2,6 +2,7 @@ import { ToggleTheme } from 'common'
 import * as ThemeContext from 'contexts/ThemeContext'
 import { useEffect, useState } from 'react'
 import * as login from 'domains/login'
+import { useRouter } from 'next/router'
 
 const backgroundImage = '/assets/images/bg-green-2-darker.jpg'
 
@@ -13,6 +14,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
   const { formType, setFormType } = login.useLogin()
   const { isDark } = ThemeContext.useTheme()
   const [logoImgSrc, setLogoImgSrc] = useState<string>('')
+  const router = useRouter()
 
   useEffect(() => {
     setLogoImgSrc(
@@ -48,18 +50,16 @@ export function AuthLayout({ children }: AuthLayoutProps) {
                 </h2>
                 <p className="mt-2 text-sm dark:text-text-secondary text-gray-700">
                   {`${
-                    formType === 'login'
-                      ? 'Não possui uma conta?'
-                      : 'Possui uma conta?'
+                    router.pathname === '/login'
+                      ? "Don't have an account?"
+                      : 'Have an account?'
                   }`}{' '}
-                  <span
-                    onClick={() =>
-                      setFormType(formType === 'login' ? 'create' : 'login')
-                    }
+                  <a
+                    href={router.pathname === '/login' ? '/register' : '/login'}
                     className="font-medium dark:text-blue-400 text-blue-600 hover:underline cursor-pointer"
                   >
-                    {`${formType === 'login' ? 'Cadastre-se!' : 'Faça login!'}`}
-                  </span>
+                    {`${router.pathname === '/login' ? 'Sign up!' : 'Login!'}`}
+                  </a>
                 </p>
               </div>
             </div>

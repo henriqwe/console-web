@@ -59,7 +59,7 @@ export function CreateUser() {
           <div className="w-full">
             <common.Input
               onChange={onChange}
-              label="Nome de usuário"
+              label="Username"
               placeholder="Username"
               id="username"
               name="username"
@@ -103,7 +103,7 @@ export function CreateUser() {
           <div className="w-full">
             <common.Input
               onChange={onChange}
-              label="Senha"
+              label="Password"
               placeholder="Password"
               id="password"
               name="password"
@@ -125,7 +125,7 @@ export function CreateUser() {
         disabled={loading}
       >
         <span className="text-white">
-          Cadastrar <span aria-hidden="true">&rarr;</span>
+          Register <span aria-hidden="true">&rarr;</span>
         </span>
       </common.Buttons.Ycodify>
     </form>

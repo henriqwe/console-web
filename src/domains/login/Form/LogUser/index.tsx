@@ -67,7 +67,7 @@ export function LogUser() {
           <div className="w-full">
             <common.Input
               onChange={onChange}
-              label="Nome de usuário"
+              label="Username"
               placeholder="Username"
               id="username"
               name="username"
@@ -88,7 +88,7 @@ export function LogUser() {
           <div className="w-full">
             <common.Input
               onChange={onChange}
-              label="Senha"
+              label="Password"
               placeholder="Password"
               id="password"
               name="password"
@@ -109,7 +109,7 @@ export function LogUser() {
         disabled={loading}
       >
         <span className="text-white">
-          Entrar <span aria-hidden="true">&rarr;</span>
+          Login <span aria-hidden="true">&rarr;</span>
         </span>
       </common.Buttons.Ycodify>
     </form>

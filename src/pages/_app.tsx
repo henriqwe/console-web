@@ -33,7 +33,7 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
   useEffect(() => {
-    if (router.asPath !== '/login') {
+    if (router.asPath !== '/login' && router.asPath !== '/register') {
       if (status === 'unauthenticated') {
         signIn('credentials', { callbackUrl: '/' })
         return null
@@ -59,7 +59,11 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
     }
   }, [session])
 
-  if ((user && status === 'authenticated') || router.asPath === '/login') {
+  if (
+    (user && status === 'authenticated') ||
+    router.asPath === '/login' ||
+    router.asPath === '/register'
+  ) {
     return (
       <ThemeContext.ThemeProvider>
         <Component {...pageProps} />
