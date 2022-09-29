@@ -11,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { routes } from 'domains/routes'
+import { ArrowRightIcon } from '@heroicons/react/solid'
 import router from 'next/router'
 
 export function LogUser() {
@@ -107,10 +108,9 @@ export function LogUser() {
         type="submit"
         loading={loading}
         disabled={loading}
+        icon={<ArrowRightIcon className="text-white h-5 w-5" />}
       >
-        <span className="text-white">
-          Login <span aria-hidden="true">&rarr;</span>
-        </span>
+        Login
       </common.Buttons.Ycodify>
     </form>
   )

@@ -11,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { routes } from 'domains/routes'
+import { ArrowRightIcon } from '@heroicons/react/solid'
 
 export function CreateUser() {
   const [loading, setLoading] = useState(false)
@@ -123,10 +124,9 @@ export function CreateUser() {
         type="submit"
         loading={loading}
         disabled={loading}
+        icon={<ArrowRightIcon className="text-white h-5 w-5" />}
       >
-        <span className="text-white">
-          Register <span aria-hidden="true">&rarr;</span>
-        </span>
+        Register
       </common.Buttons.Ycodify>
     </form>
   )

@@ -119,15 +119,70 @@ export function Template({ children }: TemplateProps) {
 
       <div className="fixed w-full h-screen bg-gray-200 dark:bg-bg-page" />
       <div className="flex flex-col flex-1 w-full h-full md:pl-64">
-        <div className="sticky top-0 z-10 pt-1 pl-1 bg-gray-100 md:hidden sm:pl-3 sm:pt-3">
-          <button
-            type="button"
-            className="-ml-0.5 -mt-0.5 h-12 w-full inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <span className="sr-only">Open sidebar</span>
-            <MenuIcon className="w-6 h-6" aria-hidden="true" />
-          </button>
+        <div className="sticky z-50 insset-0 bg-bg-navigation md:hidden">
+          <div className="flex justify-between pl-3 pr-2 items-center">
+            <button
+              type="button"
+              className={`py-2 duration-150 ${
+                sidebarOpen
+                  ? 'text-text-primary'
+                  : 'text-text-secondary hover:text-text-primary'
+              }`}
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              <span className="sr-only">Open sidebar</span>
+              <MenuIcon className="w-7 h-7" aria-hidden="true" />
+            </button>
+            <ToggleTheme changeColor={false} />
+          </div>
+
+          {sidebarOpen && (
+            <div className="py-2 absolute left-0 bg-bg-navigation w-full first-letter:md:hidden">
+              <div className="flex flex-col gap-y-4">
+                <nav className="flex flex-col">
+                  {navigation.map((item) => (
+                    <button
+                      key={item.name}
+                      onClick={() => {
+                        item.onClick()
+                        setSidebarOpen(false)
+                      }}
+                      className={`group flex w-full items-center px-2 py-2 text-xs font-medium rounded-md transition ${
+                        item.current
+                          ? 'bg-menuItem-ativoEscuro text-text-primary'
+                          : 'text-text-tertiary hover:bg-gray-700 hover:text-text-primary'
+                      }`}
+                    >
+                      <item.icon
+                        className={`mr-4 flex-shrink-0 h-6 w-6 ${
+                          item.current
+                            ? 'text-text-primary'
+                            : 'text-text-tertiary group-hover:text-text-primary'
+                        }`}
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </button>
+                  ))}
+                </nav>
+                <div
+                  className={`group flex items-center justify-center px-2 py-2 text-sm font-medium rounded-md text-text-secondary hover:bg-red-700 hover:text-primary cursor-pointer mx-2 transition`}
+                  onClick={() => {
+                    removeCookie('X-TenantID')
+                    removeCookie('admin_access_token')
+                    removeCookie('access_token')
+                    signOut()
+                  }}
+                >
+                  <LogoutIcon
+                    className={`mr-3 text-xs flex-shrink-0 h-6 w-6 text-text-secondary group-hover:text-text-secondary`}
+                    aria-hidden="true"
+                  />
+                  Logout
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         <main className="h-full pt-10 pb-8">{children}</main>
       </div>
