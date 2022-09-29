@@ -10,7 +10,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       const email = req.body.email
 
       await utils.api.post(
-        utils.apiRoutes.userAccount,
+        utils.apiRoutes.createAccount,
         {
           username,
           password,
