@@ -1,4 +1,5 @@
 import * as common from 'common'
+import * as utils from 'utils'
 import * as dashboard from 'domains/dashboard'
 import { PlusIcon } from '@heroicons/react/outline'
 import { useEffect } from 'react'
@@ -6,11 +7,13 @@ import { RowActions } from './RowActions'
 import { TicketDetail } from './TicketDetail'
 
 type Tickets = {
-  ticketId: string
+  logversion: number
+  id: number
   project: string
   category: string
   title: string
   status: string
+  content: string
 }
 
 export function HelpAndSupport() {
@@ -20,24 +23,41 @@ export function HelpAndSupport() {
     setSlideSize,
     reload,
     tickets,
+    setTickets,
     selectedTicket
   } = dashboard.useData()
 
   async function loadTickets() {
-    // try {
-    //   const { data } = await utils.api.get(utils.apiRoutes.schemas, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       Accept: 'application/json',
-    //       Authorization: `Bearer ${utils.getCookie('access_token')}`
-    //     }
-    //   })
-    //   setSchemas(data)
-    // } catch (err: any) {
-    //   if (err.response.status !== 404) {
-    //     utils.showError(err)
-    //   }
-    // }
+    try {
+      const result = await fetch(
+        'https://api.ycodify.com/v0/persistence/s/no-ac',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'READ',
+            data: [
+              {
+                tickets: {}
+              }
+            ]
+          }),
+          headers: {
+            'X-TenantAC': 'b44f7fc8-e2b7-3cc8-9a3d-04b3dac69886',
+            'X-TenantID': '9316c346-4db5-35aa-896f-f61fe1a7d9d8',
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          }
+        }
+      )
+      
+
+       const data = await result.json()
+
+       setTickets(data?.[0]?.tickets ?? [])
+   
+    } catch (err) {
+      utils.showError(err)
+    }
   }
   useEffect(() => {
     loadTickets()
@@ -90,7 +110,7 @@ export function HelpAndSupport() {
           ) : (
             <common.Table
               tableColumns={[
-                { name: 'ticketId', displayName: 'Ticket Id' },
+                { name: 'id', displayName: 'Ticket Id' },
                 {
                   name: 'project',
                   displayName: 'Project'
