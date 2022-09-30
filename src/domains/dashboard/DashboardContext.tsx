@@ -50,12 +50,13 @@ type Schemas = {
 }
 
 type Tickets = {
-  ticketId: string
+  logversion: number
+  id: number
   project: string
   category: string
-  message: string
   title: string
   status: string
+  content: string
 }
 
 type ProviderProps = {

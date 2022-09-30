@@ -26,7 +26,7 @@ type SelectObject = {
 
 export function CreateTicket() {
   const [loading, setLoading] = useState(false)
-  const { schemas, createTicketSchema, setTickets, tickets, setOpenSlide } =
+  const { schemas, createTicketSchema, setOpenSlide, setReload, reload } =
     dashboard.useData()
 
   const {
@@ -35,22 +35,32 @@ export function CreateTicket() {
     formState: { errors }
   } = useForm({ resolver: yupResolver(createTicketSchema) })
 
-  async function Submit(data: FormData) {
+  async function Submit(formData: FormData) {
     try {
-      setLoading(true)
-
-      setTickets([
-        ...tickets,
-        {
-          category: 'Associations',
-          message:
-            "Hi, I'm trying to create an association between two entities but I received an error saying that I need to stop the schema to create a new association, what's really wrong?",
-          project: 'Blog',
-          status: 'Open',
-          ticketId: (tickets.length + 1).toString(),
-          title: "Can't create associations"
+      await fetch('https://api.ycodify.com/v0/persistence/s/no-ac', {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'CREATE',
+          data: [
+            {
+              tickets: {
+                project: formData.Project.value,
+                title: formData.Title,
+                content: formData.Content,
+                category: formData.Category.value,
+                status: 'Active'
+              }
+            }
+          ]
+        }),
+        headers: {
+          'X-TenantAC': 'b44f7fc8-e2b7-3cc8-9a3d-04b3dac69886',
+          'X-TenantID': '9316c346-4db5-35aa-896f-f61fe1a7d9d8',
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
         }
-      ])
+      })
+      setReload(!reload)
       setOpenSlide(false)
       utils.notification(`Ticket created successfully`, 'success')
     } catch (err: any) {
