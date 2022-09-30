@@ -48,7 +48,7 @@ const RelationEdge = ({
       label={label}
       labelStyle={labelStyle}
       labelShowBg={labelShowBg}
-      labelBgStyle={labelBgStyle}
+      labelBgStyle={{ fill: 'white' }}
       labelBgPadding={labelBgPadding}
       labelBgBorderRadius={labelBgBorderRadius}
     />

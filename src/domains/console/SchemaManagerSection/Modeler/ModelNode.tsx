@@ -55,13 +55,13 @@ const ModelNode = ({ data }: ModelNodeProps) => {
   }
   return (
     <table
-      className="font-sans bg-white border-2 border-separate border-black rounded-lg"
+      className="font-sans bg-white border-2 border-separate border-black dark:border-gray-400 rounded-lg"
       style={{ minWidth: 200, maxWidth: 500, borderSpacing: 0 }}
     >
       <thead title={data.documentation}>
         <tr>
           <th
-            className="p-2 font-extrabold bg-gray-200 border-b-2 border-black rounded-t-md "
+            className="p-2 font-extrabold bg-gray-200 dark:bg-gray-800 border-b-2 border-black dark:border-gray-400 rounded-t-md "
             colSpan={4}
           >
             <div className="flex flex-col">
@@ -77,8 +77,9 @@ const ModelNode = ({ data }: ModelNodeProps) => {
           .map((col) => (
             <tr
               key={col.name}
-              // className={styles.row}
-              className={'!first:!border-4 !first:!border-red-500'}
+              className={
+                '!first:!border-4 !first:!border-red-500 dark:bg-gray-700'
+              }
               title={col.documentation}
             >
               <td className="font-mono font-semibold">
@@ -88,7 +89,6 @@ const ModelNode = ({ data }: ModelNodeProps) => {
                     'relative',
                     'py-1',
                     'px-2',
-
                     { 'cursor-pointer': isTarget(col) || isSource(col) }
                   ])}
                   onClick={() => {

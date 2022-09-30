@@ -48,7 +48,7 @@ const FlowView = ({ schema }: FlowViewProps) => {
           gap={24}
           size={2}
           color="currentColor"
-          className="text-gray-200"
+          className="text-gray-200 dark:text-gray-700"
         />
         <Controls />
       </ReactFlow>

@@ -162,12 +162,9 @@ export const schemaToElements = (data: schemaType): DMMFToElementsResult => {
 
   const filterFields = () =>
     data.entities.flatMap(({ name: entityName, attributes }) => {
-      return (
-        attributes
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          .filter((entity) => entitiesName.includes(entity?._conf.type.value))
-          .map((entity) => ({ ...entity, entityName }))
-      )
+      return attributes
+        .filter((entity) => entitiesName.includes(entity?._conf.type.value))
+        .map((entity) => ({ ...entity, entityName }))
     })
 
   const relationFields = filterFields()

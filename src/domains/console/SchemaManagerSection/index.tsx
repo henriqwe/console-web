@@ -118,10 +118,7 @@ export function SchemaManagerSection() {
             {currentTabSchema === 'Modeler' && (
               <common.Buttons.GreenOutline
                 type="button"
-                onClick={() => {
-                  setShowCreateEntitySection(true)
-                  setBreadcrumbPages(breadcrumbPagesData.createEntity)
-                }}
+                onClick={() => null}
                 icon={<CheckCircleIcon className="w-4 h-4 " />}
               >
                 Deploy
