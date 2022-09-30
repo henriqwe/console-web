@@ -11,7 +11,7 @@ export default function Login() {
 function Page() {
   return (
     <login.AuthLayout>
-      <login.LogUser />
+      <login.CreateUser />
     </login.AuthLayout>
   )
 }

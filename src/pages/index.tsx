@@ -22,13 +22,10 @@ function Page() {
     case 'tutorialsAndDocs':
       break
     case 'myAccount':
+      component = <dashboard.MyAccount />
       break
   }
-  return (
-    <dashboard.Template>
-      {component}
-    </dashboard.Template>
-  )
+  return <dashboard.Template>{component}</dashboard.Template>
 }
 
 // Admin user name: tester@test

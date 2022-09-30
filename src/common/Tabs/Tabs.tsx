@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react'
+import * as common from '..'
 
 type TabsProps = {
   tabs: Tab[]
@@ -25,16 +26,16 @@ export function Tabs({
           Select a tab
         </label>
         {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
-        <select
-          id="tabs"
-          name="tabs"
-          className="block w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-          defaultValue={selectedTab.name}
-        >
-          {tabs.map((tab) => (
-            <option key={tab.name}>{tab.name}</option>
-          ))}
-        </select>
+        <common.Select
+          options={
+            tabs ? tabs.map((tab) => ({ value: tab.name, name: tab.name })) : []
+          }
+          value={{ value: selectedTab.name, name: selectedTab.name }}
+          onChange={(val) => {
+            const tab = tabs.find((tab) => tab.name === val.value)
+            tab && setSelectedTab(tab)
+          }}
+        />
       </div>
       <div className="hidden sm:block">
         <div className="border-b border-gray-200 dark:border-menu-primary">
