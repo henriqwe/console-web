@@ -33,9 +33,6 @@ const FlowView = ({ schema }: FlowViewProps) => {
         : ({ nodes: [], edges: [] } as DMMFToElementsResult),
     [schema]
   )
-  console.group('nodes')
-  console.log({ nodes_ycl, edges_ycl })
-  console.groupEnd()
 
   return (
     <>
@@ -58,7 +55,7 @@ const FlowView = ({ schema }: FlowViewProps) => {
       <svg width="0" height="0">
         <defs>
           <marker
-            id="prismaliser-1n"
+            id="er-1n"
             markerWidth="32.5"
             markerHeight="12.5"
             viewBox="-20 0 20 20"
@@ -76,7 +73,7 @@ const FlowView = ({ schema }: FlowViewProps) => {
             </text>
           </marker>
           <marker
-            id="prismaliser-n1"
+            id="er-n1"
             markerWidth="22.5"
             markerHeight="12.5"
             viewBox="-10 -20 20 20"

@@ -6,7 +6,7 @@ import * as utils from 'utils'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
-import { PlusIcon } from '@heroicons/react/solid'
+import { CheckCircleIcon, PlusIcon } from '@heroicons/react/solid'
 
 export function SchemaManagerSection() {
   const [selectedEntityTab, setSelectedEntityTab] = useState({
@@ -91,7 +91,7 @@ export function SchemaManagerSection() {
       <common.Card className="flex flex-col h-full">
         <div className="flex w-full h-[3.3rem]">
           <div className="flex items-center justify-between w-full">
-            <div className="flex items  -center">
+            <div className="flex items-center">
               <common.Breadcrumb pages={breadcrumbPages} />
               {selectedEntity && (
                 <PencilIcon
@@ -114,6 +114,18 @@ export function SchemaManagerSection() {
               >
                 Create entity
               </common.Buttons.WhiteOutline>
+            )}
+            {currentTabSchema === 'Modeler' && (
+              <common.Buttons.GreenOutline
+                type="button"
+                onClick={() => {
+                  setShowCreateEntitySection(true)
+                  setBreadcrumbPages(breadcrumbPagesData.createEntity)
+                }}
+                icon={<CheckCircleIcon className="w-4 h-4 " />}
+              >
+                Deploy
+              </common.Buttons.GreenOutline>
             )}
           </div>
           <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>

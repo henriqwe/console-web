@@ -7,8 +7,6 @@ import {
   useStoreApi
 } from 'react-flow-renderer'
 
-// import styles from './Node.module.scss'
-
 import { ModelNodeData } from './types'
 
 type ColumnData = ModelNodeData['columns'][number]
@@ -80,6 +78,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
             <tr
               key={col.name}
               // className={styles.row}
+              className={'!first:!border-4 !first:!border-red-500'}
               title={col.documentation}
             >
               <td className="font-mono font-semibold">
@@ -109,7 +108,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
           return (
             <Handle
               key={`${data.name}-${relations.name}`}
-              // className={cc([styles.handle, styles.left])}
+              className={'!border-4 !h-4 !w-4 !bg-gray-700 -ml-1'}
               type="source"
               id={`${data.name}-${relations.name}-${relations._conf.type.value}`}
               position={Position.Left}
@@ -122,7 +121,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
           return (
             <Handle
               key={`${data.name}-${relations.name}`}
-              // className={cc([styles.handle, styles.Right])}
+              className={'!border-4 !h-4 !w-4 bg-gray-700'}
               type="target"
               id={`${data.name}-${relations.name}`}
               position={Position.Right}
