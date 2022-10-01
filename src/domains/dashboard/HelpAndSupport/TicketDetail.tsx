@@ -54,7 +54,7 @@ export function TicketDetail() {
                 date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms'),
                 createdbyuser: true,
                 content: formData.Content,
-                ticketid: selectedTicket?.id
+                ticket: selectedTicket?.id
               }
             }
           ]
@@ -85,7 +85,11 @@ export function TicketDetail() {
             data: [
               {
                 ticketsmessages: {
-                  ticketid: `${selectedTicket?.id}`
+                  ticket: {
+                    tickets: {
+                      id: selectedTicket?.id
+                    }
+                  }
                 }
               }
             ]
