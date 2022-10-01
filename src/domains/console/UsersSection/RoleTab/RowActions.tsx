@@ -13,7 +13,7 @@ export function RowActions({ item }: { item: any }) {
         await utils.api
           .delete(utils.apiRoutes.deleteRole(item.name), {
             headers: {
-              Authorization: `Bearer ${utils.getCookie('admin_access_token')}`,
+              Authorization: `Bearer${utils.getCookie('access_token')}`,
               'X-TenantID': utils.getCookie('X-TenantID') as string
             }
           })

@@ -8,9 +8,9 @@ export const apiRoutes = {
     entityName: string
   }) =>
     `v0/modeling/project-name/${projectName}/schema/sql/entity/${entityName}/association`,
-  userAccount: 'v0/id/account',
+  userAccount: 'v0/id/account/get',
   createAccount: 'v0/id/account/create',
-  roles: '/caccount/role',
+  roles: '/v0/id/role',
   deleteRole: (name: string) => `/caccount/role/name/${name}`,
   getUserToken: 'v0/auth/oauth/token',
   interpreter: 'v0/persistence/s/no-ac',

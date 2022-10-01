@@ -17,9 +17,10 @@ export function AccountTab() {
         headers: {
           'X-TenantID': utils.getCookie('X-TenantID') as string,
           Accept: 'application/json',
-          Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
         }
       })
+      console.log('data', data)
       setEntityData(data)
     } catch (err: any) {
       console.log(err)
@@ -52,7 +53,7 @@ export function AccountTab() {
           <p className="text-lg font-bold text-gray-700">Loading entity data</p>
         </div>
       ) : (
-        <div className="flex flex-col w-full h-full gap-0 bg-gray-100 rounded-b-lg overflow-y">
+        <div className="flex flex-col w-full h-full gap-2 bg-gray-100 rounded-b-lg ">
           <div className="flex items-center justify-between w-full px-8 pt-2">
             <h2 className="text-lg">Accounts</h2>
             <common.Buttons.Blue
@@ -65,7 +66,6 @@ export function AccountTab() {
               <PlusIcon className="w-5 h-5" />
             </common.Buttons.Blue>
           </div>
-          <common.Separator />
           <common.Table
             tableColumns={[
               { name: 'username', displayName: 'Username' },

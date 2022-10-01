@@ -71,7 +71,7 @@ export function UpdateAccount() {
         headers: {
           'X-TenantID': utils.getCookie('X-TenantID') as string,
           Accept: 'application/json',
-          Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
         }
       })
       setRoles(data)

@@ -17,7 +17,7 @@ export function RoleTab() {
         headers: {
           'X-TenantID': utils.getCookie('X-TenantID') as string,
           Accept: 'application/json',
-          Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
+          Authorization: `Bearer ${utils.getCookie('access_token')}`
         }
       })
       setRoles(data)
@@ -65,9 +65,8 @@ export function RoleTab() {
               <PlusIcon className="w-5 h-5" />
             </common.Buttons.Blue>
           </div>
-          <common.Separator />
-          {/* <common.Entity
-            entityColumns={[
+          {/* <common.Table
+            tableColumns={[
               { name: 'name', displayName: 'Name' },
               { name: 'schema', displayName: 'Schema' },
               {

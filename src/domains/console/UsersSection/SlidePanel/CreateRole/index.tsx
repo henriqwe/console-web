@@ -40,7 +40,7 @@ export function CreateRole() {
           headers: {
             'Content-Type': 'application/json',
             'X-TenantID': utils.getCookie('X-TenantID') as string,
-            Authorization: `Bearer ${utils.getCookie('admin_access_token')}`
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
           }
         }
       )

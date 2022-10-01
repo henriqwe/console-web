@@ -25,7 +25,9 @@ export function SchemaManagerSection() {
     breadcrumbPagesData,
     setBreadcrumbPages,
     setShowCreateEntitySection,
-    currentTabSchema
+    currentTabSchema,
+    selectedTabUsersAndRoles,
+    setSelectedTabUsersAndRoles
   } = consoleSection.useSchemaManager()
   const [loading, setLoading] = useState(true)
 
@@ -125,6 +127,15 @@ export function SchemaManagerSection() {
                 Deploy
               </common.Buttons.WhiteOutline>
             )}
+            {currentTabSchema === 'Users and Roles' && (
+              <div className={` w-1/3 `}>
+                <common.Tabs
+                  tabs={[{ name: 'Accounts' }, { name: 'Roles' }]}
+                  selectedTab={selectedTabUsersAndRoles}
+                  setSelectedTab={setSelectedTabUsersAndRoles}
+                />
+              </div>
+            )}
           </div>
           <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
             <common.Tabs
@@ -150,7 +161,7 @@ export function SchemaManagerSection() {
             ) : currentTabSchema === 'Modeler' ? (
               <consoleSection.Modeler />
             ) : currentTabSchema === 'Users and Roles' ? (
-              <div />
+              <consoleSection.UsersSection />
             ) : (
               <div />
             )}
