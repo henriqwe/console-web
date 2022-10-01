@@ -1,5 +1,4 @@
-/* eslint-disable react/no-unknown-property */
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -26,7 +25,7 @@ const FlowView = ({ schema }: FlowViewProps) => {
   // Will be more complex but gives us better control over how they're handled, and makes storing locations EZ.
   // https://reactflow.dev/docs/guides/migrate-to-v10/#11-controlled-nodes-and-edges
 
-  const { nodes: nodes_ycl, edges: edges_ycl } = useMemo(
+  const { nodes, edges } = useMemo(
     () =>
       schema
         ? schemaToElements(schema)
@@ -37,8 +36,8 @@ const FlowView = ({ schema }: FlowViewProps) => {
   return (
     <>
       <ReactFlow
-        defaultNodes={nodes_ycl}
-        defaultEdges={edges_ycl}
+        defaultNodes={nodes}
+        defaultEdges={edges}
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
         minZoom={0.1}

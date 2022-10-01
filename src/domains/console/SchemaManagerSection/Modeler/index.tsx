@@ -18,9 +18,7 @@ export function Modeler() {
   const [schema, setSchema] = useState<schemaType>()
   const update = async () => {
     const { schema: _schema } = utils.ycl_transpiler.parse(text, false)
-    console.log('_schema', _schema)
     if (Object.keys(_schema).length > 0) {
-      console.log('entrou')
       setSchema(_schema as schemaType)
     }
   }

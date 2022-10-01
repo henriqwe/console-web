@@ -39,16 +39,6 @@ const generateEntityNode = (
     }
   })
 
-  console.group('generateEntityNode')
-  console.log('name', name)
-  console.log('attributes', attributes)
-  console.log('relations', relations)
-  console.log('relationType', relationType)
-  console.log('__relationsTarget', relationsTarget)
-  console.log('__relationsSource', relationsSource)
-
-  console.groupEnd()
-
   const obj = {
     id: name,
     type: 'entity',
@@ -109,7 +99,7 @@ const generateEntityNode = (
   return obj
 }
 
-const generateRelationEdge_ycl = ([relationName, { type, fields }]: [
+const generateRelationEdge = ([relationName, { type, fields }]: [
   string,
   Relation
 ]): Edge[] => {
@@ -190,15 +180,6 @@ export const schemaToElements = (data: schemaType): DMMFToElementsResult => {
   const relations: Readonly<Record<string, Relation>> =
     Object.fromEntries(intermediate2)
 
-  console.group('-----------------schemaToElements')
-  console.log('data.entities', data.entities)
-
-  console.log('relationFields', relationFields)
-  console.log('intermediate2', intermediate2)
-  console.log('relations', relations)
-
-  console.groupEnd()
-
   // console.log("relations", relations);
   // const implicitManyToMany = Object.entries(relations)
   //   .filter(([, { type }]) => type === "m-n")
@@ -226,7 +207,6 @@ export const schemaToElements = (data: schemaType): DMMFToElementsResult => {
   //       } as DMMF.Model)
   //   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   for (const entity of data.entities)
     for (const attribute of entity.attributes)
       if (entitiesName.includes(attribute._conf.type.value))
@@ -238,7 +218,7 @@ export const schemaToElements = (data: schemaType): DMMFToElementsResult => {
         generateEntityNode(entity, relations)
       )
     ],
-    edges: [...Object.entries(relations).flatMap(generateRelationEdge_ycl)]
+    edges: [...Object.entries(relations).flatMap(generateRelationEdge)]
   }
 }
 

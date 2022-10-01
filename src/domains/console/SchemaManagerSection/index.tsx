@@ -116,13 +116,14 @@ export function SchemaManagerSection() {
               </common.Buttons.WhiteOutline>
             )}
             {currentTabSchema === 'Modeler' && (
-              <common.Buttons.GreenOutline
+              <common.Buttons.WhiteOutline
                 type="button"
                 onClick={() => null}
-                icon={<CheckCircleIcon className="w-4 h-4 " />}
+                icon={<CheckCircleIcon className="w-4 h-4 !text-green-700 " />}
+                disabled
               >
                 Deploy
-              </common.Buttons.GreenOutline>
+              </common.Buttons.WhiteOutline>
             )}
           </div>
           <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
