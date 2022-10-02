@@ -2,8 +2,6 @@ import cc from 'classcat'
 import React, { useState } from 'react'
 import { Handle, Position } from 'react-flow-renderer'
 
-// import styles from './Node.module.scss'
-
 import { EnumNodeData } from './types'
 
 const MAX_VALUES = 12
@@ -42,7 +40,9 @@ const EnumNode = ({ data }: EnumNodeProps) => {
         {data.values.map((val) => (
           <tr
             key={val}
-            // className={styles.row}
+            className={
+              '!first:!border-4 !first:!border-red-500 dark:bg-gray-700'
+            }
           >
             <td className="flex p-2 font-mono border-t-2 border-gray-300">
               {val}
@@ -67,7 +67,7 @@ const EnumNode = ({ data }: EnumNodeProps) => {
       )}
 
       <Handle
-        // className={cc([styles.handle, styles.bottom])}
+        className={'!border-4 !h-4 !w-4 bg-gray-700'}
         type="source"
         position={Position.Bottom}
         isConnectable={false}

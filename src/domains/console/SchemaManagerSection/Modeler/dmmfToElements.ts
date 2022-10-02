@@ -33,7 +33,7 @@ const generateEntityNode = (
       relationsSource.push({ ...relations[key], name: key })
   })
   const relationsTarget = attributes.filter((attribute) => {
-    if (relations[attribute._conf.type.value] as Relation | undefined) {
+    if (relations[attribute?._conf.type.value] as Relation | undefined) {
       relationType.push(relations[attribute._conf.type.value].type)
       return true
     }
@@ -109,21 +109,19 @@ const generateRelationEdge = ([relationName, { type, fields }]: [
     label: relationName,
     data: { relationType: type }
   }
-
-  if (type === 'm-n')
+  const source = fields[0]
+  const target = fields[1]
+  if (type === 'm-n') {
     return fields.map((col, i) => ({
       ...base,
-      id: `e${relationName}-${col.tableName}-${col.type}`,
-      source: col.tableName,
+      id: `e${relationName}-${col.name}`,
+      source: col.name,
       target: `_${relationName}`,
-      sourceHandle: `${col.tableName}-${col.relationName}-${col.name}`,
-      targetHandle: `_${relationName}-${letters[i]}`
+      sourceHandle: `${source.name}-${relationName}-${target.name}`,
+      targetHandle: `_${target.name}-${relationName}`
     }))
-  else if (type === '1-n') {
-    // console.log("fields", fields);
-    const source = fields[0]
-    const target = fields[1]
-
+  }
+  if (type === '1-n') {
     return [
       {
         ...base,
@@ -133,19 +131,17 @@ const generateRelationEdge = ([relationName, { type, fields }]: [
         targetHandle: `${target.name}-${relationName}`
       }
     ]
-  } else
-    return [
-      {
-        ...base,
-        source: fields[0].tableName,
-        target: fields[0].type,
-        sourceHandle: `${fields[0].tableName}-${relationName}-${fields[0].name}`,
-        targetHandle: `${fields[0].type}-${relationName}`
-      }
-    ]
+  }
+  return [
+    {
+      ...base,
+      source: source.name,
+      target: target.name,
+      sourceHandle: `${source.name}-${relationName}-${target.name}`,
+      targetHandle: `${target.name}-${relationName}`
+    }
+  ]
 }
-
-// issue, need to look into it a bit better at some point.
 
 export const schemaToElements = (data: schemaType): DMMFToElementsResult => {
   const entitiesName = data.entities.map((entity) => entity.name)
@@ -180,38 +176,13 @@ export const schemaToElements = (data: schemaType): DMMFToElementsResult => {
   const relations: Readonly<Record<string, Relation>> =
     Object.fromEntries(intermediate2)
 
-  // console.log("relations", relations);
-  // const implicitManyToMany = Object.entries(relations)
-  //   .filter(([, { type }]) => type === "m-n")
-  //   .map(
-  //     ([relationName, { fields }]) =>
-  //       ({
-  //         name: `_${relationName}`,
-  //         dbName: null,
-  //         fields: fields.map((field, i) => ({
-  //           name: letters[i],
-  //           kind: "scalar",
-  //           isList: false,
-  //           isRequired: true,
-  //           // CBA to fuck with some other shit in the ModelNode, so this is a
-  //           // "hack" to get the corresponding letter on the handle ID. In the
-  //           // future it'd probably be a better idea to make __ALL__ handles
-  //           // take the shape of `table-columnName-relationName/foreignName`????
-  //           relationName: letters[i],
-  //           hasDefaultValue: false,
-  //           // this is gonna break on composite ids i think lol
-  //           type: data.models
-  //             .find((m) => m.name === field.type)
-  //             ?.fields.find((x) => x.isId)?.type,
-  //         })),
-  //       } as DMMF.Model)
-  //   );
-
-  for (const entity of data.entities)
-    for (const attribute of entity.attributes)
-      if (entitiesName.includes(attribute._conf.type.value))
+  for (const entity of data.entities) {
+    for (const attribute of entity.attributes) {
+      if (entitiesName.includes(attribute._conf.type.value)) {
         attribute.relation = true
-
+      }
+    }
+  }
   return {
     nodes: [
       ...[...data.entities].map((entity) =>
@@ -235,9 +206,13 @@ export function groupByRelationship({
     let entityRelation2: entitiesType
 
     for (const entity of entities) {
-      if (entity.name === relation.entityName) entityRelation1 = entity
+      if (entity.name === relation.entityName) {
+        entityRelation1 = entity
+      }
 
-      if (entity.name === relation._conf.type.value) entityRelation2 = entity
+      if (entity.name === relation._conf.type.value) {
+        entityRelation2 = entity
+      }
     }
     objRelation[relation.name] = [entityRelation1, entityRelation2]
   }

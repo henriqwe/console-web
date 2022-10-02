@@ -25,7 +25,6 @@ export function Modeler() {
   useDebounce(update, 1000, [text])
 
   useEffect(() => {
-    console.log('documentationValue', documentationValue)
     if (documentationValue) {
       setText(documentationValue)
     }
