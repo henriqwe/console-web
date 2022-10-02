@@ -1,5 +1,6 @@
 import * as common from 'common'
-import * as dashboard from 'domains/dashboard'
+import Profile from './Profile'
+import Billing from './Billing'
 import { useState } from 'react'
 
 export function MyAccount() {
@@ -16,7 +17,7 @@ export function MyAccount() {
           />
         </div>
       </div>
-      <div className="z-20 flex flex-col w-4/6 gap-y-8">
+      <div className="z-20 flex flex-col w-full mx-10 lg:w-4/6 gap-y-8">
         <div className="flex flex-col">
           <p className="text-xs dark:text-gray-500">
             My Account <span className="ml-1"> {'>'} </span>
@@ -31,7 +32,7 @@ export function MyAccount() {
             setSelectedTab={setSelectedTab}
             tabs={[{ name: 'Profile' }, { name: 'Billing' }]}
           />
-          <section className="flex dark:bg-menu-primary bg-white">
+          <section className="flex dark:bg-menu-primary bg-white overflow-hidden rounded-lg">
             <div className="flex flex-col py-10 w-full">
               {selectedTab.name === 'Profile' ? <Profile /> : <Billing />}
             </div>
@@ -39,26 +40,5 @@ export function MyAccount() {
         </div>
       </div>
     </div>
-  )
-}
-
-function Profile() {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-10 w-full">
-      <div className="flex flex-col gap-y-4 px-4">
-        <p className="dark:text-text-primary text-xl">My Info</p>
-      </div>
-      <div className="flex flex-col gap-y-4 px-4">
-        <p className="dark:text-text-primary text-xl">Address</p>
-      </div>
-    </div>
-  )
-}
-
-function Billing() {
-  return (
-    <p className="px-4 text-2xl font-semibold text-gray-900 dark:text-white">
-      Billing
-    </p>
   )
 }
