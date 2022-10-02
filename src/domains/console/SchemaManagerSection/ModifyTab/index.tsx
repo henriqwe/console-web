@@ -202,7 +202,7 @@ function AttributeForm({
   }
   return (
     <form
-      className="grid grid-cols-12 gap-4 px-4 py-5 bg-white dark:bg-menu-primary border border-gray-300 rounded-lg"
+      className="grid grid-cols-12 gap-4 px-4 py-5 bg-white border border-gray-300 rounded-lg dark:bg-menu-primary"
       onSubmit={handleSubmit(Submit)}
     >
       <Controller
@@ -222,13 +222,13 @@ function AttributeForm({
 
       <Controller
         name={'Type'}
-        defaultValue={{ name: 'String', value: 'String' }}
         control={control}
         render={({ field: { onChange, value } }) => (
           <div className="col-span-2">
             <common.Select
               options={[
                 { name: 'String', value: 'String' },
+                { name: 'Text', value: 'Text' },
                 { name: 'Integer', value: 'Integer' },
                 { name: 'Long', value: 'Long' },
                 { name: 'Boolean', value: 'Boolean' },
@@ -237,6 +237,7 @@ function AttributeForm({
               ]}
               value={value}
               onChange={onChange}
+              placeholder="Type"
             />
           </div>
         )}

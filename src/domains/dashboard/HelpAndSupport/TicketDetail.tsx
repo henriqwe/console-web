@@ -8,32 +8,23 @@ import { CheckIcon, ReplyIcon } from '@heroicons/react/outline'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as dashboard from 'domains/dashboard'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { format } from 'date-fns'
 
 type FormData = {
   Content: string
 }
 
 type Message = {
-  text: string
+  content: string
   date: string
-  mine: boolean
+  createdbyuser: boolean
 }
 
 export function TicketDetail() {
   const [loading, setLoading] = useState(false)
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, distinctio voluptate illo inventore reprehenderit aut repellendus est corrupti veniam molestiae perferendis nam officiis in repudiandae tempore mollitia. Facilis, culpa assumenda.',
-      date: new Date().toLocaleString('pt-BR'),
-      mine: false
-    },
-    {
-      text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, distinctio voluptate illo inventore reprehenderit aut repellendus est corrupti veniam molestiae perferendis nam officiis in repudiandae tempore mollitia. Facilis, culpa assumenda.',
-      date: new Date().toLocaleString('pt-BR'),
-      mine: true
-    }
-  ])
+  const [reloadMessages, setReloadMessages] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([])
 
   const { selectedTicket, setSelectedTicket } = dashboard.useData()
 
@@ -43,26 +34,85 @@ export function TicketDetail() {
     formState: { errors }
   } = useForm()
 
-  function createTicketMessage(data: FormData) {
+  async function createTicketMessage(formData: FormData) {
     try {
       setLoading(true)
-      if (!data.Content || data.Content === '') {
+      if (!formData.Content || formData.Content === '') {
         throw new Error('Cannot create a empty message')
       }
-      setMessages([
-        ...messages,
-        {
-          date: new Date().toLocaleString('pt-BR'),
-          mine: true,
-          text: data.Content
+      let currentDate = new Date()
+      const offset = currentDate.getTimezoneOffset()
+      currentDate = new Date(currentDate.getTime() - offset * 60 * 1000)
+
+      await fetch('https://api.ycodify.com/v0/persistence/s/no-ac', {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'CREATE',
+          data: [
+            {
+              ticketsmessages: {
+                date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms'),
+                createdbyuser: true,
+                content: formData.Content,
+                ticket: selectedTicket?.id
+              }
+            }
+          ]
+        }),
+        headers: {
+          'X-TenantAC': 'b44f7fc8-e2b7-3cc8-9a3d-04b3dac69886',
+          'X-TenantID': '9316c346-4db5-35aa-896f-f61fe1a7d9d8',
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
         }
-      ])
+      })
+      setReloadMessages(!reloadMessages)
     } catch (err) {
       utils.showError(err)
     } finally {
       setLoading(false)
     }
   }
+
+  async function loadMessages() {
+    try {
+      const result = await fetch(
+        'https://api.ycodify.com/v0/persistence/s/no-ac',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'READ',
+            data: [
+              {
+                ticketsmessages: {
+                  ticket: {
+                    tickets: {
+                      id: selectedTicket?.id
+                    }
+                  }
+                }
+              }
+            ]
+          }),
+          headers: {
+            'X-TenantAC': 'b44f7fc8-e2b7-3cc8-9a3d-04b3dac69886',
+            'X-TenantID': '9316c346-4db5-35aa-896f-f61fe1a7d9d8',
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          }
+        }
+      )
+
+      const data = await result.json()
+      setMessages(data?.[0]?.ticketsmessages ?? [])
+    } catch (err) {
+      utils.showError(err)
+    }
+  }
+
+  useEffect(() => {
+    loadMessages()
+  }, [reloadMessages])
 
   return (
     <form
@@ -74,7 +124,7 @@ export function TicketDetail() {
           <div>
             <div className="z-20 flex items-center gap-2">
               <p className="text-xs leading-none dark:text-gray-400">
-                Ticket {selectedTicket?.ticketId}
+                Ticket {selectedTicket?.id}
               </p>
               <div
                 className="flex items-center gap-1 px-1 text-gray-300 bg-gray-600 rounded-sm cursor-pointer text-super-tiny hover:bg-gray-600 hover:text-gray-200"
@@ -90,19 +140,19 @@ export function TicketDetail() {
 
           <p className="text-lg font-bold">{selectedTicket?.title}</p>
 
-          <p className="text-sm">{selectedTicket?.message}</p>
+          <p className="text-sm">{selectedTicket?.content}</p>
         </common.Card>
 
         {messages.map((message) => (
           <div
             className={`p-4 rounded-lg ${
-              message.mine
+              message.createdbyuser
                 ? '!rounded-tr-none dark:bg-menu-primary bg-white'
                 : '!rounded-tl-none dark:bg-menuItem-primary bg-green-50'
             }`}
             key={message.date}
           >
-            <p className="dark:text-white">{message.text}</p>
+            <p className="dark:text-white">{message.content}</p>
             <p className="mt-1 text-xs dark:text-gray-400">{message.date}</p>
           </div>
         ))}
