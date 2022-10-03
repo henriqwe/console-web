@@ -30,12 +30,6 @@ export function Template({ children }: TemplateProps) {
       current: currentSection === 'projects'
     },
     {
-      name: 'Billing',
-      onClick: () => setCurrentSection('billing'),
-      icon: CashIcon,
-      current: currentSection === 'billing'
-    },
-    {
       name: 'Tutorial And Docs',
       onClick: () => setCurrentSection('tutorialsAndDocs'),
       icon: BookOpenIcon,

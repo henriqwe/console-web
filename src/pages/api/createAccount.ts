@@ -19,11 +19,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: 'Basic '.concat(
-              Buffer.from('yc:c547d72d-607c-429c-81e2-0baec7dd068b').toString(
-                'base64'
-              )
-            )
+            'X-TenantID': '38bc66c9-dd2d-3ea5-8eb3-51a4f84469'
           }
         }
       )

@@ -31,12 +31,7 @@ type DataContextProps = {
   setSelectedTicket: Dispatch<SetStateAction<Tickets | undefined>>
 }
 
-type Sections =
-  | 'projects'
-  | 'helpAndSupport'
-  | 'tutorialsAndDocs'
-  | 'myAccount'
-  | 'billing'
+type Sections = 'projects' | 'helpAndSupport' | 'tutorialsAndDocs' | 'myAccount'
 
 type SlideType = 'createProject' | 'viewProject' | 'createTicket'
 type SlideSize = 'normal' | 'halfPage' | 'fullPage'
