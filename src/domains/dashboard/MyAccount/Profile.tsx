@@ -16,7 +16,7 @@ type formProps = {
   }
 }
 
-const Profile = () => {
+export function Profile() {
   const [form, setForm] = useState<formProps>({
     myInfo: {
       email: '',
@@ -39,7 +39,7 @@ const Profile = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid grid-cols-1 lg:grid-cols-2 gap-y-10 w-full"
+      className="grid grid-cols-1 md:grid-cols-2 gap-y-10 w-full"
     >
       {/* os valores padrão dos campos usuário (username, email) e endereço vêm da página de login, usando a senha que o usuário coloca para logar, e  */}
       <div className="flex flex-col gap-y-4 px-4">
@@ -102,7 +102,7 @@ const Profile = () => {
             }
             value={form.address.address}
           />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2 gap-y-4">
             <Common.Input
               placeholder="Country"
               label="Country"
@@ -129,7 +129,7 @@ const Profile = () => {
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2 w-full justify-evenly">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2 w-full justify-evenly gap-y-4">
             <Common.Input
               placeholder="City"
               label="City"
@@ -165,5 +165,3 @@ const Profile = () => {
     </form>
   )
 }
-
-export default Profile

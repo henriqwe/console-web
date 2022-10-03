@@ -109,7 +109,7 @@ export function Projects() {
           />
         </div>
       </div>
-      <div className="z-20 flex flex-col w-4/6 gap-y-8">
+      <div className="z-20 flex flex-col w-full gap-y-8">
         <section className="flex justify-between w-full mx-auto">
           <div className="flex">
             <h1 className="pr-4 mr-1 text-2xl font-semibold text-gray-900 border-r dark:text-text-primary border-r-gray-300 dark:border-r-gray-600">
@@ -149,7 +149,7 @@ export function Projects() {
           </div>
         </section>
 
-        <section className="flex flex-col w-full gap-8 mx-auto">
+        <section className="grid grid-cols-1 xl:grid-cols-2 w-full gap-6 mx-auto">
           {loadingSchemas ? (
             <div className="flex flex-col items-center justify-center gap-2 mt-32">
               <div className="w-20 h-20 dark:text-text-primary">
@@ -195,83 +195,85 @@ export function Project({
   const [showCopyText, setShowCopyText] = useState(false)
   const router = useRouter()
   return (
-    <common.Card
-      className="flex p-6 bg-white border shadow-sm dark:bg-menu-primary dark:border-gray-700"
-      key={schema.createdat}
-    >
-      <div className="grid items-center justify-between flex-1 grid-cols-4 gap-4">
-        <div>
-          <p className="text-2xl dark:text-text-primary">{schema.name}</p>
-          <p className="text-xs text-gray-600 dark:text-text-tertiary">
-            Standard
-          </p>
-        </div>
-        <div className="dark:text-text-primary">
-          <p>Project secret: </p>
-          <div className="relative flex w-full h-full">
-            <input
-              disabled
-              value={schema.tenantAc}
-              type="password"
-              className="w-40 text-xs bg-transparent dark:text-text-tertiary"
-            />
-            <CopyToClipboard
-              text="Copy to clipboard"
-              onCopy={() => {
-                setShowCopyText(true)
-                setTimeout(() => {
-                  setShowCopyText(false)
-                }, 800)
+    <div className="flex flex-col gap-y-3">
+      <div className="flex gap-x-3 items-center">
+        <p className="text-2xl dark:text-text-primary">{schema.name}</p>
+        <span className="h-full border-r border-r-gray-300 dark:border-r-gray-600" />
+        <p className="text-xs text-gray-600 dark:text-text-tertiary">
+          Standard
+        </p>
+      </div>
+      <common.Card
+        className="flex p-6 bg-white border shadow-sm dark:bg-menu-primary dark:border-gray-700"
+        key={schema.createdat}
+      >
+        <div className="grid items-center justify-between flex-1 grid-cols-5 gap-4">
+          <div className="dark:text-text-primary col-span-2">
+            <p>Project secret: </p>
+            <div className="relative flex w-full h-full">
+              <input
+                disabled
+                value={schema.tenantAc}
+                type="password"
+                className="w-40 text-xs bg-transparent dark:text-text-tertiary truncate"
+              />
+              <CopyToClipboard
+                text="Copy to clipboard"
+                onCopy={() => {
+                  setShowCopyText(true)
+                  setTimeout(() => {
+                    setShowCopyText(false)
+                  }, 800)
+                }}
+              >
+                <div>
+                  {showCopyText && (
+                    <span className="absolute right-0 bottom-5">Copied!</span>
+                  )}
+                  <DocumentDuplicateIcon
+                    className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
+                    onClick={() =>
+                      navigator.clipboard.writeText(schema.tenantAc)
+                    }
+                  />
+                </div>
+              </CopyToClipboard>
+            </div>
+          </div>
+          <div className="flex items-center justify-start flex-1 col-span-2">
+            <div className="py-2">
+              <p className="text-sm dark:text-text-primary">Traffic: </p>
+              <p className="text-xs text-gray-600 dark:text-text-tertiary">
+                50.000 requests per day
+              </p>
+            </div>
+          </div>
+
+          <div className="flex justify-start lg:justify-end">
+            <button
+              onClick={() => {
+                // if (
+                //   utils.getCookie('X-TenantID')?.split('@')[1] !== schema.name
+                // ) {
+                //   utils.removeCookie('X-TenantID')
+                //   utils.removeCookie('admin_access_token')
+                // }
+                utils.setCookie('X-TenantID', schema.tenantId)
+                utils.setCookie('X-TenantAC', schema.tenantAc)
+                router.push(`${routes.console}/${schema.name}`)
               }}
             >
-              <div>
-                {showCopyText && (
-                  <span className="absolute right-0 bottom-5">Copied!</span>
-                )}
-                <DocumentDuplicateIcon
-                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
-                  onClick={() => navigator.clipboard.writeText(schema.tenantAc)}
-                />
-              </div>
-            </CopyToClipboard>
-          </div>
-        </div>
-        <div className="flex items-center justify-around flex-1 col-span-1">
-          <div className="p-2">
-            <p className="text-sm dark:text-text-primary">Traffic: </p>
-            <p className="text-xs text-gray-600 dark:text-text-tertiary">
-              50.000 requests per day
-            </p>
-          </div>
-        </div>
+              <PlayIcon className="w-6 h-6 text-iconGreen" />
+            </button>
 
-        <div className="flex items-end justify-end">
-          <button
-            className="px-1 py-1"
-            onClick={() => {
-              // if (
-              //   utils.getCookie('X-TenantID')?.split('@')[1] !== schema.name
-              // ) {
-              //   utils.removeCookie('X-TenantID')
-              //   utils.removeCookie('admin_access_token')
-              // }
-              utils.setCookie('X-TenantID', schema.tenantId)
-              utils.setCookie('X-TenantAC', schema.tenantAc)
-              router.push(`${routes.console}/${schema.name}`)
-            }}
-          >
-            <PlayIcon className="w-6 h-6 text-iconGreen" />
-          </button>
-
-          <button
-            className="px-1 py-1"
-            onClick={() => {
-              onConfigClick(schema)
-            }}
-          >
-            <CogIcon className="w-6 h-6 text-gray-600 dark:text-text-secondary" />
-          </button>
-          {/* <button
+            <button
+              onClick={() => {
+                onConfigClick(schema)
+              }}
+            >
+              <CogIcon className="w-6 h-6 text-gray-600 dark:text-text-secondary" />
+            </button>
+            {/* <button
           className="px-1 py-1 text-white bg-indigo-500 rounded-lg"
           onClick={() => {
             downloadSchema(schema)
@@ -279,8 +281,9 @@ export function Project({
         >
           <DownloadIcon className="w-6 h-6 text-white" />
         </button> */}
+          </div>
         </div>
-      </div>
-    </common.Card>
+      </common.Card>
+    </div>
   )
 }

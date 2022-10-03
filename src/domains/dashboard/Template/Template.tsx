@@ -178,7 +178,7 @@ export function Template({ children }: TemplateProps) {
             </div>
           )}
         </div>
-        <main className="h-full pt-10 pb-8">{children}</main>
+        <main className="h-full px-8 md:px-16 pt-10 pb-8">{children}</main>
       </div>
     </div>
   )
