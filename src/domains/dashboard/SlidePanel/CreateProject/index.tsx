@@ -5,12 +5,8 @@ import {
   SubmitHandler,
   useForm
 } from 'react-hook-form'
-import { Dispatch, SetStateAction, useState } from 'react'
-import {
-  CheckCircleIcon,
-  CheckIcon,
-  UploadIcon
-} from '@heroicons/react/outline'
+import { useState } from 'react'
+import { CheckIcon, UploadIcon } from '@heroicons/react/outline'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as ThemeContext from 'contexts/ThemeContext'
@@ -18,41 +14,19 @@ import * as dashboard from 'domains/dashboard'
 import { dracula } from '@uiw/codemirror-theme-dracula'
 import { EditorView } from '@codemirror/view'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useRouter } from 'next/router'
-import { routes } from 'domains/routes'
-
-const plans = {
-  Free: {
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
-    features: [
-      'Ambiente de testes',
-      'Modelo de dados ilimitado',
-      'Elasticidade ilimitada',
-      'Tráfego limitado a 500 MB/dia',
-      'Armazenamento limitado a 1 GB',
-      'Sem custos adicionais'
-    ]
-  },
-  Pro: {
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perferendis possimus ipsam harum alias quidem recusandae iusto quis cupiditate maiores fugiat, optio',
-    features: [
-      'Ambiente de produção',
-      'Modelo de dados ilimitado',
-      'Elasticidade ilimitada',
-      'Tráfego de dados ilimitado',
-      'Armazenamento limitado a 10 GB',
-      'Sem custos adicionais'
-    ]
-  }
-}
 
 export function Create() {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [submittedSchema, setSubmittedSchema] = useState<string>()
-  const { createProjectSchema, setReload, reload } = dashboard.useData()
+  const {
+    createProjectSchema,
+    setReload,
+    reload,
+    setCreatedSchemaName,
+    setAdminUser,
+    setSlideSize,
+    setSlideType
+  } = dashboard.useData()
   const { isDark } = ThemeContext.useTheme()
 
   const {
@@ -109,7 +83,21 @@ export function Create() {
             'success'
           )
 
-          router.push(routes.console + '/' + schemaParsed.schema.name)
+          const AdminAccount = await utils.api.post(
+            utils.apiRoutes.createAdminAccount(data.ProjectName),
+            {},
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization: `Bearer ${utils.getCookie('access_token')}`
+              }
+            }
+          )
+          setAdminUser(AdminAccount.data)
+          setCreatedSchemaName(data.ProjectName)
+          setSlideType('ViewAdminUser')
+          setSlideSize('normal')
         })
 
         return
@@ -158,6 +146,20 @@ export function Create() {
         }
       )
 
+      const AdminAccount = await utils.api.post(
+        utils.apiRoutes.createAdminAccount(data.ProjectName),
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
+      setAdminUser(AdminAccount.data)
+      setCreatedSchemaName(data.ProjectName)
+
       utils.setCookie('X-TenantID', schemaData.tenantId)
       utils.setCookie('X-TenantAC', schemaData.tenantAc)
       setReload(!reload)
@@ -165,7 +167,8 @@ export function Create() {
         `Project ${data.ProjectName} created successfully`,
         'success'
       )
-      router.push(routes.console + '/' + data.ProjectName)
+      setSlideType('ViewAdminUser')
+      setSlideSize('normal')
     } catch (err: any) {
       utils.showError(err)
     } finally {

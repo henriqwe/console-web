@@ -29,11 +29,19 @@ type DataContextProps = {
   setTickets: Dispatch<SetStateAction<Tickets[]>>
   selectedTicket?: Tickets
   setSelectedTicket: Dispatch<SetStateAction<Tickets | undefined>>
+  createdSchemaName?: string
+  setCreatedSchemaName: Dispatch<SetStateAction<string | undefined>>
+  adminUser?: AdminUser
+  setAdminUser: Dispatch<SetStateAction<AdminUser | undefined>>
 }
 
 type Sections = 'projects' | 'helpAndSupport' | 'tutorialsAndDocs' | 'myAccount'
 
-type SlideType = 'createProject' | 'viewProject' | 'createTicket'
+type SlideType =
+  | 'createProject'
+  | 'viewProject'
+  | 'createTicket'
+  | 'ViewAdminUser'
 type SlideSize = 'normal' | 'halfPage' | 'fullPage'
 
 type Schemas = {
@@ -57,7 +65,10 @@ type Tickets = {
 type ProviderProps = {
   children: ReactNode
 }
-
+type AdminUser = {
+  password: string
+  username: string
+}
 export const DataContext = createContext<DataContextProps>(
   {} as DataContextProps
 )
@@ -72,6 +83,8 @@ export const DataProvider = ({ children }: ProviderProps) => {
   const [selectedSchema, setSelectedSchema] = useState<Schemas>()
   const [tickets, setTickets] = useState<Tickets[]>([])
   const [selectedTicket, setSelectedTicket] = useState<Tickets>()
+  const [createdSchemaName, setCreatedSchemaName] = useState<string>()
+  const [adminUser, setAdminUser] = useState<AdminUser>()
 
   const createProjectSchema = (submittedSchema?: string) => {
     return yup.object().shape({
@@ -114,7 +127,11 @@ export const DataProvider = ({ children }: ProviderProps) => {
         tickets,
         setTickets,
         selectedTicket,
-        setSelectedTicket
+        setSelectedTicket,
+        createdSchemaName,
+        setCreatedSchemaName,
+        adminUser,
+        setAdminUser
       }}
     >
       {children}

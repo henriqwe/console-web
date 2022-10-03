@@ -21,6 +21,7 @@ export { AccordionGroup } from './AccordionGroup'
 export { Toggle } from './Toggle'
 export { ToggleTheme } from './ToggleTheme'
 export { EditableTable } from './EditableTable'
+export { Alert } from './Alert'
 
 export * as illustrations from './Ilustrations'
 export * as icons from './Icons'
