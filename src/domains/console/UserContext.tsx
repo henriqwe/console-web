@@ -16,8 +16,10 @@ type UserContextProps = {
   logUserSchema: yup.AnyObjectSchema
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
-  slideType: 'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT'
-  setSlideType: Dispatch<SetStateAction<'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT'>>
+  slideType: 'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT' | 'ADMINLOGIN'
+  setSlideType: Dispatch<
+    SetStateAction<'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT' | 'ADMINLOGIN'>
+  >
   roleSchema: yup.AnyObjectSchema
   createUserSchema: yup.AnyObjectSchema
   selectedUser?: User

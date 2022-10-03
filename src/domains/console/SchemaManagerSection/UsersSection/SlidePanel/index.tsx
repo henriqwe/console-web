@@ -3,6 +3,7 @@ import * as common from 'common'
 import { CreateRole } from './CreateRole'
 import { CreateAccount } from './CreateAccount'
 import { UpdateAccount } from './UpdateAccount'
+import { AdminLogin } from './AdminLogin'
 
 export function UserSlidePanel() {
   const { setOpenSlide, openSlide, slideType } = consoleData.useUser()
@@ -17,6 +18,10 @@ export function UserSlidePanel() {
     case 'ROLE':
       title = 'Create Role'
       content = <CreateRole />
+      break
+    case 'ADMINLOGIN':
+      title = 'Authorization'
+      content = <AdminLogin />
       break
     case 'UPDATEACCOUNT':
       title = 'Update Account'

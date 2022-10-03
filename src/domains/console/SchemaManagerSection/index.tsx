@@ -130,7 +130,7 @@ export function SchemaManagerSection() {
             {currentTabSchema === 'Users and Roles' && (
               <div className={` w-1/3 `}>
                 <common.Tabs
-                  tabs={[{ name: 'Accounts' }, { name: 'Roles' }]}
+                  tabs={[{ name: 'Users' }, { name: 'Roles' }]}
                   selectedTab={selectedTabUsersAndRoles}
                   setSelectedTab={setSelectedTabUsersAndRoles}
                 />

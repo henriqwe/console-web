@@ -3,13 +3,15 @@ import * as consoleData from 'domains/console'
 import * as utils from 'utils'
 import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
-import { PlusIcon } from '@heroicons/react/outline'
+import { CheckIcon, LinkIcon, PlusIcon } from '@heroicons/react/outline'
+import * as UserContext from 'contexts/UserContext'
 
-export function AccountTab() {
+export function UsersTab() {
   const [loading, setLoading] = useState(true)
   const [entityData, setEntityData] = useState()
   const { selectedEntity } = consoleData.useSchemaManager()
   const { reload, setOpenSlide, setSlideType } = consoleData.useUser()
+  const { user, setUser } = UserContext.useUser()
 
   async function loadData() {
     try {
@@ -33,16 +35,33 @@ export function AccountTab() {
   }
 
   useEffect(() => {
-    setEntityData(undefined)
-    setLoading(true)
-    loadData()
-  }, [selectedEntity, reload])
-
+    if (user?.adminSchemaPassword) {
+      setEntityData(undefined)
+      setLoading(true)
+      loadData()
+    }
+  }, [selectedEntity, reload, user?.adminSchemaPassword])
+  if (!user?.adminSchemaPassword) {
+    return (
+      <div className="flex  p-8 justify-between ">
+        You need admin authorization to access this section
+        <common.Buttons.WhiteOutline
+          icon={<CheckIcon className="w-3 h-3" />}
+          onClick={() => {
+            setOpenSlide(true)
+            setSlideType('ADMINLOGIN')
+          }}
+        >
+          Authorization
+        </common.Buttons.WhiteOutline>
+      </div>
+    )
+  }
   return (
     <div
       className={`flex flex-col ${
         loading ? 'items-center justify-center' : 'items-start'
-      } h-full bg-white rounded-b-lg`}
+      } h-full  rounded-b-lg`}
     >
       {loading ? (
         <div className="flex flex-col items-center justify-center gap-4">
@@ -53,18 +72,28 @@ export function AccountTab() {
           <p className="text-lg font-bold text-gray-700">Loading entity data</p>
         </div>
       ) : (
-        <div className="flex flex-col w-full h-full gap-2 bg-gray-100 rounded-b-lg ">
-          <div className="flex items-center justify-between w-full px-8 pt-2">
-            <h2 className="text-lg">Accounts</h2>
-            <common.Buttons.Blue
+        <div className="flex flex-col w-full h-full gap-2  rounded-b-lg ">
+          <div className="flex items-center justify-end w-full px-8 py-2 gap-8">
+            <common.Buttons.WhiteOutline
               type="button"
               onClick={() => {
                 setOpenSlide(true)
                 setSlideType('ACCOUNT')
               }}
+              icon={<LinkIcon className="w-5 h-5" />}
             >
-              <PlusIcon className="w-5 h-5" />
-            </common.Buttons.Blue>
+              Associate
+            </common.Buttons.WhiteOutline>
+            <common.Buttons.WhiteOutline
+              type="button"
+              onClick={() => {
+                setOpenSlide(true)
+                setSlideType('ACCOUNT')
+              }}
+              icon={<PlusIcon className="w-5 h-5" />}
+            >
+              Create
+            </common.Buttons.WhiteOutline>
           </div>
           <common.Table
             tableColumns={[

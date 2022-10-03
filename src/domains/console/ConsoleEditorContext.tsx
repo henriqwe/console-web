@@ -157,9 +157,6 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   })
 
   async function loadParser() {
-    console.log('utils.getCookie', utils.getCookie('access_token'))
-    console.log('router.query.name', router.query.name)
-
     try {
       const { data } = await utils.localApi.get(
         utils.apiRoutes.local.parser(router.query.name as string),

@@ -8,8 +8,8 @@ export function UsersSection() {
   return (
     <common.Card className="flex flex-col h-full w-full">
       <div className="rounded-b-lg">
-        {selectedTabUsersAndRoles.name === 'Accounts' ? (
-          <consoleData.AccountTab />
+        {selectedTabUsersAndRoles.name === 'Users' ? (
+          <consoleData.UsersTab />
         ) : (
           <consoleData.RoleTab />
         )}

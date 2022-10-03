@@ -11,6 +11,7 @@ export const apiRoutes = {
   userAccount: 'v0/id/account/get-all',
   createAccount: 'v0/id/account/create',
   roles: 'v0/id/role/get-all',
+  createRole: 'v0/id/role/create',
   deleteRole: (name: string) => `/caccount/role/name/${name}`,
   getUserToken: 'v0/auth/oauth/token',
   interpreter: 'v0/persistence/s/no-ac',

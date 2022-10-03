@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { createContext, ReactNode, useContext } from 'react'
 
 type ProvedorProps = {
@@ -10,6 +10,7 @@ export type UserType = {
   email?: string
   image?: string
   accessToken?: string
+  adminSchemaPassword?: string
 }
 
 type UserContextProps = {

@@ -74,7 +74,7 @@ type breadcrumbPageType = {
   action?: () => void
 }
 type selectedTabUsersAndRolesType = {
-  name: 'Accounts' | 'Roles'
+  name: 'Users' | 'Roles'
 }
 
 export const SchemaManagerContext = createContext<SchemaManagerContextProps>(
