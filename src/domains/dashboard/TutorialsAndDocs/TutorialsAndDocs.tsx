@@ -1,5 +1,6 @@
 import * as Common from 'common'
 import { Tutorials } from './Tutorials'
+import { Docs } from './Docs'
 import { useState } from 'react'
 
 export function TutorialsAndDocs() {
@@ -15,7 +16,7 @@ export function TutorialsAndDocs() {
           />
         </div>
       </div>
-      <div className="z-20 flex flex-col w-full mx-10 lg:w-4/6 gap-y-8">
+      <div className="z-20 flex flex-col w-full gap-y-8">
         <div className="flex flex-col">
           <p className="text-xs dark:text-gray-500">
             Tutorials and Docs <span className="ml-1"> {'>'} </span>
@@ -28,17 +29,13 @@ export function TutorialsAndDocs() {
           <Common.Tabs
             selectedTab={selectedTab}
             setSelectedTab={(tab) => {
-              if (tab.name === 'Docs') {
-                window.open('https://docs.ycodify.com/', '_blank')
-                return
-              }
               setSelectedTab(tab)
             }}
             tabs={[{ name: 'Tutorials' }, { name: 'Docs' }]}
           />
           <section className="flex dark:bg-menu-primary bg-white overflow-hidden rounded-lg">
             <div className="flex flex-col py-10 w-full">
-              {selectedTab.name === 'Tutorials' ? <Tutorials /> : '<Docs />'}
+              {selectedTab.name === 'Tutorials' ? <Tutorials /> : <Docs />}
             </div>
           </section>
         </div>

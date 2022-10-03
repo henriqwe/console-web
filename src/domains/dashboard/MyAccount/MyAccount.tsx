@@ -17,7 +17,7 @@ export function MyAccount() {
           />
         </div>
       </div>
-      <div className="z-20 flex flex-col w-full mx-10 lg:w-4/6 gap-y-8">
+      <div className="z-20 flex flex-col w-full gap-y-8">
         <div className="flex flex-col">
           <p className="text-xs dark:text-gray-500">
             My Account <span className="ml-1"> {'>'} </span>

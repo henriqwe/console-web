@@ -130,7 +130,7 @@ export function Tutorials() {
             if (subtopic.title === currentTopic) {
               return (
                 <div key={subtopic.title} className="flex flex-col gap-y-8">
-                  <div className="w-full h-[56.25%] bg-black">
+                  <div className="w-full h-[56.25%] object-cover bg-black">
                     <ReactPlayer
                       url={subtopic.videoLink}
                       width="100%"

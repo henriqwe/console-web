@@ -49,12 +49,10 @@ export function HelpAndSupport() {
           }
         }
       )
-      
 
-       const data = await result.json()
+      const data = await result.json()
 
-       setTickets(data?.[0]?.tickets ?? [])
-   
+      setTickets(data?.[0]?.tickets ?? [])
     } catch (err) {
       utils.showError(err)
     }
@@ -74,7 +72,7 @@ export function HelpAndSupport() {
           />
         </div>
       </div>
-      <div className="z-20 flex flex-col w-4/6 gap-y-8">
+      <div className="z-20 flex flex-col w-full gap-y-8">
         <section className="flex justify-between w-full mx-auto">
           <div className="flex flex-col">
             <p className="text-xs dark:text-gray-500">

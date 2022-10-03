@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify'
 import { UserProvider, useUser } from 'contexts/UserContext'
 import { SessionProvider, useSession, signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 import type { AppProps } from 'next/app'
 import type { UserType } from 'contexts/UserContext'
@@ -65,10 +66,22 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
     router.asPath === '/register'
   ) {
     return (
-      <ThemeContext.ThemeProvider>
-        <Component {...pageProps} />
-        <ToastContainer closeOnClick={false} />
-      </ThemeContext.ThemeProvider>
+      <>
+        <Head>
+          <title>
+            {router.asPath === '/login'
+              ? 'Login'
+              : router.asPath === '/register'
+              ? 'Register'
+              : null}
+          </title>
+          <link rel="icon" href="/assets/images/favicon.ico" />
+        </Head>
+        <ThemeContext.ThemeProvider>
+          <Component {...pageProps} />
+          <ToastContainer closeOnClick={false} />
+        </ThemeContext.ThemeProvider>
+      </>
     )
   }
   return (
