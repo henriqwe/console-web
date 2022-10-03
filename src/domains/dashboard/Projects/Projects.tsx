@@ -151,14 +151,14 @@ export function Projects() {
 
         <section className="grid grid-cols-1 xl:grid-cols-2 w-full gap-6 mx-auto">
           {loadingSchemas ? (
-            <div className="flex flex-col items-center justify-center gap-2 mt-32">
+            <div className="flex col-span-2 flex-col items-center justify-center gap-2 mt-32">
               <div className="w-20 h-20 dark:text-text-primary">
                 <common.Spinner />
               </div>
               <p className="dark:text-text-primary">Loading projects</p>
             </div>
           ) : (showFiltered ? filteredSchemas : schemas).length === 0 ? (
-            <div className="flex flex-col mt-16 text-center gap-y-6">
+            <div className="flex col-span-2 flex-col mt-16 text-center gap-y-6">
               <div className="m-auto w-80">
                 <common.illustrations.Empty />
               </div>

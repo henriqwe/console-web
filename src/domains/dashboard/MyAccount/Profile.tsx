@@ -17,6 +17,7 @@ type formProps = {
 }
 
 export function Profile() {
+  //form e setform devem vir do contexto do dashboard, os valores iniciais são de um request usando a senha na hora do login
   const [form, setForm] = useState<formProps>({
     myInfo: {
       email: '',
