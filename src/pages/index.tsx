@@ -20,6 +20,7 @@ function Page() {
       component = <dashboard.HelpAndSupport />
       break
     case 'tutorialsAndDocs':
+      component = <dashboard.TutorialsAndDocs />
       break
     case 'myAccount':
       component = <dashboard.MyAccount />

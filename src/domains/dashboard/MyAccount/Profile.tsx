@@ -16,7 +16,7 @@ type formProps = {
   }
 }
 
-const Profile = () => {
+export function Profile() {
   const [form, setForm] = useState<formProps>({
     myInfo: {
       email: '',
@@ -165,5 +165,3 @@ const Profile = () => {
     </form>
   )
 }
-
-export default Profile
