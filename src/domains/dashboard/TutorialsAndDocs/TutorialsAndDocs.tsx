@@ -25,15 +25,17 @@ export function TutorialsAndDocs() {
             {selectedTab.name === 'Tutorials' ? 'Tutorials' : 'Docs'}
           </h1>
         </div>
-        <div className="flex flex-col rounded-lg overflow-hidden dark:border-gray-700 sm:border gap-y-8 sm:gap-y-0">
-          <Common.Tabs
-            selectedTab={selectedTab}
-            setSelectedTab={(tab) => {
-              setSelectedTab(tab)
-            }}
-            tabs={[{ name: 'Tutorials' }, { name: 'Docs' }]}
-          />
-          <section className="flex dark:bg-menu-primary bg-white overflow-hidden rounded-lg">
+        <div className="flex flex-col gap-y-8 sm:gap-y-0">
+          <div className="w-full sm:w-48 rounded-t-lg overflow-hidden self-end dark:border-gray-700 sm:border sm:border-b-0 -mb-[1px] z-10">
+            <Common.Tabs
+              selectedTab={selectedTab}
+              setSelectedTab={(tab) => {
+                setSelectedTab(tab)
+              }}
+              tabs={[{ name: 'Tutorials' }, { name: 'Docs' }]}
+            />
+          </div>
+          <section className="flex dark:bg-menu-primary dark:border-gray-700 sm:border bg-white overflow-hidden rounded-lg rounded-tr-none">
             <div className="flex flex-col py-10 w-full">
               {selectedTab.name === 'Tutorials' ? <Tutorials /> : <Docs />}
             </div>

@@ -26,13 +26,17 @@ export function MyAccount() {
             {selectedTab.name === 'Profile' ? 'Profile' : 'Billing'}
           </h1>
         </div>
-        <div className="flex flex-col rounded-lg overflow-hidden dark:border-gray-700 sm:border gap-y-8 sm:gap-y-0">
-          <Common.Tabs
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-            tabs={[{ name: 'Profile' }, { name: 'Billing' }]}
-          />
-          <section className="flex dark:bg-menu-primary bg-white overflow-hidden rounded-lg">
+        <div className="flex flex-col gap-y-8 sm:gap-y-0">
+          <div className="w-full sm:w-48 rounded-t-lg overflow-hidden dark:border-gray-700 sm:border sm:border-b-0 -mb-[1px] z-20">
+            <Common.Tabs
+              selectedTab={selectedTab}
+              setSelectedTab={(tab) => {
+                setSelectedTab(tab)
+              }}
+              tabs={[{ name: 'Profile' }, { name: 'Billing' }]}
+            />
+          </div>
+          <section className="flex dark:bg-menu-primary dark:border-gray-700 sm:border sm:rounded-tl-none bg-white overflow-hidden rounded-lg">
             <div className="flex flex-col py-10 w-full">
               {selectedTab.name === 'Profile' ? <Profile /> : <Billing />}
             </div>
