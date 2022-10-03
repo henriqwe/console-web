@@ -46,7 +46,7 @@ export function Accordion({
                 } h-5 w-5 text-gray-700 dark:text-text-primary`}
               />
             </Disclosure.Button>
-            <Disclosure.Panel className="p-3 pb-8 text-sm text-gray-500 bg-white dark:text-text-primary dark:bg-menu-secondary">
+            <Disclosure.Panel className="p-3 text-sm text-gray-500 bg-white dark:text-text-primary dark:bg-menu-secondary">
               {content}
             </Disclosure.Panel>
           </>

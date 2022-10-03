@@ -170,7 +170,7 @@ function Plan({
   )
 }
 
-export default function Billing() {
+export function Billing() {
   return (
     <div className="grid w-full grid-cols-1 gap-10 px-4 lg:grid-cols-4">
       {plans.map(
