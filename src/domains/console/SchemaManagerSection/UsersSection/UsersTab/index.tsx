@@ -7,14 +7,26 @@ import { CheckIcon, LinkIcon, PlusIcon } from '@heroicons/react/outline'
 import * as UserContext from 'contexts/UserContext'
 import { useRouter } from 'next/router'
 
+type userDataType = {
+  email: string
+  id: number
+  logCreatedAt: number
+  logUpdatedAt: number
+  logVersion: number
+  name: string
+  roles: { name: string }[]
+  status: number
+  username: string
+}
+
 export function UsersTab() {
   const router = useRouter()
 
   const [loading, setLoading] = useState(true)
-  const [entityData, setEntityData] = useState()
+  const [usersData, setUsersData] = useState<userDataType[]>([])
   const { selectedEntity } = consoleData.useSchemaManager()
   const { reload, setOpenSlide, setSlideType } = consoleData.useUser()
-  const { user } = UserContext.useUser()
+  const { user, setUser } = UserContext.useUser()
 
   async function loadData() {
     try {
@@ -32,9 +44,13 @@ export function UsersTab() {
           }
         }
       )
-      setEntityData(data)
+      setUsersData(data)
     } catch (err: any) {
       console.log(err)
+      setUser({ ...user, adminSchemaPassword: undefined })
+      if (err.response.status === 401) {
+        return
+      }
       if (err.response.status !== 404) {
         utils.notification(err.message, 'error')
       }
@@ -45,11 +61,12 @@ export function UsersTab() {
 
   useEffect(() => {
     if (user?.adminSchemaPassword) {
-      setEntityData(undefined)
+      setUsersData([])
       setLoading(true)
       loadData()
     }
   }, [selectedEntity, reload, user?.adminSchemaPassword])
+
   if (!user?.adminSchemaPassword) {
     return (
       <div className="flex  p-8 justify-between ">
@@ -127,7 +144,7 @@ export function UsersTab() {
                   )
               }
             ]}
-            values={entityData}
+            values={usersData}
             actions={RowActions}
           />
         </div>

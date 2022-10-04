@@ -77,8 +77,8 @@ export function CreateAccount() {
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input
-                placeholder={'User name'}
-                label="User name"
+                placeholder={'Username'}
+                label="Username"
                 value={value}
                 onChange={onChange}
                 errors={errors.Username}

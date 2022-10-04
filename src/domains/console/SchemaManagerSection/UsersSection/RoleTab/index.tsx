@@ -42,7 +42,9 @@ export function RoleTab() {
     } catch (err: any) {
       console.log(err)
       setUser({ ...user, adminSchemaPassword: undefined })
-
+      if (err.response.status === 401) {
+        return
+      }
       if (err.response.status !== 404) {
         utils.notification(err.message, 'error')
       }

@@ -15,35 +15,6 @@ export function RowActions({ item }: { item: any }) {
         setSelectedUser(item)
       },
       icon: <common.icons.EditIcon />
-    },
-    {
-      title: 'Delete',
-      handler: async () => {
-        event?.preventDefault()
-        await utils.api
-          .delete(
-            utils.apiRoutes.deleteUserAccount({
-              username: item.username,
-              version: item.version
-            }),
-            {
-              headers: {
-                Authorization: `Bearer ${utils.getCookie(
-                  'admin_access_token'
-                )}`,
-                'X-TenantID': utils.getCookie('X-TenantID') as string
-              }
-            }
-          )
-          .then(() => {
-            setReload(!reload)
-            utils.notification('Operation performed successfully', 'success')
-          })
-          .catch((err) => {
-            utils.notification(err.message, 'error')
-          })
-      },
-      icon: <common.icons.DeleteIcon />
     }
   ]
   return <common.ActionsRow actions={actions} />

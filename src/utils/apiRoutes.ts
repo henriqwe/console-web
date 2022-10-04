@@ -14,6 +14,7 @@ export const apiRoutes = {
   roles: 'v0/id/role/get-all',
   createRole: 'v0/id/role/create',
   updateRole: 'v0/id/role/update',
+  deleteRole: 'v0/id/role/delete',
   getUserToken: 'v0/auth/oauth/token',
   interpreter: 'v0/persistence/s/no-ac',
   deleteUserAccount: ({
