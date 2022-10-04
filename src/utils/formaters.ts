@@ -201,7 +201,6 @@ export const ChassiTruncateFormat = (Chassi: string) => {
 }
 
 export function parseJwt(token: string) {
-  console.log('token', token)
   if (!token) {
     return {}
   }

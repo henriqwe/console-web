@@ -13,7 +13,7 @@ import { CheckIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import * as UserContext from 'contexts/UserContext'
 
-export function CreateAccount() {
+export function AssociateAccount() {
   const [loading, setLoading] = useState(false)
   const { user } = UserContext.useUser()
 
@@ -26,21 +26,17 @@ export function CreateAccount() {
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(createUserSchema) })
+  } = useForm()
 
   const onSubmit = async (formData: {
-    Email: string
     Username: string
-    Password: string
     Roles: { name: string; value: string }[]
   }) => {
     setLoading(true)
     try {
-      await utils.localApi.post(utils.apiRoutes.local.createAccount, {
-        username: formData.Username,
-        password: formData.Password,
-        email: formData.Email
-      })
+      if (!formData.Username) {
+        throw new Error('Please enter a username')
+      }
       const roles =
         formData?.Roles?.map(({ name }) => {
           return { name }
@@ -82,39 +78,6 @@ export function CreateAccount() {
                 value={value}
                 onChange={onChange}
                 errors={errors.Username}
-              />
-            </div>
-          )}
-        />
-
-        <Controller
-          name={'Email'}
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <div className="flex-1">
-              <common.Input
-                placeholder={'E-mail'}
-                label="E-mail"
-                value={value}
-                onChange={onChange}
-                errors={errors.Email}
-              />
-            </div>
-          )}
-        />
-
-        <Controller
-          name={'Password'}
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <div className="flex-1">
-              <common.Input
-                placeholder={'Password'}
-                label="Password"
-                value={value}
-                onChange={onChange}
-                errors={errors.Password}
-                type="password"
               />
             </div>
           )}

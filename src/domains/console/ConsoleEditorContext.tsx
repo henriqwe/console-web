@@ -438,7 +438,6 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
 
   useEffect(() => {
     if (router.query.name) {
-      console.log('loadParser')
       loadParser()
     }
   }, [router.query.name, reload])

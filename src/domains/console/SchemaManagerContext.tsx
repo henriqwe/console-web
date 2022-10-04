@@ -88,7 +88,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   )
   const [selectedTabUsersAndRoles, setSelectedTabUsersAndRoles] =
     useState<selectedTabUsersAndRolesType>({
-      name: 'Accounts'
+      name: 'Roles'
     })
   const [selectedItemToExclude, setSelectedItemToExclude] = useState()
   const [reload, setReload] = useState(false)

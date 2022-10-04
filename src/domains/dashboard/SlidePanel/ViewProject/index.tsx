@@ -112,8 +112,6 @@ export function ViewSchema() {
   //   loadAdminUser()
   // }, [])
 
-  console.log('selectedSchema', selectedSchema)
-
   return (
     <div
       onSubmit={handleSubmit(onSubmit)}

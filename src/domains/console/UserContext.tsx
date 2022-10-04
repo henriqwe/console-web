@@ -16,10 +16,8 @@ type UserContextProps = {
   logUserSchema: yup.AnyObjectSchema
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
-  slideType: 'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT' | 'ADMINLOGIN'
-  setSlideType: Dispatch<
-    SetStateAction<'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT' | 'ADMINLOGIN'>
-  >
+  slideType: slideTypeTypes
+  setSlideType: Dispatch<SetStateAction<slideTypeTypes>>
   roleSchema: yup.AnyObjectSchema
   createUserSchema: yup.AnyObjectSchema
   selectedUser?: User
@@ -27,7 +25,16 @@ type UserContextProps = {
   roles?: { name: string }[]
   setRoles: Dispatch<SetStateAction<{ name: string }[] | undefined>>
   updateUserSchema: yup.AnyObjectSchema
+  slideData: any
+  setSlideData: Dispatch<any>
 }
+type slideTypeTypes =
+  | 'ACCOUNT'
+  | 'ROLE'
+  | 'UPDATEROLE'
+  | 'UPDATEACCOUNT'
+  | 'ADMINLOGIN'
+  | 'ASSOCIATEACCOUNT'
 
 type User = {
   createdAt: number
@@ -53,9 +60,9 @@ export const UserContext = createContext<UserContextProps>(
 
 export const UserProvider = ({ children }: ProviderProps) => {
   const [openSlide, setOpenSlide] = useState(false)
-  const [slideType, setSlideType] = useState<
-    'ACCOUNT' | 'ROLE' | 'UPDATEACCOUNT'
-  >('ACCOUNT')
+  const [slideType, setSlideType] = useState<slideTypeTypes>('ACCOUNT')
+  const [slideData, setSlideData] = useState<any>()
+
   const [reload, setReload] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User>()
   const [roles, setRoles] = useState<{ name: string }[]>()
@@ -68,8 +75,7 @@ export const UserProvider = ({ children }: ProviderProps) => {
 
   const roleSchema = yup.object().shape({
     Name: yup.string().required(),
-    Active: yup.object().required(),
-    Default: yup.object().required()
+    Active: yup.object().required()
   })
 
   const createUserSchema = yup.object().shape({
@@ -102,7 +108,9 @@ export const UserProvider = ({ children }: ProviderProps) => {
         setSelectedUser,
         roles,
         setRoles,
-        updateUserSchema
+        updateUserSchema,
+        slideData,
+        setSlideData
       }}
     >
       {children}

@@ -38,7 +38,6 @@ export function RoleTab() {
           }
         }
       )
-      console.log('data', data)
       setRoles(data)
     } catch (err: any) {
       console.log(err)
@@ -109,7 +108,12 @@ export function RoleTab() {
               {
                 name: 'status',
                 displayName: 'Status',
-                handler: (value) => (value === 1 ? 'Active' : 'Suspended')
+                handler: (value) =>
+                  value === 0
+                    ? 'Suspended'
+                    : value === 1
+                    ? 'Active'
+                    : 'Canceled'
               }
             ]}
             values={roles}

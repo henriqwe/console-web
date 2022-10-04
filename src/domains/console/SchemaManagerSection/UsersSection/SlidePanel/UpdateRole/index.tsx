@@ -4,7 +4,7 @@ import {
   SubmitHandler,
   useForm
 } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
@@ -13,12 +13,17 @@ import { CheckIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import * as UserContext from 'contexts/UserContext'
 
-export function CreateRole() {
+const options = [
+  { name: 'Suspended', value: 0 },
+  { name: 'Active', value: 1 },
+  { name: 'Canceled', value: 2 }
+]
+export function UpdateRole() {
   const router = useRouter()
   const { user } = UserContext.useUser()
 
   const [loading, setLoading] = useState(false)
-  const { roleSchema, reload, setReload, setOpenSlide } =
+  const { roleSchema, reload, setReload, setOpenSlide, slideData } =
     consoleSection.useUser()
 
   const {
@@ -35,7 +40,7 @@ export function CreateRole() {
     setLoading(true)
     await utils.api
       .post(
-        utils.apiRoutes.createRole,
+        utils.apiRoutes.updateRole,
         {
           username: `${
             utils.parseJwt(utils.getCookie('access_token'))?.username
@@ -57,14 +62,21 @@ export function CreateRole() {
         reset()
         setReload(!reload)
         setOpenSlide(false)
-        setLoading(false)
         utils.notification('Operation performed successfully', 'success')
       })
       .catch((err) => {
         utils.notification(err.message, 'error')
       })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
+  useEffect(() => {
+    reset({
+      Name: slideData?.name
+    })
+  }, [slideData])
   return (
     <form data-testid="editForm" className="flex flex-col items-end">
       <div className="flex flex-col w-full gap-2 mb-2">
@@ -75,9 +87,11 @@ export function CreateRole() {
             <div className="flex-1">
               <common.Input
                 placeholder={'Name'}
+                label={'Name'}
                 value={value}
                 onChange={onChange}
                 errors={errors.Name}
+                disabled
               />
             </div>
           )}
@@ -85,17 +99,16 @@ export function CreateRole() {
         <Controller
           name={'Active'}
           control={control}
-          defaultValue={{ name: 'Active', value: 1 }}
+          defaultValue={
+            options.filter((option) => option.value === slideData?.status)[0]
+          }
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Select
                 onChange={onChange}
                 value={value}
                 label="Status"
-                options={[
-                  { name: 'Suspended', value: 0 },
-                  { name: 'Active', value: 1 }
-                ]}
+                options={options}
                 errors={errors.Active}
               />
             </div>
@@ -110,7 +123,7 @@ export function CreateRole() {
         type="button"
         onClick={() => handleSubmit(onSubmit as SubmitHandler<FieldValues>)()}
       >
-        <div className="flex">Create</div>
+        <div className="flex">Update</div>
       </common.Buttons.WhiteOutline>
     </form>
   )

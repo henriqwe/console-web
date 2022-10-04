@@ -10,9 +10,10 @@ export const apiRoutes = {
     `v0/modeling/project-name/${projectName}/schema/sql/entity/${entityName}/association`,
   userAccount: 'v0/id/account/get-all',
   createAccount: 'v0/id/account/create',
+  updateAccount: 'v0/id/account/update',
   roles: 'v0/id/role/get-all',
   createRole: 'v0/id/role/create',
-  deleteRole: (name: string) => `/caccount/role/name/${name}`,
+  updateRole: 'v0/id/role/update',
   getUserToken: 'v0/auth/oauth/token',
   interpreter: 'v0/persistence/s/no-ac',
   deleteUserAccount: ({
@@ -22,10 +23,8 @@ export const apiRoutes = {
     username: string
     version: string
   }) => `/caccount/account/username/${username}/version/${version}`,
-  createAdminAccount: (
-    projectName: string
-  ) => `v0/modeling/project-name/${projectName}/schema/create-admin-account
-  `,
+  createAdminAccount: (projectName: string) =>
+    `v0/modeling/project-name/${projectName}/schema/create-admin-account`,
   getAdminToken: '/csecurity/oauth/token',
   adminData: '/caccount/account',
   parseReverse: (projectName: string) =>

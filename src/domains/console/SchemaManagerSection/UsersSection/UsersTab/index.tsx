@@ -5,24 +5,33 @@ import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
 import { CheckIcon, LinkIcon, PlusIcon } from '@heroicons/react/outline'
 import * as UserContext from 'contexts/UserContext'
+import { useRouter } from 'next/router'
 
 export function UsersTab() {
+  const router = useRouter()
+
   const [loading, setLoading] = useState(true)
   const [entityData, setEntityData] = useState()
   const { selectedEntity } = consoleData.useSchemaManager()
   const { reload, setOpenSlide, setSlideType } = consoleData.useUser()
-  const { user, setUser } = UserContext.useUser()
+  const { user } = UserContext.useUser()
 
   async function loadData() {
     try {
-      const { data } = await utils.api.get(utils.apiRoutes.userAccount, {
-        headers: {
-          'X-TenantID': utils.getCookie('X-TenantID') as string,
-          Accept: 'application/json',
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
+      const { data } = await utils.api.post(
+        utils.apiRoutes.userAccount,
+        {
+          username: `${
+            utils.parseJwt(utils.getCookie('access_token'))?.username
+          }@${router.query.name}`,
+          password: user?.adminSchemaPassword
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
-      })
-      console.log('data', data)
+      )
       setEntityData(data)
     } catch (err: any) {
       console.log(err)
@@ -78,7 +87,7 @@ export function UsersTab() {
               type="button"
               onClick={() => {
                 setOpenSlide(true)
-                setSlideType('ACCOUNT')
+                setSlideType('ASSOCIATEACCOUNT')
               }}
               icon={<LinkIcon className="w-5 h-5" />}
             >
@@ -112,7 +121,7 @@ export function UsersTab() {
                 name: 'roles',
                 displayName: 'Roles',
                 handler: (roles: { name: string }[]) =>
-                  roles.map(
+                  roles?.map(
                     (role, index) =>
                       `${role.name}${index + 1 === roles.length ? '' : ', '}`
                   )

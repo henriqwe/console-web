@@ -16,7 +16,6 @@ export function AdminLogin() {
   const { control, handleSubmit, reset } = useForm()
 
   async function onSubmit(formData: { Password: string }) {
-    console.log('formData', formData)
     try {
       if (!formData.Password) {
         throw new Error('Please enter a password')

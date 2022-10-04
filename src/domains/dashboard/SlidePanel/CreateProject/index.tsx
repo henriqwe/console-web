@@ -59,7 +59,6 @@ export function Create() {
               {
                 name: entity.name,
                 attributes: entity.attributes.map((attribute) => {
-                  console.log('attribute', attribute)
                   return {
                     ...attribute,
                     type: attribute._conf.type.value
@@ -256,7 +255,6 @@ export function Create() {
 
                     const reader = new FileReader()
                     reader.addEventListener('load', (event) => {
-                      console.log('event', event)
                       setSubmittedSchema(event?.target?.result as string)
                     })
                     reader.readAsText(file)

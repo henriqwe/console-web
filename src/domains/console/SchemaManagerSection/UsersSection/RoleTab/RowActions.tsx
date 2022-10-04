@@ -3,30 +3,16 @@ import * as common from 'common'
 import * as consoleData from 'domains/console'
 
 export function RowActions({ item }: { item: any }) {
-  const { setReload, reload } = consoleData.useUser()
+  const { setSlideType, setOpenSlide, setSlideData } = consoleData.useUser()
   const actions = [
     {
-      title: 'excluir',
+      title: 'edit',
       handler: async () => {
-        // event?.preventDefault()
-        // await utils.api
-        //   .delete(utils.apiRoutes.deleteRole(item.name), {
-        //     headers: {
-        //       Authorization: `Bearer${utils.getCookie('access_token')}`,
-        //       'X-TenantID': utils.getCookie('X-TenantID') as string
-        //     }
-        //   })
-        //   .then(() => {
-        //     setReload(!reload)
-        //     utils.notification('Operation performed successfully', 'success')
-        //   })
-        //   .catch((err) => {
-        //     utils.notification(err.message, 'error')
-        //   })
+        setSlideData(item)
+        setOpenSlide(true)
+        setSlideType(`UPDATEROLE`)
       },
-      icon: (
-        <common.icons.DeleteIcon className="!text-red-200 cursor-not-allowed" />
-      )
+      icon: <common.icons.EditIcon />
     }
   ]
   return <common.ActionsRow actions={actions} />

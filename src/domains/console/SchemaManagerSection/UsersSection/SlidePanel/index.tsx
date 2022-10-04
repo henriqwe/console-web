@@ -4,6 +4,8 @@ import { CreateRole } from './CreateRole'
 import { CreateAccount } from './CreateAccount'
 import { UpdateAccount } from './UpdateAccount'
 import { AdminLogin } from './AdminLogin'
+import { AssociateAccount } from './AssociateAccount'
+import { UpdateRole } from './UpdateRole'
 
 export function UserSlidePanel() {
   const { setOpenSlide, openSlide, slideType } = consoleData.useUser()
@@ -14,6 +16,10 @@ export function UserSlidePanel() {
     case 'ACCOUNT':
       title = 'Create Account'
       content = <CreateAccount />
+      break
+    case 'ASSOCIATEACCOUNT':
+      title = 'Associate Account'
+      content = <AssociateAccount />
       break
     case 'ROLE':
       title = 'Create Role'
@@ -26,6 +32,10 @@ export function UserSlidePanel() {
     case 'UPDATEACCOUNT':
       title = 'Update Account'
       content = <UpdateAccount />
+      break
+    case 'UPDATEROLE':
+      title = 'Update role'
+      content = <UpdateRole />
       break
   }
 
