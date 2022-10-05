@@ -124,7 +124,7 @@ export function Tutorials() {
       <div className="col-span-1">
         <Common.AccordionGroup accordionsData={convertData(navigation)} />
       </div>
-      <div className="col-span-3">
+      <div className="col-span-3 py-10">
         {navigation.map((topic) =>
           topic.subtopics.map((subtopic) => {
             if (subtopic.title === currentTopic) {

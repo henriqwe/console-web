@@ -1,70 +1,150 @@
 import { Buttons } from 'common'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import * as Common from 'common'
 
 const plans = [
   {
     name: 'Free',
     price: 'R$0,00',
-    description: 'Baixa escala',
+    description: 'Low scale',
     href: 'https://console.ycodify.com/register',
     features: [
-      'Modelos: 10',
-      'Franquia mensal: 500 MB',
-      '60 requisições por minuto',
-      'Suporte na comunidade',
+      'Models: 10',
+      'Monthly deductible: 500 MB',
+      '60 requests per minute',
+      'Community support',
       'SLA: 48h'
     ],
     detail: '',
-    buttontext: 'Experimente'
+    buttontext: 'Try out'
   },
   {
     featured: true,
     name: 'Starter',
     price: 'R$149,97',
-    description: 'Média escala',
+    description: 'Medium scale',
     href: 'https://console.ycodify.com/register',
     features: [
-      'Modelos de dados ilimitados',
-      'Franquia mensal: 5 GB*',
-      'Requisições ilimitadas',
-      'Alta disponibilidade',
+      'Unlimited data models',
+      'Monthly deductible: 5 GB*',
+      'Unlimited requests',
+      'High availability',
       'SLA: 95'
     ],
-    detail: '*R$15,00 por GB adicional',
-    buttontext: 'Contrate'
+    detail: '*R$15,00 per additional GB',
+    buttontext: 'Hire'
   },
   {
     name: 'Pro',
     price: 'R$349,97',
-    description: 'Larga escala',
+    description: 'Large scale',
     href: 'https://console.ycodify.com/register',
     features: [
-      'Modelos de dados ilimitados',
-      'Modelagem Gráfica',
-      'Franquia mensal: 15 GB',
-      'Requisições ilimitadas',
-      'Alta disponibilidade',
+      'Unlimited data models',
+      'Graphic modeling',
+      'Monthly deductible: 15 GB',
+      'Unlimited requests',
+      'High availability',
       'SLA: 97365'
     ],
-    detail: '*R$15,00 por GB adicional',
-    buttontext: 'Contrate'
+    detail: '*R$15,00 per additional GB',
+    buttontext: 'Hire'
   },
   {
     name: 'Enterprise',
     price: 'Sob medida',
-    description: 'Infraestrutura dedicada',
+    description: 'Dedicated infrastructure',
     href: 'https://console.ycodify.com/register',
     features: [
-      'Franquia personalizada',
-      'Modelagem Gráfica',
-      'Alta disponibilidade',
+      'Personalized franchise',
+      'Graphic modeling',
+      'High availability',
       'Single-Sign On',
-      'Suporte dedicado'
+      'Dedicated support'
     ],
-    detail: '*R$15,00 por GB adicional',
-    buttontext: 'Entre em contato'
+    detail: '*R$15,00 per additional GB',
+    buttontext: 'Contact us'
   }
 ]
+
+type BillingCardProps = {
+  projectName: String
+}
+
+export function Billing() {
+  const [loading, setLoading] = useState(true)
+  const [billingHistory, setBillingHistory] = useState<BillingCardProps[]>([])
+
+  useEffect(() => {
+    //requisição pra pegar o plano atual e o histórico de faturas
+
+    //setar os estados
+
+    //renderizar como featured o plano atual do usuário
+
+    setTimeout(() => {
+      setLoading(false)
+    }, 1500)
+  }, [])
+  return (
+    <div className="flex flex-col gap-y-8 px-4">
+      <section className="grid w-full grid-cols-1 gap-10 lg:grid-cols-4">
+        {plans.map(
+          (
+            {
+              featured,
+              name,
+              price,
+              description,
+              href,
+              features,
+              detail,
+              buttontext
+            },
+            index
+          ) => (
+            <Plan
+              key={index}
+              featured={featured}
+              name={name}
+              price={price}
+              description={description}
+              href={href}
+              features={features}
+              detail={detail}
+              buttontext={buttontext}
+            />
+          )
+        )}
+      </section>
+      <span className="w-full border-b border-gray-300 mt-4 dark:border-gray-600" />
+      <section className="flex flex-col gap-y-8">
+        <p className="text-2xl font-semibold dark:text-text-primary text-slate-900">
+          Billing history
+        </p>
+
+        <div className="flex w-full items-center justify-center">
+          {loading ? (
+            <Common.Spinner className="dark:text-text-primary w-8 h-8" />
+          ) : billingHistory.length ? (
+            billingHistory.map((item, index) => (
+              <BillingCard key={index} projectName={item.projectName} />
+            ))
+          ) : (
+            <span className="flex items-center flex-col gap-y-6 w-80 h-auto">
+              <Common.illustrations.Empty />
+              <p className="text-text-primary">Billing history not found</p>
+            </span>
+          )}
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function BillingCard({ projectName }: BillingCardProps) {
+  return <p>{projectName}</p>
+}
 
 type CheckIconProps = {
   className?: string
@@ -134,14 +214,14 @@ function Plan({
           <p className=" text-4xl font-light tracking-tight 2xl:text-5xl dark:text-text-primary">
             {price}
           </p>
-          <p className="px-1 text-sm text-text-tertiary">{description}</p>
+          <p className="px-1 text-sm text-text-secondary">{description}</p>
         </div>
 
         <ul role="list" className="flex flex-col gap-y-2 text-sm">
           {features.map((feature) => (
             <li
               key={feature}
-              className="flex gap-x-2 text-slate-700 dark:text-text-secondary"
+              className="flex gap-x-2 text-slate-700 dark:text-text-primary"
             >
               <CheckIcon />
               <span>{feature}</span>
@@ -150,7 +230,7 @@ function Plan({
         </ul>
 
         <div className="mt-auto flex flex-col gap-y-4">
-          <p className="mt-auto px-1 font-display text-xs text-text-tertiary">
+          <p className="mt-auto px-1 font-display text-xs text-text-secondary">
             {detail}
           </p>
           <a href={href}>
@@ -166,40 +246,6 @@ function Plan({
           </a>
         </div>
       </section>
-    </div>
-  )
-}
-
-export function Billing() {
-  return (
-    <div className="grid w-full grid-cols-1 gap-10 px-4 lg:grid-cols-4">
-      {plans.map(
-        (
-          {
-            featured,
-            name,
-            price,
-            description,
-            href,
-            features,
-            detail,
-            buttontext
-          },
-          index
-        ) => (
-          <Plan
-            key={index}
-            featured={featured}
-            name={name}
-            price={price}
-            description={description}
-            href={href}
-            features={features}
-            detail={detail}
-            buttontext={buttontext}
-          />
-        )
-      )}
     </div>
   )
 }

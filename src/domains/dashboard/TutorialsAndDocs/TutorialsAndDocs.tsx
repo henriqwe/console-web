@@ -39,7 +39,7 @@ export function TutorialsAndDocs() {
             />
           </div>
           <section className="flex dark:bg-menu-primary dark:border-gray-700 sm:border bg-white overflow-hidden rounded-lg rounded-tr-none">
-            <div className="flex flex-col py-10 w-full">
+            <div className="flex flex-col w-full">
               {selectedTab.name === 'Tutorials' ? <Tutorials /> : <Docs />}
             </div>
           </section>
