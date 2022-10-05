@@ -1,4 +1,4 @@
-import * as Common from 'common'
+import * as common from 'common'
 import { Profile } from './Profile'
 import { Billing } from './Billing'
 import { useState } from 'react'
@@ -19,16 +19,19 @@ export function MyAccount() {
       </div>
       <div className="z-20 flex flex-col w-full gap-y-8">
         <div className="flex flex-col">
-          <p className="text-xs dark:text-gray-500">
-            My Account <span className="ml-1"> {'>'} </span>
-          </p>
+          <common.Breadcrumb
+            pages={[
+              { content: 'My Account', current: false },
+              { content: '', current: false }
+            ]}
+          />
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
             {selectedTab.name === 'Profile' ? 'Profile' : 'Billing'}
           </h1>
         </div>
         <div className="flex flex-col gap-y-8 sm:gap-y-0">
           <div className="w-full sm:w-48 rounded-t-lg overflow-hidden dark:border-gray-700 sm:border sm:border-b-0 -mb-[1px] z-20">
-            <Common.Tabs
+            <common.Tabs
               selectedTab={selectedTab}
               setSelectedTab={(tab) => {
                 setSelectedTab(tab)

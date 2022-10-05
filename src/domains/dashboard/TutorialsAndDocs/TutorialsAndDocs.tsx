@@ -1,4 +1,4 @@
-import * as Common from 'common'
+import * as common from 'common'
 import { Tutorials } from './Tutorials'
 import { Docs } from './Docs'
 import { useState } from 'react'
@@ -18,16 +18,19 @@ export function TutorialsAndDocs() {
       </div>
       <div className="z-20 flex flex-col w-full gap-y-8">
         <div className="flex flex-col">
-          <p className="text-xs dark:text-gray-500">
-            Tutorials and Docs <span className="ml-1"> {'>'} </span>
-          </p>
+          <common.Breadcrumb
+            pages={[
+              { content: 'Tutorials and Docs', current: false },
+              { content: '', current: false }
+            ]}
+          />
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
             {selectedTab.name === 'Tutorials' ? 'Tutorials' : 'Docs'}
           </h1>
         </div>
         <div className="flex flex-col gap-y-8 sm:gap-y-0">
           <div className="w-full sm:w-48 rounded-t-lg overflow-hidden self-end dark:border-gray-700 sm:border sm:border-b-0 -mb-[1px] z-10">
-            <Common.Tabs
+            <common.Tabs
               selectedTab={selectedTab}
               setSelectedTab={(tab) => {
                 setSelectedTab(tab)

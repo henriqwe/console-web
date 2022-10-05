@@ -34,7 +34,6 @@ export function AdminLogin() {
           }
         }
       )
-      console.log()
       setRoles(data)
       setUser({ ...user, adminSchemaPassword: formData.Password })
       reset()

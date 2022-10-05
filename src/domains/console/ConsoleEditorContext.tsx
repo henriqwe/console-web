@@ -166,7 +166,6 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
           }
         }
       )
-      console.log(data)
       setdocumentationValue(data.data)
     } catch (err: any) {
       console.log(err)
