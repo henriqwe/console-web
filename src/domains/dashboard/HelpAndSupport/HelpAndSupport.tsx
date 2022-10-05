@@ -72,7 +72,7 @@ export function HelpAndSupport() {
           />
         </div>
       </div>
-      <div className="z-20 flex flex-col w-full gap-y-8">
+      <div className="z-20 flex flex-col w-full gap-y-6">
         <section className="flex justify-between w-full mx-auto">
           <div className="flex flex-col">
             <common.Breadcrumb

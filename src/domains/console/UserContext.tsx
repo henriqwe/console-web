@@ -85,7 +85,6 @@ export const UserProvider = ({ children }: ProviderProps) => {
   })
 
   const updateUserSchema = yup.object().shape({
-    Email: yup.string().email().required(),
     Active: yup.object().required(),
     Roles: yup.array().min(1, 'Select at least one role').required()
   })

@@ -16,20 +16,20 @@ export function TutorialsAndDocs() {
           />
         </div>
       </div>
-      <div className="z-20 flex flex-col w-full gap-y-8">
-        <div className="flex flex-col">
-          <common.Breadcrumb
-            pages={[
-              { content: 'Tutorials and Docs', current: false },
-              { content: '', current: false }
-            ]}
-          />
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-            {selectedTab.name === 'Tutorials' ? 'Tutorials' : 'Docs'}
-          </h1>
-        </div>
-        <div className="flex flex-col gap-y-8 sm:gap-y-0">
-          <div className="w-full sm:w-48 rounded-t-lg overflow-hidden self-end dark:border-gray-700 sm:border sm:border-b-0 -mb-[1px] z-10">
+      <div className="z-20 flex flex-col w-full ">
+        <div className="flex justify-between">
+          <div className="flex flex-col">
+            <common.Breadcrumb
+              pages={[
+                { content: 'Tutorials and Docs', current: false },
+                { content: '', current: false }
+              ]}
+            />
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              {selectedTab.name === 'Tutorials' ? 'Tutorials' : 'Docs'}
+            </h1>
+          </div>
+          <div className="w-full sm:w-48 rounded-t-lg overflow-hidden self-end dark:border-gray-700 sm:border sm:border-b-0 -mb-[1px] z-10 h-20">
             <common.Tabs
               selectedTab={selectedTab}
               setSelectedTab={(tab) => {
@@ -38,6 +38,8 @@ export function TutorialsAndDocs() {
               tabs={[{ name: 'Tutorials' }, { name: 'Docs' }]}
             />
           </div>
+        </div>
+        <div className="flex flex-col gap-y-8 sm:gap-y-0">
           <section className="flex dark:bg-menu-primary dark:border-gray-700 sm:border bg-white overflow-hidden rounded-lg rounded-tr-none">
             <div className="flex flex-col w-full">
               {selectedTab.name === 'Tutorials' ? <Tutorials /> : <Docs />}

@@ -4,7 +4,7 @@ import {
   SubmitHandler,
   useForm
 } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -30,7 +30,8 @@ export function UpdateAccount() {
     control,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm({ resolver: yupResolver(updateUserSchema) })
 
   const onSubmit = async (formData: {
@@ -45,15 +46,17 @@ export function UpdateAccount() {
         formData?.Roles?.map(({ name }) => {
           return { name }
         }) || []
+
       await utils.api.post(
-        utils.apiRoutes.updateRole,
+        utils.apiRoutes.updateAccount,
         {
           username: `${
-            utils.parseJwt(utils.getCookie('access_token'))?.username
+            utils.parseJwt(utils.getCookie('access_token')!)?.username
           }@${router.query.name}`,
           password: user?.adminSchemaPassword,
           account: {
-            email: formData.Email,
+            username: selectedUser?.username,
+            // email: formData.Email,
             roles,
             status: formData.Active.value
           }
@@ -65,6 +68,7 @@ export function UpdateAccount() {
           }
         }
       )
+
       reset()
       setReload(!reload)
       setOpenSlide(false)
@@ -76,6 +80,15 @@ export function UpdateAccount() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    const userRoles =
+      selectedUser?.roles?.map((role) => {
+        return { name: role.name, value: role.name }
+      }) || []
+    setValue('Roles', userRoles)
+  }, [selectedUser])
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)}
@@ -83,13 +96,13 @@ export function UpdateAccount() {
     >
       <div className="flex flex-col w-full gap-2 mb-2">
         <Controller
-          name={'userame'}
+          name={'Userame'}
           control={control}
           defaultValue={selectedUser?.username}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input
-                placeholder={'username'}
+                placeholder={'Username'}
                 label={'Username'}
                 value={value}
                 onChange={onChange}
@@ -109,7 +122,7 @@ export function UpdateAccount() {
                 label={'E-mail'}
                 value={value}
                 onChange={onChange}
-                errors={errors.Email}
+                disabled
               />
             </div>
           )}
@@ -140,11 +153,7 @@ export function UpdateAccount() {
         <Controller
           name={'Roles'}
           control={control}
-          defaultValue={
-            selectedUser?.roles?.map((role) => {
-              return { name: role.name, value: role.name }
-            }) || []
-          }
+          defaultValue={[]}
           render={({ field: { onChange, value } }) => {
             return (
               <div className="flex-1">

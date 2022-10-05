@@ -16,6 +16,8 @@ export function AdminLogin() {
   const { control, handleSubmit, reset } = useForm()
 
   async function onSubmit(formData: { Password: string }) {
+    setLoading(true)
+
     try {
       if (!formData.Password) {
         throw new Error('Please enter a password')
@@ -63,6 +65,7 @@ export function AdminLogin() {
             <common.Input
               placeholder={'Password'}
               label="Password"
+              type="password"
               value={value}
               onChange={onChange}
             />
