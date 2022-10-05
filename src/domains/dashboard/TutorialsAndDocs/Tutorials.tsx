@@ -102,10 +102,14 @@ export function Tutorials() {
         id: index,
         title: topic.title,
         content: (
-          <div className="flex flex-col text-sm font-light dark:text-text-primary pl-5 gap-y-1">
+          <div className="flex flex-col text-sm font-light pl-5 gap-y-1">
             {topic.subtopics.map((subtopic) => (
               <button
-                className="cursor-pointer self-start"
+                className={`cursor-pointer self-start ${
+                  currentTopic === subtopic.title
+                    ? 'text-ycodify'
+                    : 'dark:text-text-primary'
+                }`}
                 onClick={() => setCurrentTopic(subtopic.title)}
               >
                 {subtopic.title}

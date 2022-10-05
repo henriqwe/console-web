@@ -52,7 +52,7 @@ const plans = [
   },
   {
     name: 'Enterprise',
-    price: 'Sob medida',
+    price: 'Custom made',
     description: 'Dedicated infrastructure',
     href: 'https://console.ycodify.com/register',
     features: [
@@ -133,7 +133,9 @@ export function Billing() {
           ) : (
             <span className="flex items-center flex-col gap-y-6 w-80 h-auto">
               <Common.illustrations.Empty />
-              <p className="text-text-primary">Billing history not found</p>
+              <p className="dark:text-text-primary">
+                Billing history not found
+              </p>
             </span>
           )}
         </div>

@@ -54,7 +54,8 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
       utils.setCookie('access_token', session?.accessToken as string)
       setUser({
         ...(session.user as UserType),
-        accessToken: session?.accessToken as string
+        accessToken: session?.accessToken as string,
+        ...utils.parseJwt(session?.accessToken as string)
       })
     }
   }, [session])

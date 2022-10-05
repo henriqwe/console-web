@@ -11,6 +11,7 @@ export type UserType = {
   image?: string
   accessToken?: string
   adminSchemaPassword?: string
+  username?: string
 }
 
 type UserContextProps = {

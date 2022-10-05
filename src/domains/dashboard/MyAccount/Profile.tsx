@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as Common from 'common'
+import { useUser } from 'contexts/UserContext'
 import { ChevronRightIcon } from '@heroicons/react/solid'
 
 type formProps = {
   myInfo: {
+    username: string
     email: string
     password: string
     passwordConfirmation: string
@@ -18,10 +20,12 @@ type formProps = {
 }
 
 export function Profile() {
+  const { user } = useUser()
   //form e setform devem vir do contexto do dashboard, os valores iniciais são de um request usando a senha na hora do login
   const [form, setForm] = useState<formProps>({
     myInfo: {
-      email: '',
+      username: user?.username as string,
+      email: user?.email as string,
       password: '',
       passwordConfirmation: ''
     },
@@ -42,6 +46,10 @@ export function Profile() {
     console.log(form)
   }
 
+  useEffect(() => {
+    console.log(user)
+  }, [])
+
   return (
     <form
       onSubmit={(e) => handleSubmit(e)}
@@ -50,7 +58,12 @@ export function Profile() {
       {/* os valores padrão dos campos usuário (username, email) e endereço vêm da página de login, usando a senha que o usuário coloca para logar, e  */}
       <div className="flex flex-col gap-y-4 px-4">
         <p className="dark:text-text-primary text-xl">My Info</p>
-        <Common.Input label="Username" className="w-full" readOnly value={''} />
+        <Common.Input
+          label="Username"
+          className="w-full"
+          disabled
+          value={form.myInfo.username}
+        />
         <div className="flex flex-col gap-y-4">
           <Common.Input
             placeholder="Email"
