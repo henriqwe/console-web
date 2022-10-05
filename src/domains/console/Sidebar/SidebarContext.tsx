@@ -8,15 +8,16 @@ import {
 } from 'react'
 
 import { DatabaseIcon } from '@heroicons/react/outline'
+import type { currentTabType } from 'domains/console/SchemaManagerContext'
 
 type SidebarContextProps = {
   selectedTab: {
-    name: string
+    name: currentTabType
     icon?: any
   }
   setSelectedTab: Dispatch<
     SetStateAction<{
-      name: string
+      name: currentTabType
       icon?: any
     }>
   >
@@ -31,8 +32,11 @@ export const SidebarContext = createContext<SidebarContextProps>(
 )
 
 export const SidebarProvider = ({ children }: ProviderProps) => {
-  const [selectedTab, setSelectedTab] = useState<{ name: string; icon?: any }>({
-    name: 'Schema Manager',
+  const [selectedTab, setSelectedTab] = useState<{
+    name: currentTabType
+    icon?: any
+  }>({
+    name: 'Schema',
     icon: DatabaseIcon
   })
 

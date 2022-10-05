@@ -17,8 +17,8 @@ type FormData = {
 
 type Message = {
   content: string
+  id: string
   date: string
-  createdbyuser: boolean
 }
 
 export function TicketDetail() {
@@ -31,7 +31,8 @@ export function TicketDetail() {
   const {
     control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm()
 
   async function createTicketMessage(formData: FormData) {
@@ -67,6 +68,7 @@ export function TicketDetail() {
         }
       })
       setReloadMessages(!reloadMessages)
+      setValue('Content', '')
     } catch (err) {
       utils.showError(err)
     } finally {
@@ -142,20 +144,9 @@ export function TicketDetail() {
 
           <p className="text-sm">{selectedTicket?.content}</p>
         </common.Card>
-
-        {messages.map((message) => (
-          <div
-            className={`p-4 rounded-lg ${
-              message.createdbyuser
-                ? '!rounded-tr-none dark:bg-menu-primary bg-white'
-                : '!rounded-tl-none dark:bg-menuItem-primary bg-green-50'
-            }`}
-            key={message.date}
-          >
-            <p className="dark:text-white">{message.content}</p>
-            <p className="mt-1 text-xs dark:text-gray-400">{message.date}</p>
-          </div>
-        ))}
+        <div className="ml-4">
+          <common.Feed activity={messages} />
+        </div>
       </div>
 
       <common.Separator className="border-gray-400" />

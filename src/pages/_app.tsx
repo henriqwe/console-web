@@ -1,6 +1,5 @@
 import 'styles/main.css'
 import 'react-toastify/dist/ReactToastify.css'
-
 import * as ThemeContext from 'contexts/ThemeContext'
 import * as common from 'common'
 import * as utils from 'utils'

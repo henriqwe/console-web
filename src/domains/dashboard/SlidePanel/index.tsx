@@ -3,6 +3,7 @@ import * as common from 'common'
 import { Create } from './CreateProject'
 import { CreateTicket } from './CreateTicket'
 import { ViewSchema } from './ViewProject'
+import { ViewAdminUser } from './ViewAdminUser'
 
 export function SlidePanel() {
   const { setOpenSlide, openSlide, slideType, selectedSchema, slideSize } =
@@ -14,6 +15,10 @@ export function SlidePanel() {
     case 'createProject':
       component = <Create />
       title = 'New Project'
+      break
+    case 'ViewAdminUser':
+      component = <ViewAdminUser />
+      title = 'Admin Data'
       break
     case 'viewProject':
       component = <ViewSchema />

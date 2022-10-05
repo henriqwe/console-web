@@ -9,11 +9,14 @@ import {
 import * as yup from 'yup'
 import * as types from 'domains/console/types'
 
+export type currentTabType = 'Data Api' | 'Schema' | 'USERS'
+export type currentTabSchemaType = 'Modeler' | 'Databases' | 'Users and Roles'
+
 type SchemaManagerContextProps = {
-  currentTab: 'Data Manager' | 'Schema Manager' | 'USERS'
-  setCurrentTab: Dispatch<
-    SetStateAction<'Data Manager' | 'Schema Manager' | 'USERS'>
-  >
+  currentTab: currentTabType
+  setCurrentTab: Dispatch<SetStateAction<currentTabType>>
+  currentTabSchema: currentTabSchemaType
+  setCurrentTabSchema: Dispatch<SetStateAction<currentTabSchemaType>>
   selectedEntity?: string
   setSelectedEntity: Dispatch<SetStateAction<string | undefined>>
   reload: boolean
@@ -47,7 +50,13 @@ type SchemaManagerContextProps = {
   }
   schemaStatus?: number
   setSchemaStatus: Dispatch<SetStateAction<number | undefined>>
-  returnToEntitiesPage(): void
+  goToEntitiesPage(): void
+  goToModelerPage(): void
+  goToUserAndRolesPage(): void
+  selectedTabUsersAndRoles: selectedTabUsersAndRolesType
+  setSelectedTabUsersAndRoles: Dispatch<
+    SetStateAction<selectedTabUsersAndRolesType>
+  >
 }
 
 type ProviderProps = {
@@ -64,6 +73,9 @@ type breadcrumbPageType = {
   current: boolean
   action?: () => void
 }
+type selectedTabUsersAndRolesType = {
+  name: 'Users' | 'Roles'
+}
 
 export const SchemaManagerContext = createContext<SchemaManagerContextProps>(
   {} as SchemaManagerContextProps
@@ -74,13 +86,18 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const [slideType, setSlideType] = useState<'UPDATE' | 'UPDATE ENTITY'>(
     'UPDATE'
   )
+  const [selectedTabUsersAndRoles, setSelectedTabUsersAndRoles] =
+    useState<selectedTabUsersAndRolesType>({
+      name: 'Roles'
+    })
   const [selectedItemToExclude, setSelectedItemToExclude] = useState()
   const [reload, setReload] = useState(false)
   const [showCreateEntitySection, setShowCreateEntitySection] = useState(false)
   const [showTableViewMode, setShowTableViewMode] = useState(false)
-  const [currentTab, setCurrentTab] = useState<
-    'Data Manager' | 'Schema Manager' | 'USERS'
-  >('Schema Manager')
+  const [currentTab, setCurrentTab] = useState<currentTabType>('Schema')
+  const [currentTabSchema, setCurrentTabSchema] =
+    useState<currentTabSchemaType>('Databases')
+
   const [selectedEntity, setSelectedEntity] = useState<string>()
   const [entityData, setEntityData] = useState<types.EntityData[]>()
   const [schemaTables, setSchemaTables] = useState<types.SchemaTable>()
@@ -109,40 +126,61 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     ReferenceEntity: yup.object().required('This field is required')
   })
 
-  function returnToEntitiesPage() {
+  function goToEntitiesPage() {
     setShowCreateEntitySection(false)
     setSelectedEntity(undefined)
     setBreadcrumbPages(breadcrumbPagesData?.home)
+    setCurrentTabSchema('Databases')
+  }
+  function goToModelerPage() {
+    setShowCreateEntitySection(false)
+    setSelectedEntity(undefined)
+    setBreadcrumbPages(breadcrumbPagesData?.modeler)
+    setCurrentTabSchema('Modeler')
+  }
+  function goToUserAndRolesPage() {
+    setShowCreateEntitySection(false)
+    setSelectedEntity(undefined)
+    setBreadcrumbPages(breadcrumbPagesData?.userAndRoles)
+    setCurrentTabSchema('Users and Roles')
   }
   const breadcrumbPagesData = {
     home: [
-      { content: 'Schema manager', current: false },
-      { content: 'Entities', current: true }
+      { content: 'Schema', current: false },
+      { content: 'Database', current: true }
+    ],
+    modeler: [
+      { content: 'Schema', current: false },
+      { content: 'Modeler', current: true }
+    ],
+    userAndRoles: [
+      { content: 'Schema', current: false },
+      { content: 'Users and roles', current: true }
     ],
     createEntity: [
-      { content: 'Schema manager', current: false },
+      { content: 'Schema', current: false },
       {
-        content: 'Entities',
+        content: 'Database',
         current: false,
-        action: returnToEntitiesPage
+        action: goToEntitiesPage
       },
       { content: 'Create', current: true }
     ],
     viewEntity: (entityName: string) => [
-      { content: 'Schema manager', current: false },
+      { content: 'Schema', current: false },
       {
-        content: 'Entities',
+        content: 'Database',
         current: false,
-        action: returnToEntitiesPage
+        action: goToEntitiesPage
       },
       { content: entityName, current: true }
     ],
     viewEntityRelationship: (entityName: string) => [
-      { content: 'Schema manager', current: false },
+      { content: 'Schema', current: false },
       {
-        content: 'Entities',
+        content: 'Database',
         current: false,
-        action: returnToEntitiesPage
+        action: goToEntitiesPage
       },
       { content: entityName, current: false },
       { content: 'Relationship', current: true }
@@ -185,7 +223,13 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         updateAssociationSchema,
         schemaStatus,
         setSchemaStatus,
-        returnToEntitiesPage
+        goToEntitiesPage,
+        goToModelerPage,
+        currentTabSchema,
+        setCurrentTabSchema,
+        goToUserAndRolesPage,
+        selectedTabUsersAndRoles,
+        setSelectedTabUsersAndRoles
       }}
     >
       {children}

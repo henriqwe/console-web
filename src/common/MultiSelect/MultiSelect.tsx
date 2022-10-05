@@ -70,7 +70,9 @@ export const MultiSelect = ({
   }, [value])
 
   useEffect(() => {
-    onChange && onChange(selectedItens)
+    if (selectedItens !== value) {
+      onChange && onChange(selectedItens)
+    }
   }, [selectedItens])
 
   return (
@@ -94,9 +96,7 @@ export const MultiSelect = ({
               role="button"
             >
               {selectedItens?.length > 0 ? (
-                <span
-                  className="block truncate dark:text-text-primary"
-                >
+                <span className="block truncate dark:text-text-primary">
                   {selectedItens.map((item) => item.name).join(', ')}
                 </span>
               ) : (
@@ -141,7 +141,7 @@ export const MultiSelect = ({
                             ${selected ? 'font-semibold' : 'font-normal'}
                             block truncate
                           `}
-                          title={option.name}
+                            title={option.name}
                           >
                             {option.name}
                           </span>
@@ -156,7 +156,7 @@ export const MultiSelect = ({
                               }
                               absolute inset-y-0 right-0 flex items-center pr-4
                             `}
-                            role="checkicon"
+                              role="checkicon"
                             >
                               <CheckIcon
                                 className="w-5 h-5"

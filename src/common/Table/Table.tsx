@@ -22,8 +22,8 @@ export function Table({
   return (
     <div className="w-full ">
       <div className="flex flex-col">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+        <div className="-mx-4  overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="inline-block min-w-full align-middle md:px-6 lg:px-8">
             <div
               className={`overflow-hidden shadow ring-1 ring-black dark:ring-gray-600 ring-opacity-5 ${
                 rounded ? 'rounded-lg' : ''

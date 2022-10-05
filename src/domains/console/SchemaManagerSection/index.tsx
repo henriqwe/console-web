@@ -6,7 +6,7 @@ import * as utils from 'utils'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
-import { PlusIcon } from '@heroicons/react/solid'
+import { CheckCircleIcon, PlusIcon } from '@heroicons/react/solid'
 
 export function SchemaManagerSection() {
   const [selectedEntityTab, setSelectedEntityTab] = useState({
@@ -24,7 +24,10 @@ export function SchemaManagerSection() {
     setSchemaStatus,
     breadcrumbPagesData,
     setBreadcrumbPages,
-    setShowCreateEntitySection
+    setShowCreateEntitySection,
+    currentTabSchema,
+    selectedTabUsersAndRoles,
+    setSelectedTabUsersAndRoles
   } = consoleSection.useSchemaManager()
   const [loading, setLoading] = useState(true)
 
@@ -90,7 +93,7 @@ export function SchemaManagerSection() {
       <common.Card className="flex flex-col h-full">
         <div className="flex w-full h-[3.3rem]">
           <div className="flex items-center justify-between w-full">
-            <div className="flex items  -center">
+            <div className="flex items-center">
               <common.Breadcrumb pages={breadcrumbPages} />
               {selectedEntity && (
                 <PencilIcon
@@ -102,7 +105,7 @@ export function SchemaManagerSection() {
                 />
               )}
             </div>
-            {!selectedEntity && (
+            {!selectedEntity && currentTabSchema === 'Databases' && (
               <common.Buttons.WhiteOutline
                 type="button"
                 onClick={() => {
@@ -113,6 +116,25 @@ export function SchemaManagerSection() {
               >
                 Create entity
               </common.Buttons.WhiteOutline>
+            )}
+            {currentTabSchema === 'Modeler' && (
+              <common.Buttons.WhiteOutline
+                type="button"
+                onClick={() => null}
+                icon={<CheckCircleIcon className="w-4 h-4 !text-green-700 " />}
+                disabled
+              >
+                Deploy
+              </common.Buttons.WhiteOutline>
+            )}
+            {currentTabSchema === 'Users and Roles' && (
+              <div className={` w-1/3 `}>
+                <common.Tabs
+                  tabs={[{ name: 'Users' }, { name: 'Roles' }]}
+                  selectedTab={selectedTabUsersAndRoles}
+                  setSelectedTab={setSelectedTabUsersAndRoles}
+                />
+              </div>
             )}
           </div>
           <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
@@ -126,14 +148,22 @@ export function SchemaManagerSection() {
         <consoleSection.SlidePanel />
         <div className="bg-white rounded-md dark:bg-menu-primary w-full">
           <common.ContentSection variant="WithoutTitleBackgroundColor">
-            {selectedEntity ? (
-              selectedEntityTab.name === 'Attributes' ? (
-                <consoleSection.ModifyTab loading={loading} />
+            {currentTabSchema === 'Databases' ? (
+              selectedEntity ? (
+                selectedEntityTab.name === 'Attributes' ? (
+                  <consoleSection.ModifyTab loading={loading} />
+                ) : (
+                  <consoleSection.AssociationTab loading={loading} />
+                )
               ) : (
-                <consoleSection.AssociationTab loading={loading} />
+                <consoleSection.DefaultPage />
               )
+            ) : currentTabSchema === 'Modeler' ? (
+              <consoleSection.Modeler />
+            ) : currentTabSchema === 'Users and Roles' ? (
+              <consoleSection.UsersSection />
             ) : (
-              <consoleSection.DefaultPage />
+              <div />
             )}
           </common.ContentSection>
         </div>

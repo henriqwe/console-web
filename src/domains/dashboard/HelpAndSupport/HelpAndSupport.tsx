@@ -72,12 +72,15 @@ export function HelpAndSupport() {
           />
         </div>
       </div>
-      <div className="z-20 flex flex-col w-full gap-y-8">
+      <div className="z-20 flex flex-col w-full gap-y-6">
         <section className="flex justify-between w-full mx-auto">
           <div className="flex flex-col">
-            <p className="text-xs dark:text-gray-500">
-              Help and support <span className="ml-1"> {'>'} </span>
-            </p>
+            <common.Breadcrumb
+              pages={[
+                { content: 'Help and support', current: false },
+                { content: '', current: false }
+              ]}
+            />
             <div className="flex">
               <h1 className="pr-4 text-2xl font-semibold text-gray-900 dark:text-white">
                 Ticket

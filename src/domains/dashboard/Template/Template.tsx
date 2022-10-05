@@ -36,7 +36,7 @@ export function Template({ children }: TemplateProps) {
       current: currentSection === 'tutorialsAndDocs'
     },
     {
-      name: 'Help And Suport',
+      name: 'Help And Support',
       onClick: () => setCurrentSection('helpAndSupport'),
       icon: InformationCircleIcon,
       current: currentSection === 'helpAndSupport'
