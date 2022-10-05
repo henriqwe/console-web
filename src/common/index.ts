@@ -1,4 +1,3 @@
-export * as Buttons from './Button'
 export { Spinner } from './Spinner'
 export { Input } from './Input'
 export { Select } from './Select'
@@ -22,6 +21,8 @@ export { Toggle } from './Toggle'
 export { ToggleTheme } from './ToggleTheme'
 export { EditableTable } from './EditableTable'
 export { Alert } from './Alert'
+export { Feed } from './Feed'
 
+export * as Buttons from './Button'
 export * as illustrations from './Ilustrations'
 export * as icons from './Icons'
