@@ -42,7 +42,7 @@ export function Docs() {
 
   return (
     <div className="bg-white dark:-mb-32 dark:mt-[-4.5rem] dark:bg-slate-900 dark:pb-32 dark:pt-[4.5rem] dark:lg:mt-[-4.75rem] dark:lg:pt-[4.75rem]">
-      <div className="pb-10 lg:relative lg:px-0">
+      <div className="py-10 lg:relative lg:px-0">
         <div className="mx-auto grid px-6 lg:px-12 grid-cols-1 items-center gap-y-16 gap-x-8 lg:max-w-8xl xl:gap-x-16 2xl:grid-cols-2">
           <div className="relative flex flex-col gap-y-3 md:text-center lg:text-left">
             <div className="relative">
