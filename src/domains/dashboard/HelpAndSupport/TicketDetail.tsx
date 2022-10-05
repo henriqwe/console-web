@@ -31,7 +31,8 @@ export function TicketDetail() {
   const {
     control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm()
 
   async function createTicketMessage(formData: FormData) {
@@ -67,6 +68,7 @@ export function TicketDetail() {
         }
       })
       setReloadMessages(!reloadMessages)
+      setValue('Content', '')
     } catch (err) {
       utils.showError(err)
     } finally {
