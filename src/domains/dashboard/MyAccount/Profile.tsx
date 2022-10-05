@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import * as Common from 'common'
+import { ChevronRightIcon } from '@heroicons/react/solid'
 
 type formProps = {
   myInfo: {
@@ -33,13 +34,17 @@ export function Profile() {
     }
   })
 
-  function handleSubmit() {
+  const [loading, setLoading] = useState(false)
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setLoading(true)
     console.log(form)
   }
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={(e) => handleSubmit(e)}
       className="grid grid-cols-1 md:grid-cols-2 gap-y-10 w-full"
     >
       {/* os valores padrão dos campos usuário (username, email) e endereço vêm da página de login, usando a senha que o usuário coloca para logar, e  */}
@@ -159,8 +164,18 @@ export function Profile() {
         </div>
       </div>
       <span className="flex justify-end lg:col-start-2 px-3">
-        <Common.Buttons.Ycodify className="w-max">
-          Atualizar dados
+        <Common.Buttons.Ycodify
+          icon={
+            loading ? (
+              <Common.Spinner className="w-4 h-4" />
+            ) : (
+              <ChevronRightIcon className="w-4 h-4" />
+            )
+          }
+          className="w-max"
+          type="submit"
+        >
+          Update data
         </Common.Buttons.Ycodify>
       </span>
     </form>
