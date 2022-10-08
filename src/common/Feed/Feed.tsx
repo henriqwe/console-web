@@ -23,21 +23,21 @@ export function Feed({ activity }: FeedProps) {
               ) : null}
               <div className="relative flex items-start space-x-3">
                 <div className="relative">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white ring-8 ring-gray-200 dark:ring-bg-page">
+                  <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full ring-4 ring-gray-200 dark:ring-bg-page">
                     <UserIcon
-                      className="h-8 w-8 text-slate-400 dark:text-bg-page"
+                      className="w-8 h-8 text-slate-400 dark:text-bg-page"
                       aria-hidden="true"
                     />
                   </div>
 
-                  <span className="absolute -bottom-0.5 -right-1 rounded-tl bg-gray-200 dark:bg-bg-page px-0.5 py-px">
+                  <span className="absolute -bottom-0.5 -right-1 rounded-tl rounded-br-full bg-gray-200 dark:bg-bg-page px-0.5 py-px">
                     <ChatAltIcon
-                      className="h-5 w-5 text-gray-400 dark:text-gray-100"
+                      className="w-5 h-5 text-gray-400 dark:text-gray-100"
                       aria-hidden="true"
                     />
                   </span>
                 </div>
-                <div className="min-w-0 flex-1">
+                <div className="flex-1 min-w-0">
                   <div>
                     <div className="text-sm">
                       <div className="font-medium text-gray-900 dark:text-gray-100">
