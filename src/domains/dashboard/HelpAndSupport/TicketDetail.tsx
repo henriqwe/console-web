@@ -128,25 +128,15 @@ export function TicketDetail() {
               <p className="text-xs leading-none dark:text-gray-400">
                 Ticket {selectedTicket?.id}
               </p>
-              <div
-                className="flex items-center gap-1 px-1 text-gray-300 bg-gray-600 rounded-sm cursor-pointer text-super-tiny hover:bg-gray-600 hover:text-gray-200"
-                onClick={() => {
-                  setSelectedTicket(undefined)
-                }}
-              >
-                <ReplyIcon className="w-2 h-2" />
-                <span>Back</span>
-              </div>
             </div>
           </div>
-
           <p className="text-lg font-bold">{selectedTicket?.title}</p>
-
           <p className="text-sm">{selectedTicket?.content}</p>
+          <common.Separator />
+          <div className="ml-4">
+            <common.Feed activity={messages} />
+          </div>
         </common.Card>
-        <div className="ml-4">
-          <common.Feed activity={messages} />
-        </div>
       </div>
 
       <common.Separator className="border-gray-400" />
