@@ -96,7 +96,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const [showTableViewMode, setShowTableViewMode] = useState(false)
   const [currentTab, setCurrentTab] = useState<currentTabType>('Schema')
   const [currentTabSchema, setCurrentTabSchema] =
-    useState<currentTabSchemaType>('Databases')
+    useState<currentTabSchemaType>('Modeler')
 
   const [selectedEntity, setSelectedEntity] = useState<string>()
   const [entityData, setEntityData] = useState<types.EntityData[]>()
