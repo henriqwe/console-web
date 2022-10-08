@@ -13,10 +13,10 @@ function Page() {
   return (
     <>
       <Head>
-        <title>Projects - Dashboard</title>
+        <title>My Account - Dashboard</title>
       </Head>
       <dashboard.Template>
-        <dashboard.Projects />
+        <dashboard.MyAccount />
       </dashboard.Template>
     </>
   )

@@ -13,39 +13,41 @@ import {
 import { removeCookie } from 'utils'
 import { ToggleTheme } from 'common'
 import { signOut } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { routes } from 'domains/routes'
 
 type TemplateProps = {
   children: ReactNode
 }
 
 export function Template({ children }: TemplateProps) {
-  const { setCurrentSection, currentSection } = dashboard.useData()
+  const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const navigation = [
     {
       name: 'Projects',
-      onClick: () => setCurrentSection('projects'),
+      onClick: () => router.push(routes.dashboard),
       icon: HomeIcon,
-      current: currentSection === 'projects'
+      current: router.asPath === routes.dashboard
     },
     {
       name: 'Tutorial And Docs',
-      onClick: () => setCurrentSection('tutorialsAndDocs'),
+      onClick: () => router.push(routes.tutorialsAndDocs),
       icon: BookOpenIcon,
-      current: currentSection === 'tutorialsAndDocs'
+      current: router.asPath === routes.tutorialsAndDocs
     },
     {
       name: 'Help And Support',
-      onClick: () => setCurrentSection('helpAndSupport'),
+      onClick: () => router.push(routes.helpAndSupport),
       icon: InformationCircleIcon,
-      current: currentSection === 'helpAndSupport'
+      current: router.asPath === routes.helpAndSupport
     },
     {
       name: 'My Account',
-      onClick: () => setCurrentSection('myAccount'),
+      onClick: () => router.push(routes.myAccount),
       icon: UserIcon,
-      current: currentSection === 'myAccount'
+      current: router.asPath === routes.myAccount
     }
   ]
 
@@ -114,7 +116,7 @@ export function Template({ children }: TemplateProps) {
       <div className="fixed w-full h-screen bg-gray-200 dark:bg-bg-page" />
       <div className="flex flex-col flex-1 w-full h-full md:pl-64">
         <div className="sticky z-50 insset-0 bg-bg-navigation md:hidden">
-          <div className="flex justify-between pl-3 pr-2 items-center">
+          <div className="flex items-center justify-between pl-3 pr-2">
             <button
               type="button"
               className={`py-2 duration-150 ${
@@ -131,7 +133,7 @@ export function Template({ children }: TemplateProps) {
           </div>
 
           {sidebarOpen && (
-            <div className="py-2 absolute left-0 bg-bg-navigation w-full first-letter:md:hidden">
+            <div className="absolute left-0 w-full py-2 bg-bg-navigation first-letter:md:hidden">
               <div className="flex flex-col gap-y-4">
                 <nav className="flex flex-col">
                   {navigation.map((item) => (
@@ -178,7 +180,7 @@ export function Template({ children }: TemplateProps) {
             </div>
           )}
         </div>
-        <main className="h-full px-8 md:px-16 pt-10 pb-8">{children}</main>
+        <main className="h-full px-8 pt-10 pb-8 md:px-16">{children}</main>
       </div>
     </div>
   )
