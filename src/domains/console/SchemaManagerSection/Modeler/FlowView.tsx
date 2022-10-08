@@ -41,6 +41,7 @@ const FlowView = ({ schema }: FlowViewProps) => {
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
         minZoom={0.1}
+        defaultZoom={0.8}
       >
         <Background
           variant={BackgroundVariant.Dots}
