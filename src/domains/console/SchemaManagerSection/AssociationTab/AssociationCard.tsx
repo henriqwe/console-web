@@ -20,7 +20,7 @@ export function AssociationCard({
   const [showDetails, setShowDetails] = useState(false)
 
   return (
-    <div>
+    <div className="w-full">
       {showDetails ? (
         <FieldDetail
           attribute={attribute}
