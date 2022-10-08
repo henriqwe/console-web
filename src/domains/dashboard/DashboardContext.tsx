@@ -20,8 +20,6 @@ type DataContextProps = {
   setSlideType: Dispatch<SetStateAction<SlideType>>
   slideSize: SlideSize
   setSlideSize: Dispatch<SetStateAction<SlideSize>>
-  currentSection: Sections
-  setCurrentSection: Dispatch<SetStateAction<Sections>>
   schemas: Schemas[]
   setSchemas: Dispatch<SetStateAction<Schemas[]>>
   createTicketSchema: yup.AnyObjectSchema
@@ -74,7 +72,6 @@ export const DataContext = createContext<DataContextProps>(
 )
 
 export const DataProvider = ({ children }: ProviderProps) => {
-  const [currentSection, setCurrentSection] = useState<Sections>('projects')
   const [openSlide, setOpenSlide] = useState(false)
   const [slideType, setSlideType] = useState<SlideType>('createProject')
   const [slideSize, setSlideSize] = useState<SlideSize>('normal')
@@ -119,8 +116,6 @@ export const DataProvider = ({ children }: ProviderProps) => {
         setSelectedSchema,
         slideSize,
         setSlideSize,
-        currentSection,
-        setCurrentSection,
         schemas,
         setSchemas,
         createTicketSchema,

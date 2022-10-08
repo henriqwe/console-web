@@ -45,6 +45,7 @@ export function CreateTicket() {
             {
               tickets: {
                 project: formData.Project.value,
+                userid: '',
                 title: formData.Title,
                 content: formData.Content,
                 category: formData.Category.value,
