@@ -87,8 +87,8 @@ export function FieldDetail({
   }
 
   return (
-    <common.Card className="p-3 bg-gray-100 border border-gray-300 dark:bg-menu-primary">
-      <div className="flex flex-col">
+    <common.Card className="flex w-full gap-4 p-3 bg-gray-100 border border-gray-300 dark:bg-menu-primary">
+      <div className="flex gap-4">
         <div>
           <common.Buttons.WhiteOutline
             type="button"
@@ -105,7 +105,7 @@ export function FieldDetail({
         </p>
       </div>
       <form
-        className="flex flex-col gap-4"
+        className="flex flex-1 gap-4"
         onSubmit={handleSubmit(Save as SubmitHandler<FieldValues>)}
       >
         <Controller
