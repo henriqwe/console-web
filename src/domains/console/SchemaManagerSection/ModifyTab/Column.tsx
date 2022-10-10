@@ -1,6 +1,8 @@
 import * as types from 'domains/console/types'
 import { useState } from 'react'
 import { FieldDetail } from './FieldDetail'
+import { PencilIcon } from '@heroicons/react/outline'
+
 import * as common from 'common'
 
 export function Column({ data }: { data: types.EntityData }) {
@@ -10,12 +12,12 @@ export function Column({ data }: { data: types.EntityData }) {
     return <FieldDetail setShowDetails={setShowDetails} data={data} />
   }
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex items-center gap-4">
       <common.Buttons.WhiteOutline
         type="button"
         onClick={() => setShowDetails(true)}
       >
-        Edit
+        <PencilIcon className="w-5 h-5"/>
       </common.Buttons.WhiteOutline>
       <p className="font-bold">
         {data.name} -{' '}
