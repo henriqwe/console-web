@@ -224,63 +224,66 @@ export function Editors() {
                     <common.Spinner className="w-5 h-5" />
                   </div>
                 </div>
-              ) : showTableViewMode ? (
-                <consoleSection.TableViewMode />
               ) : (
-                <div className="flex  flex-col w-full  h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
-                  <CodeMirror
-                    value={consoleResponseFormated}
-                    className="flex w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]"
-                    width="100%"
-                    theme={isDark ? dracula : 'light'}
-                    editable={false}
-                    extensions={[json()]}
-                    basicSetup={{
-                      lineNumbers: false
-                    }}
-                  />
-
-                  <div className="flex items-center justify-end h-6 px-2">
-                    {responseTime && (
-                      <div className="text-xs  h-8 flex items-center">
-                        Response time: {responseTime} ms
-                      </div>
-                    )}
+                <div className="flex relative flex-col w-full  h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
+                  {showTableViewMode ? (
+                    <consoleSection.TableViewMode />
+                  ) : (
+                    <CodeMirror
+                      value={consoleResponseFormated}
+                      className="flex w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]"
+                      width="100%"
+                      theme={isDark ? dracula : 'light'}
+                      editable={false}
+                      extensions={[json()]}
+                      basicSetup={{
+                        lineNumbers: false
+                      }}
+                    />
+                  )}
+                  <div className="absolute bottom-2 right-3">
+                    {consoleResponseFormated &&
+                      (showTableViewMode ? (
+                        <button
+                          type="button"
+                          title="JSON View"
+                          onClick={() => {
+                            setShowTableViewMode(false)
+                          }}
+                          className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7 bg-white dark:bg-gray-900"
+                        >
+                          <Icon
+                            icon="ph:brackets-curly-bold"
+                            className="w-4 h-4 text-gray-600 dark:text-text-primary "
+                          />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          title="Table View"
+                          onClick={() => {
+                            setShowTableViewMode(true)
+                          }}
+                          className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7"
+                        >
+                          <Icon
+                            icon="bi:table"
+                            className="w-4 h-4 text-gray-600 dark:text-text-primary"
+                          />
+                        </button>
+                      ))}
                   </div>
+                  {!showTableViewMode && (
+                    <div className="flex items-center justify-end h-6 px-2">
+                      {responseTime && (
+                        <div className="text-xs  h-8 flex items-center">
+                          Response time: {responseTime} ms
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
-              <div className="absolute bottom-10 right-3">
-                {consoleResponseFormated &&
-                  (showTableViewMode ? (
-                    <button
-                      type="button"
-                      title="JSON View"
-                      onClick={() => {
-                        setShowTableViewMode(false)
-                      }}
-                      className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7 bg-white dark:bg-gray-900"
-                    >
-                      <Icon
-                        icon="ph:brackets-curly-bold"
-                        className="w-4 h-4 text-gray-600 dark:text-text-primary "
-                      />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      title="Table View"
-                      onClick={() => {
-                        setShowTableViewMode(true)
-                      }}
-                      className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7"
-                    >
-                      <Icon
-                        icon="bi:table"
-                        className="w-4 h-4 text-gray-600 dark:text-text-primary"
-                      />
-                    </button>
-                  ))}
-              </div>
             </div>
           </div>
         </div>
