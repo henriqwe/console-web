@@ -1,20 +1,10 @@
 import * as common from 'common'
 import * as utils from 'utils'
 import * as dashboard from 'domains/dashboard'
-import { PlusIcon } from '@heroicons/react/outline'
+import { PlusIcon, ReplyIcon } from '@heroicons/react/outline'
 import { useEffect } from 'react'
 import { RowActions } from './RowActions'
 import { TicketDetail } from './TicketDetail'
-
-type Tickets = {
-  logversion: number
-  id: number
-  project: string
-  category: string
-  title: string
-  status: string
-  content: string
-}
 
 export function HelpAndSupport() {
   const {
@@ -24,7 +14,8 @@ export function HelpAndSupport() {
     reload,
     tickets,
     setTickets,
-    selectedTicket
+    selectedTicket,
+    setSelectedTicket
   } = dashboard.useData()
 
   async function loadTickets() {
@@ -86,20 +77,34 @@ export function HelpAndSupport() {
                 Ticket
               </h1>
               <div className="flex items-center">
-                <button
-                  className="px-1 py-1 bg-white rounded-md"
-                  onClick={() => {
-                    setOpenSlide(true)
-                    setSlideType('createTicket')
-                    setSlideSize('normal')
-                    // router.push(routes.createProject)
-                  }}
-                >
-                  <div className="flex items-center gap-2 dark:text-primary">
-                    <p className="text-xs ">Create</p>
-                    <PlusIcon className="w-3 h-3" />
-                  </div>
-                </button>
+                {!selectedTicket ? (
+                  <button
+                    className="px-1 py-1 bg-white rounded-md"
+                    onClick={() => {
+                      setOpenSlide(true)
+                      setSlideType('createTicket')
+                      setSlideSize('normal')
+                      // router.push(routes.createProject)
+                    }}
+                  >
+                    <div className="flex items-center gap-2 dark:text-primary">
+                      <p className="text-xs ">Create</p>
+                      <PlusIcon className="w-3 h-3" />
+                    </div>
+                  </button>
+                ) : (
+                  <button
+                    className="px-1 py-1 bg-gray-600 rounded-md"
+                    onClick={() => {
+                      setSelectedTicket(undefined)
+                    }}
+                  >
+                    <div className="flex items-center gap-2 text-gray-300 dark:text-primary">
+                      <ReplyIcon className="w-3 h-3" />
+                      <span className="text-xs ">Back</span>
+                    </div>
+                  </button>
+                )}
               </div>
             </div>
           </div>

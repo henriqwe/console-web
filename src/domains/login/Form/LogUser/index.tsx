@@ -38,7 +38,6 @@ export function LogUser() {
         )
       }
       if (res?.ok && res?.status === 200) {
-        utils.notification('Login successfully', 'success')
         router.push(routes.dashboard)
         return
       }
@@ -59,7 +58,7 @@ export function LogUser() {
   return (
     <form
       onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
-      className="mt-10 flex flex-col gap-y-8"
+      className="flex flex-col mt-10 gap-y-8"
     >
       <Controller
         name="userName"
@@ -108,7 +107,7 @@ export function LogUser() {
         type="submit"
         loading={loading}
         disabled={loading}
-        icon={<ArrowRightIcon className="text-white h-5 w-5" />}
+        icon={<ArrowRightIcon className="w-5 h-5 text-white" />}
       >
         Login
       </common.Buttons.Ycodify>

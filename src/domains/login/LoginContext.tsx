@@ -37,7 +37,7 @@ export const LoginProvider = ({ children }: ProviderProps) => {
     password: yup
       .string()
       .required()
-      .min(5, 'password must be at least 5 characters')
+      .min(6, 'password must be at least 6 characters')
   })
 
   return (

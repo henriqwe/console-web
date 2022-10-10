@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify'
 import { UserProvider, useUser } from 'contexts/UserContext'
 import { SessionProvider, useSession, signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import NextNprogress from 'nextjs-progressbar'
 import Head from 'next/head'
 
 import type { AppProps } from 'next/app'
@@ -36,12 +37,12 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
     if (router.asPath !== '/login' && router.asPath !== '/register') {
       if (status === 'unauthenticated') {
         signIn('credentials', { callbackUrl: '/' })
-        return null
+        return
       }
       const timeoutId = setTimeout(() => {
         if (!session) {
           signIn('credentials', { callbackUrl: '/' })
-          return null
+          return
         }
       }, 5000)
 
@@ -67,6 +68,13 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
   ) {
     return (
       <>
+        <NextNprogress
+          color="#29D"
+          startPosition={0.3}
+          stopDelayMs={200}
+          height={3}
+          showOnShallow={true}
+        />
         <Head>
           <title>
             {router.asPath === '/login'
@@ -86,7 +94,7 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
   }
   return (
     <div className="flex items-center justify-center w-full h-screen">
-      <div className="flex  space-x-4 justify-center items-center">
+      <div className="flex items-center justify-center space-x-4">
         <common.Spinner className="w-10 h-10 text-white" />
         <div className="text-gray-100">Carregando...</div>
       </div>
