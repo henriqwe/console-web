@@ -1,6 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { signIn } from 'next-auth/react'
-import { stringify } from 'qs'
 import * as utils from 'utils'
 
 export default async function createAccount(
@@ -27,15 +25,8 @@ export default async function createAccount(
           }
         }
       )
-
-      const signInRes = await signIn('credentials', {
-        username: req.body.username,
-        password: req.body.password,
-        redirect: false
-      })
-      console.log(signInRes)
       
-      return res.status(200).json({ data: signInRes })
+      return res.status(200).json({})
     } catch (err: any) {
       console.log(err)
       return res.status(err.response.status).json({ err })

@@ -12,6 +12,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { routes } from 'domains/routes'
 import { ArrowRightIcon } from '@heroicons/react/solid'
+import { signIn } from 'next-auth/react'
 
 export function CreateUser() {
   const [loading, setLoading] = useState(false)
@@ -30,7 +31,7 @@ export function CreateUser() {
   }) {
     setLoading(true)
     try {
-      const { data } = await utils.localApi.post(
+      await utils.localApi.post(
         utils.apiRoutes.local.createAccount,
         {
           username: formData.userName,
@@ -38,7 +39,18 @@ export function CreateUser() {
           email: formData.email
         }
       )
-      utils.setCookie('access_token', data?.data?.access_token)
+
+      const res = await signIn('credentials', {
+        username: formData.userName,
+        password: formData.password,
+        redirect: false
+      })
+
+      if (res?.ok && res?.status === 200) {
+        router.push(routes.dashboard)
+        return
+      }
+      // utils.setCookie('access_token', data?.data?.access_token)
       utils.notification('User created successfully', 'success')
       router.push(routes.dashboard)
     } catch (err: any) {
