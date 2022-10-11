@@ -2,11 +2,20 @@ import * as common from 'common'
 import * as utils from 'utils'
 import * as dashboard from 'domains/dashboard'
 import { PlusIcon, ReplyIcon } from '@heroicons/react/outline'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
 import { TicketDetail } from './TicketDetail'
+import axios from 'axios'
+
+type User = {
+  email: string
+  id: number
+  username: string
+}
 
 export function HelpAndSupport() {
+  const [user, setUser] = useState<User>()
+  console.log('user', user)
   const {
     setOpenSlide,
     setSlideType,
@@ -20,6 +29,14 @@ export function HelpAndSupport() {
 
   async function loadTickets() {
     try {
+      const { data } = await axios.get(
+        'https://api.ycodify.com/v0/id/account/get',
+        {
+          headers: {
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
       const result = await fetch(
         'https://api.ycodify.com/v0/persistence/s/no-ac',
         {
@@ -28,7 +45,9 @@ export function HelpAndSupport() {
             action: 'READ',
             data: [
               {
-                tickets: {}
+                tickets: {
+                  userid: data.id
+                }
               }
             ]
           }),
@@ -41,9 +60,10 @@ export function HelpAndSupport() {
         }
       )
 
-      const data = await result.json()
+      const response = await result.json()
 
-      setTickets(data?.[0]?.tickets ?? [])
+      setUser(data)
+      setTickets(response?.[0]?.tickets ?? [])
     } catch (err) {
       utils.showError(err)
     }
@@ -112,7 +132,7 @@ export function HelpAndSupport() {
 
         <section className="flex flex-col w-full gap-8 mx-auto">
           {selectedTicket ? (
-            <TicketDetail />
+            <TicketDetail user={user} />
           ) : (
             <common.Table
               tableColumns={[

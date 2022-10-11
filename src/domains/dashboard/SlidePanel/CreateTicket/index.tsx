@@ -4,12 +4,13 @@ import {
   SubmitHandler,
   useForm
 } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CheckIcon } from '@heroicons/react/outline'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as dashboard from 'domains/dashboard'
 import { yupResolver } from '@hookform/resolvers/yup'
+import axios from 'axios'
 
 type FormData = {
   Project: SelectObject
@@ -24,9 +25,18 @@ type SelectObject = {
   value: string
 }
 
+type Schema = {
+  createdat: number
+  name: string
+  status: string
+  tenantAc: string
+  tenantId: string
+}
+
 export function CreateTicket() {
   const [loading, setLoading] = useState(false)
-  const { schemas, createTicketSchema, setOpenSlide, setReload, reload } =
+  const [schemas, setSchemas] = useState<Schema[]>([])
+  const { createTicketSchema, setOpenSlide, setReload, reload } =
     dashboard.useData()
 
   const {
@@ -37,6 +47,15 @@ export function CreateTicket() {
 
   async function Submit(formData: FormData) {
     try {
+      const { data } = await axios.get(
+        'https://api.ycodify.com/v0/id/account/get',
+        {
+          headers: {
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        }
+      )
+
       await fetch('https://api.ycodify.com/v0/persistence/s/no-ac', {
         method: 'POST',
         body: JSON.stringify({
@@ -45,7 +64,7 @@ export function CreateTicket() {
             {
               tickets: {
                 project: formData.Project.value,
-                userid: '',
+                userid: data.id,
                 title: formData.Title,
                 content: formData.Content,
                 category: formData.Category.value,
@@ -70,6 +89,21 @@ export function CreateTicket() {
       setLoading(false)
     }
   }
+
+  async function loadSchemas() {
+    const { data } = await utils.api.get(utils.apiRoutes.schemas, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${utils.getCookie('access_token')}`
+      }
+    })
+    setSchemas(data)
+  }
+
+  useEffect(() => {
+    loadSchemas()
+  }, [])
 
   return (
     <form

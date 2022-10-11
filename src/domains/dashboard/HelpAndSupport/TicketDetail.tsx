@@ -19,9 +19,19 @@ type Message = {
   content: string
   id: string
   date: string
+  name: string
+  createdbyuser: boolean
 }
 
-export function TicketDetail() {
+type TicketDetail = {
+  user?: {
+    email: string
+    id: number
+    username: string
+  }
+}
+
+export function TicketDetail({ user }: TicketDetail) {
   const [loading, setLoading] = useState(false)
   const [reloadMessages, setReloadMessages] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
@@ -87,11 +97,7 @@ export function TicketDetail() {
             data: [
               {
                 ticketsmessages: {
-                  ticket: {
-                    tickets: {
-                      id: selectedTicket?.id
-                    }
-                  }
+                  ticket: selectedTicket?.id
                 }
               }
             ]
@@ -106,7 +112,12 @@ export function TicketDetail() {
       )
 
       const data = await result.json()
-      setMessages(data?.[0]?.ticketsmessages ?? [])
+      setMessages(
+        data?.[0]?.ticketsmessages?.map((ticket) => ({
+          ...ticket,
+          name: ticket?.createdbyuser ? user?.username : 'System'
+        })) ?? []
+      )
     } catch (err) {
       utils.showError(err)
     }
