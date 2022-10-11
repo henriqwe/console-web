@@ -121,7 +121,7 @@ export function Projects() {
                 onClick={() => {
                   setOpenSlide(true)
                   setSlideType('createProject')
-                  setSlideSize('halfPage')
+                  setSlideSize('normal')
                   // router.push(routes.createProject)
                 }}
               >

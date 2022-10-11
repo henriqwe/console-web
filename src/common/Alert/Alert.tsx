@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { ExclamationIcon } from '@heroicons/react/outline'
+import { ExclamationIcon } from '@heroicons/react/solid'
 
 export const Alert = ({
   children,
@@ -36,9 +36,7 @@ export const Alert = ({
       borderTopColor = '!border-yellow-500'
       textColor = 'text-yellow-900'
       backgroundColor = 'bg-yellow-100'
-      icon = (
-        <ExclamationIcon className="w-6 h-6 mr-4 text-yellow-500 fill-current" />
-      )
+      icon = <ExclamationIcon className="w-6 h-6 mr-4 text-yellow-500 " />
       break
     case 'danger':
       borderTopColor = '!border-red-500'

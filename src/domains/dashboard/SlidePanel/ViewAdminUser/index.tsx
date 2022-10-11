@@ -30,12 +30,12 @@ export function ViewAdminUser() {
   }
 
   return (
-    <common.Card>
+    <common.Card className="flex flex-col gap-4">
       <common.Alert title="Attention" theme="warning">
         Please save the admin user password as it cannot be recovered.
       </common.Alert>
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col items-center w-full gap-2">
+        <div className="flex flex-col items-center w-full gap-4">
           <div className="w-40 h-40 mt-4">
             <common.illustrations.User />
           </div>
