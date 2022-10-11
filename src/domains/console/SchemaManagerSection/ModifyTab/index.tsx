@@ -22,7 +22,8 @@ export function ModifyTab({ loading }: ModifyTabProps) {
     setReload,
     reload,
     setSelectedEntity,
-    schemaTables
+    schemaTables,
+    privateAttributes
   } = consoleSection.useSchemaManager()
 
   async function RemoveEntity() {
@@ -92,17 +93,44 @@ export function ModifyTab({ loading }: ModifyTabProps) {
         )}
       </div>
       <common.Separator />
-      {entityData
-        ?.filter((data) => {
-          const entities = Object.keys(schemaTables!)
-          if (entities.includes(data.type)) {
-            return false
-          }
-          return data.name !== '_conf'
-        })
-        .map((data) => (
-          <Column key={data.name} data={data} />
-        ))}
+      <div className="flex flex-col gap-6 mt-4">
+        <div className="flex flex-col gap-2">
+          <span className="text-gray-600 font-semibold text-lg">
+            Ycodify control attributes
+          </span>
+          {entityData
+            ?.filter((data) => {
+              const entities = Object.keys(schemaTables!)
+              if (entities.includes(data.type)) {
+                return false
+              }
+              return (
+                data.name !== '_conf' && privateAttributes.includes(data.name)
+              )
+            })
+            .map((data) => (
+              <Column key={data.name} data={data} noEdit />
+            ))}
+        </div>
+        <div className="flex flex-col gap-2">
+          <span className="text-gray-600 font-semibold text-lg">
+            Entity attributes
+          </span>
+          {entityData
+            ?.filter((data) => {
+              const entities = Object.keys(schemaTables!)
+              if (entities.includes(data.type)) {
+                return false
+              }
+              return (
+                data.name !== '_conf' && !privateAttributes.includes(data.name)
+              )
+            })
+            .map((data) => (
+              <Column key={data.name} data={data} />
+            ))}
+        </div>
+      </div>
 
       {openForm && (
         <AttributeForm
