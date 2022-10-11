@@ -1430,7 +1430,6 @@ export const ycl_transpiler = {
                       '\n'
                     index++
                   } else {
-                    console.log('entity_names: ', entity_names)
                     throw new Error(
                       "error: unknow token. token '" +
                         tokens[index].symbol +
@@ -1521,8 +1520,6 @@ export const ycl_transpiler = {
               types[type] = types[type] + '}'
             }
           }
-
-          console.log('code ok')
         } else {
           throw new Error(
             "* error: unknow token '" +
@@ -2687,12 +2684,7 @@ export const ycl_transpiler = {
                             'nullable'
                           ]['value']
                       }
-                      console.log(
-                        schema.name,
-                        entity.name,
-                        association_.name,
-                        assoc
-                      )
+
                       ycl_transpiler.updateAssociation(
                         schema.name,
                         entity.name,
@@ -2715,12 +2707,7 @@ export const ycl_transpiler = {
                             'unique'
                           ]['value']
                       }
-                      console.log(
-                        schema.name,
-                        entity.name,
-                        association_.name,
-                        assoc
-                      )
+
                       ycl_transpiler.updateAssociation(
                         schema.name,
                         entity.name,
@@ -2755,11 +2742,8 @@ export const ycl_transpiler = {
         }
       }
 
-      console.log('count: ', count)
-
       if (toCreateEntities.length > 0) {
         for (let idx = 0; idx < toCreateEntities.length; idx++) {
-          console.log('toCreateEntities[' + idx + ']: ', toCreateEntities[idx])
           ycl_transpiler.createEntity(
             toCreateEntities[idx].schema,
             toCreateEntities[idx].entity,
@@ -2794,12 +2778,12 @@ export const ycl_transpiler = {
     }
   },
   createSchema: function (schema, callback) {
-    console.log('> create schema: ', schema)
+    // console.log('> create schema: ', schema)
 
     _gtools_lib.request(api.endpoint.modeling.schema.create, schema, callback)
   },
   updateSchema: function (schema, body, callback) {
-    console.log('update schema: ', schema, body)
+    // console.log('update schema: ', schema, body)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.update)
@@ -2808,7 +2792,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, body, callback)
   },
   deleteSchema: function (schema, callback) {
-    console.log('delete schema: ', schema)
+    // console.log('delete schema: ', schema)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.delete)
@@ -2817,7 +2801,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, null, callback)
   },
   createEntity: function (schema, entity, callback) {
-    console.log('create entity: ', schema, entity)
+    // console.log('create entity: ', schema, entity)
 
     let endpoint = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.create)

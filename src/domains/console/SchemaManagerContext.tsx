@@ -57,6 +57,7 @@ type SchemaManagerContextProps = {
   setSelectedTabUsersAndRoles: Dispatch<
     SetStateAction<selectedTabUsersAndRolesType>
   >
+  privateAttributes: string[]
 }
 
 type ProviderProps = {
@@ -97,6 +98,12 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const [currentTab, setCurrentTab] = useState<currentTabType>('Schema')
   const [currentTabSchema, setCurrentTabSchema] =
     useState<currentTabSchemaType>('Modeler')
+  const privateAttributes = [
+    'logrole',
+    'loguser',
+    'logupdatedat',
+    'logcreatedat'
+  ]
 
   const [selectedEntity, setSelectedEntity] = useState<string>()
   const [entityData, setEntityData] = useState<types.EntityData[]>()
@@ -229,7 +236,8 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         setCurrentTabSchema,
         goToUserAndRolesPage,
         selectedTabUsersAndRoles,
-        setSelectedTabUsersAndRoles
+        setSelectedTabUsersAndRoles,
+        privateAttributes
       }}
     >
       {children}
