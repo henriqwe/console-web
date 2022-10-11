@@ -31,14 +31,11 @@ export function CreateUser() {
   }) {
     setLoading(true)
     try {
-      await utils.localApi.post(
-        utils.apiRoutes.local.createAccount,
-        {
-          username: formData.userName,
-          password: formData.password,
-          email: formData.email
-        }
-      )
+      await utils.localApi.post(utils.apiRoutes.local.createAccount, {
+        username: formData.userName,
+        password: formData.password,
+        email: formData.email
+      })
 
       const res = await signIn('credentials', {
         username: formData.userName,
@@ -54,6 +51,10 @@ export function CreateUser() {
       utils.notification('User created successfully', 'success')
       router.push(routes.dashboard)
     } catch (err: any) {
+      if (err?.response?.status === 417) {
+        utils.notification('Username  already exists', 'error')
+        return
+      }
       utils.showError(err)
     } finally {
       setLoading(false)
