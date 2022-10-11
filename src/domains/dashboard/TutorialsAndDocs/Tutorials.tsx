@@ -102,20 +102,23 @@ export function Tutorials() {
         id: index,
         title: topic.title,
         content: (
-          <div className="flex flex-col text-sm font-light pl-5 gap-y-1">
+          <ul className="space-y-2 border-l-2 border-slate-100 dark:border-slate-700/80 lg:mt-4 lg:space-y-4 lg:border-slate-200">
             {topic.subtopics.map((subtopic) => (
-              <button
-                className={`cursor-pointer self-start ${
-                  currentTopic === subtopic.title
-                    ? 'text-ycodify'
-                    : 'dark:text-text-primary'
-                }`}
-                onClick={() => setCurrentTopic(subtopic.title)}
-              >
-                {subtopic.title}
-              </button>
+              <li className="relative">
+                <button
+                  className={`flex w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full
+                  ${
+                    currentTopic === subtopic.title
+                      ? 'font-semibold text-sky-500 before:bg-sky-500'
+                      : 'text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300'
+                  }`}
+                  onClick={() => setCurrentTopic(subtopic.title)}
+                >
+                  {subtopic.title}
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
         ),
         defaultOpen: index === 0,
         action: () => {}
@@ -124,11 +127,15 @@ export function Tutorials() {
   }
 
   return (
-    <section className="grid grid-cols-4 gap-x-6 pr-6">
+    <section className="grid grid-cols-4 gap-x-6 pr-6 py-10">
       <div className="col-span-1">
-        <Common.AccordionGroup accordionsData={convertData(navigation)} />
+        <Common.AccordionGroup
+          style="docs"
+          gap="gap-y-3"
+          accordionsData={convertData(navigation)}
+        />
       </div>
-      <div className="col-span-3 py-10">
+      <div className="col-span-3">
         {navigation.map((topic) =>
           topic.subtopics.map((subtopic) => {
             if (subtopic.title === currentTopic) {

@@ -1,6 +1,6 @@
 import * as common from 'common'
 import { Profile } from './Profile'
-import { Billing } from './Billing'
+import { Billing } from './Billing/Billing'
 import { useState } from 'react'
 
 export function MyAccount() {

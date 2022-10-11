@@ -9,11 +9,15 @@ type AccordionGroupProps = {
     defaultOpen: boolean
     action: () => void
   }[]
+  style: 'console' | 'docs'
+  gap?: string
   hideSelf?: boolean
 }
 
 export function AccordionGroup({
   accordionsData,
+  style = 'console',
+  gap,
   hideSelf = false
 }: AccordionGroupProps) {
   const elementsRef = useRef(accordionsData?.map(() => createRef()))
@@ -46,7 +50,7 @@ export function AccordionGroup({
   }
 
   return (
-    <div className={`w-full`}>
+    <div className={`flex flex-col w-full ${gap}`}>
       {accordionsData.map((accordionData, idx) => {
         return (
           <div
@@ -58,6 +62,7 @@ export function AccordionGroup({
             <common.Accordion
               title={accordionData.title}
               content={accordionData.content}
+              style={style}
               defaultOpen={accordionData.defaultOpen}
               elementRef={elementsRef.current[idx]}
               id={accordionData.id}

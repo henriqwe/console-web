@@ -4,7 +4,7 @@ import { Docs } from './Docs'
 import { useState } from 'react'
 
 export function TutorialsAndDocs() {
-  const [selectedTab, setSelectedTab] = useState({ name: 'Tutorials' })
+  const [selectedTab, setSelectedTab] = useState({ name: 'Docs' }) //Tutorials
   return (
     <div className="flex justify-center">
       <div className="absolute inset-x-0 top-0 z-10 flex justify-center pointer-events-none blur-xl">
@@ -35,14 +35,16 @@ export function TutorialsAndDocs() {
               setSelectedTab={(tab) => {
                 setSelectedTab(tab)
               }}
-              tabs={[{ name: 'Tutorials' }, { name: 'Docs' }]}
+              tabs={[/*{ name: 'Tutorials' }, */ { name: 'Docs' }]}
             />
           </div>
         </div>
         <div className="flex flex-col gap-y-8 sm:gap-y-0">
           <section className="flex dark:bg-menu-primary dark:border-gray-700 sm:border bg-white overflow-hidden rounded-lg rounded-tr-none">
             <div className="flex flex-col w-full">
-              {selectedTab.name === 'Tutorials' ? <Tutorials /> : <Docs />}
+              {selectedTab.name === 'Tutorials' ? /* <Tutorials /> */ null : (
+                <Docs />
+              )}
             </div>
           </section>
         </div>

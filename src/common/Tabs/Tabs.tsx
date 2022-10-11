@@ -38,7 +38,7 @@ export function Tabs({
         />
       </div>
       <div className="hidden sm:block h-full">
-        <div className="border-b border-gray-200 dark:border-menu-primary h-full">
+        <div className="h-full">
           <nav
             className="flex justify-center w-full -mb-px h-full "
             aria-label="Tabs roudend-t-md"
