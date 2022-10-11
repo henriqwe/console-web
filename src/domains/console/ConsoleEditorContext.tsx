@@ -112,7 +112,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleResponseLoading, setconsoleResponseLoading] = useState(false)
   const router = useRouter()
   const [responseTime, setResponseTime] = useState<number>()
-  const { reload } = data.useSchemaManager()
+  const { reload, privateAttributes } = data.useSchemaManager()
   const [codeExporterValue, setCodeExporterValue] = useState('')
   const [variablesValue, setVariablesValue] = useState('')
   const [schemaTabData, setSchemaTabData] = useState<JSX.Element>()
@@ -244,6 +244,34 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     formatValueToSetInConsole(value)
   }
 
+  function handleRemovePrivateAttribute(value: {
+    action: actionType
+    data: any[]
+  }) {
+    try {
+      for (const privateAttibute of privateAttributes) {
+        // Lindando com os atributos se existir remove
+        for (const valueDataEntity of value.data) {
+          for (const entity of Object.keys(valueDataEntity)) {
+            if (
+              Object.keys(valueDataEntity[entity]).includes(privateAttibute)
+            ) {
+              delete valueDataEntity[entity][privateAttibute]
+              break
+            }
+          }
+        }
+      }
+    } catch (err) {
+      value = {
+        action: 'READ',
+        data: [{}]
+      }
+    }
+
+    formatValueToSetInConsole(value)
+  }
+
   function handleFormatQueryOrMutationEntity({ entity }: { entity: string }) {
     let value: consoleValueParsedType
 
@@ -290,7 +318,10 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     } catch (err) {
       value = { action, data: [] }
     }
-
+    if (action !== 'READ') {
+      handleRemovePrivateAttribute(value)
+      return
+    }
     formatValueToSetInConsole(value)
   }
 
