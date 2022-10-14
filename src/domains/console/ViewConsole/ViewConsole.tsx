@@ -17,7 +17,7 @@ export function ViewConsole() {
     case 'Schema':
       tab = <consoleSection.SchemaManagerSection />
       break
-    case 'Data Api':
+    case 'Data API':
       tab = <consoleSection.DataApiSection />
       break
     case 'USERS':

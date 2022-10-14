@@ -20,7 +20,8 @@ export default function WrapperApp({
   ...rest
 }: AppProps) {
   return (
-    <SessionProvider session={session}>
+    // 24 hours
+    <SessionProvider session={session} refetchInterval={24 * 60 * 60}>
       <UserProvider>
         <ConsoleWebApp Component={Component} pageProps={pageProps} {...rest} />
       </UserProvider>
@@ -54,6 +55,7 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
     if (session) {
       utils.setCookie('access_token', session?.accessToken as string)
       setUser({
+        ...user,
         ...(session.user as UserType),
         accessToken: session?.accessToken as string,
         ...utils.parseJwt(session?.accessToken as string)
