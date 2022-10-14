@@ -28,10 +28,10 @@ export function SideBar() {
     },
     {
       id: 2,
-      title: 'Data Api',
+      title: 'Data API',
       content: <consoleSection.DataApiTab />,
       defaultOpen: false,
-      action: () => setCurrentTab('Data Api')
+      action: () => setCurrentTab('Data API')
     }
   ]
   return (

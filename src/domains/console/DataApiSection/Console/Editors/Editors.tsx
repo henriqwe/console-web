@@ -95,7 +95,7 @@ export function Editors() {
             <div className="flex items-center z-50">
               <common.Breadcrumb
                 pages={[
-                  { content: 'Data Api', current: false },
+                  { content: 'Data API', current: false },
                   { content: 'Console', current: false },
                   {
                     content: (

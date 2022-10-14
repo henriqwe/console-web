@@ -9,7 +9,7 @@ type AccordionGroupProps = {
     defaultOpen: boolean
     action: () => void
   }[]
-  style: 'console' | 'docs'
+  style?: 'console' | 'docs'
   gap?: string
   hideSelf?: boolean
 }

@@ -40,9 +40,8 @@ export function RoleTab() {
       )
       setRoles(data)
     } catch (err: any) {
-      console.log(err)
       setUser({ ...user, adminSchemaPassword: undefined })
-      if (err.response.status === 401) {
+      if (err.response.status === 401 || err.response.status === 400) {
         return
       }
       if (err.response.status !== 404) {

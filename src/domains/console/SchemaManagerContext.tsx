@@ -9,7 +9,7 @@ import {
 import * as yup from 'yup'
 import * as types from 'domains/console/types'
 
-export type currentTabType = 'Data Api' | 'Schema' | 'USERS'
+export type currentTabType = 'Data API' | 'Schema' | 'USERS'
 export type currentTabSchemaType = 'Modeler' | 'Databases' | 'Users and Roles'
 
 type SchemaManagerContextProps = {
