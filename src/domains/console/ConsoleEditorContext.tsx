@@ -11,12 +11,14 @@ import {
   useRef,
   MutableRefObject
 } from 'react'
+import * as common from 'common'
 import { javascriptLanguage } from '@codemirror/lang-javascript'
 import { completeFromGlobalScope } from './DataApiSection/Console/Editors/Autocomplete'
 import { useRouter } from 'next/router'
 
 import * as data from 'domains/console'
 import * as utils from 'utils'
+import { ArrowRightIcon } from '@heroicons/react/outline'
 
 export type actionType = 'CREATE' | 'UPDATE' | 'DELETE' | 'READ'
 export type consoleValueParsedType = { action: actionType; data: any[] }
@@ -382,7 +384,13 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   }
 
   function formaterCodeExporterValue() {
-    const text = `async function yc_persistence_service(tenantAC, tenantID, BODY) {
+    const text = `const tenantAC = '${getCookie('X-TenantAC')}'
+const tenantID = '${getCookie('X-TenantID')}'
+
+const QUERY = ${consoleValueLastOperation}
+
+
+async function apiRequest(tenantAC, tenantID, BODY) {
   const result = await fetch('${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/${
       utils.apiRoutes.interpreter
     }', 
@@ -399,11 +407,13 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   return await result.json()
 }
 
-const tenantAC = '${getCookie('X-TenantAC')}'
-const tenantID = '${getCookie('X-TenantID')}'
-const BODY = ${consoleValueLastOperation}
 
-yc_persistence_service(tenantAC, tenantID, BODY)`
+const handlerAction = async () => {
+  const result = await apiRequest(tenantAC, tenantID, QUERY)
+  console.log(result)
+}
+
+handlerAction()`
     setCodeExporterValue(text)
   }
 
@@ -478,7 +488,32 @@ yc_persistence_service(tenantAC, tenantID, BODY)`
         {
           title: 'Docs',
           color: 'blue',
-          content: <div>Docs</div>
+          content: (
+            <div className="relative flex flex-col gap-y-3 md:text-center lg:text-left">
+              <div className="relative">
+                <p className="inline bg-gradient-to-r from-indigo-400 via-sky-600 to-indigo-400 bg-clip-text font-display text-xl tracking-tight text-transparent dark:from-indigo-200 dark:via-sky-400 dark:to-indigo-200">
+                  Develop your software faster.
+                </p>
+                <p className="mt-3 tracking-tight text-slate-600 dark:text-slate-400">
+                  Reduce significantly the efforts of coding, testing,
+                  deployment and evolution of a software. Deliver your software
+                  products in up to 60% shorter timeframes, reducing the costs
+                  of software production, operation and maintenance.
+                </p>
+                <div className="mt-8 flex gap-4 justify-center lg:justify-start">
+                  <common.Buttons.WhiteOutline
+                    onClick={() =>
+                      window.open('https://docs.ycodify.com/', '_blank')
+                    }
+                    className="flex"
+                    icon={<ArrowRightIcon className="w-4 h-4" />}
+                  >
+                    Access Docs
+                  </common.Buttons.WhiteOutline>
+                </div>
+              </div>
+            </div>
+          )
         },
         {
           title: 'Spec',
