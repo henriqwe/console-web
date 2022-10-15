@@ -164,7 +164,10 @@ export function CreateTicket() {
               <common.Select
                 placeholder="Select a Ticket Category..."
                 label="Category"
-                options={[{ name: 'String', value: 'String' }]}
+                options={[
+                  { name: 'Financeiro', value: 'Financeiro' },
+                  { name: 'Técnico', value: 'Técnico' }
+                ]}
                 value={value}
                 onChange={onChange}
                 errors={errors.Category}
