@@ -15,6 +15,7 @@ import CopyToClipboard from 'react-copy-to-clipboard'
 
 export function ViewAdminUser() {
   const router = useRouter()
+  const [allowConclude, setAllowConclude] = useState(false)
   const [loading, setLoading] = useState(false)
   const { createdSchemaName, adminUser } = dashboard.useData()
 
@@ -61,7 +62,7 @@ export function ViewAdminUser() {
                     disabled
                     value={adminUser?.password as string}
                     type="password"
-                    className="text-xs bg-transparent dark:text-text-tertiary truncate  w-20"
+                    className="w-20 text-xs truncate bg-transparent dark:text-text-tertiary"
                   />
                   <CopyToClipboard text="Copy to clipboard">
                     <div>
@@ -89,11 +90,27 @@ export function ViewAdminUser() {
           </div>
         </div>
 
+        <common.Separator />
+        <div className="flex items-center w-full gap-4">
+          <input
+            type="checkbox"
+            className="w-10 h-10"
+            onChange={() => {
+              setAllowConclude(!allowConclude)
+            }}
+            id="checkbox"
+          />
+          <label className="text-sm" htmlFor="checkbox">
+            I understand that I need to save the admin password as it will not
+            be displayed again.
+          </label>
+        </div>
+
         <div className="flex items-center justify-end w-full">
           <div className="flex gap-4">
             <common.Buttons.WhiteOutline
               loading={loading}
-              disabled={loading}
+              disabled={loading || !allowConclude}
               onClick={Submit}
               icon={<CheckIcon className="w-4 h-4" />}
             >
@@ -116,8 +133,8 @@ function InfoDetails({
   description: ReactNode
 }) {
   return (
-    <div className="flex gap-2 items-center">
-      <div className="flex w-8 h-8 bg-slate-800 dark:bg-slate-100 rounded-full items-center justify-center">
+    <div className="flex items-center gap-2">
+      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-800 dark:bg-slate-100">
         <div>{Icon}</div>
       </div>
 
