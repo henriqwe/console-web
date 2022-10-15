@@ -54,7 +54,7 @@ export function Template({ children }: TemplateProps) {
   return (
     <div>
       {/* Static sidebar for desktop */}
-      <div className="z-20 hidden bg-bg-navigation md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
+      <div className="z-20 hidden bg-bg-navigation md:flex md:w-80 md:flex-col md:fixed md:inset-y-0">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex flex-col flex-1 min-h-0 border-r border-r-gray-700">
           <div className="flex flex-col flex-1 pt-5 pb-4 mx-4 overflow-y-auto">
@@ -180,7 +180,7 @@ export function Template({ children }: TemplateProps) {
             </div>
           )}
         </div>
-        <main className="h-full px-8 pt-10 pb-8 md:px-16">{children}</main>
+        <main className="h-full px-8 pt-10 pb-8 md:px-16 md:pl-24">{children}</main>
       </div>
     </div>
   )
