@@ -149,16 +149,16 @@ export function Projects() {
           </div>
         </section>
 
-        <section className="grid grid-cols-1 xl:grid-cols-2 w-full gap-6 mx-auto">
+        <section className="grid w-full grid-cols-1 gap-6 mx-auto">
           {loadingSchemas ? (
-            <div className="flex col-span-2 flex-col items-center justify-center gap-2 mt-32">
+            <div className="flex flex-col items-center justify-center col-span-2 gap-2 mt-32">
               <div className="w-20 h-20 dark:text-text-primary">
                 <common.Spinner />
               </div>
               <p className="dark:text-text-primary">Loading projects</p>
             </div>
           ) : (showFiltered ? filteredSchemas : schemas).length === 0 ? (
-            <div className="flex col-span-2 flex-col mt-16 text-center gap-y-6">
+            <div className="flex flex-col col-span-2 mt-16 text-center gap-y-6">
               <div className="m-auto w-80">
                 <common.illustrations.Empty />
               </div>
@@ -196,7 +196,7 @@ export function Project({
   const router = useRouter()
   return (
     <div className="flex flex-col gap-y-3">
-      <div className="flex gap-x-3 items-center">
+      <div className="flex items-center gap-x-3">
         <p className="text-2xl dark:text-text-primary">{schema.name}</p>
         <span className="h-full border-r border-r-gray-300 dark:border-r-gray-600" />
         <p className="text-xs text-gray-600 dark:text-text-tertiary">
@@ -208,14 +208,14 @@ export function Project({
         key={schema.createdat}
       >
         <div className="grid items-center justify-between flex-1 grid-cols-5 gap-4">
-          <div className="dark:text-text-primary col-span-2">
+          <div className="col-span-2 dark:text-text-primary">
             <p>Project secret: </p>
             <div className="relative flex w-full h-full">
               <input
                 disabled
                 value={schema.tenantAc}
                 type="password"
-                className="w-40 text-xs bg-transparent dark:text-text-tertiary truncate"
+                className="w-40 text-xs truncate bg-transparent dark:text-text-tertiary"
               />
               <CopyToClipboard
                 text="Copy to clipboard"
