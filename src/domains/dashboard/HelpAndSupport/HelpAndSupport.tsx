@@ -15,7 +15,6 @@ type User = {
 
 export function HelpAndSupport() {
   const [user, setUser] = useState<User>()
-  console.log('user', user)
   const {
     setOpenSlide,
     setSlideType,

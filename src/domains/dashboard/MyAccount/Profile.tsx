@@ -43,21 +43,20 @@ export function Profile() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
-    console.log(form)
   }
 
-  useEffect(() => {
-    console.log(user)
-  }, [])
+  // useEffect(() => {
+  //   console.log(user)
+  // }, [])
 
   return (
     <form
       onSubmit={(e) => handleSubmit(e)}
-      className="grid grid-cols-1 md:grid-cols-2 gap-y-10 w-full"
+      className="grid w-full grid-cols-1 md:grid-cols-2 gap-y-10"
     >
       {/* os valores padrão dos campos usuário (username, email) e endereço vêm da página de login, usando a senha que o usuário coloca para logar, e  */}
-      <div className="flex flex-col gap-y-4 px-4">
-        <p className="dark:text-text-primary text-xl">My Info</p>
+      <div className="flex flex-col px-4 gap-y-4">
+        <p className="text-xl dark:text-text-primary">My Info</p>
         <Common.Input
           label="Username"
           className="w-full"
@@ -106,8 +105,8 @@ export function Profile() {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-y-4 px-4">
-        <p className="dark:text-text-primary text-xl">Address</p>
+      <div className="flex flex-col px-4 gap-y-4">
+        <p className="text-xl dark:text-text-primary">Address</p>
         <div className="flex flex-col gap-y-4">
           <Common.Input
             placeholder="Street and number"
@@ -148,7 +147,7 @@ export function Profile() {
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2 w-full justify-evenly gap-y-4">
+          <div className="grid w-full grid-cols-1 lg:grid-cols-2 gap-x-2 justify-evenly gap-y-4">
             <Common.Input
               placeholder="City"
               label="City"
@@ -176,7 +175,7 @@ export function Profile() {
           </div>
         </div>
       </div>
-      <span className="flex justify-end lg:col-start-2 px-3">
+      <span className="flex justify-end px-3 lg:col-start-2">
         <Common.Buttons.Ycodify
           icon={
             loading ? (
