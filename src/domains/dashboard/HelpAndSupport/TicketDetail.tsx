@@ -63,7 +63,7 @@ export function TicketDetail({ user }: TicketDetail) {
             {
               ticketsmessages: {
                 date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms'),
-                createdbyuser: true,
+                createdbyuser: !(user?.email === 'suporte@ycodify.com'),
                 content: formData.Content,
                 ticket: selectedTicket?.id
               }
@@ -115,7 +115,7 @@ export function TicketDetail({ user }: TicketDetail) {
       setMessages(
         data?.[0]?.ticketsmessages?.map((ticket) => ({
           ...ticket,
-          name: ticket?.createdbyuser ? user?.username : 'System'
+          name: ticket?.createdbyuser ? user?.username : 'Ycodify'
         })) ?? []
       )
     } catch (err) {
