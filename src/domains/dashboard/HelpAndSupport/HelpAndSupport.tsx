@@ -36,6 +36,13 @@ export function HelpAndSupport() {
           }
         }
       )
+      let tickets: any = {
+        userid: data.id
+      }
+
+      if (data.email === 'suporte@ycodify.com') {
+        tickets = {}
+      }
       const result = await fetch(
         'https://api.ycodify.com/v0/persistence/s/no-ac',
         {
@@ -45,7 +52,7 @@ export function HelpAndSupport() {
             data: [
               {
                 tickets: {
-                  userid: data.id
+                  ...tickets
                 }
               }
             ]
