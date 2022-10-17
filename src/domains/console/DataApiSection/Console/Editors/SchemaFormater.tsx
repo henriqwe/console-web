@@ -27,7 +27,7 @@ export function SchemaFormater() {
       type: 'text/plain'
     })
     element.href = URL.createObjectURL(file)
-    element.download = `schema ${router.query.name}.txt`
+    element.download = `schema ${router.query.name}.yc`
     document.body.appendChild(element)
     element.click()
   }
