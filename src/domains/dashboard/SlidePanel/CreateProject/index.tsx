@@ -182,7 +182,7 @@ export function Create() {
       className="flex flex-col items-end"
     >
       {!submittedSchema && (
-        <div className="flex flex-col w-full gap-2 mb-2">
+        <div className="flex flex-col w-full gap-4 mb-2">
           <Controller
             name={'ProjectName'}
             control={control}
@@ -198,6 +198,11 @@ export function Create() {
               </div>
             )}
           />
+          <div className="flex w-full justify-center">
+            <div className="w-56 ">
+              <common.illustrations.Colorschemes />
+            </div>
+          </div>
         </div>
       )}
       {submittedSchema && (
@@ -244,12 +249,12 @@ export function Create() {
               <input
                 type="file"
                 id="file"
-                accept=".txt"
+                accept=".yc"
                 className="hidden"
                 onChange={(e) => {
                   try {
                     const file = e.target.files![0]
-                    if (file.type !== 'text/plain') {
+                    if (!file.name.includes('.yc')) {
                       throw new Error('Unsupported file type')
                     }
 
