@@ -97,8 +97,8 @@ export function UsersTab() {
           <p className="text-lg font-bold text-gray-700">Loading entity data</p>
         </div>
       ) : (
-        <div className="flex flex-col w-full h-full gap-2  rounded-b-lg ">
-          <div className="flex items-center justify-end w-full px-8 py-2 gap-8">
+        <div className="flex flex-col w-full h-full gap-2  rounded-b-lg pt-2">
+          <div className="flex items-center w-full px-4 py-2 gap-8 ">
             <common.Buttons.WhiteOutline
               type="button"
               onClick={() => {

@@ -90,8 +90,8 @@ export function RoleTab() {
           <p className="text-lg font-bold text-gray-700">Loading entity data</p>
         </div>
       ) : (
-        <div className="w-full h-full  rounded-b-lg overflow-y">
-          <div className="flex items-center justify-end w-full px-8 py-2">
+        <div className="w-full h-full  rounded-b-lg overflow-y pt-2">
+          <div className="flex items-center w-full px-4 py-2">
             <common.Buttons.WhiteOutline
               type="button"
               onClick={() => {
