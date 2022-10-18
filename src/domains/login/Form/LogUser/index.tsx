@@ -13,6 +13,7 @@ import { signIn } from 'next-auth/react'
 import { routes } from 'domains/routes'
 import { ArrowRightIcon } from '@heroicons/react/solid'
 import router from 'next/router'
+import Link from 'next/link'
 
 export function LogUser() {
   const [loading, setLoading] = useState(false)
@@ -81,27 +82,37 @@ export function LogUser() {
           </div>
         )}
       />
-      <Controller
-        name="password"
-        control={control}
-        render={({ field: { onChange } }) => (
-          <div className="w-full">
-            <common.Input
-              onChange={onChange}
-              label="Password"
-              placeholder="Password"
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-            />
-            {errors.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
-            )}
-          </div>
-        )}
-      />
+      <div>
+        <Controller
+          name="password"
+          control={control}
+          render={({ field: { onChange } }) => (
+            <div className="w-full">
+              <common.Input
+                onChange={onChange}
+                label="Password"
+                placeholder="Password"
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+              />
+              {errors.password && (
+                <p className="text-sm text-red-500">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+        <Link href={'/change-password'}>
+          <a className="text-sm font-medium text-blue-600 cursor-pointer dark:text-blue-400 hover:underline">
+            Forgot password?
+          </a>
+        </Link>
+      </div>
+
       <common.Buttons.Ycodify
         className="w-full md:w-max md:self-end"
         type="submit"

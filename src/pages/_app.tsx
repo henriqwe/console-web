@@ -35,7 +35,11 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
   useEffect(() => {
-    if (router.asPath !== '/login' && router.asPath !== '/register') {
+    if (
+      router.asPath !== '/login' &&
+      router.asPath !== '/register' &&
+      router.asPath !== '/change-password'
+    ) {
       if (status === 'unauthenticated') {
         signIn('credentials', { callbackUrl: '/' })
         return
@@ -66,7 +70,8 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
   if (
     (user && status === 'authenticated') ||
     router.asPath === '/login' ||
-    router.asPath === '/register'
+    router.asPath === '/register' ||
+    router.asPath === '/change-password'
   ) {
     return (
       <>
@@ -83,6 +88,8 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
               ? 'Login'
               : router.asPath === '/register'
               ? 'Register'
+              : router.asPath === '/change-password'
+              ? 'Recover password'
               : null}
           </title>
           <link rel="icon" href="/assets/images/favicon.ico" />
