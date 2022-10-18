@@ -34,6 +34,16 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
   const { user, setUser } = useUser()
   const router = useRouter()
 
+  async function getUserData() {
+    const { data } = await utils.api.get(utils.apiRoutes.userData, {
+      headers: {
+        Authorization: session?.accessToken as string
+      }
+    })
+
+    return data
+  }
+
   useEffect(() => {
     if (router.asPath !== '/login' && router.asPath !== '/register') {
       if (status === 'unauthenticated') {
@@ -54,11 +64,14 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (session) {
       utils.setCookie('access_token', session?.accessToken as string)
-      setUser({
-        ...user,
-        ...(session.user as UserType),
-        accessToken: session?.accessToken as string,
-        ...utils.parseJwt(session?.accessToken as string)
+
+      getUserData().then((userData) => {
+        setUser({
+          ...user,
+          ...(session.user as UserType),
+          accessToken: session?.accessToken as string,
+          userData: userData
+        })
       })
     }
   }, [session])

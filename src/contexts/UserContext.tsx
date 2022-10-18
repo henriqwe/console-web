@@ -12,6 +12,7 @@ export type UserType = {
   accessToken?: string
   adminSchemaPassword?: string
   username?: string
+  userData?: any
 }
 
 type UserContextProps = {

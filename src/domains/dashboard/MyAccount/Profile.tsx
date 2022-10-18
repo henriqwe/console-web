@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as Common from 'common'
 import { useUser } from 'contexts/UserContext'
 import { ChevronRightIcon } from '@heroicons/react/solid'
@@ -11,30 +11,42 @@ type formProps = {
     passwordConfirmation: string
   }
   address: {
-    address: string
-    country: string
-    state: string
-    city: string
-    zip: string
+    addrStreet: string
+    addrNumber: string
+    addrCountry: string
+    addrDistrict: string
+    addrCity: string
+    addrZip: string
   }
 }
 
 export function Profile() {
   const { user } = useUser()
+  const {
+    username,
+    email,
+    addrStreet,
+    addrNumber,
+    addrCountry,
+    addrDistrict,
+    addrCity,
+    addrZip
+  } = user?.userData
   //form e setform devem vir do contexto do dashboard, os valores iniciais são de um request usando a senha na hora do login
   const [form, setForm] = useState<formProps>({
     myInfo: {
-      username: user?.username as string,
-      email: user?.email as string,
+      username,
+      email,
       password: '',
       passwordConfirmation: ''
     },
     address: {
-      address: '',
-      country: '',
-      state: '',
-      city: '',
-      zip: ''
+      addrStreet,
+      addrNumber,
+      addrCountry,
+      addrDistrict,
+      addrCity,
+      addrZip
     }
   })
 
@@ -43,6 +55,8 @@ export function Profile() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
+
+    setLoading(false)
   }
 
   // useEffect(() => {
@@ -57,18 +71,16 @@ export function Profile() {
       {/* os valores padrão dos campos usuário (username, email) e endereço vêm da página de login, usando a senha que o usuário coloca para logar, e  */}
       <div className="flex flex-col px-4 gap-y-4">
         <p className="text-xl dark:text-text-primary">My Info</p>
-        <Common.Input
-          label="Username"
-          className="w-full"
-          disabled
-          value={form.myInfo.username}
-        />
         <div className="flex flex-col gap-y-4">
+          <Common.Input
+            label="Username"
+            disabled
+            value={form.myInfo.username}
+          />
           <Common.Input
             placeholder="Email"
             label="Email"
             type="email"
-            className="w-full"
             onChange={(e) =>
               setForm({
                 ...form,
@@ -81,7 +93,6 @@ export function Profile() {
             placeholder="Password"
             label="Password"
             type="password"
-            className="w-full"
             onChange={(e) =>
               setForm({
                 ...form,
@@ -94,7 +105,6 @@ export function Profile() {
             placeholder="Password Confirmation"
             label="Password Confirmation"
             type="password"
-            className="w-full"
             onChange={(e) =>
               setForm({
                 ...form,
@@ -108,42 +118,54 @@ export function Profile() {
       <div className="flex flex-col px-4 gap-y-4">
         <p className="text-xl dark:text-text-primary">Address</p>
         <div className="flex flex-col gap-y-4">
-          <Common.Input
-            placeholder="Street and number"
-            label="Street and number"
-            className="w-full"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                address: { ...form.address, address: e.target.value }
-              })
-            }
-            value={form.address.address}
-          />
+          <div className="flex flex-col col-span-1 xl:grid xl:grid-cols-4 gap-y-4 gap-x-2">
+            <Common.Input
+              placeholder="Street"
+              label="Street"
+              className="col-span-1 sm:col-span-3"
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  address: { ...form.address, addrStreet: e.target.value }
+                })
+              }
+              value={form.address.addrCity}
+            />
+            <Common.Input
+              placeholder="Number"
+              label="Number"
+              className="col-span-3 sm:col-span-1"
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  address: { ...form.address, addrNumber: e.target.value }
+                })
+              }
+              value={form.address.addrNumber}
+            />
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2 gap-y-4">
             <Common.Input
               placeholder="Country"
               label="Country"
-              className="w-full"
               onChange={(e) =>
                 setForm({
                   ...form,
-                  address: { ...form.address, country: e.target.value }
+                  address: { ...form.address, addrCountry: e.target.value }
                 })
               }
-              value={form.address.country}
+              value={form.address.addrCountry}
             />
             <Common.Input
               placeholder="State"
               label="State"
-              className="w-full"
               onChange={(e) =>
                 setForm({
                   ...form,
-                  address: { ...form.address, state: e.target.value }
+                  address: { ...form.address, addrDistrict: e.target.value }
                 })
               }
-              value={form.address.state}
+              value={form.address.addrDistrict}
             />
           </div>
 
@@ -151,26 +173,24 @@ export function Profile() {
             <Common.Input
               placeholder="City"
               label="City"
-              className="w-full"
               onChange={(e) =>
                 setForm({
                   ...form,
-                  address: { ...form.address, city: e.target.value }
+                  address: { ...form.address, addrCity: e.target.value }
                 })
               }
-              value={form.address.city}
+              value={form.address.addrCity}
             />
             <Common.Input
               placeholder="Zip code"
               label="Zip code"
-              className="w-full"
               onChange={(e) =>
                 setForm({
                   ...form,
-                  address: { ...form.address, zip: e.target.value }
+                  address: { ...form.address, addrZip: e.target.value }
                 })
               }
-              value={form.address.zip}
+              value={form.address.addrZip}
             />
           </div>
         </div>
