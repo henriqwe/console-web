@@ -1,4 +1,7 @@
 export const apiRoutes = {
+  getUserHash: ({ username }: { username: string }) =>
+    `v0/id/account/recovery-password/${username}`,
+  changePassword: `v0/id/account/change-password`,
   schemas: `v0/modeling/project-name`,
   association: ({
     projectName,

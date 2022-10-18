@@ -13,6 +13,7 @@ type LoginContextProps = {
   setFormType: Dispatch<SetStateAction<'create' | 'login'>>
   logUserSchema: yup.AnyObjectSchema
   createUserSchema: yup.AnyObjectSchema
+  changePasswordSchema: (step: number) => yup.AnyObjectSchema
 }
 
 type ProviderProps = {
@@ -40,13 +41,36 @@ export const LoginProvider = ({ children }: ProviderProps) => {
       .min(6, 'password must be at least 6 characters')
   })
 
+  const changePasswordSchema = (step: number) => {
+    let yupObject = {}
+
+    if (step === 0) {
+      yupObject = {
+        userName: yup.string().required('This field is required')
+      }
+    }
+
+    if (step !== 0) {
+      yupObject = {
+        email: yup.string().email().required(),
+        password: yup
+          .string()
+          .required()
+          .min(6, 'password must be at least 6 characters')
+      }
+    }
+
+    return yup.object().shape(yupObject)
+  }
+
   return (
     <LoginContext.Provider
       value={{
         formType,
         setFormType,
         logUserSchema,
-        createUserSchema
+        createUserSchema,
+        changePasswordSchema
       }}
     >
       {children}

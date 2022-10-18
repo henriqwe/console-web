@@ -22,7 +22,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.url))
   }
 
-  if (pathname === '/register') {
+  if (pathname === '/register' || pathname === '/change-password') {
     return
   }
 
