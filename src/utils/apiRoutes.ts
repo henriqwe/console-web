@@ -12,6 +12,7 @@ export const apiRoutes = {
   }) =>
     `v0/modeling/project-name/${projectName}/schema/sql/entity/${entityName}/association`,
   userAccount: 'v0/id/account/get-all',
+  userData: 'v0/id/account/get',
   createAccount: 'v0/id/account/create',
   updateAccount: 'v0/id/account/update',
   roles: 'v0/id/role/get-all',

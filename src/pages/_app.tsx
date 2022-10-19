@@ -34,6 +34,16 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
   const { user, setUser } = useUser()
   const router = useRouter()
 
+  async function getUserData() {
+    const { data } = await utils.api.get(utils.apiRoutes.userData, {
+      headers: {
+        Authorization: session?.accessToken as string
+      }
+    })
+
+    return data
+  }
+
   useEffect(() => {
     if (
       router.asPath !== '/login' &&
@@ -58,14 +68,36 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (session) {
       utils.setCookie('access_token', session?.accessToken as string)
-      setUser({
-        ...user,
-        ...(session.user as UserType),
-        accessToken: session?.accessToken as string,
-        ...utils.parseJwt(session?.accessToken as string)
+
+      getUserData().then((userData) => {
+        setUser({
+          ...user,
+          ...(session.user as UserType),
+          accessToken: session?.accessToken as string,
+          userData: userData
+        })
       })
     }
   }, [session])
+
+  useEffect(() => {
+    const isDevelopment = process.env.NODE_ENV === 'development'
+    import('react-facebook-pixel')
+      .then((x) => x.default)
+      .then((ReactPixel) => {
+        ReactPixel.init(
+          process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID as string,
+          {},
+          { debug: isDevelopment }
+        )
+        // ReactPixel.init(process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID as string)
+        ReactPixel.pageView()
+
+        router.events.on('routeChangeComplete', () => {
+          ReactPixel.pageView()
+        })
+      })
+  }, [router.events])
 
   if (
     (user && status === 'authenticated') ||

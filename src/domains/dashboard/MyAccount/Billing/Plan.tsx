@@ -7,7 +7,7 @@ type PlanProps = {
   href: string
   features: string[]
   detail: string
-  selected?: boolean
+  selectedPlan?: boolean
 }
 
 export function Plan({
@@ -17,13 +17,13 @@ export function Plan({
   href,
   features,
   detail,
-  selected = false
+  selectedPlan = false
 }: PlanProps) {
   return (
     <div
       className={`w-max rounded-3xl p-[2px]
         ${
-          selected
+          selectedPlan
             ? 'order-first lg:order-none bg-gradient-to-r from-[#869700] via-[#b1c901] to-[#869700]'
             : 'bg-gray-300'
         }`}
@@ -56,17 +56,17 @@ export function Plan({
           <p className="mt-auto px-1 font-display text-xs text-text-secondary">
             {detail}
           </p>
-          <a href={href}>
-            {selected ? (
-              <Buttons.Ycodify className="w-full dark:text-text-primary">
-                Selected
-              </Buttons.Ycodify>
-            ) : (
-              <Buttons.Clean className="w-full dark:text-text-primary">
-                Change
-              </Buttons.Clean>
-            )}
-          </a>
+          {/* <a href={href}> */}
+          {selectedPlan ? (
+            <Buttons.Ycodify className="w-full dark:text-text-primary">
+              Selected
+            </Buttons.Ycodify>
+          ) : (
+            <Buttons.Clean className="w-full dark:text-text-primary">
+              Change
+            </Buttons.Clean>
+          )}
+          {/* </a> */}
         </div>
       </section>
     </div>
