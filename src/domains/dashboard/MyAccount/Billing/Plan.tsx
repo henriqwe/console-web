@@ -57,17 +57,15 @@ export function Plan({
             {detail}
           </p>
           {/* <a href={href}> */}
-          <button>
-            {selectedPlan ? (
-              <Buttons.Ycodify className="w-full dark:text-text-primary">
-                Selected
-              </Buttons.Ycodify>
-            ) : (
-              <Buttons.Clean className="w-full dark:text-text-primary">
-                Change
-              </Buttons.Clean>
-            )}
-          </button>
+          {selectedPlan ? (
+            <Buttons.Ycodify className="w-full dark:text-text-primary">
+              Selected
+            </Buttons.Ycodify>
+          ) : (
+            <Buttons.Clean className="w-full dark:text-text-primary">
+              Change
+            </Buttons.Clean>
+          )}
           {/* </a> */}
         </div>
       </section>

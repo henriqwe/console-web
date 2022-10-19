@@ -76,6 +76,25 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
     }
   }, [session])
 
+  useEffect(() => {
+    const isDevelopment = process.env.NODE_ENV === 'development'
+    import('react-facebook-pixel')
+      .then((x) => x.default)
+      .then((ReactPixel) => {
+        ReactPixel.init(
+          process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID as string,
+          {},
+          { debug: isDevelopment }
+        )
+        // ReactPixel.init(process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID as string)
+        ReactPixel.pageView()
+
+        router.events.on('routeChangeComplete', () => {
+          ReactPixel.pageView()
+        })
+      })
+  }, [router.events])
+
   if (
     (user && status === 'authenticated') ||
     router.asPath === '/login' ||
