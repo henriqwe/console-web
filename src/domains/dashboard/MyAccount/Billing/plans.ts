@@ -2,7 +2,7 @@ export const plans = [
   {
     name: 'Free',
     price: 'R$0,00',
-    description: 'Low scale',
+    description: 'Small scale',
     href: 'https://console.ycodify.com/register',
     features: [
       'Models: 10',
@@ -35,7 +35,7 @@ export const plans = [
     features: [
       'Unlimited data models',
       'Graphic modeling',
-      'Monthly deductible: 15 GB',
+      'Monthly deductible: 15 GB*',
       'Unlimited requests',
       'High availability',
       'SLA: 9*7*365'
@@ -44,7 +44,7 @@ export const plans = [
   },
   {
     name: 'Enterprise',
-    price: 'Custom made',
+    price: 'Custom',
     description: 'Dedicated infrastructure',
     href: 'https://console.ycodify.com/register',
     features: [
@@ -54,6 +54,6 @@ export const plans = [
       'Single-Sign On',
       'Dedicated support'
     ],
-    detail: '*R$15,00 per additional GB'
+    detail: ''
   }
 ]

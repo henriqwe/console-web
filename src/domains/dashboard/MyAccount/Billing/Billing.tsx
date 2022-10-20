@@ -9,7 +9,10 @@ export function Billing() {
   const [loading, setLoading] = useState(true)
   const [billingHistory, setBillingHistory] = useState<BillingCardProps[]>([])
   const { user } = useUser()
-  const { selectedPlan } = user?.userData
+
+  // temporariamente enquanto não vem do backend
+  // const { selectedPlan } = user?.userData
+  const selectedPlan = 'Free'
 
   useEffect(() => {
     //requisição pra pegar o plano atual e o histórico de faturas
@@ -36,7 +39,7 @@ export function Billing() {
               href={href}
               features={features}
               detail={detail}
-              selectedPlan={selectedPlan?.toLowerCase() === name}
+              selectedPlan={selectedPlan === name}
             />
           )
         )}
