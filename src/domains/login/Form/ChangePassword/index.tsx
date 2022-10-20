@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { routes } from 'domains/routes'
-import { ArrowRightIcon } from '@heroicons/react/solid'
+import { ArrowRightIcon, ReplyIcon } from '@heroicons/react/solid'
 import { signIn } from 'next-auth/react'
 
 export function ChangePassword() {
@@ -33,12 +33,9 @@ export function ChangePassword() {
       )
 
       setRecoverStep(1)
+      utils.notification('User found! check your email account', 'success')
       // utils.setCookie('access_token', data?.data?.access_token)
     } catch (err: any) {
-      if (err?.response?.status === 417) {
-        utils.notification('Username  already exists', 'error')
-        return
-      }
       utils.showError(err)
     } finally {
       setLoading(false)
@@ -82,8 +79,14 @@ export function ChangePassword() {
           ? (Submit as SubmitHandler<FieldValues>)
           : (ValidateHash as SubmitHandler<FieldValues>)
       )}
-      className="flex flex-col mt-10"
+      className="flex flex-col mt-6"
     >
+      {recoverStep === 1 && (
+        <p className="mb-4 text-xs text-green-500">
+          Account found! we sent an email with a hash code to validate a new
+          password
+        </p>
+      )}
       <Controller
         name="userName"
         control={control}
@@ -107,15 +110,28 @@ export function ChangePassword() {
         )}
       />
       {recoverStep === 0 ? (
-        <common.Buttons.Ycodify
-          className="w-full mt-4 md:w-max md:self-end"
-          type="submit"
-          loading={loading}
-          disabled={loading}
-          icon={<ArrowRightIcon className="w-5 h-5 text-white" />}
-        >
-          Confirm
-        </common.Buttons.Ycodify>
+        <div className="flex justify-between w-full">
+          <common.Buttons.WhiteOutline
+            className="w-full md:w-max md:self-end"
+            type="button"
+            disabled={loading}
+            icon={<ReplyIcon className="w-3 h-3 text-gray-800" />}
+            onClick={() => {
+              router.push(routes.login)
+            }}
+          >
+            Go back
+          </common.Buttons.WhiteOutline>
+          <common.Buttons.Ycodify
+            className="w-full mt-4 md:w-max md:self-end"
+            type="submit"
+            loading={loading}
+            disabled={loading}
+            icon={<ArrowRightIcon className="w-5 h-5 text-white" />}
+          >
+            Confirm
+          </common.Buttons.Ycodify>
+        </div>
       ) : (
         <div className="flex flex-col gap-4 my-4">
           <Controller
@@ -166,15 +182,28 @@ export function ChangePassword() {
             )}
           />
 
-          <common.Buttons.Ycodify
-            className="w-full md:w-max md:self-end"
-            type="submit"
-            loading={loading}
-            disabled={loading}
-            icon={<ArrowRightIcon className="w-5 h-5 text-white" />}
-          >
-            Validate
-          </common.Buttons.Ycodify>
+          <div className="flex justify-between w-full">
+            <common.Buttons.WhiteOutline
+              className="w-full md:w-max md:self-end"
+              type="button"
+              disabled={loading}
+              icon={<ReplyIcon className="w-3 h-3 text-gray-800" />}
+              onClick={() => {
+                setRecoverStep(0)
+              }}
+            >
+              Go back
+            </common.Buttons.WhiteOutline>
+            <common.Buttons.Ycodify
+              className="w-full md:w-max md:self-end"
+              type="submit"
+              loading={loading}
+              disabled={loading}
+              icon={<ArrowRightIcon className="w-5 h-5 text-white" />}
+            >
+              Validate
+            </common.Buttons.Ycodify>
+          </div>
         </div>
       )}
     </form>
