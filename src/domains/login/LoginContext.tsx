@@ -28,17 +28,20 @@ export const LoginProvider = ({ children }: ProviderProps) => {
   const [formType, setFormType] = useState<'create' | 'login'>('login')
 
   const logUserSchema = yup.object().shape({
-    userName: yup.string().required(),
-    password: yup.string().required()
+    userName: yup.string().required('This field is required'),
+    password: yup.string().required('This field is required')
   })
 
   const createUserSchema = yup.object().shape({
-    userName: yup.string().required(),
-    email: yup.string().email().required(),
+    userName: yup.string().required('Username is requierd'),
+    email: yup
+      .string()
+      .email('Email must be valid')
+      .required('This field is required'),
     password: yup
       .string()
       .required()
-      .min(6, 'password must be at least 6 characters')
+      .min(6, 'Password must be at least 6 characters long')
   })
 
   const changePasswordSchema = (step: number) => {

@@ -65,7 +65,7 @@ export function LogUser() {
         name="userName"
         control={control}
         render={({ field: { onChange } }) => (
-          <div className="w-full">
+          <div className="w-full flex flex-col gap-y-2">
             <common.Input
               onChange={onChange}
               label="Username"
@@ -74,7 +74,6 @@ export function LogUser() {
               name="username"
               type="text"
               autoComplete="username"
-              required
             />
             {errors.userName && (
               <p className="text-sm text-red-500">{errors.userName.message}</p>
@@ -87,7 +86,7 @@ export function LogUser() {
           name="password"
           control={control}
           render={({ field: { onChange } }) => (
-            <div className="w-full">
+            <div className="w-full flex flex-col gap-y-2">
               <common.Input
                 onChange={onChange}
                 label="Password"
@@ -96,7 +95,6 @@ export function LogUser() {
                 name="password"
                 type="password"
                 autoComplete="current-password"
-                required
               />
               {errors.password && (
                 <p className="text-sm text-red-500">
