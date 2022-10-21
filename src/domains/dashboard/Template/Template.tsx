@@ -60,8 +60,8 @@ export function Template({ children }: TemplateProps) {
           <div className="flex flex-col flex-1 pt-5 pb-4 mx-4 overflow-y-auto">
             <div className="flex items-center justify-between flex-shrink-0 px-4 my-10">
               <img
-                className="w-auto h-7"
-                src="/assets/images/logo.png"
+                className="h-6 w-auto"
+                src="/assets/images/logoTextLight.png"
                 alt="Workflow"
               />
               <div className="z-50">
@@ -180,7 +180,9 @@ export function Template({ children }: TemplateProps) {
             </div>
           )}
         </div>
-        <main className="h-full px-8 pt-10 pb-8 md:px-16 md:pl-24">{children}</main>
+        <main className="h-full px-8 pt-10 pb-8 md:px-16 md:pl-24">
+          {children}
+        </main>
       </div>
     </div>
   )

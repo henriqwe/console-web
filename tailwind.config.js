@@ -28,7 +28,8 @@ module.exports = {
           ativoEscuro: '#101623'
         },
         iconGreen: '#16a34a',
-        ycodify: '#b1c901'
+        yc: '#0cd664',
+        'yc-brighter': '#56f59b'
       },
       fontSize: {
         tiny: '.7rem',
