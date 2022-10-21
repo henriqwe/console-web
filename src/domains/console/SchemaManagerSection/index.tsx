@@ -127,7 +127,7 @@ export function SchemaManagerSection() {
                 Deploy
               </common.Buttons.WhiteOutline>
             )}
-            {currentTabSchema === 'Users and Roles' && (
+            {currentTabSchema === 'Users & Roles' && (
               <div className={` w-1/3 `}>
                 <common.Tabs
                   tabs={[{ name: 'Users' }, { name: 'Roles' }]}
@@ -160,7 +160,7 @@ export function SchemaManagerSection() {
               )
             ) : currentTabSchema === 'Modeler' ? (
               <consoleSection.Modeler />
-            ) : currentTabSchema === 'Users and Roles' ? (
+            ) : currentTabSchema === 'Users & Roles' ? (
               <consoleSection.UsersSection />
             ) : (
               <div />

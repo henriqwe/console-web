@@ -146,7 +146,7 @@ export function SchemaManagerTab() {
             setShowDatabase(false)
           }}
         >
-          Users and roles
+          Users & Roles
         </div>
       </div>
     </div>

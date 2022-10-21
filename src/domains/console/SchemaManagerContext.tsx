@@ -10,7 +10,7 @@ import * as yup from 'yup'
 import * as types from 'domains/console/types'
 
 export type currentTabType = 'Data API' | 'Schema' | 'USERS'
-export type currentTabSchemaType = 'Modeler' | 'Databases' | 'Users and Roles'
+export type currentTabSchemaType = 'Modeler' | 'Databases' | 'Users & Roles'
 
 type SchemaManagerContextProps = {
   currentTab: currentTabType
@@ -149,7 +149,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     setShowCreateEntitySection(false)
     setSelectedEntity(undefined)
     setBreadcrumbPages(breadcrumbPagesData?.userAndRoles)
-    setCurrentTabSchema('Users and Roles')
+    setCurrentTabSchema('Users & Roles')
   }
   const breadcrumbPagesData = {
     home: [
@@ -162,7 +162,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     ],
     userAndRoles: [
       { content: 'Schema', current: false },
-      { content: 'Users and roles', current: true }
+      { content: 'Users & Roles', current: true }
     ],
     createEntity: [
       { content: 'Schema', current: false },
