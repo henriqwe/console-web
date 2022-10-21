@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import * as Common from 'common'
+import * as utils from 'utils'
 import { useUser } from 'contexts/UserContext'
 import { ChevronRightIcon } from '@heroicons/react/solid'
+import { useSession } from 'next-auth/react'
 
 type formProps = {
   myInfo: {
     username: string
     email: string
+    oldPassword: string
     password: string
     passwordConfirmation: string
   }
@@ -21,7 +24,8 @@ type formProps = {
 }
 
 export function Profile() {
-  const { user } = useUser()
+  const { data: session } = useSession()
+  const { user, setUser } = useUser()
   const {
     username,
     email,
@@ -30,13 +34,15 @@ export function Profile() {
     addrCountry,
     addrDistrict,
     addrCity,
-    addrZip
+    addrZip,
+    status
   } = user?.userData
   //form e setform devem vir do contexto do dashboard, os valores iniciais são de um request usando a senha na hora do login
   const [form, setForm] = useState<formProps>({
     myInfo: {
       username,
       email,
+      oldPassword: '',
       password: '',
       passwordConfirmation: ''
     },
@@ -52,28 +58,110 @@ export function Profile() {
 
   const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function getUserData() {
+    const { data } = await utils.api.get(utils.apiRoutes.userData, {
+      headers: {
+        Authorization: session?.accessToken as string
+      }
+    })
+
+    return data
+  }
+
+  const refreshUserData = async () => {
+    getUserData().then((userData) => setUser((prev) => ({ ...prev, userData })))
+  }
+
+  function handleUpdateAddress(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
 
-    setLoading(false)
+    utils.api
+      .post(
+        utils.apiRoutes.updateAccount,
+        {
+          username,
+          email: form.myInfo.email,
+          status,
+          addrStreet: form.address.addrStreet,
+          addrNumber: form.address.addrNumber,
+          addrCountry: form.address.addrCountry,
+          addrDistrict: form.address.addrDistrict,
+          addrCity: form.address.addrCity,
+          addrZip: form.address.addrZip
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: session?.accessToken as string
+          }
+        }
+      )
+      .then((res) => {
+        console.log('response', res)
+        if (res.status === 200) {
+          refreshUserData()
+
+          utils.notification('Address updated successfully!', 'success')
+        } else utils.notification(res.data.message, 'error')
+      })
+      .then(() => setLoading(false))
   }
 
-  // useEffect(() => {
-  //   console.log(user)
-  // }, [])
+  function handleChangePassword(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setLoading(true)
+
+    if (form.myInfo.password !== form.myInfo.passwordConfirmation) {
+      utils.notification("The passwords don't match", 'error')
+      setLoading(false)
+      return
+    }
+
+    if (form.myInfo.password.length < 6 || form.myInfo.oldPassword.length < 6) {
+      utils.notification(
+        'The password must have at least 6 characters',
+        'error'
+      )
+      setLoading(false)
+      return
+    }
+
+    utils.api
+      .post(
+        utils.apiRoutes.changePassword,
+        {
+          username,
+          password: form.myInfo.password,
+          oldPassword: form.myInfo.oldPassword
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      .then((res) => {
+        console.log('response', res)
+        if (res.status === 200) {
+          utils.notification('Password changed successfully!', 'success')
+        } else utils.notification(res.data.message, 'error')
+      })
+      .then(() => setLoading(false))
+  }
 
   return (
-    <form
-      onSubmit={(e) => handleSubmit(e)}
-      className="grid w-full grid-cols-1 md:grid-cols-2 gap-y-10"
-    >
-      {/* os valores padrão dos campos usuário (username, email) e endereço vêm da página de login, usando a senha que o usuário coloca para logar, e  */}
-      <div className="flex flex-col px-4 gap-y-4">
+    <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-y-10">
+      <form
+        onSubmit={(e) => handleChangePassword(e)}
+        className="flex flex-col px-4 gap-y-4"
+      >
         <p className="text-xl dark:text-text-primary">My Info</p>
-        <div className="flex flex-col gap-y-4">
+        <div className="flex flex-col gap-y-4 h-full">
           <Common.Input
+            placeholder="Username"
             label="Username"
+            type="text"
             disabled
             value={form.myInfo.username}
           />
@@ -81,17 +169,24 @@ export function Profile() {
             placeholder="Email"
             label="Email"
             type="email"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                myInfo: { ...form.myInfo, email: e.target.value }
-              })
-            }
+            disabled
             value={form.myInfo.email}
           />
           <Common.Input
-            placeholder="Password"
-            label="Password"
+            placeholder="Old Password"
+            label="Old Password"
+            type="password"
+            onChange={(e) =>
+              setForm({
+                ...form,
+                myInfo: { ...form.myInfo, oldPassword: e.target.value }
+              })
+            }
+            value={form.myInfo.oldPassword}
+          />
+          <Common.Input
+            placeholder="New Password"
+            label="New Password"
             type="password"
             onChange={(e) =>
               setForm({
@@ -114,10 +209,28 @@ export function Profile() {
             value={form.myInfo.passwordConfirmation}
           />
         </div>
-      </div>
-      <div className="flex flex-col px-4 gap-y-4">
+        <span className="flex self-end mt-auto px-3 lg:col-start-2">
+          <Common.Buttons.Ycodify
+            icon={
+              loading ? (
+                <Common.Spinner className="w-4 h-4" />
+              ) : (
+                <ChevronRightIcon className="w-4 h-4" />
+              )
+            }
+            className="w-max"
+            type="submit"
+          >
+            Change Password
+          </Common.Buttons.Ycodify>
+        </span>
+      </form>
+      <form
+        onSubmit={(e) => handleUpdateAddress(e)}
+        className="flex flex-col px-4 gap-y-4"
+      >
         <p className="text-xl dark:text-text-primary">Address</p>
-        <div className="flex flex-col gap-y-4">
+        <div className="flex flex-col gap-y-4 h-full">
           <div className="flex flex-col col-span-1 xl:grid xl:grid-cols-4 gap-y-4 gap-x-2">
             <Common.Input
               placeholder="Street"
@@ -129,7 +242,7 @@ export function Profile() {
                   address: { ...form.address, addrStreet: e.target.value }
                 })
               }
-              value={form.address.addrCity}
+              value={form.address.addrStreet}
             />
             <Common.Input
               placeholder="Number"
@@ -194,22 +307,22 @@ export function Profile() {
             />
           </div>
         </div>
-      </div>
-      <span className="flex justify-end px-3 lg:col-start-2">
-        <Common.Buttons.Ycodify
-          icon={
-            loading ? (
-              <Common.Spinner className="w-4 h-4" />
-            ) : (
-              <ChevronRightIcon className="w-4 h-4" />
-            )
-          }
-          className="w-max"
-          type="submit"
-        >
-          Update data
-        </Common.Buttons.Ycodify>
-      </span>
-    </form>
+        <span className="flex self-end mt-auto px-3 lg:col-start-2">
+          <Common.Buttons.Ycodify
+            icon={
+              loading ? (
+                <Common.Spinner className="w-4 h-4" />
+              ) : (
+                <ChevronRightIcon className="w-4 h-4" />
+              )
+            }
+            className="w-max"
+            type="submit"
+          >
+            Update Address
+          </Common.Buttons.Ycodify>
+        </span>
+      </form>
+    </div>
   )
 }
