@@ -21,10 +21,10 @@ export function Plan({
 }: PlanProps) {
   return (
     <div
-      className={`w-max rounded-3xl p-[2px]
+      className={`w-full rounded-3xl p-[2px]
         ${
           selectedPlan
-            ? 'order-first lg:order-none bg-gradient-to-r from-[#869700] via-[#b1c901] to-[#869700]'
+            ? 'order-first lg:order-none bg-gradient-to-r from-yc via-yc-brighter to-yc'
             : 'bg-gray-300'
         }`}
     >

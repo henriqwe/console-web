@@ -13,6 +13,7 @@ import { useState } from 'react'
 import { routes } from 'domains/routes'
 import { ArrowRightIcon } from '@heroicons/react/solid'
 import { signIn } from 'next-auth/react'
+import * as yup from 'yup'
 
 export function CreateUser() {
   const [loading, setLoading] = useState(false)
@@ -30,6 +31,7 @@ export function CreateUser() {
     email: string
   }) {
     setLoading(true)
+
     try {
       await utils.localApi.post(utils.apiRoutes.local.createAccount, {
         username: formData.userName,
@@ -70,7 +72,7 @@ export function CreateUser() {
         name="userName"
         control={control}
         render={({ field: { onChange } }) => (
-          <div className="w-full">
+          <div className="w-full flex flex-col gap-y-2">
             <common.Input
               onChange={onChange}
               label="Username"
@@ -79,7 +81,6 @@ export function CreateUser() {
               name="username"
               type="text"
               autoComplete="username"
-              required
             />
             {errors.userName && (
               <p className="text-sm text-red-500">{errors.userName.message}</p>
@@ -92,16 +93,15 @@ export function CreateUser() {
         name="email"
         control={control}
         render={({ field: { onChange } }) => (
-          <div className="w-full">
+          <div className="w-full flex flex-col gap-y-2">
             <common.Input
               onChange={onChange}
               label="E-mail"
               placeholder="E-mail"
               id="email"
               name="email"
-              type="email"
+              type="text"
               autoComplete="email"
-              required
             />
             {errors.email && (
               <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -114,7 +114,7 @@ export function CreateUser() {
         name="password"
         control={control}
         render={({ field: { onChange } }) => (
-          <div className="w-full">
+          <div className="w-full flex flex-col gap-y-2">
             <common.Input
               onChange={onChange}
               label="Password"
@@ -123,7 +123,6 @@ export function CreateUser() {
               name="password"
               type="password"
               autoComplete="current-password"
-              required
             />
             {errors.password && (
               <p className="text-sm text-red-500">{errors.password.message}</p>
