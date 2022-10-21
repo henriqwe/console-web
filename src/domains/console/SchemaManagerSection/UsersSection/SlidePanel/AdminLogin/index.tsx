@@ -80,7 +80,7 @@ export function AdminLogin() {
           onClick={() => handleSubmit(onSubmit)()}
           icon={<CheckIcon className="w-3 h-3" />}
         >
-          Access
+          access
         </common.Buttons.WhiteOutline>
       </div>
     </form>
