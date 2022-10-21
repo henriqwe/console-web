@@ -15,6 +15,7 @@ import { ToggleTheme } from 'common'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
+import { BetaTag } from 'common/BetaTag'
 
 type TemplateProps = {
   children: ReactNode
@@ -54,16 +55,20 @@ export function Template({ children }: TemplateProps) {
   return (
     <div>
       {/* Static sidebar for desktop */}
-      <div className="z-20 hidden bg-bg-navigation md:flex md:w-80 md:flex-col md:fixed md:inset-y-0">
+      <div className="z-20 hidden bg-bg-navigation md:flex md:w-96 md:flex-col md:fixed md:inset-y-0">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex flex-col flex-1 min-h-0 border-r border-r-gray-700">
           <div className="flex flex-col flex-1 pt-5 pb-4 mx-4 overflow-y-auto">
             <div className="flex items-center justify-between flex-shrink-0 px-4 my-10">
-              <img
-                className="h-6 w-auto"
-                src="/assets/images/logoTextLight.png"
-                alt="Workflow"
-              />
+              <div className="flex w-max gap-x-4">
+                <img
+                  className="h-6 w-auto"
+                  src="/assets/images/logoTextLight.png"
+                  alt="Workflow"
+                />
+                <BetaTag />
+              </div>
+
               <div className="z-50">
                 <ToggleTheme changeColor={false} />
               </div>
@@ -114,7 +119,7 @@ export function Template({ children }: TemplateProps) {
       </div>
 
       <div className="fixed w-full h-screen bg-gray-200 dark:bg-bg-page" />
-      <div className="flex flex-col flex-1 w-full h-full md:pl-64">
+      <div className="flex flex-col flex-1 w-full h-full md:pl-[22rem]">
         <div className="sticky z-50 insset-0 bg-bg-navigation md:hidden">
           <div className="flex items-center justify-between pl-3 pr-2">
             <button

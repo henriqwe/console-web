@@ -7,6 +7,7 @@ import {
 } from 'react-hook-form'
 import { useState } from 'react'
 import { CheckIcon, UploadIcon } from '@heroicons/react/outline'
+import { InformationCircleIcon } from '@heroicons/react/solid'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as ThemeContext from 'contexts/ThemeContext'
@@ -14,6 +15,12 @@ import * as dashboard from 'domains/dashboard'
 import { dracula } from '@uiw/codemirror-theme-dracula'
 import { EditorView } from '@codemirror/view'
 import { yupResolver } from '@hookform/resolvers/yup'
+
+const tooltips = [
+  'Must not contain spaces',
+  'Must not contain numbers',
+  'Must be at least 2 characters long'
+]
 
 export function Create() {
   const [loading, setLoading] = useState(false)
@@ -190,7 +197,24 @@ export function Create() {
               <div className="col-span-3">
                 <common.Input
                   placeholder="Name"
-                  label="Project name"
+                  label={
+                    <div className="flex items-center gap-2">
+                      <span>Project Name</span>
+                      <div className="flex relative group">
+                        <InformationCircleIcon className="w-4 h-4 text-slate-600 dark:text-gray-400" />
+                        <ul className="text-sm font-normal left-6 -top-1 absolute w-max p-2 rounded-lg group-hover:block hidden dark:bg-opacity-95 dark:bg-slate-900">
+                          {tooltips.map((tooltip, i) => (
+                            <li
+                              key={i}
+                              className="flex gap-1 before:my-auto before:h-1 before:w-1 before:block before:bg-white before:rounded-full"
+                            >
+                              {tooltip}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  }
                   value={value}
                   onChange={onChange}
                   errors={errors.ProjectName}

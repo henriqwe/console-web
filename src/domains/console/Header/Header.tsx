@@ -2,6 +2,7 @@ import { ReplyIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
 import { ToggleTheme } from 'common'
+import { BetaTag } from 'common/BetaTag'
 
 export function Header() {
   const router = useRouter()
@@ -9,12 +10,16 @@ export function Header() {
   return (
     <div>
       <div className="flex w-full bg-gray-800 h-16 gap-4">
-        <div className="flex w-[20%] h-full border-r border-gray-400 dark:border-gray-700 items-center px-6">
-          <img
-            className="h-6 w-auto"
-            src="/assets/images/logoTextLight.png"
-            alt="Workflow"
-          />
+        <div className="flex w-[20%] justify-between h-full border-r border-gray-400 dark:border-gray-700 items-center px-6">
+          <div className="flex w-max gap-x-4">
+            <img
+              className="h-6 w-auto"
+              src="/assets/images/logoTextLight.png"
+              alt="Workflow"
+            />
+            <BetaTag />
+          </div>
+          <ToggleTheme changeColor={false} />
         </div>
         <div className="flex flex-col h-full justify-center text-gray-300 gap-y-1">
           <div className="flex gap-2 items-center z-20">
@@ -34,9 +39,6 @@ export function Header() {
               {router.query.name}
             </span>
           </div>
-        </div>
-        <div className="ml-auto mr-5 items-center flex">
-          <ToggleTheme changeColor={false} />
         </div>
       </div>
     </div>

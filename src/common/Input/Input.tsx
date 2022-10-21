@@ -4,7 +4,7 @@ import { DeepMap, FieldError, FieldValues } from 'react-hook-form'
 type InputProps = {
   type?: string
   errors?: DeepMap<FieldValues, FieldError> & { message?: string }
-  label?: string
+  label?: ReactNode
   icon?: ReactNode
 } & React.InputHTMLAttributes<HTMLInputElement>
 

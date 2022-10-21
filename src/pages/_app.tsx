@@ -117,11 +117,11 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
         <Head>
           <title>
             {router.asPath === '/login'
-              ? 'Login'
+              ? 'Login - Ycodify'
               : router.asPath === '/register'
-              ? 'Register'
+              ? 'Register - Ycodify'
               : router.asPath === '/change-password'
-              ? 'Recover password'
+              ? 'Recover Password - Ycodify'
               : null}
           </title>
           <link rel="icon" href="/assets/images/favicon.ico" />
