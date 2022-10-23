@@ -35,13 +35,19 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
   async function getUserData() {
-    const { data } = await utils.api.get(utils.apiRoutes.userData, {
-      headers: {
-        Authorization: session?.accessToken as string
-      }
-    })
+    let res = undefined
 
-    return data
+    try {
+      res = await utils.api.get(utils.apiRoutes.userData, {
+        headers: {
+          Authorization: session?.accessToken as string
+        }
+      })
+    } catch (error) {
+      console.error('Error fetching user data', error)
+    }
+
+    return res?.data
   }
 
   useEffect(() => {
