@@ -36,7 +36,9 @@ export function Slide({
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 z-50 overflow-hidden"
+        className={`fixed inset-0 z-50 overflow-hidden  ${
+          open === false ? 'hidden' : ''
+        }`}
         onClose={() => null}
         role="dialog"
       >
