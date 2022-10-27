@@ -16,6 +16,12 @@ import { signIn } from 'next-auth/react'
 import * as yup from 'yup'
 import { usePixel } from 'contexts/PixelContext'
 
+type formDataType = {
+  userName: string
+  password: string
+  email: string
+}
+
 export function CreateUser() {
   const { pixel } = usePixel()
   const [loading, setLoading] = useState(false)
@@ -27,11 +33,7 @@ export function CreateUser() {
     control
   } = useForm({ resolver: yupResolver(createUserSchema) })
 
-  async function Submit(formData: {
-    userName: string
-    password: string
-    email: string
-  }) {
+  async function Submit(formData: formDataType) {
     setLoading(true)
 
     try {
@@ -49,6 +51,7 @@ export function CreateUser() {
 
       if (res?.ok && res?.status === 200) {
         pixel.track('Lead')
+        handleActiveCampaign(formData)
 
         router.push(routes.dashboard)
         return
@@ -146,4 +149,36 @@ export function CreateUser() {
       </common.Buttons.Ycodify>
     </form>
   )
+}
+
+function handleActiveCampaign(formData: formDataType) {
+  const acFormData = new FormData()
+
+  const acSubdomain = process.env.NEXT_PUBLIC_AC_SUBDOMAIN as string
+  const acOr = '0c786ae5a473977fe713c5b91a961217'
+  const acListId = '5'
+
+  acFormData.append('u', acListId)
+  acFormData.append('f', acListId)
+  acFormData.append('s', 's')
+  acFormData.append('c', '0')
+  acFormData.append('m', '0')
+  acFormData.append('act', 'sub')
+  acFormData.append('v', '2')
+  acFormData.append('or', acOr)
+
+  acFormData.append('firstname', formData.userName)
+  acFormData.append('email', formData.email)
+
+  fetch(acSubdomain, {
+    method: 'POST',
+    body: acFormData,
+    mode: 'no-cors'
+  })
+    .then((response) => {
+      console.log('ac response', response)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
 }
