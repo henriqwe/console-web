@@ -25,7 +25,7 @@ export default async function createAccount(
           }
         }
       )
-      
+
       return res.status(200).json({})
     } catch (err: any) {
       console.log(err)

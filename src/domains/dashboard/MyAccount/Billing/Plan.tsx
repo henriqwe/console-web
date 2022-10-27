@@ -62,8 +62,8 @@ export function Plan({
               Selected
             </Buttons.Ycodify>
           ) : (
-            <Buttons.Clean className="w-full dark:text-text-primary">
-              Change
+            <Buttons.Clean disabled className="w-full dark:text-text-primary">
+              Coming soon...
             </Buttons.Clean>
           )}
           {/* </a> */}

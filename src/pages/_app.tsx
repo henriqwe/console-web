@@ -1,6 +1,7 @@
 import 'styles/main.css'
 import 'react-toastify/dist/ReactToastify.css'
 import * as ThemeContext from 'contexts/ThemeContext'
+import * as PixelContext from 'contexts/PixelContext'
 import * as common from 'common'
 import * as utils from 'utils'
 import { useEffect } from 'react'
@@ -86,25 +87,6 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
     }
   }, [session])
 
-  useEffect(() => {
-    const isDevelopment = process.env.NODE_ENV === 'development'
-    import('react-facebook-pixel')
-      .then((x) => x.default)
-      .then((ReactPixel) => {
-        ReactPixel.init(
-          process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID as string,
-          {},
-          { debug: isDevelopment }
-        )
-        // ReactPixel.init(process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID as string)
-        ReactPixel.pageView()
-
-        router.events.on('routeChangeComplete', () => {
-          ReactPixel.pageView()
-        })
-      })
-  }, [router.events])
-
   if (
     (user && status === 'authenticated') ||
     router.asPath === '/login' ||
@@ -133,8 +115,10 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
           <link rel="icon" href="/assets/images/favicon.ico" />
         </Head>
         <ThemeContext.ThemeProvider>
-          <Component {...pageProps} />
-          <ToastContainer closeOnClick={false} />
+          <PixelContext.PixelProvider>
+            <Component {...pageProps} />
+            <ToastContainer closeOnClick={false} />
+          </PixelContext.PixelProvider>
         </ThemeContext.ThemeProvider>
       </>
     )

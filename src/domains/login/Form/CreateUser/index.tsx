@@ -14,8 +14,10 @@ import { routes } from 'domains/routes'
 import { ArrowRightIcon } from '@heroicons/react/solid'
 import { signIn } from 'next-auth/react'
 import * as yup from 'yup'
+import { usePixel } from 'contexts/PixelContext'
 
 export function CreateUser() {
+  const { pixel } = usePixel()
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { createUserSchema } = login.useLogin()
@@ -46,6 +48,8 @@ export function CreateUser() {
       })
 
       if (res?.ok && res?.status === 200) {
+        pixel.track('Lead')
+
         router.push(routes.dashboard)
         return
       }
@@ -54,7 +58,7 @@ export function CreateUser() {
       router.push(routes.dashboard)
     } catch (err: any) {
       if (err?.response?.status === 417) {
-        utils.notification('Username  already exists', 'error')
+        utils.notification('Username already exists', 'error')
         return
       }
       utils.showError(err)
