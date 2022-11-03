@@ -15,6 +15,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
 import { useId } from 'react'
+import { useLocalTour } from 'contexts/TourContext'
 
 type Schemas = {
   createdat: number
@@ -39,6 +40,7 @@ export function Projects() {
   const [showFiltered, setShowFiltered] = useState(false)
   const [filteredSchemas, setFilteredSchemas] = useState<Schemas[]>([])
   const [loadingSchemas, setLoadingSchemas] = useState(true)
+  const { nextStep } = useLocalTour()
 
   async function loadSchemas() {
     try {
@@ -99,7 +101,7 @@ export function Projects() {
   }, [watch('search')])
 
   return (
-    <div className="flex justify-center">
+    <div className="step-6 flex justify-center">
       <div className="absolute inset-x-0 top-0 z-10 flex justify-center pointer-events-none blur-xl">
         <div className="flex justify-end flex-none w-full">
           <img
@@ -122,17 +124,18 @@ export function Projects() {
                   setOpenSlide(true)
                   setSlideType('createProject')
                   setSlideSize('normal')
+                  nextStep()
                   // router.push(routes.createProject)
                 }}
               >
-                <div className="flex items-center gap-2 dark:text-text-primary">
-                  <p className="text-xs ">New Project</p>
+                <div className="step-8 flex items-center gap-2 dark:text-text-primary">
+                  <p className="text-xs">New Project</p>
                   <PlusIcon className="w-3 h-3" />
                 </div>
               </button>
             </div>
           </div>
-          <div className="relative flex items-center">
+          <div className="step-7 relative flex items-center">
             <SearchIcon className="absolute w-4 h-4 text-gray-400 dark:text-text-primary left-2" />
             <Controller
               name="search"

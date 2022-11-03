@@ -55,7 +55,7 @@ export function Template({ children }: TemplateProps) {
   return (
     <div>
       {/* Static sidebar for desktop */}
-      <div className="z-20 hidden bg-bg-navigation md:flex md:w-96 md:flex-col md:fixed md:inset-y-0">
+      <div className="step-1 z-20 hidden bg-bg-navigation md:flex md:w-96 md:flex-col md:fixed md:inset-y-0">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex flex-col flex-1 min-h-0 border-r border-r-gray-700">
           <div className="flex flex-col flex-1 pt-5 pb-4 mx-4 overflow-y-auto">
@@ -74,7 +74,7 @@ export function Template({ children }: TemplateProps) {
               </div>
             </div>
             <nav className="flex-1 px-2 mt-5 space-y-1">
-              {navigation.map((item) => (
+              {navigation.map((item, index) => (
                 <button
                   key={item.name}
                   onClick={item.onClick}
@@ -82,7 +82,7 @@ export function Template({ children }: TemplateProps) {
                     item.current
                       ? 'bg-menuItem-ativoEscuro text-text-primary'
                       : 'text-text-tertiary hover:bg-gray-700 hover:text-text-primary'
-                  }`}
+                  } step-${index + 2}`}
                 >
                   <item.icon
                     className={`mr-4 flex-shrink-0 h-6 w-6 ${

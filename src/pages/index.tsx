@@ -1,4 +1,5 @@
 import * as dashboard from 'domains/dashboard'
+import { Tour } from 'domains/dashboard/Tour'
 import Head from 'next/head'
 
 export default function Dashboard() {
@@ -15,6 +16,7 @@ function Page() {
       <Head>
         <title>Projects - Dashboard</title>
       </Head>
+      <Tour />
       <dashboard.Template>
         <dashboard.Projects />
       </dashboard.Template>

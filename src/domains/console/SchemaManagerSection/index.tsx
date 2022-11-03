@@ -89,7 +89,7 @@ export function SchemaManagerSection() {
   }
 
   return (
-    <div data-tour="step-1" className="w-full h-full py-4 px-8 ">
+    <div className="w-full h-full py-4 px-8 ">
       <common.Card className="flex flex-col h-full">
         <div className="flex w-full h-[3.3rem]">
           <div className="flex items-center justify-between w-full">

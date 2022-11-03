@@ -87,7 +87,7 @@ export function Editors() {
   ]
 
   return (
-    <div className="flex flex-col w-full h-full" data-tour="step-4">
+    <div className="flex flex-col w-full h-full">
       <common.ContentSection
         variant="WithoutTitleBackgroundColor"
         title={

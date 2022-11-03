@@ -7,6 +7,8 @@ import * as utils from 'utils'
 import { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { UserProvider, useUser } from 'contexts/UserContext'
+import { TourProvider } from '@reactour/tour'
+import * as LocalTourContext from 'contexts/TourContext'
 import { SessionProvider, useSession, signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import NextNprogress from 'nextjs-progressbar'
@@ -49,6 +51,26 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
     }
 
     return res?.data
+  }
+
+  function onTourClose() {
+    const path =
+      router.pathname === '/'
+        ? 'dashboard'
+        : router.pathname === '/console'
+        ? 'console'
+        : ''
+
+    switch (path) {
+      case 'dashboard':
+        window.localStorage.setItem('dashboard-toured', 'true')
+        break
+      case 'console':
+        window.localStorage.setItem('console-toured', 'true')
+        break
+      default:
+        break
+    }
   }
 
   useEffect(() => {
@@ -116,8 +138,28 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
         </Head>
         <ThemeContext.ThemeProvider>
           <PixelContext.PixelProvider>
-            <Component {...pageProps} />
-            <ToastContainer closeOnClick={false} />
+            <TourProvider
+              steps={[]}
+              styles={{
+                badge: (base) => ({
+                  ...base,
+                  backgroundColor: '#0cd664'
+                }),
+                dot: (base) => ({
+                  ...base,
+                  backgroundColor: '#0cd664'
+                }),
+                maskWrapper: (base) => ({
+                  ...base
+                })
+              }}
+              beforeClose={() => onTourClose()}
+            >
+              <LocalTourContext.TourProvider>
+                <Component {...pageProps} />
+                <ToastContainer closeOnClick={false} />
+              </LocalTourContext.TourProvider>
+            </TourProvider>
           </PixelContext.PixelProvider>
         </ThemeContext.ThemeProvider>
       </>

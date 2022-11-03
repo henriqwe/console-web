@@ -6,8 +6,6 @@ import {
   useState
 } from 'react'
 
-import { useRouter } from 'next/router'
-
 type PixelContextProps = {
   pixel: any
 }
