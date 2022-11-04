@@ -29,6 +29,7 @@ export function SchemaManagerSection() {
     selectedTabUsersAndRoles,
     setSelectedTabUsersAndRoles
   } = consoleSection.useSchemaManager()
+  const { deploySchema } = consoleSection.useConsoleEditor()
   const [loading, setLoading] = useState(true)
 
   async function loadEntityData() {
@@ -120,9 +121,8 @@ export function SchemaManagerSection() {
             {currentTabSchema === 'Modeler' && (
               <common.Buttons.WhiteOutline
                 type="button"
-                onClick={() => null}
+                onClick={deploySchema}
                 icon={<CheckCircleIcon className="w-4 h-4 !text-green-700 " />}
-                disabled
               >
                 Deploy
               </common.Buttons.WhiteOutline>
