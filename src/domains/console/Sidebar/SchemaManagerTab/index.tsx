@@ -1,11 +1,9 @@
 import { Icon } from '@iconify/react'
 import { useEffect, useState } from 'react'
 import * as common from 'common'
-import * as utils from 'utils'
 import * as consoleSection from 'domains/console'
-import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
-import { CheckCircleIcon, ChevronUpIcon } from '@heroicons/react/solid'
+import { ChevronUpIcon } from '@heroicons/react/solid'
 
 export function SchemaManagerTab() {
   const router = useRouter()
@@ -16,42 +14,18 @@ export function SchemaManagerTab() {
     setShowCreateEntitySection,
     setBreadcrumbPages,
     breadcrumbPagesData,
-    setSchemaTables,
     goToEntitiesPage,
     goToModelerPage,
     setCurrentTabSchema,
     currentTabSchema,
-    goToUserAndRolesPage
+    goToUserAndRolesPage,
+    entities,
+    loadEntities,
+    entitiesLoading
   } = consoleSection.useSchemaManager()
-  const [entities, setEntities] = useState<string[]>([])
-  const [loading, setLoading] = useState(false)
   const [showDatabase, setShowDatabase] = useState(
     currentTabSchema === 'Databases'
   )
-
-  async function loadEntities() {
-    try {
-      setLoading(true)
-
-      const { data } = await utils.api.get(
-        `${utils.apiRoutes.entityList(router.query.name as string)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
-          }
-        }
-      )
-
-      setSchemaTables(data)
-      setEntities(Object.keys(data) as string[])
-    } catch (err: any) {
-      if (err.response.status !== 404) {
-        utils.showError(err)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
 
   useEffect(() => {
     if (router.query.name) {
@@ -97,7 +71,7 @@ export function SchemaManagerTab() {
         </div>
         {showDatabase && (
           <>
-            {loading ? (
+            {entitiesLoading ? (
               <div className="flex items-center justify-center w-full h-full">
                 <div className="w-8 h-8 mr-8">
                   <common.Spinner />

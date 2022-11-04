@@ -1,8 +1,19 @@
 import * as utils from 'utils'
+
 /*
 {"password":"1234567","username":"tester@academia"}
 tester@biblioteca   OXrrnKZgQ2jgEEon
 tester@natalnet  RP2AhXDO0AiDL46v
+
+{"password":"TipRd0VKRR3Mj8lO","username":"papaleguas@escola"}
+
+{"password":"DDaRC5308MV9GicH","username":"frajola@escola"}
+
+{"password":"Wa7CSlYobmlwE9HP","username":"tester@testee"}
+
+{ tester@escola rXk3CsYOxRN6HuJZ }
+
+{ tester@news rYDYYuUMXF4matQZ }
 
 {
   "dcovid": [{
@@ -580,7 +591,7 @@ export const api = {
                 PROTOCOL +
                 '://' +
                 baas_address +
-                '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}/association/{relationshipName}',
+                '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}/association/{associationName}',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer {TOKEN}'
@@ -592,7 +603,7 @@ export const api = {
                 PROTOCOL +
                 '://' +
                 baas_address +
-                '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}/association/{relationshipName}/type/{relationshipType}',
+                '/v0/modeling/project-name/{projectName}/schema/sql/entity/{entityName}/association/{associationName}/type/{associationType}',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer {TOKEN}'
@@ -947,81 +958,61 @@ Developer: Prashen Jeet Roy
 Version: 1
 functionality: onclick dropdown, body click hide, 
 */
-// (function($) {
-//     $.fn.simpleMenu = function(options) {
-//         "use strict";
-//         var $a = $(this), $b = $(this).find('a').next();
-//         $a.on('click', 'a', function(e) {
-//             e.stopPropagation();
-//             var $c = $(this).next().hasClass('sub-menu');
-//             if ($c === true) {
-//                 e.preventDefault();
-//             }
 
-//             $(this).next().slideToggle(300)
-//                 .parent().siblings().children('ul')
-//                 .not($(this).next()).hide()
-//         });
-//         $(document).on('click', $b, function(e) {
-//             $b.hide(200);
-//         });
-//     }
-// }(jQuery));
+String.prototype.replaceAll = function (search, replacement) {
+  return this.split(search).join(replacement)
+}
 
-// $('.simple-menu').simpleMenu();
+String.prototype.isAlphaNumeric = function () {
+  var regExp = /^[A-Za-z0-9]+$/
+  return this.match(regExp)
+}
 
-// $('.simple-menu .sub-menu a').click(function(e) {
-//     $('.sub-menu').hide(200);
-// });
+if (!Array.prototype.clear) {
+  Array.prototype.clear = function () {
+    this.splice(0, this.length)
+  }
+}
 
-// String.prototype.replaceAll = function(search, replacement) {
-//     return this.split(search).join(replacement);
-// };
+/* *************** *
+ * Confirme Dialog *
+ * *************** */
 
-// String.prototype.isAlphaNumeric = function() {
-//     var regExp = /^[A-Za-z0-9]+$/;
-//     return (this.match(regExp));
-// };
+const ui = {
+  confirm: async (message) => createConfirmDialog(message)
+}
 
-// if (!Array.prototype.clear) {
-//     Array.prototype.clear = function() {
-//         this.splice(0, this.length);
-//     };
-// }
+const createConfirmDialog = (message) => {
+  return new Promise((complete, failed) => {
+    $('#confirmMessage').text(message)
 
-// /* *************** *
-//  * Confirme Dialog *
-//  * *************** */
+    $('#confirmYes').off('click')
+    $('#confirmNo').off('click')
 
-// const ui = {
-//     confirm: async (message) => createConfirmDialog(message)
-// }
+    $('#confirmYes').on('click', () => {
+      $('.confirm').hide()
+      complete(true)
+    })
+    $('#confirmNo').on('click', () => {
+      $('.confirm').hide()
+      complete(false)
+    })
 
-// const createConfirmDialog = (message) => {
-//     return new Promise((complete, failed) => {
-//         $('#confirmMessage').text(message)
+    $('.confirm').show()
+  })
+}
 
-//         $('#confirmYes').off('click');
-//         $('#confirmNo').off('click');
+const launchConfirmDialog = async (message) => {
+  const confirm = await ui.confirm(message)
 
-//         $('#confirmYes').on('click', () => { $('.confirm').hide(); complete(true); });
-//         $('#confirmNo').on('click', () => { $('.confirm').hide(); complete(false); });
+  if (confirm) {
+    alert('yes clicked')
+  } else {
+    alert('no clicked')
+  }
+}
 
-//         $('.confirm').show();
-//     });
-// }
-
-// const launchConfirmDialog = async (message) => {
-//     const confirm = await ui.confirm(message);
-
-//     if (confirm) {
-//         alert('yes clicked');
-//     } else {
-//         alert('no clicked');
-//     }
-// }
-
-// function copyToClipboard(value) {
-//     $('#to_clipboard').val(value).select();
-//     document.execCommand("copy");
-// }
+function copyToClipboard(value) {
+  $('#to_clipboard').val(value).select()
+  document.execCommand('copy')
+}

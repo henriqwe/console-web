@@ -8,6 +8,9 @@ import {
 } from 'react'
 import * as yup from 'yup'
 import * as types from 'domains/console/types'
+import * as utils from 'utils'
+import { getCookie } from 'utils/cookies'
+import { useRouter } from 'next/router'
 
 export type currentTabType = 'Data API' | 'Schema' | 'USERS'
 export type currentTabSchemaType = 'Modeler' | 'Databases' | 'Users and Roles'
@@ -58,6 +61,11 @@ type SchemaManagerContextProps = {
     SetStateAction<selectedTabUsersAndRolesType>
   >
   privateAttributes: string[]
+  entities: string[]
+  setEntities: Dispatch<SetStateAction<string[]>>
+  loadEntities(): Promise<void>
+  entitiesLoading: boolean
+  setEntitiesLoading: Dispatch<SetStateAction<boolean>>
 }
 
 type ProviderProps = {
@@ -83,6 +91,8 @@ export const SchemaManagerContext = createContext<SchemaManagerContextProps>(
 )
 
 export const SchemaManagerProvider = ({ children }: ProviderProps) => {
+  const router = useRouter()
+
   const [openSlide, setOpenSlide] = useState(false)
   const [slideType, setSlideType] = useState<'UPDATE' | 'UPDATE ENTITY'>(
     'UPDATE'
@@ -104,6 +114,8 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     'logupdatedat',
     'logcreatedat'
   ]
+  const [entities, setEntities] = useState<string[]>([])
+  const [entitiesLoading, setEntitiesLoading] = useState(false)
 
   const [selectedEntity, setSelectedEntity] = useState<string>()
   const [entityData, setEntityData] = useState<types.EntityData[]>()
@@ -197,6 +209,29 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     breadcrumbPagesData.home
   )
 
+  async function loadEntities() {
+    try {
+      setEntitiesLoading(true)
+
+      const { data } = await utils.api.get(
+        `${utils.apiRoutes.entityList(router.query.name as string)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getCookie('access_token')}`
+          }
+        }
+      )
+      setSchemaTables(data)
+      setEntities(Object.keys(data) as string[])
+    } catch (err: any) {
+      if (err.response.status !== 404) {
+        utils.showError(err)
+      }
+    } finally {
+      setEntitiesLoading(false)
+    }
+  }
+
   return (
     <SchemaManagerContext.Provider
       value={{
@@ -237,7 +272,12 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         goToUserAndRolesPage,
         selectedTabUsersAndRoles,
         setSelectedTabUsersAndRoles,
-        privateAttributes
+        privateAttributes,
+        entities,
+        setEntities,
+        loadEntities,
+        entitiesLoading,
+        setEntitiesLoading
       }}
     >
       {children}

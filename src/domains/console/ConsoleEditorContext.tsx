@@ -85,6 +85,9 @@ type ConsoleEditorContextProps = {
   handleFormatQueryOrMutationEntity({ entity }: { entity: string }): void
   consoleFormaterMensageError: string | undefined
   setConsoleFormaterMensageError: Dispatch<SetStateAction<string | undefined>>
+  deploySchema: () => void
+  textModeler: string
+  setTextModeler: Dispatch<SetStateAction<string>>
 }
 
 type ProviderProps = {
@@ -114,7 +117,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [consoleResponseLoading, setconsoleResponseLoading] = useState(false)
   const router = useRouter()
   const [responseTime, setResponseTime] = useState<number>()
-  const { reload, privateAttributes } = data.useSchemaManager()
+  const { reload, privateAttributes, loadEntities } = data.useSchemaManager()
   const [codeExporterValue, setCodeExporterValue] = useState('')
   const [variablesValue, setVariablesValue] = useState('')
   const [schemaTabData, setSchemaTabData] = useState<JSX.Element>()
@@ -124,8 +127,10 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [activeEntitiesSidebar, setActiveEntitiesSidebar] = useState(
     new Set<string>()
   )
+
   const [currentEditorAction, setCurrentEditorAction] =
     useState<actionType>('READ')
+  const [textModeler, setTextModeler] = useState<string>('')
 
   const handleFormat = useCallback(() => {
     try {
@@ -528,6 +533,20 @@ handlerAction()`
     }
   }, [schemaTabData])
 
+  function deploySchema() {
+    try {
+      const { schema } = utils.ycl_transpiler.parse(textModeler, false)
+      utils.ycl_transpiler.deploy(schema, () => {
+        loadEntities()
+        loadParser()
+      })
+
+      utils.notification('Operation performed successfully', 'success')
+    } catch (err) {
+      utils.showError(err)
+    }
+  }
+
   return (
     <ConsoleEditorContext.Provider
       value={{
@@ -569,7 +588,10 @@ handlerAction()`
         debounceEditor,
         handleFormatQueryOrMutationEntity,
         consoleFormaterMensageError,
-        setConsoleFormaterMensageError
+        setConsoleFormaterMensageError,
+        deploySchema,
+        textModeler,
+        setTextModeler
       }}
     >
       {children}
