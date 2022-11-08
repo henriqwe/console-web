@@ -52,7 +52,7 @@ const FlowView = ({ schema }: FlowViewProps) => {
         />
         <Controls />
       </ReactFlow>
-      <svg width="0" height="0">
+      {/* <svg width="0" height="0">
         <defs>
           <marker
             id="er-1n"
@@ -92,7 +92,7 @@ const FlowView = ({ schema }: FlowViewProps) => {
             </text>
           </marker>
         </defs>
-      </svg>
+      </svg> */}
     </>
   )
 }

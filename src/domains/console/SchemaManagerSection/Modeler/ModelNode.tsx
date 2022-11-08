@@ -61,7 +61,14 @@ const ModelNode = ({ data }: ModelNodeProps) => {
       <thead title={data.documentation}>
         <tr>
           <th
-            className="p-2 font-extrabold bg-gray-200 dark:bg-gray-800 border-b-2 border-black dark:border-gray-400 rounded-t-md "
+            className={cc([
+              'p-2 font-extrabold  border-b-2 border-black dark:border-gray-400 rounded-t-md ',
+              {
+                'bg-gray-200 dark:bg-gray-800': data.command === '',
+                'bg-red-200': data.command === 'd',
+                'bg-green-200': data.command === 'c'
+              }
+            ])}
             colSpan={4}
           >
             <div className="flex flex-col">
@@ -83,23 +90,22 @@ const ModelNode = ({ data }: ModelNodeProps) => {
               title={col.documentation}
             >
               <td className="font-mono font-semibold">
-                <button
-                  type="button"
+                <div
                   className={cc([
                     'relative',
                     'py-1',
                     'px-2',
-                    { 'cursor-pointer': isTarget(col) || isSource(col) }
+                    {
+                      'cursor-pointer': isTarget(col) || isSource(col),
+                      'bg-red-200': col.command === 'd',
+                      'bg-green-200': col.command === 'c',
+                      'bg-yellow-200': col.command === 'u'
+                    }
                   ])}
-                  onClick={() => {
-                    if (!isTarget(col) && !isSource(col)) return
-
-                    focusNode(col.type)
-                  }}
                 >
                   {col.name}:{' '}
                   <span className="text-gray-500">{col.displayType}</span>
-                </button>
+                </div>
               </td>
             </tr>
           ))}

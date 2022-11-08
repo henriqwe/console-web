@@ -38,7 +38,7 @@ const RelationEdge = ({
     targetY,
     sourcePosition,
     targetPosition,
-    borderRadius: 8
+    borderRadius: 16
   })
 
   const text = label ? (
@@ -67,7 +67,7 @@ const RelationEdge = ({
   return (
     <>
       <path
-        className="text-gray-400 stroke-current stroke-2 fill-none"
+        className="text-gray-400 stroke-current stroke-2 fill-transparent"
         d={path}
         markerStart={markerStart}
         markerEnd={markerEnd}

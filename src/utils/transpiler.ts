@@ -113,10 +113,11 @@ export const ycl_transpiler = {
           if (!ycl_transpiler.ycl_reserved_word_contains(aux[0])) {
             // go!
           } else
-            throw new Error(
-              'error: malformed syntax. the token found is a reserved word.'
+            utils.notification(
+              'error: malformed syntax. the token found is a reserved word.',
+              'error'
             )
-        } else throw new Error('error: malformed list syntax.')
+        } else utils.notification('error: malformed list syntax.', 'error')
       }
       let positions = lines[line].trim().split(' ')
       for (let position = 0; position < positions.length; position++) {
@@ -248,7 +249,7 @@ export const ycl_transpiler = {
           index++
           from = 1
         } else {
-          throw new Error(
+          utils.notification(
             "error: the token format is not lowercase, or matches some reserved word, or does not match only alpha characters. token '" +
               tokens[index + 1].symbol +
               "', line " +
@@ -257,7 +258,8 @@ export const ycl_transpiler = {
               tokens[index + 1].position +
               '. [from: ' +
               from +
-              ']'
+              ']',
+            'error'
           )
         }
       } else if (
@@ -451,8 +453,9 @@ export const ycl_transpiler = {
               }
             }
             if (index == tokens.length) {
-              throw new Error(
-                'error: neither a next entity was found, nor the end of the code after the entity declared to be delete.'
+              utils.notification(
+                'error: neither a next entity was found, nor the end of the code after the entity declared to be delete.',
+                'error'
               )
             }
           } else {
@@ -471,7 +474,7 @@ export const ycl_transpiler = {
             from = 4
           }
         } else {
-          throw new Error(
+          utils.notification(
             "error: the token format is not lowercase, or matches some reserved word, or does not match only alpha characters. token '" +
               tokens[index + 1].symbol +
               "', line " +
@@ -480,7 +483,8 @@ export const ycl_transpiler = {
               tokens[index + 1].position +
               '. [from: ' +
               from +
-              ']'
+              ']',
+            'error'
           )
         }
       } else if (from == 4 && tokens[index].symbol == '(') {
@@ -511,16 +515,18 @@ export const ycl_transpiler = {
                 if (tokens[++index].symbol == ')') {
                   code_body = code_body + ' ' + tokens[index].symbol
                 } else
-                  throw new Error(
+                  utils.notification(
                     "error: unexpected token '" +
                       tokens[index].symbol +
-                      "'. the expected token is ')'"
+                      "'. the expected token is ')'",
+                    'error'
                   )
               } else
-                throw new Error(
+                utils.notification(
                   "error: unexpected token '" +
                     tokens[index].symbol +
-                    "'. the expected token is 'columnar' or 'graph'"
+                    "'. the expected token is 'columnar' or 'graph'",
+                  'error'
                 )
             }
             code_body = code_body + '\n'
@@ -591,10 +597,11 @@ export const ycl_transpiler = {
             if (tokens[++index].symbol == ')') {
               code_body = code_body + '    ' + tokens[index].symbol + '\n'
             } else
-              throw new Error(
+              utils.notification(
                 "error: unexpected token '" +
                   tokens[index].symbol +
-                  "'. the expected token is ')'"
+                  "'. the expected token is ')'",
+                'error'
               )
             index++
           } else if (
@@ -668,7 +675,7 @@ export const ycl_transpiler = {
                 code_body = code_body + '      ' + tokens[index].symbol + '\n'
                 index++
               } else {
-                throw new Error(
+                utils.notification(
                   "error: attribute name incorrect into uniqueKey. token '" +
                     tokens[index].symbol +
                     "', line " +
@@ -677,7 +684,8 @@ export const ycl_transpiler = {
                     tokens[index].position +
                     '. [from: ' +
                     from +
-                    ']'
+                    ']',
+                  'error'
                 )
               }
             }
@@ -736,7 +744,7 @@ export const ycl_transpiler = {
                     index++
                     hasPK = true
                   } else {
-                    throw new Error(
+                    utils.notification(
                       "error: attribute name incorrect into uniqueKey. token '" +
                         tokens[index].symbol +
                         "', line " +
@@ -745,14 +753,18 @@ export const ycl_transpiler = {
                         tokens[index].position +
                         '. [from: ' +
                         from +
-                        ']'
+                        ']',
+                      'error'
                     )
                   }
                 }
                 if (
                   actual_entity._conf.uniqueKey.partitionKeys.values.length == 0
                 ) {
-                  throw new Error('error: you must defined a primary key')
+                  utils.notification(
+                    'error: you must defined a primary key',
+                    'error'
+                  )
                 }
                 code_body = code_body + '      ' + tokens[index].symbol + '\n' // o ']' do 'partitionKeys ['
                 index++
@@ -785,7 +797,7 @@ export const ycl_transpiler = {
                     index++
                     hasPK = true
                   } else {
-                    throw new Error(
+                    utils.notification(
                       "error: attribute name incorrect into uniqueKey. token '" +
                         tokens[index].symbol +
                         "', line " +
@@ -794,7 +806,8 @@ export const ycl_transpiler = {
                         tokens[index].position +
                         '. [from: ' +
                         from +
-                        ']'
+                        ']',
+                      'error'
                     )
                   }
                 }
@@ -803,17 +816,18 @@ export const ycl_transpiler = {
               } else flag = false
             }
             if (!hasPK) {
-              throw new Error('error: primary key undefined')
+              utils.notification('error: primary key undefined', 'error')
             }
             if (tokens[index].symbol == ')') {
               code_body = code_body + '    ' + tokens[index].symbol + '\n' // o ')' do 'primaryKey ('
             } else
-              throw new Error(
+              utils.notification(
                 "error: unexpected token '" +
                   tokens[index].symbol +
                   "' (in line: " +
                   tokens[index].line +
-                  "). the expected token is ')'"
+                  "). the expected token is ')'",
+                'error'
               )
             index++
           } else if (
@@ -848,7 +862,7 @@ export const ycl_transpiler = {
                 code_body = code_body + '      ' + tokens[index].symbol + '\n'
                 index++
               } else {
-                throw new Error(
+                utils.notification(
                   "error: attribute name incorrect into indexKey. token '" +
                     tokens[index].symbol +
                     "', line " +
@@ -857,7 +871,8 @@ export const ycl_transpiler = {
                     tokens[index].position +
                     '. [from: ' +
                     from +
-                    ']'
+                    ']',
+                  'error'
                 )
               }
             }
@@ -918,7 +933,7 @@ export const ycl_transpiler = {
                       code_body + '        ' + tokens[index].symbol + '\n'
                     index++
                   } else {
-                    throw new Error(
+                    utils.notification(
                       "error: token format is not capitalized, or matches some reserved word, or does not start with length gt 2. token '" +
                         tokens[index].symbol +
                         "', line " +
@@ -927,7 +942,8 @@ export const ycl_transpiler = {
                         tokens[index].position +
                         '. [from: ' +
                         from +
-                        ']'
+                        ']',
+                      'error'
                     )
                   }
                 }
@@ -960,7 +976,7 @@ export const ycl_transpiler = {
                       code_body + '        ' + tokens[index].symbol + '\n'
                     index++
                   } else {
-                    throw new Error(
+                    utils.notification(
                       "error: token format is not capitalized, or matches some reserved word, or does not start with length gt 2. token '" +
                         tokens[index].symbol +
                         "', line " +
@@ -969,14 +985,15 @@ export const ycl_transpiler = {
                         tokens[index].position +
                         '. [from: ' +
                         from +
-                        ']'
+                        ']',
+                      'error'
                     )
                   }
                 }
                 code_body = code_body + '      ' + tokens[index].symbol + '\n' // o ']' do 'write ['
                 index++
               } else {
-                throw new Error(
+                utils.notification(
                   "error: unknow token '" +
                     tokens[index].symbol +
                     "', line " +
@@ -985,7 +1002,8 @@ export const ycl_transpiler = {
                     tokens[index].position +
                     '. [from: ' +
                     from +
-                    ']'
+                    ']',
+                  'error'
                 )
               }
             }
@@ -1008,7 +1026,7 @@ export const ycl_transpiler = {
                 command: 'u'
               }
             } else {
-              throw new Error(
+              utils.notification(
                 "error: unknow token '" +
                   tokens[index].symbol +
                   "', line " +
@@ -1017,13 +1035,14 @@ export const ycl_transpiler = {
                   tokens[index].position +
                   '. [from: ' +
                   from +
-                  ']'
+                  ']',
+                'error'
               )
             }
             // code_body = code_body + '    ' + tokens[index].symbol.replace('u:','') + '\n';
             index++
           } else {
-            throw new Error(
+            utils.notification(
               "error: unknow token '" +
                 tokens[index].symbol +
                 "', line " +
@@ -1032,7 +1051,8 @@ export const ycl_transpiler = {
                 tokens[index].position +
                 '. [from: ' +
                 from +
-                ']'
+                ']',
+              'error'
             )
           }
         }
@@ -1093,8 +1113,9 @@ export const ycl_transpiler = {
                   }
                 }
                 if (index == tokens.length) {
-                  throw new Error(
-                    'error: neither a next attribute was found, nor the end of the code after the attribute declared to be delete.'
+                  utils.notification(
+                    'error: neither a next attribute was found, nor the end of the code after the attribute declared to be delete.',
+                    'error'
                   )
                 }
               } else {
@@ -1194,12 +1215,13 @@ export const ycl_transpiler = {
                       code_body =
                         code_body + '      ' + tokens[index].symbol + '\n'
                     } else
-                      throw new Error(
+                      utils.notification(
                         "error: unexpected token '" +
                           tokens[index].symbol +
                           "' (in line: " +
                           tokens[index].line +
-                          "). the expected token is ')'"
+                          "). the expected token is ')'",
+                        'error'
                       )
                     index++
                   } else if (
@@ -1392,7 +1414,7 @@ export const ycl_transpiler = {
                           code_body + '      ' + tokens[index].symbol + '\n'
                         index++
                       } else {
-                        throw new Error(
+                        utils.notification(
                           "error: unknow token. token '" +
                             tokens[index + 1].symbol +
                             "', line " +
@@ -1401,7 +1423,8 @@ export const ycl_transpiler = {
                             tokens[index + 1].position +
                             '. [from: ' +
                             from +
-                            ']'
+                            ']',
+                          'error'
                         )
                       }
                     } else {
@@ -1460,7 +1483,7 @@ export const ycl_transpiler = {
                           command: 'u'
                         }
                       } else {
-                        throw new Error(
+                        utils.notification(
                           "error: unknow token. token '" +
                             tokens[index].symbol +
                             "', line " +
@@ -1469,7 +1492,8 @@ export const ycl_transpiler = {
                             tokens[index].position +
                             '. [from: ' +
                             from +
-                            ']'
+                            ']',
+                          'error'
                         )
                       }
                     }
@@ -1481,7 +1505,7 @@ export const ycl_transpiler = {
                     index++
                   } else {
                     // console.log('entity_names: ', entity_names)
-                    throw new Error(
+                    utils.notification(
                       "error: unknow token. token '" +
                         tokens[index].symbol +
                         "', line " +
@@ -1490,7 +1514,8 @@ export const ycl_transpiler = {
                         tokens[index].position +
                         '. [from: ' +
                         from +
-                        ']'
+                        ']',
+                      'error'
                     )
                   }
                 }
@@ -1534,7 +1559,7 @@ export const ycl_transpiler = {
                 ';\n'
             }
           } else {
-            throw new Error(
+            utils.notification(
               "error: token matches some reserved word or length is less than 2. token '" +
                 tokens[index].symbol +
                 "', line " +
@@ -1543,7 +1568,8 @@ export const ycl_transpiler = {
                 tokens[index].position +
                 '. [from: ' +
                 from +
-                ']'
+                ']',
+              'error'
             )
           }
         }
@@ -1574,7 +1600,7 @@ export const ycl_transpiler = {
 
           // console.log('code ok')
         } else {
-          throw new Error(
+          utils.notification(
             "* error: unknow token '" +
               tokens[index].symbol +
               "', line " +
@@ -1583,7 +1609,8 @@ export const ycl_transpiler = {
               tokens[index].position +
               '. [from: ' +
               from +
-              ']'
+              ']',
+            'error'
           )
         }
         index++
@@ -1744,8 +1771,9 @@ export const ycl_transpiler = {
               }
             })
           } else {
-            throw new Error(
-              'error: association between entities is inconsistency.'
+            utils.notification(
+              'error: association between entities is inconsistency.',
+              'error'
             )
           }
         }
