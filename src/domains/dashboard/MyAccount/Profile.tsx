@@ -98,7 +98,6 @@ export function Profile() {
         }
       )
       .then((res) => {
-        console.log('response', res)
         if (res.status === 200) {
           refreshUserData()
 
@@ -142,7 +141,6 @@ export function Profile() {
         }
       )
       .then((res) => {
-        console.log('response', res)
         if (res.status === 200) {
           utils.notification('Password changed successfully!', 'success')
         } else utils.notification(res.data.message, 'error')
