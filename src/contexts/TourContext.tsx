@@ -8,16 +8,28 @@ import {
 
 import { useTour } from '@reactour/tour'
 
+type TouredType = {
+  dashboard: boolean
+  modeler: boolean
+  database: boolean
+  users: boolean
+  roles: boolean
+  dataapi: boolean
+}
+
 type TourContextProps = {
-  toured: {
-    dashboard: boolean
-    console: boolean
-  }
-  getToured: () => {
-    dashboard: boolean
-    console: boolean
-  }
-  setLocalToured: (section: 'dashboard' | 'console', value: boolean) => void
+  toured: TouredType
+  getToured: () => TouredType
+  setLocalToured: (
+    section:
+      | 'dashboard'
+      | 'modeler'
+      | 'database'
+      | 'users'
+      | 'roles'
+      | 'dataapi',
+    value: boolean
+  ) => void
   previousStep: () => void
   nextStep: () => void
 }
@@ -34,9 +46,20 @@ export const TourProvider = ({ children }: ProviderProps) => {
   const { currentStep, setCurrentStep } = useTour()
   const [toured, setToured] = useState({
     dashboard: false,
-    console: false
+    modeler: false,
+    database: false,
+    users: false,
+    roles: false,
+    dataapi: false
   })
-  const sections = ['dashboard', 'console']
+  const sections = [
+    'dashboard',
+    'modeler',
+    'database',
+    'users',
+    'roles',
+    'dataapi'
+  ]
 
   useEffect(() => {
     const newToured = getToured()
@@ -49,23 +72,29 @@ export const TourProvider = ({ children }: ProviderProps) => {
   }, [])
 
   function getToured() {
-    let newToured = {} as {
-      dashboard: boolean
-      console: boolean
-    }
+    let newToured = {} as TouredType
 
     sections.forEach((s) => {
       newToured = {
         ...newToured,
-        [s]: window.localStorage.getItem(`${s}-toured`) === 'true'
+        [s]: window.localStorage.getItem(`toured-${s}`) === 'true'
       }
     })
 
     return newToured
   }
 
-  function setLocalToured(section: 'dashboard' | 'console', value: boolean) {
-    window.localStorage.setItem(`${section}-toured`, value.toString())
+  function setLocalToured(
+    section:
+      | 'dashboard'
+      | 'modeler'
+      | 'database'
+      | 'users'
+      | 'roles'
+      | 'dataapi',
+    value: boolean
+  ) {
+    window.localStorage.setItem(`toured-${section}`, value.toString())
   }
 
   function previousStep() {

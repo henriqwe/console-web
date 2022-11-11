@@ -77,7 +77,7 @@ export function RoleTab() {
   }
   return (
     <div
-      className={`flex flex-col ${
+      className={`roles-step-1 flex flex-col ${
         loading ? 'items-center justify-center' : 'items-start'
       } h-full  rounded-b-lg`}
     >
@@ -99,6 +99,7 @@ export function RoleTab() {
                 setSlideType('ROLE')
               }}
               icon={<PlusIcon className="w-5 h-5" />}
+              className="roles-step-2"
             >
               Create
             </common.Buttons.WhiteOutline>

@@ -60,10 +60,10 @@ export function SchemaManagerTab() {
   }, [router.query.name, reload])
 
   return (
-    <div className="flex flex-col h-full gap-1 px-4 pt-3 overflow-y-auto">
+    <div className="modeler-step-2 flex flex-col h-full gap-1 px-4 pt-3 overflow-y-auto">
       <div className="flex flex-col w-full">
         <div
-          className={`flex items-center gap-2  text-sm hover:cursor-pointer ${
+          className={`modeler-step-3 flex items-center gap-2 text-sm hover:cursor-pointer ${
             currentTabSchema === 'Modeler' ? 'font-semibold' : 'font-light'
           }`}
           onClick={() => {

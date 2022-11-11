@@ -9,6 +9,8 @@ import { useEffect, useState } from 'react'
 import { schemaType } from 'domains/console/SchemaManagerSection/Modeler/types'
 import * as utils from 'utils'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
+import { Tour } from './Tour'
+import { TourProvider } from '@reactour/tour'
 
 export function Modeler() {
   const { isDark } = ThemeContext.useTheme()
@@ -31,20 +33,23 @@ export function Modeler() {
   }, [documentationValue])
 
   return (
-    <div className="flex w-full h-full">
-      <section className="relative flex flex-col items-start border-r-2 w-[35%]">
-        <CodeMirror
-          value={text}
-          className="flex w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
-          width="100%"
-          onChange={(val) => setText(val)}
-          theme={isDark ? dracula : 'light'}
-          extensions={[json(), EditorView.lineWrapping]}
-        />
-      </section>
-      <div className="overflow-auto border-l-2 w-[65%]">
-        <FlowView schema={schema} />
+    <>
+      <Tour />
+      <div className="flex w-full h-full">
+        <section className="modeler-step-4 relative flex flex-col items-start border-r-2 w-[35%]">
+          <CodeMirror
+            value={text}
+            className="flex w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
+            width="100%"
+            onChange={(val) => setText(val)}
+            theme={isDark ? dracula : 'light'}
+            extensions={[json(), EditorView.lineWrapping]}
+          />
+        </section>
+        <div className="modeler-step-5 overflow-auto border-l-2 w-[65%]">
+          <FlowView schema={schema} />
+        </div>
       </div>
-    </div>
+    </>
   )
 }

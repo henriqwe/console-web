@@ -7,6 +7,7 @@ import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
 import { CheckCircleIcon, PlusIcon } from '@heroicons/react/solid'
+import { TourProvider } from '@reactour/tour'
 
 export function SchemaManagerSection() {
   const [selectedEntityTab, setSelectedEntityTab] = useState({
@@ -80,6 +81,19 @@ export function SchemaManagerSection() {
       })
   }, [])
 
+  function beforeClose() {
+    if (currentTabSchema === 'Databases')
+      window.localStorage.setItem('toured-database', 'true')
+    else if (currentTabSchema === 'Modeler')
+      window.localStorage.setItem('toured-modeler', 'true')
+    else if (currentTabSchema === 'Users and Roles') {
+      if (selectedTabUsersAndRoles.name === 'Users')
+        window.localStorage.setItem('toured-users', 'true')
+      else if (selectedTabUsersAndRoles.name === 'Roles')
+        window.localStorage.setItem('toured-roles', 'true')
+    }
+  }
+
   if (showCreateEntitySection) {
     return (
       <div className="w-full h-full py-4 px-8 ">
@@ -89,85 +103,104 @@ export function SchemaManagerSection() {
   }
 
   return (
-    <div className="w-full h-full py-4 px-8 ">
-      <common.Card className="flex flex-col h-full">
-        <div className="flex w-full h-[3.3rem]">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center">
-              <common.Breadcrumb pages={breadcrumbPages} />
-              {selectedEntity && (
-                <PencilIcon
-                  className="w-3 h-3 text-gray-500 cursor-pointer"
+    <TourProvider
+      steps={[]}
+      styles={{
+        popover: (base) => ({
+          ...base,
+          '--reactour-accent': '#0cd664',
+          borderRadius: 10
+        }),
+        dot: (base, { current }: any) => ({
+          ...base,
+          backgroundColor: current ? '#0cd664' : '#ccc'
+        })
+      }}
+      beforeClose={() => beforeClose()}
+    >
+      <div className="w-full h-full py-4 px-8 ">
+        <common.Card className="flex flex-col h-full">
+          <div className="flex w-full h-[3.3rem]">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center">
+                <common.Breadcrumb pages={breadcrumbPages} />
+                {selectedEntity && (
+                  <PencilIcon
+                    className="w-3 h-3 text-gray-500 cursor-pointer"
+                    onClick={() => {
+                      setOpenSlide(true)
+                      setSlideType('UPDATE ENTITY')
+                    }}
+                  />
+                )}
+              </div>
+              {!selectedEntity && currentTabSchema === 'Databases' && (
+                <common.Buttons.WhiteOutline
+                  type="button"
                   onClick={() => {
-                    setOpenSlide(true)
-                    setSlideType('UPDATE ENTITY')
+                    setShowCreateEntitySection(true)
+                    setBreadcrumbPages(breadcrumbPagesData.createEntity)
                   }}
-                />
+                  icon={<PlusIcon className="w-3 h-3" />}
+                  className="database-step-3"
+                >
+                  Create entity
+                </common.Buttons.WhiteOutline>
+              )}
+              {currentTabSchema === 'Modeler' && (
+                <common.Buttons.WhiteOutline
+                  type="button"
+                  onClick={() => null}
+                  icon={
+                    <CheckCircleIcon className="w-4 h-4 !text-green-700 " />
+                  }
+                  disabled
+                >
+                  Deploy
+                </common.Buttons.WhiteOutline>
+              )}
+              {currentTabSchema === 'Users and Roles' && (
+                <div className={` w-1/3 `}>
+                  <common.Tabs
+                    tabs={[{ name: 'Users' }, { name: 'Roles' }]}
+                    selectedTab={selectedTabUsersAndRoles}
+                    setSelectedTab={setSelectedTabUsersAndRoles}
+                  />
+                </div>
               )}
             </div>
-            {!selectedEntity && currentTabSchema === 'Databases' && (
-              <common.Buttons.WhiteOutline
-                type="button"
-                onClick={() => {
-                  setShowCreateEntitySection(true)
-                  setBreadcrumbPages(breadcrumbPagesData.createEntity)
-                }}
-                icon={<PlusIcon className="w-3 h-3" />}
-              >
-                Create entity
-              </common.Buttons.WhiteOutline>
-            )}
-            {currentTabSchema === 'Modeler' && (
-              <common.Buttons.WhiteOutline
-                type="button"
-                onClick={() => null}
-                icon={<CheckCircleIcon className="w-4 h-4 !text-green-700 " />}
-                disabled
-              >
-                Deploy
-              </common.Buttons.WhiteOutline>
-            )}
-            {currentTabSchema === 'Users and Roles' && (
-              <div className={` w-1/3 `}>
-                <common.Tabs
-                  tabs={[{ name: 'Users' }, { name: 'Roles' }]}
-                  selectedTab={selectedTabUsersAndRoles}
-                  setSelectedTab={setSelectedTabUsersAndRoles}
-                />
-              </div>
-            )}
+            <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
+              <common.Tabs
+                selectedTab={selectedEntityTab}
+                setSelectedTab={setSelectedEntityTab}
+                tabs={[{ name: 'Attributes' }, { name: 'Associations' }]}
+              />
+            </div>
           </div>
-          <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
-            <common.Tabs
-              selectedTab={selectedEntityTab}
-              setSelectedTab={setSelectedEntityTab}
-              tabs={[{ name: 'Attributes' }, { name: 'Associations' }]}
-            />
-          </div>
-        </div>
-        <consoleSection.SlidePanel />
-        <div className="bg-white rounded-md dark:bg-menu-primary w-full">
-          <common.ContentSection variant="WithoutTitleBackgroundColor">
-            {currentTabSchema === 'Databases' ? (
-              selectedEntity ? (
-                selectedEntityTab.name === 'Attributes' ? (
-                  <consoleSection.ModifyTab loading={loading} />
+          <consoleSection.SlidePanel />
+          <div className="bg-white rounded-md dark:bg-menu-primary w-full">
+            <common.ContentSection variant="WithoutTitleBackgroundColor">
+              {currentTabSchema === 'Databases' ? (
+                selectedEntity ? (
+                  selectedEntityTab.name === 'Attributes' ? (
+                    <consoleSection.ModifyTab loading={loading} />
+                  ) : (
+                    <consoleSection.AssociationTab loading={loading} />
+                  )
                 ) : (
-                  <consoleSection.AssociationTab loading={loading} />
+                  <consoleSection.DefaultPage />
                 )
+              ) : currentTabSchema === 'Modeler' ? (
+                <consoleSection.Modeler />
+              ) : currentTabSchema === 'Users and Roles' ? (
+                <consoleSection.UsersSection />
               ) : (
-                <consoleSection.DefaultPage />
-              )
-            ) : currentTabSchema === 'Modeler' ? (
-              <consoleSection.Modeler />
-            ) : currentTabSchema === 'Users and Roles' ? (
-              <consoleSection.UsersSection />
-            ) : (
-              <div />
-            )}
-          </common.ContentSection>
-        </div>
-      </common.Card>
-    </div>
+                <div />
+              )}
+            </common.ContentSection>
+          </div>
+        </common.Card>
+      </div>
+    </TourProvider>
   )
 }

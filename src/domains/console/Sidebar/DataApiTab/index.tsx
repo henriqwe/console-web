@@ -62,7 +62,7 @@ export function DataApiTab() {
   }, [router.query.name])
 
   return (
-    <div className="flex flex-col flex-1 h-full gap-1 px-4 pt-3 overflow-y-auto rounded-b-lg">
+    <div className="dataapi-step-1 flex flex-col flex-1 h-full gap-1 px-4 pt-3 overflow-y-auto rounded-b-lg">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <div className="w-8 h-8 mr-8">

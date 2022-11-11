@@ -21,6 +21,7 @@
     "@heroicons/react": "^1.0.6",
     "@hookform/resolvers": "^2.9.1",
     "@iconify/react": "^3.2.2",
+    "@reactour/mask": "^1.0.4",
     "@reactour/tour": "^3.1.6",
     "@uiw/codemirror-theme-dracula": "^4.11.4",
     "@uiw/codemirror-themes": "^4.11.4",

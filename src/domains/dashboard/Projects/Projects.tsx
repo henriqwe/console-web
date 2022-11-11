@@ -101,7 +101,7 @@ export function Projects() {
   }, [watch('search')])
 
   return (
-    <div className="step-6 flex justify-center">
+    <div className="dashboard-step-6 flex justify-center">
       <div className="absolute inset-x-0 top-0 z-10 flex justify-center pointer-events-none blur-xl">
         <div className="flex justify-end flex-none w-full">
           <img
@@ -128,14 +128,14 @@ export function Projects() {
                   // router.push(routes.createProject)
                 }}
               >
-                <div className="step-8 flex items-center gap-2 dark:text-text-primary">
+                <div className="dashboard-step-8 flex items-center gap-2 dark:text-text-primary">
                   <p className="text-xs">New Project</p>
                   <PlusIcon className="w-3 h-3" />
                 </div>
               </button>
             </div>
           </div>
-          <div className="step-7 relative flex items-center">
+          <div className="dashboard-step-7 relative flex items-center">
             <SearchIcon className="absolute w-4 h-4 text-gray-400 dark:text-text-primary left-2" />
             <Controller
               name="search"

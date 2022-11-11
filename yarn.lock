@@ -2053,7 +2053,7 @@
     schema-utils "^3.0.0"
     source-map "^0.7.3"
 
-"@reactour/mask@*":
+"@reactour/mask@*", "@reactour/mask@^1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@reactour/mask/-/mask-1.0.4.tgz#d5415a76e0f5a8436be964de82fa0579887c7dd5"
   integrity sha512-znMRiDB5GjXlAUFOcmtFlmwy3w2w4xb10pSZofYdvNSl9VHinuAXqJURDIBfpKTB72vx1Tv6FiX5TPN9Wtedzw==

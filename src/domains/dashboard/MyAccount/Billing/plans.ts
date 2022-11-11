@@ -15,7 +15,7 @@ export const plans = [
   },
   {
     name: 'Starter',
-    price: 'R$149,97',
+    price: 'R$150,00',
     description: 'Medium scale',
     href: 'https://console.ycodify.com/register',
     features: [
@@ -29,7 +29,7 @@ export const plans = [
   },
   {
     name: 'Pro',
-    price: 'R$349,97',
+    price: 'R$350,00',
     description: 'Large scale',
     href: 'https://console.ycodify.com/register',
     features: [
