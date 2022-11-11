@@ -63,7 +63,6 @@ export const TourProvider = ({ children }: ProviderProps) => {
 
   useEffect(() => {
     const newToured = getToured()
-    console.log(newToured)
     setToured(newToured)
 
     window.onstorage = function () {

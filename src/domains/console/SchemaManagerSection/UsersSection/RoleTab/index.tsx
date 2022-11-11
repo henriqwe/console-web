@@ -87,7 +87,9 @@ export function RoleTab() {
             <common.Spinner />
           </div>
 
-          <p className="text-lg font-bold text-gray-700">Loading entity data</p>
+          <p className="text-lg font-bold text-gray-700 dark:text-text-secondary">
+            Loading entity data
+          </p>
         </div>
       ) : (
         <div className="w-full h-full  rounded-b-lg overflow-y pt-2">

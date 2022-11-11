@@ -33,16 +33,15 @@ export function Modeler() {
   }, [documentationValue])
 
   return (
-
     <>
       <Tour />
       <div className="flex w-full h-full">
         <section className="modeler-step-4 relative flex flex-col items-start border-r-2 w-[35%]">
           <CodeMirror
-            value={text}
+            value={textModeler}
             className="flex w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
             width="100%"
-            onChange={(val) => setText(val)}
+            onChange={(val) => setTextModeler(val)}
             theme={isDark ? dracula : 'light'}
             extensions={[json(), EditorView.lineWrapping]}
           />

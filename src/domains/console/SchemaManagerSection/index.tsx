@@ -148,14 +148,14 @@ export function SchemaManagerSection() {
                   Create entity
                 </common.Buttons.WhiteOutline>
               )}
+
               {currentTabSchema === 'Modeler' && (
                 <common.Buttons.WhiteOutline
                   type="button"
-                  onClick={() => null}
+                  onClick={deploySchema}
                   icon={
                     <CheckCircleIcon className="w-4 h-4 !text-green-700 " />
                   }
-                  disabled
                 >
                   Deploy
                 </common.Buttons.WhiteOutline>
@@ -170,36 +170,6 @@ export function SchemaManagerSection() {
                 </div>
               )}
             </div>
-            {!selectedEntity && currentTabSchema === 'Databases' && (
-              <common.Buttons.WhiteOutline
-                type="button"
-                onClick={() => {
-                  setShowCreateEntitySection(true)
-                  setBreadcrumbPages(breadcrumbPagesData.createEntity)
-                }}
-                icon={<PlusIcon className="w-3 h-3" />}
-              >
-                Create entity
-              </common.Buttons.WhiteOutline>
-            )}
-            {currentTabSchema === 'Modeler' && (
-              <common.Buttons.WhiteOutline
-                type="button"
-                onClick={deploySchema}
-                icon={<CheckCircleIcon className="w-4 h-4 !text-green-700 " />}
-              >
-                Deploy
-              </common.Buttons.WhiteOutline>
-            )}
-            {currentTabSchema === 'Users and Roles' && (
-              <div className={` w-1/3 `}>
-                <common.Tabs
-                  tabs={[{ name: 'Users' }, { name: 'Roles' }]}
-                  selectedTab={selectedTabUsersAndRoles}
-                  setSelectedTab={setSelectedTabUsersAndRoles}
-                />
-              </div>
-            )}
           </div>
           <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
             <common.Tabs
