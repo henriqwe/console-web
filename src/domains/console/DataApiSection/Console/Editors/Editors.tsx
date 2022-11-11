@@ -87,7 +87,7 @@ export function Editors() {
   ]
 
   return (
-    <div className="flex flex-col w-full h-full" data-tour="step-4">
+    <div className="flex flex-col w-full h-full">
       <common.ContentSection
         variant="WithoutTitleBackgroundColor"
         title={
@@ -99,9 +99,11 @@ export function Editors() {
                   { content: 'Console', current: false },
                   {
                     content: (
-                      <common.Dropdown actions={dropdownActions}>
-                        {utils.capitalizeWord(currentEditorAction)}
-                      </common.Dropdown>
+                      <div className="dataapi-step-2">
+                        <common.Dropdown actions={dropdownActions}>
+                          {utils.capitalizeWord(currentEditorAction)}
+                        </common.Dropdown>
+                      </div>
                     ),
                     current: true
                   }
@@ -112,7 +114,7 @@ export function Editors() {
             <div className="flex items-center justify-end gap-2">
               <div title="Endpoint and request headers">
                 <common.icons.DotsVerticalIcon
-                  className="w-5 h-5 cursor-pointer"
+                  className="dataapi-step-7 w-5 h-5 cursor-pointer"
                   onClick={() => {
                     setSlideState({
                       open: true,
@@ -128,7 +130,7 @@ export function Editors() {
         <div className="relative items-center justify-center">
           <button
             title="Run"
-            className={`absolute items-center justify-center mt-10 ${
+            className={`dataapi-step-4 absolute items-center justify-center mt-10 ${
               showTableViewMode ? 'left-1/3' : 'left-2/4'
             } -translate-x-1/2 -translate-y-1/2 z-10 bg-gray-200  h-14 w-14 border-4 border-white dark:border-gray-900 rounded-full`}
             onClick={() => {
@@ -157,7 +159,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-4' : 'col-span-6'
             } h-full rounded-lg flex`}
           >
-            <div className="flex relative flex-col w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] rounded-l-lg">
+            <div className="dataapi-step-3 flex relative flex-col w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] rounded-l-lg">
               <CodeMirror
                 value={consoleValue}
                 className="flex w-full h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem] "
@@ -203,7 +205,7 @@ export function Editors() {
                   onClick={() => {
                     setSlideState({ open: true, type: 'CodeExporterView' })
                   }}
-                  className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7"
+                  className="dataapi-step-6 flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7"
                 >
                   <common.icons.DownloadIcon className="w-5 h-5 text-gray-600 dark:text-text-primary" />
                 </button>
@@ -225,7 +227,7 @@ export function Editors() {
                   </div>
                 </div>
               ) : (
-                <div className="flex relative flex-col w-full  h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
+                <div className="dataapi-step-5 flex relative flex-col w-full  h-[29rem] max-h-[29rem] min-h-[29rem] 2lx:h-[49rem] 2xl:max-h-[49rem] 2xl:min-h-[49rem]  ">
                   {showTableViewMode ? (
                     <consoleSection.TableViewMode />
                   ) : (

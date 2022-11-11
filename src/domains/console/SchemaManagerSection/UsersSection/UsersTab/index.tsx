@@ -84,7 +84,7 @@ export function UsersTab() {
   }
   return (
     <div
-      className={`flex flex-col ${
+      className={`users-step-1 flex flex-col ${
         loading ? 'items-center justify-center' : 'items-start'
       } h-full  rounded-b-lg`}
     >
@@ -99,16 +99,17 @@ export function UsersTab() {
       ) : (
         <div className="flex flex-col w-full h-full gap-2  rounded-b-lg pt-2">
           <div className="flex items-center w-full px-4 py-2 gap-8 ">
-            <common.Buttons.WhiteOutline
+            {/* <common.Buttons.WhiteOutline
               type="button"
               onClick={() => {
                 setOpenSlide(true)
                 setSlideType('ASSOCIATEACCOUNT')
               }}
               icon={<LinkIcon className="w-5 h-5" />}
+              className="users-step-3"
             >
               Associate
-            </common.Buttons.WhiteOutline>
+            </common.Buttons.WhiteOutline> */}
             <common.Buttons.WhiteOutline
               type="button"
               onClick={() => {
@@ -116,6 +117,7 @@ export function UsersTab() {
                 setSlideType('ACCOUNT')
               }}
               icon={<PlusIcon className="w-5 h-5" />}
+              className="users-step-2"
             >
               Create
             </common.Buttons.WhiteOutline>

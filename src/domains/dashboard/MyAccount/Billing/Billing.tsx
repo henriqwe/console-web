@@ -8,7 +8,6 @@ import { useUser } from 'contexts/UserContext'
 export function Billing() {
   const [loading, setLoading] = useState(true)
   const [billingHistory, setBillingHistory] = useState<BillingCardProps[]>([])
-  const { user } = useUser()
 
   // temporariamente enquanto não vem do backend
   // const { selectedPlan } = user?.userData

@@ -4,6 +4,8 @@ import * as consoleSection from 'domains/console'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { PlusIcon } from '@heroicons/react/solid'
+import { Tour } from './Tour'
+import { TourProvider } from '@reactour/tour'
 
 export function DefaultPage() {
   const router = useRouter()
@@ -62,61 +64,64 @@ export function DefaultPage() {
   }, [schemaStatus])
 
   return (
-    <div className="flex flex-col w-full h-full p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="font-semibold">Publish console version</p>
-          <p className="text-sm text-gray-600 dark:text-text-tertiary">
-            Active the toggle button to publish all modifications in a new
-            version
-          </p>
+    <>
+      <Tour />
+      <div className="database-step-1 flex flex-col w-full h-full p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-semibold">Publish console version</p>
+            <p className="text-sm text-gray-600 dark:text-text-tertiary">
+              Active the toggle button to publish all modifications in a new
+              version
+            </p>
+          </div>
+          <div className="database-step-2 flex gap-2">
+            Publish version
+            <common.Toggle
+              enabled={publish}
+              onChange={(value) => {
+                publishSchema(value)
+                setPublish(value)
+              }}
+            />
+          </div>
         </div>
-        <div className="flex gap-2">
-          Publish version
-          <common.Toggle
-            enabled={publish}
-            onChange={(value) => {
-              publishSchema(value)
-              setPublish(value)
-            }}
-          />
-        </div>
+        <common.Separator />
+        <p className="mt-5 text-lg font-medium">Lorem ipsum dolor sit amet</p>
+        <p className="my-5 text-base text-gray-600  dark:text-text-tertiary">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa
+          nostrum laborum ea molestias corporis rerum iusto? Iure, sapiente
+          velit? Alias possimus natus voluptas hic perferendis quae,
+          consequuntur optio. Recusandae, atque?
+        </p>
+        <common.Table
+          values={sections}
+          tableColumns={[
+            {
+              name: 'name',
+              displayName: 'Template name',
+              handler: (value) =>
+                value ? (
+                  <p
+                    className={
+                      value.type === 'title' ? 'font-semibold' : 'text-blue-500'
+                    }
+                  >
+                    {value.value}
+                  </p>
+                ) : (
+                  ''
+                )
+            },
+            {
+              name: 'description',
+              displayName: 'Description',
+              handler: (value) => (value ? value : '')
+            }
+          ]}
+          rounded
+        />
       </div>
-      <common.Separator />
-      <p className="mt-5 text-lg font-medium">Lorem ipsum dolor sit amet</p>
-      <p className="my-5 text-base text-gray-600  dark:text-text-tertiary">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa nostrum
-        laborum ea molestias corporis rerum iusto? Iure, sapiente velit? Alias
-        possimus natus voluptas hic perferendis quae, consequuntur optio.
-        Recusandae, atque?
-      </p>
-      <common.Table
-        values={sections}
-        tableColumns={[
-          {
-            name: 'name',
-            displayName: 'Template name',
-            handler: (value) =>
-              value ? (
-                <p
-                  className={
-                    value.type === 'title' ? 'font-semibold' : 'text-blue-500'
-                  }
-                >
-                  {value.value}
-                </p>
-              ) : (
-                ''
-              )
-          },
-          {
-            name: 'description',
-            displayName: 'Description',
-            handler: (value) => (value ? value : '')
-          }
-        ]}
-        rounded
-      />
-    </div>
+    </>
   )
 }

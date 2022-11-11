@@ -202,11 +202,11 @@ export function Create() {
                       <span>Project Name</span>
                       <div className="flex relative group">
                         <InformationCircleIcon className="w-4 h-4 text-slate-600 dark:text-gray-400" />
-                        <ul className="text-sm font-normal left-6 -top-1 absolute w-max p-2 rounded-lg group-hover:block hidden dark:bg-opacity-95 dark:bg-slate-900">
+                        <ul className="text-sm font-normal left-6 -top-1 absolute w-max p-2 rounded-lg group-hover:block hidden dark:bg-opacity-95 bg-white shadow-lg dark:bg-slate-900">
                           {tooltips.map((tooltip, i) => (
                             <li
                               key={i}
-                              className="flex gap-1 before:my-auto before:h-1 before:w-1 before:block before:bg-white before:rounded-full"
+                              className="flex gap-1 before:my-auto before:h-1 before:w-1 before:block before:bg-slate-600 before:dark:bg-white before:rounded-full"
                             >
                               {tooltip}
                             </li>

@@ -7,6 +7,7 @@ import * as utils from 'utils'
 import { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { UserProvider, useUser } from 'contexts/UserContext'
+import * as LocalTourContext from 'contexts/TourContext'
 import { SessionProvider, useSession, signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import NextNprogress from 'nextjs-progressbar'
@@ -116,8 +117,10 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
         </Head>
         <ThemeContext.ThemeProvider>
           <PixelContext.PixelProvider>
-            <Component {...pageProps} />
-            <ToastContainer closeOnClick={false} />
+            <LocalTourContext.TourProvider>
+              <Component {...pageProps} />
+              <ToastContainer closeOnClick={false} />
+            </LocalTourContext.TourProvider>
           </PixelContext.PixelProvider>
         </ThemeContext.ThemeProvider>
       </>
