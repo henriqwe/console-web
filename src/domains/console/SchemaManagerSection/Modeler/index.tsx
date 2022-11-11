@@ -14,25 +14,26 @@ import { TourProvider } from '@reactour/tour'
 
 export function Modeler() {
   const { isDark } = ThemeContext.useTheme()
-  const { documentationValue } = consoleEditor.useConsoleEditor()
-  const [text, setText] = useState<string>('')
+  const { documentationValue, textModeler, setTextModeler } =
+    consoleEditor.useConsoleEditor()
 
   const [schema, setSchema] = useState<schemaType>()
   const update = async () => {
-    const { schema: _schema } = utils.ycl_transpiler.parse(text, false)
+    const { schema: _schema } = utils.ycl_transpiler.parse(textModeler, false)
     if (Object.keys(_schema).length > 0) {
       setSchema(_schema as schemaType)
     }
   }
-  useDebounce(update, 1000, [text])
+  useDebounce(update, 1000, [textModeler])
 
   useEffect(() => {
     if (documentationValue) {
-      setText(documentationValue)
+      setTextModeler(documentationValue)
     }
   }, [documentationValue])
 
   return (
+
     <>
       <Tour />
       <div className="flex w-full h-full">

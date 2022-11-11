@@ -30,6 +30,7 @@ export function SchemaManagerSection() {
     selectedTabUsersAndRoles,
     setSelectedTabUsersAndRoles
   } = consoleSection.useSchemaManager()
+  const { deploySchema } = consoleSection.useConsoleEditor()
   const [loading, setLoading] = useState(true)
 
   async function loadEntityData() {
@@ -169,13 +170,43 @@ export function SchemaManagerSection() {
                 </div>
               )}
             </div>
-            <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
-              <common.Tabs
-                selectedTab={selectedEntityTab}
-                setSelectedTab={setSelectedEntityTab}
-                tabs={[{ name: 'Attributes' }, { name: 'Associations' }]}
-              />
-            </div>
+            {!selectedEntity && currentTabSchema === 'Databases' && (
+              <common.Buttons.WhiteOutline
+                type="button"
+                onClick={() => {
+                  setShowCreateEntitySection(true)
+                  setBreadcrumbPages(breadcrumbPagesData.createEntity)
+                }}
+                icon={<PlusIcon className="w-3 h-3" />}
+              >
+                Create entity
+              </common.Buttons.WhiteOutline>
+            )}
+            {currentTabSchema === 'Modeler' && (
+              <common.Buttons.WhiteOutline
+                type="button"
+                onClick={deploySchema}
+                icon={<CheckCircleIcon className="w-4 h-4 !text-green-700 " />}
+              >
+                Deploy
+              </common.Buttons.WhiteOutline>
+            )}
+            {currentTabSchema === 'Users and Roles' && (
+              <div className={` w-1/3 `}>
+                <common.Tabs
+                  tabs={[{ name: 'Users' }, { name: 'Roles' }]}
+                  selectedTab={selectedTabUsersAndRoles}
+                  setSelectedTab={setSelectedTabUsersAndRoles}
+                />
+              </div>
+            )}
+          </div>
+          <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
+            <common.Tabs
+              selectedTab={selectedEntityTab}
+              setSelectedTab={setSelectedEntityTab}
+              tabs={[{ name: 'Attributes' }, { name: 'Associations' }]}
+            />
           </div>
           <consoleSection.SlidePanel />
           <div className="bg-white rounded-md dark:bg-menu-primary w-full">

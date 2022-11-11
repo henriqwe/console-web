@@ -1,3 +1,4 @@
+import * as utils from 'utils'
 import { api, _gtools_lib } from './tools'
 
 const types = {}
@@ -47,6 +48,35 @@ const ycl_reserved_words = [
   'version'
 ]
 
+function splice(original, text, offset) {
+  let calculatedOffset = offset < 0 ? original.length + offset : offset
+  return (
+    original.substring(0, calculatedOffset) +
+    text +
+    original.substring(calculatedOffset)
+  )
+}
+
+function importSchema(src) {
+  src = src.trim()
+  let accumulator = ''
+  for (let index = 0; index < src.length; index++) {
+    if (src.charAt(index) === ' ') {
+      if (
+        accumulator.length < 7 &&
+        (accumulator === 'schema' || accumulator === 'entity')
+      ) {
+        while (src.charAt(++index) === ' ') {}
+        /* console.log(splice(String(src), 'c:', index)); */
+        ycl_transpiler.parse(splice(String(src), 'c:', index))
+      }
+      accumulator = ''
+    } else {
+      accumulator = accumulator + src.charAt(index)
+    }
+  }
+}
+
 export const ycl_transpiler = {
   refs: {},
   types: [
@@ -83,10 +113,11 @@ export const ycl_transpiler = {
           if (!ycl_transpiler.ycl_reserved_word_contains(aux[0])) {
             // go!
           } else
-            throw new Error(
-              'error: malformed syntax. the token found is a reserved word.'
+            utils.notification(
+              'error: malformed syntax. the token found is a reserved word.',
+              'error'
             )
-        } else throw new Error('error: malformed list syntax.')
+        } else utils.notification('error: malformed list syntax.', 'error')
       }
       let positions = lines[line].trim().split(' ')
       for (let position = 0; position < positions.length; position++) {
@@ -106,10 +137,11 @@ export const ycl_transpiler = {
               ycl_transpiler.check_schema_object_name(entity_name_)
             ) {
               if (entity_names_.includes(entity_name_)) {
-                throw new Error(
+                utils.notification(
                   "error: model inconsistency. entity name '" +
                     entity_name_ +
-                    "' duplicated."
+                    "' duplicated.",
+                  'error'
                 )
               } else {
                 entity_names_.push(entity_name_)
@@ -145,6 +177,24 @@ export const ycl_transpiler = {
       }
     }
     return false
+  },
+  import: function (src) {
+    // schema
+    // entity
+    for (let index = 0; index < src.length; index++) {
+      let accumulator = ''
+      for (let offset = index; offset < 5; offset++) {
+        accumulator = accumulator + src.charAt(offset)
+      }
+      index = offset
+
+      if (accumulator == 'schema' || accumulator == 'entity') {
+        let auxiliar = new String(src)
+        for (; src.charAt(offset) == ' '; offset++) {}
+        conosle.log(auxiliar.splice(offset - 1, 'c:'))
+        index = offset
+      }
+    }
   },
   db_type: 'sql',
   parse: function (src, gettypes) {
@@ -199,7 +249,7 @@ export const ycl_transpiler = {
           index++
           from = 1
         } else {
-          throw new Error(
+          utils.notification(
             "error: the token format is not lowercase, or matches some reserved word, or does not match only alpha characters. token '" +
               tokens[index + 1].symbol +
               "', line " +
@@ -208,7 +258,8 @@ export const ycl_transpiler = {
               tokens[index + 1].position +
               '. [from: ' +
               from +
-              ']'
+              ']',
+            'error'
           )
         }
       } else if (
@@ -402,8 +453,9 @@ export const ycl_transpiler = {
               }
             }
             if (index == tokens.length) {
-              throw new Error(
-                'error: neither a next entity was found, nor the end of the code after the entity declared to be delete.'
+              utils.notification(
+                'error: neither a next entity was found, nor the end of the code after the entity declared to be delete.',
+                'error'
               )
             }
           } else {
@@ -422,7 +474,7 @@ export const ycl_transpiler = {
             from = 4
           }
         } else {
-          throw new Error(
+          utils.notification(
             "error: the token format is not lowercase, or matches some reserved word, or does not match only alpha characters. token '" +
               tokens[index + 1].symbol +
               "', line " +
@@ -431,7 +483,8 @@ export const ycl_transpiler = {
               tokens[index + 1].position +
               '. [from: ' +
               from +
-              ']'
+              ']',
+            'error'
           )
         }
       } else if (from == 4 && tokens[index].symbol == '(') {
@@ -462,16 +515,18 @@ export const ycl_transpiler = {
                 if (tokens[++index].symbol == ')') {
                   code_body = code_body + ' ' + tokens[index].symbol
                 } else
-                  throw new Error(
+                  utils.notification(
                     "error: unexpected token '" +
                       tokens[index].symbol +
-                      "'. the expected token is ')'"
+                      "'. the expected token is ')'",
+                    'error'
                   )
               } else
-                throw new Error(
+                utils.notification(
                   "error: unexpected token '" +
                     tokens[index].symbol +
-                    "'. the expected token is 'columnar' or 'graph'"
+                    "'. the expected token is 'columnar' or 'graph'",
+                  'error'
                 )
             }
             code_body = code_body + '\n'
@@ -542,10 +597,11 @@ export const ycl_transpiler = {
             if (tokens[++index].symbol == ')') {
               code_body = code_body + '    ' + tokens[index].symbol + '\n'
             } else
-              throw new Error(
+              utils.notification(
                 "error: unexpected token '" +
                   tokens[index].symbol +
-                  "'. the expected token is ')'"
+                  "'. the expected token is ')'",
+                'error'
               )
             index++
           } else if (
@@ -619,7 +675,7 @@ export const ycl_transpiler = {
                 code_body = code_body + '      ' + tokens[index].symbol + '\n'
                 index++
               } else {
-                throw new Error(
+                utils.notification(
                   "error: attribute name incorrect into uniqueKey. token '" +
                     tokens[index].symbol +
                     "', line " +
@@ -628,7 +684,8 @@ export const ycl_transpiler = {
                     tokens[index].position +
                     '. [from: ' +
                     from +
-                    ']'
+                    ']',
+                  'error'
                 )
               }
             }
@@ -687,7 +744,7 @@ export const ycl_transpiler = {
                     index++
                     hasPK = true
                   } else {
-                    throw new Error(
+                    utils.notification(
                       "error: attribute name incorrect into uniqueKey. token '" +
                         tokens[index].symbol +
                         "', line " +
@@ -696,14 +753,18 @@ export const ycl_transpiler = {
                         tokens[index].position +
                         '. [from: ' +
                         from +
-                        ']'
+                        ']',
+                      'error'
                     )
                   }
                 }
                 if (
                   actual_entity._conf.uniqueKey.partitionKeys.values.length == 0
                 ) {
-                  throw new Error('error: you must defined a primary key')
+                  utils.notification(
+                    'error: you must defined a primary key',
+                    'error'
+                  )
                 }
                 code_body = code_body + '      ' + tokens[index].symbol + '\n' // o ']' do 'partitionKeys ['
                 index++
@@ -736,7 +797,7 @@ export const ycl_transpiler = {
                     index++
                     hasPK = true
                   } else {
-                    throw new Error(
+                    utils.notification(
                       "error: attribute name incorrect into uniqueKey. token '" +
                         tokens[index].symbol +
                         "', line " +
@@ -745,7 +806,8 @@ export const ycl_transpiler = {
                         tokens[index].position +
                         '. [from: ' +
                         from +
-                        ']'
+                        ']',
+                      'error'
                     )
                   }
                 }
@@ -754,17 +816,18 @@ export const ycl_transpiler = {
               } else flag = false
             }
             if (!hasPK) {
-              throw new Error('error: primary key undefined')
+              utils.notification('error: primary key undefined', 'error')
             }
             if (tokens[index].symbol == ')') {
               code_body = code_body + '    ' + tokens[index].symbol + '\n' // o ')' do 'primaryKey ('
             } else
-              throw new Error(
+              utils.notification(
                 "error: unexpected token '" +
                   tokens[index].symbol +
                   "' (in line: " +
                   tokens[index].line +
-                  "). the expected token is ')'"
+                  "). the expected token is ')'",
+                'error'
               )
             index++
           } else if (
@@ -799,7 +862,7 @@ export const ycl_transpiler = {
                 code_body = code_body + '      ' + tokens[index].symbol + '\n'
                 index++
               } else {
-                throw new Error(
+                utils.notification(
                   "error: attribute name incorrect into indexKey. token '" +
                     tokens[index].symbol +
                     "', line " +
@@ -808,7 +871,8 @@ export const ycl_transpiler = {
                     tokens[index].position +
                     '. [from: ' +
                     from +
-                    ']'
+                    ']',
+                  'error'
                 )
               }
             }
@@ -869,7 +933,7 @@ export const ycl_transpiler = {
                       code_body + '        ' + tokens[index].symbol + '\n'
                     index++
                   } else {
-                    throw new Error(
+                    utils.notification(
                       "error: token format is not capitalized, or matches some reserved word, or does not start with length gt 2. token '" +
                         tokens[index].symbol +
                         "', line " +
@@ -878,7 +942,8 @@ export const ycl_transpiler = {
                         tokens[index].position +
                         '. [from: ' +
                         from +
-                        ']'
+                        ']',
+                      'error'
                     )
                   }
                 }
@@ -911,7 +976,7 @@ export const ycl_transpiler = {
                       code_body + '        ' + tokens[index].symbol + '\n'
                     index++
                   } else {
-                    throw new Error(
+                    utils.notification(
                       "error: token format is not capitalized, or matches some reserved word, or does not start with length gt 2. token '" +
                         tokens[index].symbol +
                         "', line " +
@@ -920,14 +985,15 @@ export const ycl_transpiler = {
                         tokens[index].position +
                         '. [from: ' +
                         from +
-                        ']'
+                        ']',
+                      'error'
                     )
                   }
                 }
                 code_body = code_body + '      ' + tokens[index].symbol + '\n' // o ']' do 'write ['
                 index++
               } else {
-                throw new Error(
+                utils.notification(
                   "error: unknow token '" +
                     tokens[index].symbol +
                     "', line " +
@@ -936,7 +1002,8 @@ export const ycl_transpiler = {
                     tokens[index].position +
                     '. [from: ' +
                     from +
-                    ']'
+                    ']',
+                  'error'
                 )
               }
             }
@@ -959,7 +1026,7 @@ export const ycl_transpiler = {
                 command: 'u'
               }
             } else {
-              throw new Error(
+              utils.notification(
                 "error: unknow token '" +
                   tokens[index].symbol +
                   "', line " +
@@ -968,13 +1035,14 @@ export const ycl_transpiler = {
                   tokens[index].position +
                   '. [from: ' +
                   from +
-                  ']'
+                  ']',
+                'error'
               )
             }
             // code_body = code_body + '    ' + tokens[index].symbol.replace('u:','') + '\n';
             index++
           } else {
-            throw new Error(
+            utils.notification(
               "error: unknow token '" +
                 tokens[index].symbol +
                 "', line " +
@@ -983,7 +1051,8 @@ export const ycl_transpiler = {
                 tokens[index].position +
                 '. [from: ' +
                 from +
-                ']'
+                ']',
+              'error'
             )
           }
         }
@@ -1044,8 +1113,9 @@ export const ycl_transpiler = {
                   }
                 }
                 if (index == tokens.length) {
-                  throw new Error(
-                    'error: neither a next attribute was found, nor the end of the code after the attribute declared to be delete.'
+                  utils.notification(
+                    'error: neither a next attribute was found, nor the end of the code after the attribute declared to be delete.',
+                    'error'
                   )
                 }
               } else {
@@ -1145,12 +1215,13 @@ export const ycl_transpiler = {
                       code_body =
                         code_body + '      ' + tokens[index].symbol + '\n'
                     } else
-                      throw new Error(
+                      utils.notification(
                         "error: unexpected token '" +
                           tokens[index].symbol +
                           "' (in line: " +
                           tokens[index].line +
-                          "). the expected token is ')'"
+                          "). the expected token is ')'",
+                        'error'
                       )
                     index++
                   } else if (
@@ -1287,7 +1358,7 @@ export const ycl_transpiler = {
                           code_body + '      ' + tokens[index].symbol + '\n'
                         index++
                       } else {
-                        throw new Error(
+                        utils.notification(
                           "error: unknow token. token '" +
                             tokens[index + 1].symbol +
                             "', line " +
@@ -1296,7 +1367,8 @@ export const ycl_transpiler = {
                             tokens[index + 1].position +
                             '. [from: ' +
                             from +
-                            ']'
+                            ']',
+                          'error'
                         )
                       }
                     } else if (symbol[symbol.length - 1] == 'Time') {
@@ -1342,7 +1414,7 @@ export const ycl_transpiler = {
                           code_body + '      ' + tokens[index].symbol + '\n'
                         index++
                       } else {
-                        throw new Error(
+                        utils.notification(
                           "error: unknow token. token '" +
                             tokens[index + 1].symbol +
                             "', line " +
@@ -1351,7 +1423,8 @@ export const ycl_transpiler = {
                             tokens[index + 1].position +
                             '. [from: ' +
                             from +
-                            ']'
+                            ']',
+                          'error'
                         )
                       }
                     } else {
@@ -1410,7 +1483,7 @@ export const ycl_transpiler = {
                           command: 'u'
                         }
                       } else {
-                        throw new Error(
+                        utils.notification(
                           "error: unknow token. token '" +
                             tokens[index].symbol +
                             "', line " +
@@ -1419,7 +1492,8 @@ export const ycl_transpiler = {
                             tokens[index].position +
                             '. [from: ' +
                             from +
-                            ']'
+                            ']',
+                          'error'
                         )
                       }
                     }
@@ -1430,7 +1504,8 @@ export const ycl_transpiler = {
                       '\n'
                     index++
                   } else {
-                    throw new Error(
+                    // console.log('entity_names: ', entity_names)
+                    utils.notification(
                       "error: unknow token. token '" +
                         tokens[index].symbol +
                         "', line " +
@@ -1439,7 +1514,8 @@ export const ycl_transpiler = {
                         tokens[index].position +
                         '. [from: ' +
                         from +
-                        ']'
+                        ']',
+                      'error'
                     )
                   }
                 }
@@ -1483,7 +1559,7 @@ export const ycl_transpiler = {
                 ';\n'
             }
           } else {
-            throw new Error(
+            utils.notification(
               "error: token matches some reserved word or length is less than 2. token '" +
                 tokens[index].symbol +
                 "', line " +
@@ -1492,7 +1568,8 @@ export const ycl_transpiler = {
                 tokens[index].position +
                 '. [from: ' +
                 from +
-                ']'
+                ']',
+              'error'
             )
           }
         }
@@ -1520,8 +1597,10 @@ export const ycl_transpiler = {
               types[type] = types[type] + '}'
             }
           }
+
+          // console.log('code ok')
         } else {
-          throw new Error(
+          utils.notification(
             "* error: unknow token '" +
               tokens[index].symbol +
               "', line " +
@@ -1530,7 +1609,8 @@ export const ycl_transpiler = {
               tokens[index].position +
               '. [from: ' +
               from +
-              ']'
+              ']',
+            'error'
           )
         }
         index++
@@ -1691,8 +1771,9 @@ export const ycl_transpiler = {
               }
             })
           } else {
-            throw new Error(
-              'error: association between entities is inconsistency.'
+            utils.notification(
+              'error: association between entities is inconsistency.',
+              'error'
             )
           }
         }
@@ -2684,7 +2765,12 @@ export const ycl_transpiler = {
                             'nullable'
                           ]['value']
                       }
-
+                      // console.log(
+                      //   schema.name,
+                      //   entity.name,
+                      //   association_.name,
+                      //   assoc
+                      // )
                       ycl_transpiler.updateAssociation(
                         schema.name,
                         entity.name,
@@ -2707,7 +2793,12 @@ export const ycl_transpiler = {
                             'unique'
                           ]['value']
                       }
-
+                      // console.log(
+                      //   schema.name,
+                      //   entity.name,
+                      //   association_.name,
+                      //   assoc
+                      // )
                       ycl_transpiler.updateAssociation(
                         schema.name,
                         entity.name,
@@ -2742,8 +2833,11 @@ export const ycl_transpiler = {
         }
       }
 
+      // console.log('count: ', count)
+
       if (toCreateEntities.length > 0) {
         for (let idx = 0; idx < toCreateEntities.length; idx++) {
+          // console.log('toCreateEntities[' + idx + ']: ', toCreateEntities[idx])
           ycl_transpiler.createEntity(
             toCreateEntities[idx].schema,
             toCreateEntities[idx].entity,
@@ -2754,10 +2848,10 @@ export const ycl_transpiler = {
 
       if (toCreateAssociations.length > 0) {
         for (let idx = 0; idx < toCreateAssociations.length; idx++) {
-          console.log(
-            'toCreateAssociations[' + idx + ']: ',
-            toCreateAssociations[idx]
-          )
+          // console.log(
+          //   'toCreateAssociations[' + idx + ']: ',
+          //   toCreateAssociations[idx]
+          // )
           ycl_transpiler.createAssociation(
             toCreateAssociations[idx].schema,
             toCreateAssociations[idx].entity,
@@ -2811,7 +2905,7 @@ export const ycl_transpiler = {
     callback({ http: { status: 201 } })
   },
   createNoSQLEntity: function (schema, entity, callback) {
-    console.log('create nosql entity: ', schema, entity)
+    // console.log('create nosql entity: ', schema, entity)
 
     let endpoint = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.createNoSQL)
@@ -2820,7 +2914,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint, entity, callback)
   },
   updateEntity: function (schema, entity, body, callback) {
-    console.log('update entity: ', schema, entity, body)
+    // console.log('update entity: ', schema, entity, body)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.update)
@@ -2831,7 +2925,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, body, callback)
   },
   updateNoSQLEntity: function (schema, entity, body, callback) {
-    console.log('update nosql entity: ', schema, entity, body)
+    // console.log('update nosql entity: ', schema, entity, body)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.updateNoSQL)
@@ -2842,7 +2936,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, body, callback)
   },
   deleteEntity: function (schema, entity, callback) {
-    console.log('delete entity: ', schema, entity)
+    // console.log('delete entity: ', schema, entity)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.delete)
@@ -2864,7 +2958,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, null, callback)
   },
   createAttribute: function (schema, entity, attribute, callback) {
-    console.log('create attribute: ', schema, entity, attribute)
+    // console.log('create attribute: ', schema, entity, attribute)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.attribute.create)
@@ -2875,7 +2969,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, attribute, callback)
   },
   createNoSQLAttribute: function (schema, entity, attribute, callback) {
-    console.log('create nosql attribute: ', schema, entity, attribute)
+    // console.log('create nosql attribute: ', schema, entity, attribute)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.attribute.createNoSQL)
@@ -2886,7 +2980,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, attribute, callback)
   },
   updateAttribute: function (schema, entity, attribute, body, callback) {
-    console.log('update attribute: ', schema, entity, attribute, body)
+    // console.log('update attribute: ', schema, entity, attribute, body)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.attribute.update)
@@ -2898,7 +2992,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, body, callback)
   },
   updateNoSQLAttribute: function (schema, entity, attribute, body, callback) {
-    console.log('update attribute: ', schema, entity, attribute, body)
+    // console.log('update attribute: ', schema, entity, attribute, body)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.attribute.updateNoSQL)
@@ -2910,7 +3004,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, body, callback)
   },
   deleteAttribute: function (schema, entity, attribute, callback) {
-    console.log('delete attribute: ', schema, entity, attribute)
+    // console.log('delete attribute: ', schema, entity, attribute)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.attribute.delete)
@@ -2922,7 +3016,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, null, callback)
   },
   deleteNoSQLAttribute: function (schema, entity, attribute, callback) {
-    console.log('delete attribute: ', schema, entity, attribute)
+    // console.log('delete attribute: ', schema, entity, attribute)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.attribute.deleteNoSQL)
@@ -2934,7 +3028,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, null, callback)
   },
   createAssociation: function (schema, entity, association, callback) {
-    console.log('create association: ', schema, entity, association)
+    // console.log('create association: ', schema, entity, association)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.relationship.create)
@@ -2946,7 +3040,7 @@ export const ycl_transpiler = {
     callback({ http: { status: 201 } })
   },
   updateAssociation: function (schema, entity, association, body, callback) {
-    console.log('update association: ', schema, entity, association, body)
+    // console.log('update association: ', schema, entity, association, body)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.relationship.update)
@@ -2958,7 +3052,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, body, callback)
   },
   deleteAssociation: function (schema, entity, association, callback) {
-    console.log('delete association: ', schema, entity, association)
+    // console.log('delete association: ', schema, entity, association)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.relationship.delete)

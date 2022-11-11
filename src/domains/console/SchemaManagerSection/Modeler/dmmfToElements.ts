@@ -20,7 +20,7 @@ const letters = ['A', 'B']
 
 // TODO: figure out a good way to random spread the nodes
 const generateEntityNode = (
-  { name, attributes }: entitiesType,
+  { name, attributes, command }: entitiesType,
   relations: Readonly<Record<string, Relation>>
 ): Node<ModelNodeData> => {
   const relationType: string[] = []
@@ -32,13 +32,13 @@ const generateEntityNode = (
     )
       relationsSource.push({ ...relations[key], name: key })
   })
+
   const relationsTarget = attributes.filter((attribute) => {
     if (relations[attribute?._conf.type.value] as Relation | undefined) {
       relationType.push(relations[attribute._conf.type.value].type)
       return true
     }
   })
-
   const obj = {
     id: name,
     type: 'entity',
@@ -46,6 +46,7 @@ const generateEntityNode = (
     data: {
       type: 'entity',
       name,
+      command,
       relationsTarget,
       relationType,
       relationsSource,
@@ -53,7 +54,8 @@ const generateEntityNode = (
         ({
           name,
           _conf,
-          relation
+          relation,
+          command
           // relationName,
           // relationFromFields,
           // relationToFields,
@@ -62,6 +64,7 @@ const generateEntityNode = (
           // default: def,
         }) => ({
           name,
+          command: command !== '' ? command : _conf.type.command,
           // documentation,
           // isList = false,
           // isRequired,

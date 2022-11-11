@@ -18,6 +18,7 @@ export interface EnumNodeData {
 export interface ModelNodeData {
   type: 'model'
   name: string
+  command: '' | 'c' | 'd'
   dbName?: string | null
   documentation?: string
   relationsTarget?: attributesTYPE[]
@@ -25,6 +26,7 @@ export interface ModelNodeData {
   relationType?: string[]
   columns: Array<{
     name: string
+    command: '' | 'c' | 'd'
     type: string
     displayType: string
     kind: string
