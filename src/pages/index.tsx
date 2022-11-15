@@ -1,7 +1,10 @@
 import { TourProvider } from '@reactour/tour'
 import * as dashboard from 'domains/dashboard'
 import { Tour } from 'domains/dashboard/Tour'
+import { Buttons } from 'common'
 import Head from 'next/head'
+import { ArrowLeftIcon } from '@heroicons/react/outline'
+import { ArrowRightIcon } from '@heroicons/react/solid'
 
 export default function Dashboard() {
   return (
@@ -26,9 +29,28 @@ function Page() {
           backgroundColor: current ? '#0cd664' : '#ccc'
         })
       }}
-      beforeClose={() =>
-        window.localStorage.setItem('toured-dashboard', 'true')
-      }
+      prevButton={({ currentStep, setCurrentStep }) => (
+        <Buttons.Ycodify
+          onClick={() => setCurrentStep(currentStep - 1)}
+          icon={<ArrowLeftIcon className="w-3 h-3" />}
+          iconPosition="left"
+          className="mr-2"
+        ></Buttons.Ycodify>
+      )}
+      nextButton={({ steps, currentStep, setCurrentStep }) => {
+        return (
+          <Buttons.Ycodify
+            onClick={() => setCurrentStep(currentStep + 1)}
+            icon={<ArrowRightIcon className="w-3 h-3" />}
+            className="ml-2 w-max"
+          >
+            {currentStep === steps!.length - 1 ? 'Finish' : ''}
+          </Buttons.Ycodify>
+        )
+      }}
+      showCloseButton={false}
+      beforeClose={() => localStorage.setItem('toured-dashboard', 'true')}
+      onClickMask={() => {}}
     >
       <Head>
         <title>Projects - Dashboard</title>
