@@ -11,7 +11,7 @@ import * as consoleSection from 'domains/console'
 import { json } from '@codemirror/lang-json'
 import { dracula } from '@uiw/codemirror-theme-dracula'
 import { Slide } from 'domains/console/DataApiSection/Console/Slide'
-import { EditorView } from '@codemirror/view'
+import { EditorView, placeholder } from '@codemirror/view'
 import { Icon } from '@iconify/react'
 import { useEffect } from 'react'
 
@@ -45,6 +45,9 @@ export function Editors() {
     parser: 'json',
     plugins: [parserBabel]
   })
+
+  const placeholderCode =
+    '{\n  "action": "READ",\n  "data": [\n    {\n      "entity": {}\n    }\n  ]\n}'
 
   useEffect(() => {
     if (consoleValue) {
@@ -172,7 +175,8 @@ export function Editors() {
                 extensions={[
                   json(),
                   globalJavaScriptCompletions,
-                  EditorView.lineWrapping
+                  EditorView.lineWrapping,
+                  placeholder(placeholderCode)
                 ]}
               />
               <div className="absolute bottom-2 right-3 flex gap-1">

@@ -6,7 +6,12 @@ import * as utils from 'utils'
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
-import { CheckCircleIcon, PlusIcon } from '@heroicons/react/solid'
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckCircleIcon,
+  PlusIcon
+} from '@heroicons/react/solid'
 import { TourProvider } from '@reactour/tour'
 
 export function SchemaManagerSection() {
@@ -117,7 +122,28 @@ export function SchemaManagerSection() {
           backgroundColor: current ? '#0cd664' : '#ccc'
         })
       }}
+      prevButton={({ currentStep, setCurrentStep }) => (
+        <common.Buttons.Ycodify
+          onClick={() => setCurrentStep(currentStep - 1)}
+          icon={<ArrowLeftIcon className="w-3 h-3" />}
+          iconPosition="left"
+          className="mr-2"
+        ></common.Buttons.Ycodify>
+      )}
+      nextButton={({ steps, currentStep, setCurrentStep }) => {
+        return (
+          <common.Buttons.Ycodify
+            onClick={() => setCurrentStep(currentStep + 1)}
+            icon={<ArrowRightIcon className="w-3 h-3" />}
+            className="ml-2 w-max"
+          >
+            {currentStep === steps!.length - 1 ? 'Finish' : ''}
+          </common.Buttons.Ycodify>
+        )
+      }}
+      showCloseButton={false}
       beforeClose={() => beforeClose()}
+      onClickMask={() => {}}
     >
       <div className="w-full h-full py-4 px-8 ">
         <common.Card className="flex flex-col h-full">

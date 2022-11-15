@@ -20,6 +20,7 @@ export function Tour() {
   }
 
   useEffect(() => {
+    setIsOpen(false)
     setShowGreeting(!getToured().dashboard)
     setSteps(tourSteps)
     setCurrentStep(0)

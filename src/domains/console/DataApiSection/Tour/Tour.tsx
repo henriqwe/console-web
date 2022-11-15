@@ -20,6 +20,7 @@ export function Tour() {
   }
 
   useEffect(() => {
+    setIsOpen(false)
     setShowGreeting(!getToured().dataapi)
     setSteps(tourSteps)
     setCurrentStep(0)

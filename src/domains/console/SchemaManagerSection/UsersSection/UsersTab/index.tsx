@@ -101,7 +101,7 @@ export function UsersTab() {
       ) : (
         <div className="flex flex-col w-full h-full gap-2  rounded-b-lg pt-2">
           <div className="flex items-center w-full px-4 py-2 gap-8 ">
-            {/* <common.Buttons.WhiteOutline
+            <common.Buttons.WhiteOutline
               type="button"
               onClick={() => {
                 setOpenSlide(true)
@@ -111,7 +111,7 @@ export function UsersTab() {
               className="users-step-3"
             >
               Associate
-            </common.Buttons.WhiteOutline> */}
+            </common.Buttons.WhiteOutline>
             <common.Buttons.WhiteOutline
               type="button"
               onClick={() => {
