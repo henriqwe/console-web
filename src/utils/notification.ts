@@ -7,7 +7,7 @@ function notification(
   return toast[type](message, {
     className:
       'dark:bg-menu-primary dark:text-text-primary dark:border-gray-700 border',
-    position: 'bottom-right',
+    position: 'top-center',
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -20,7 +20,7 @@ function notification(
 function showError(err: any) {
   if (err.response) {
     if (err.response.data) {
-      const knownError = err.response.data.err ? false : true;
+      const knownError = err.response.data.err ? false : true
 
       /* 
         se o erro for conhecido, o campo 'data' virá no formato
@@ -31,10 +31,7 @@ function showError(err: any) {
       */
 
       if (knownError) {
-        notification(
-          err?.response?.data?.message,
-          'error'
-        )
+        notification(err?.response?.data?.message, 'error')
         return
       }
 

@@ -5,17 +5,23 @@ import { useForm, Controller } from 'react-hook-form'
 import * as consoleSection from 'domains/console'
 import { useRouter } from 'next/router'
 import { PlusIcon, CheckIcon } from '@heroicons/react/outline'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 export function CreateEntity() {
   const router = useRouter()
-  const { setShowCreateEntitySection, setReload, reload, breadcrumbPages } =
-    consoleSection.useSchemaManager()
+  const {
+    setShowCreateEntitySection,
+    setReload,
+    reload,
+    breadcrumbPages,
+    createEntitySchema
+  } = consoleSection.useSchemaManager()
   const {
     control,
     formState: { errors },
     handleSubmit,
     watch
-  } = useForm()
+  } = useForm({ resolver: yupResolver(createEntitySchema) })
   const [columnsGroup, setColumnsGroup] = useState<number[]>([1])
   const [lastNumber, setLastNumber] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -66,9 +72,9 @@ export function CreateEntity() {
 
         if (
           data['Type' + column].value === 'String' &&
-          !data['Length' + column]
+          data['Length' + column] < 0
         ) {
-          throw new Error('String length is required')
+          throw new Error("String can't be less than 0")
         }
 
         if (names.includes(data['ColumnName' + column].toLowerCase())) {
@@ -162,11 +168,8 @@ export function CreateEntity() {
               />
             )}
           />
-
           <common.Separator />
-
           <p>Columns</p>
-
           {columnsGroup.map(
             (column, index) =>
               column !== 0 && (
@@ -186,14 +189,22 @@ export function CreateEntity() {
                     <Controller
                       name={'ColumnName' + column}
                       control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <div className="flex-1">
+                      render={({ field: { onChange } }) => (
+                        <div className="flex-1 flex-col gap-y-2">
                           <common.Input
                             placeholder="Column name"
-                            value={value}
                             onChange={onChange}
-                            errors={errors.ColumnName}
+                            className={`${
+                              errors.columnName
+                                ? 'ring-red-500 ring-2 rounded-md'
+                                : ''
+                            }`}
                           />
+                          {errors.columnName ? (
+                            <p className="text-sm text-red-500">
+                              {errors.columnName.message}
+                            </p>
+                          ) : null}
                         </div>
                       )}
                     />

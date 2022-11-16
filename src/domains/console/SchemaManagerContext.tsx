@@ -66,6 +66,7 @@ type SchemaManagerContextProps = {
   loadEntities(): Promise<void>
   entitiesLoading: boolean
   setEntitiesLoading: Dispatch<SetStateAction<boolean>>
+  createEntitySchema: yup.AnyObjectSchema
 }
 
 type ProviderProps = {
@@ -85,6 +86,14 @@ type breadcrumbPageType = {
 type selectedTabUsersAndRolesType = {
   name: 'Users' | 'Roles'
 }
+
+const createEntitySchema = yup.object().shape({
+  columnName: yup.string().required('Column name is required'),
+  columnType: yup.object().required('Column type is required'),
+  columnLength: yup.number().positive('String length must be positive'),
+  columnComment: yup.string(),
+  columnNullable: yup.boolean()
+})
 
 export const SchemaManagerContext = createContext<SchemaManagerContextProps>(
   {} as SchemaManagerContextProps
@@ -277,7 +286,8 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         setEntities,
         loadEntities,
         entitiesLoading,
-        setEntitiesLoading
+        setEntitiesLoading,
+        createEntitySchema
       }}
     >
       {children}
