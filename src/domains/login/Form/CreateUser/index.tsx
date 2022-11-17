@@ -174,11 +174,7 @@ function handleActiveCampaign(formData: formDataType) {
     method: 'POST',
     body: acFormData,
     mode: 'no-cors'
+  }).catch((err) => {
+    console.error(err)
   })
-    .then((response) => {
-      console.log('ac response', response)
-    })
-    .catch((err) => {
-      console.error(err)
-    })
 }
