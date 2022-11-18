@@ -52,6 +52,23 @@ export const apiRoutes = {
     userLogin: '/login',
     parser: (projectName: string) => `/parser?parserName=${projectName}`,
     interpreter: '/interpreter',
-    schema: (projectName: string) => `/schema?schemaName=${projectName}`
+    schema: (projectName: string) => `/schema?schemaName=${projectName}`,
+    pagarme: {
+      customers: {
+        create: '/pagarme/customers/create',
+        list: '/pagarme/customers/list',
+        getCustomerByEmail: (email?: string | null) =>
+          `/pagarme/customers/getCustomerByEmail?email=${email}`
+      },
+      plans: {
+        list: '/pagarme/plans/list'
+      },
+      subscriptions: {
+        create: '/pagarme/subscriptions/create'
+      },
+      addresses: {
+        create: '/pagarme/addresses/create'
+      }
+    }
   }
 }

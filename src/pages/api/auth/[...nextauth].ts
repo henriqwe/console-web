@@ -48,7 +48,6 @@ const options = {
                 }
               }
             )
-
             if (res.status === 200 && res.data) {
               return { ...res.data }
             }

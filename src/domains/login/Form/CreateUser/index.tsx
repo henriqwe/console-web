@@ -17,6 +17,7 @@ import * as yup from 'yup'
 import { usePixel } from 'contexts/PixelContext'
 
 type formDataType = {
+  name: string
   userName: string
   password: string
   email: string
@@ -37,10 +38,20 @@ export function CreateUser() {
     setLoading(true)
 
     try {
+      const { data: pagarme_customer } = await utils.localApi.post(
+        utils.apiRoutes.local.pagarme.customers.create,
+        {
+          name: formData.name,
+          email: formData.email,
+          username: formData.userName
+        }
+      )
       await utils.localApi.post(utils.apiRoutes.local.createAccount, {
+        name: formData.name,
         username: formData.userName,
         password: formData.password,
-        email: formData.email
+        email: formData.email,
+        gatewayPaymentKey: pagarme_customer?.id as string
       })
 
       const res = await signIn('credentials', {
@@ -75,6 +86,24 @@ export function CreateUser() {
       onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
       className="flex flex-col mt-10 gap-y-8"
     >
+      <Controller
+        name="name"
+        control={control}
+        render={({ field: { onChange } }) => (
+          <div className="w-full flex flex-col gap-y-2">
+            <common.Input
+              onChange={onChange}
+              label="Name"
+              placeholder="Full name"
+              name="name"
+              type="text"
+            />
+            {errors.name && (
+              <p className="text-sm text-red-500">{errors.name.message}</p>
+            )}
+          </div>
+        )}
+      />
       <Controller
         name="userName"
         control={control}

@@ -77,12 +77,18 @@ function ConsoleWebApp({ Component, pageProps }: AppProps) {
     if (session) {
       utils.setCookie('access_token', session?.accessToken as string)
 
-      getUserData().then((userData) => {
+      getUserData().then(async (userData) => {
+        const pagarmeCustomer = await utils.localApi.get(
+          utils.apiRoutes.local.pagarme.customers.getCustomerByEmail(
+            session?.user?.email
+          )
+        )
         setUser({
           ...user,
           ...(session.user as UserType),
           accessToken: session?.accessToken as string,
-          userData: userData
+          userData: userData,
+          gatewayPaymentKey: pagarmeCustomer?.data?.id
         })
       })
     }

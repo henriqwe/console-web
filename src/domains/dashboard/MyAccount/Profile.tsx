@@ -64,7 +64,6 @@ export function Profile() {
         Authorization: session?.accessToken as string
       }
     })
-
     return data
   }
 
