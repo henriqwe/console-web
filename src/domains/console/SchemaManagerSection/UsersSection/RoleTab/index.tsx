@@ -77,7 +77,7 @@ export function RoleTab() {
   }
   return (
     <div
-      className={`flex flex-col ${
+      className={`roles-step-1 flex flex-col ${
         loading ? 'items-center justify-center' : 'items-start'
       } h-full  rounded-b-lg`}
     >
@@ -87,7 +87,9 @@ export function RoleTab() {
             <common.Spinner />
           </div>
 
-          <p className="text-lg font-bold text-gray-700">Loading entity data</p>
+          <p className="text-lg font-bold text-gray-700 dark:text-text-secondary">
+            Loading entity data
+          </p>
         </div>
       ) : (
         <div className="w-full h-full  rounded-b-lg overflow-y pt-2">
@@ -99,6 +101,7 @@ export function RoleTab() {
                 setSlideType('ROLE')
               }}
               icon={<PlusIcon className="w-5 h-5" />}
+              className="roles-step-2"
             >
               Create
             </common.Buttons.WhiteOutline>

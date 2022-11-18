@@ -1,14 +1,12 @@
 import * as common from 'common'
 import { Header } from 'domains/console/Header'
 import * as consoleSection from 'domains/console'
-import { useTour } from '@reactour/tour'
 import { useEffect } from 'react'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { SchemaFormater } from 'domains/console/DataApiSection/Console/Editors/SchemaFormater'
 
 export function ViewConsole() {
   const { currentTab } = consoleSection.useSchemaManager()
-  const { setIsOpen, currentStep, setSteps, isOpen, setCurrentStep } = useTour()
   const { tabsData, documentationValue, setSchemaTabData } =
     consoleEditor.useConsoleEditor()
 
@@ -22,6 +20,8 @@ export function ViewConsole() {
       break
     case 'USERS':
       tab = <consoleSection.UsersSection />
+      console.log('USERS')
+
       break
   }
   useEffect(() => {

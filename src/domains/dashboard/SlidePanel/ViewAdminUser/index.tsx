@@ -49,7 +49,24 @@ export function ViewAdminUser() {
                 <UserCircleIcon className="w-5 h-5 text-gray-200 dark:text-slate-800" />
               }
               title={'Admin username'}
-              description={adminUser?.username as string}
+              description={
+                <div className="flex gap-1 items-center">
+                  <p>{adminUser?.username as string}</p>
+                  <CopyToClipboard text="Copy to clipboard">
+                    <div>
+                      <DocumentDuplicateIcon
+                        className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
+                        onClick={() => {
+                          utils.notification('Copied!', 'success')
+                          navigator.clipboard.writeText(
+                            adminUser?.username as string
+                          )
+                        }}
+                      />
+                    </div>
+                  </CopyToClipboard>
+                </div>
+              }
             />
             <InfoDetails
               Icon={
@@ -57,7 +74,7 @@ export function ViewAdminUser() {
               }
               title={'Admin password'}
               description={
-                <div className="flex gap-1">
+                <div className="flex gap-1 items-center">
                   <input
                     disabled
                     value={adminUser?.password as string}

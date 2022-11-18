@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .tour-wrapper {
+    @apply flex flex-col gap-y-3;
+  }
+  .tour-title {
+    @apply text-xl font-semibold;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 5px;
   height: 4px;

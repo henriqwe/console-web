@@ -84,7 +84,7 @@ export function UsersTab() {
   }
   return (
     <div
-      className={`flex flex-col ${
+      className={`users-step-1 flex flex-col ${
         loading ? 'items-center justify-center' : 'items-start'
       } h-full  rounded-b-lg`}
     >
@@ -94,7 +94,9 @@ export function UsersTab() {
             <common.Spinner />
           </div>
 
-          <p className="text-lg font-bold text-gray-700">Loading entity data</p>
+          <p className="text-lg font-bold text-gray-700 dark:text-text-secondary">
+            Loading entity data
+          </p>
         </div>
       ) : (
         <div className="flex flex-col w-full h-full gap-2  rounded-b-lg pt-2">
@@ -106,6 +108,7 @@ export function UsersTab() {
                 setSlideType('ASSOCIATEACCOUNT')
               }}
               icon={<LinkIcon className="w-5 h-5" />}
+              className="users-step-3"
             >
               Associate
             </common.Buttons.WhiteOutline>
@@ -116,6 +119,7 @@ export function UsersTab() {
                 setSlideType('ACCOUNT')
               }}
               icon={<PlusIcon className="w-5 h-5" />}
+              className="users-step-2"
             >
               Create
             </common.Buttons.WhiteOutline>

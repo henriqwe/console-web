@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
 export type ButtonProps = {
-  children: React.ReactNode
+  children?: React.ReactNode
   loading?: boolean
   onClick?: () => void
   iconPosition?: 'left' | 'right'
@@ -10,7 +10,7 @@ export type ButtonProps = {
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 export type BaseButtonProps = {
-  children: React.ReactNode
+  children?: React.ReactNode
   buttonColor: string
   hoverButtonColor: string
   disableButtonColor: string

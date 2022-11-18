@@ -28,13 +28,33 @@ export const LoginProvider = ({ children }: ProviderProps) => {
   const [formType, setFormType] = useState<'create' | 'login'>('login')
 
   const logUserSchema = yup.object().shape({
-    userName: yup.string().required('This field is required'),
+    userName: yup
+      .string()
+      .required('This field is required')
+      .test('equal', 'This field cannot contain spaces', (val) => {
+        const validation = new RegExp(/\s/g)
+        return !validation.test(val as string)
+      })
+      .test('equal', 'This field must contain only letters', (val) => {
+        const validation = new RegExp(/^[A-Za-z ]*$/)
+        return validation.test(val as string)
+      }),
     password: yup.string().required('This field is required')
   })
 
   const createUserSchema = yup.object().shape({
     name: yup.string().required('Name is required'),
-    userName: yup.string().required('Username is required'),
+    userName: yup
+      .string()
+      .required('Username is required')
+      .test('equal', 'This field cannot contain spaces', (val) => {
+        const validation = new RegExp(/\s/g)
+        return !validation.test(val as string)
+      })
+      .test('equal', 'This field must contain only letters', (val) => {
+        const validation = new RegExp(/^[A-Za-z ]*$/)
+        return validation.test(val as string)
+      }),
     email: yup
       .string()
       .email('Email must be valid')
