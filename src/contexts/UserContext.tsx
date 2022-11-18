@@ -13,6 +13,7 @@ export type UserType = {
   adminSchemaPassword?: string
   username?: string
   userData?: any
+  gatewayPaymentKey?: string
 }
 
 type UserContextProps = {

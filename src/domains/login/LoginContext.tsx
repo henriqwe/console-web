@@ -33,6 +33,7 @@ export const LoginProvider = ({ children }: ProviderProps) => {
   })
 
   const createUserSchema = yup.object().shape({
+    name: yup.string().required('Name is required'),
     userName: yup.string().required('Username is required'),
     email: yup
       .string()

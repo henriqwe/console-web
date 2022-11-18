@@ -1,6 +1,6 @@
 export { getCookie, parseCookies, setCookie, removeCookie } from './cookies'
 export { notification, showError } from './notification'
-export { api, localApi } from './api'
+export { api, localApi, apiPagarme } from './api'
 export {
   BRLMoneyFormat,
   BRLMoneyInputDefaultFormat,
@@ -30,3 +30,4 @@ export {
 export { ycl_transpiler } from './transpiler'
 export { api as toolApi } from './tools'
 export { apiRoutes } from './apiRoutes'
+export { apiPagarmeRoutes } from './apiPagarmeRoutes'

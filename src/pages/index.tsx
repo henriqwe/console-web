@@ -21,7 +21,3 @@ function Page() {
     </>
   )
 }
-
-// Admin user name: tester@test
-
-// Admin password: xl75BQUEjkgMZVrp

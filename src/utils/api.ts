@@ -8,4 +8,8 @@ const localApi = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_APP_URL}/api`
 })
 
-export { api, localApi }
+const apiPagarme = axios.create({
+  baseURL: `${process.env.PAGARME_API_URL}/`
+})
+
+export { api, localApi, apiPagarme }

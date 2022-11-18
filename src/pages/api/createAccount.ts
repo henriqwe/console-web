@@ -7,6 +7,7 @@ export default async function createAccount(
 ) {
   if (req.method === 'POST') {
     try {
+      const name = req.body.name
       const username = req.body.username
       const password = req.body.password
       const email = req.body.email
@@ -14,6 +15,7 @@ export default async function createAccount(
       await utils.api.post(
         utils.apiRoutes.createAccount,
         {
+          name,
           username,
           password,
           email
