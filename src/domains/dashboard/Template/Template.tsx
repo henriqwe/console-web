@@ -124,7 +124,7 @@ export function Template({ children }: TemplateProps) {
           <div className="flex items-center justify-between pl-3 pr-2">
             <button
               type="button"
-              className={`py-2 duration-150 ${
+              className={`items-center py-2 duration-150 ${
                 sidebarOpen
                   ? 'text-text-primary'
                   : 'text-text-secondary hover:text-text-primary'
@@ -134,6 +134,14 @@ export function Template({ children }: TemplateProps) {
               <span className="sr-only">Open sidebar</span>
               <MenuIcon className="w-7 h-7" aria-hidden="true" />
             </button>
+            <div className="flex gap-x-4">
+              <img
+                className="h-6 w-auto"
+                src="/assets/images/logomarkTextLight.png"
+                alt="Workflow"
+              />
+              <BetaTag />
+            </div>
             <ToggleTheme changeColor={false} />
           </div>
 
