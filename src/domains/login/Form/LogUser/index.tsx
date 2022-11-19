@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { routes } from 'domains/routes'
-import { ArrowRightIcon } from '@heroicons/react/solid'
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/solid'
 import router from 'next/router'
 import Link from 'next/link'
 
@@ -111,6 +111,11 @@ export function LogUser() {
         </Link>
       </div>
 
+
+      <div className='flex justify-between'>
+      <a className=' w-max h-max '  href="https://ycodify.com/">
+        <common.Buttons.Clean iconPosition='left' icon={<ArrowLeftIcon className='w-4 h-4'/>}>Go back</common.Buttons.Clean>  
+        </a>
       <common.Buttons.Ycodify
         className="w-full md:w-max md:self-end"
         type="submit"
@@ -120,6 +125,9 @@ export function LogUser() {
       >
         Login
       </common.Buttons.Ycodify>
+      </div>
+
+
     </form>
   )
 }
