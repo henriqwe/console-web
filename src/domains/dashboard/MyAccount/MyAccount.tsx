@@ -40,7 +40,7 @@ export function MyAccount() {
               {selectedTab.name}
             </h1>
           </div>
-          <div className="w-full sm:w-48 rounded-t-lg overflow-hidden self-end dark:border-gray-700 sm:border sm:border-b-0 -mb-[1px] z-20 h-20">
+          <div className="w-full sm:w-56 rounded-t-lg overflow-hidden self-end dark:border-gray-700 sm:border sm:border-b-0 -mb-[1px] z-20 h-20">
             <common.Tabs
               selectedTab={selectedTab}
               setSelectedTab={(tab) => {

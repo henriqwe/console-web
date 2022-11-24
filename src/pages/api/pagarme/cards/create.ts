@@ -23,7 +23,6 @@ export default async function createCustomer(
   if (req.method === 'POST') {
     try {
       utils.validationReqBody({ body: req.body, validationArray })
-      console.log(' req.body', req.body)
       const { data } = await utils.apiPagarme.post(
         utils.apiPagarmeRoutes.cards.create(req.body.customerId),
         { ...req.body, verify_card: true },
