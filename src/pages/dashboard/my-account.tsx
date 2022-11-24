@@ -1,10 +1,14 @@
 import * as dashboard from 'domains/dashboard'
+import * as creditCardContext from 'domains/dashboard/MyAccount/Cards/CreditCardContext'
+
 import Head from 'next/head'
 
 export default function Dashboard() {
   return (
     <dashboard.DataProvider>
-      <Page />
+      <creditCardContext.DataProvider>
+        <Page />
+      </creditCardContext.DataProvider>
     </dashboard.DataProvider>
   )
 }

@@ -38,6 +38,7 @@ export function CreateUser() {
     setLoading(true)
 
     try {
+      //create customer pagarme
       const { data: pagarme_customer } = await utils.localApi.post(
         utils.apiRoutes.local.pagarme.customers.create,
         {
@@ -46,13 +47,37 @@ export function CreateUser() {
           username: formData.userName
         }
       )
+      // create user ycodify
       await utils.localApi.post(utils.apiRoutes.local.createAccount, {
         name: formData.name,
         username: formData.userName,
         password: formData.password,
-        email: formData.email,
-        gatewayPaymentKey: pagarme_customer?.id as string
+        email: formData.email
       })
+      // get user ycodify token
+      const { data: userData } = await utils.localApi.post(
+        utils.apiRoutes.local.getUserToken,
+        {
+          username: formData.userName,
+          password: formData.password
+        }
+      )
+
+      // update user ycodify with gatewayPaymentKey
+      await utils.api.post(
+        utils.apiRoutes.updateAccount,
+        {
+          username: formData.userName,
+          password: formData.password,
+          gatewayPaymentKey: pagarme_customer?.id as string
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: userData?.access_token as string
+          }
+        }
+      )
 
       const res = await signIn('credentials', {
         username: formData.userName,

@@ -25,9 +25,17 @@ export {
   UsernameFormat,
   licensePlateUnformat,
   ChassiTruncateFormat,
-  RGFormat
+  RGFormat,
+  validationReqBody
 } from './formaters'
 export { ycl_transpiler } from './transpiler'
 export { api as toolApi } from './tools'
 export { apiRoutes } from './apiRoutes'
 export { apiPagarmeRoutes } from './apiPagarmeRoutes'
+export {
+  checkLuhn,
+  getCardBrand,
+  validateCVV,
+  formatCardNumber,
+  handleBrandName
+} from './validateCard'

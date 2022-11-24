@@ -1,19 +1,27 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as utils from 'utils'
 
-const validationArray = ['email', 'name']
+const validationArray = ['customerId', 'cardId']
 
-export default async function createCustomer(
+export default async function getCard(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === 'POST') {
+  if (req.method === 'GET') {
     try {
-      utils.validationReqBody({ body: req.body, validationArray })
+      utils.validationReqBody({
+        body: {
+          customerId: req.query.customerId as string,
+          cardId: req.query.cardId as string
+        },
+        validationArray
+      })
 
-      const { data } = await utils.apiPagarme.post(
-        utils.apiPagarmeRoutes.customers.create,
-        { ...req.body, metadata: { username: req.body?.username } },
+      const { data } = await utils.apiPagarme.get(
+        utils.apiPagarmeRoutes.cards.getCard(
+          req.query.customerId as string,
+          req.query.cardId as string
+        ),
         {
           headers: {
             'Content-Type': 'application/json',

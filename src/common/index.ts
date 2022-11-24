@@ -23,6 +23,8 @@ export { EditableTable } from './EditableTable'
 export { Alert } from './Alert'
 export { Feed } from './Feed'
 export { TourStep } from './TourStep'
+export { CreditCard } from './CreditCard'
+export { ExpiryCreditCardInput } from './ExpiryCreditCardInput'
 
 export * as Buttons from './Button'
 export * as illustrations from './Ilustrations'
