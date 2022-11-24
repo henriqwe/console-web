@@ -27,7 +27,7 @@ export function Billing() {
 
   return (
     <div className="flex flex-col gap-y-8 px-4">
-      <section className="grid w-max self-center grid-cols-1 gap-10 lg:grid-cols-4">
+      <section className="grid self-center grid-cols-1 gap-10 lg:grid-cols-2 2xl:grid-cols-4">
         {plans.map(
           ({ name, price, description, href, features, detail }, index) => (
             <Plan

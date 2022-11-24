@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import * as login from 'domains/login'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-
+import * as Buttons from 'common/Button' 
+import { ArrowLeftIcon } from '@heroicons/react/solid'
 const backgroundImage = '/assets/images/bg-green-2-darker.jpg'
 
 type AuthLayoutProps = {
@@ -32,17 +33,12 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           <div className="w-full max-w-md mx-auto sm:px-4 md:w-96 md:max-w-sm md:px-0">
             <div className="flex flex-col">
               <div className="flex justify-between">
-                <a
-                  href="https://ycodify.com/"
-                  aria-label="Home"
-                  className="cursor-pointer w-max"
-                >
+                
                   <img
                     src={logoImgSrc}
                     alt="Logo"
                     className="self-start object-contain h-10"
                   />
-                </a>
                 <ToggleTheme />
               </div>
               <div className="mt-20">
@@ -69,7 +65,12 @@ export function AuthLayout({ children }: AuthLayoutProps) {
             </div>
             {children}
           </div>
+
+
+          
+        
         </div>
+        
         <div className="hidden sm:contents lg:relative lg:block lg:flex-1">
           <img
             className="absolute inset-0 object-cover w-full h-full"
