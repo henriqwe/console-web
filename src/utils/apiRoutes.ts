@@ -49,6 +49,7 @@ export const apiRoutes = {
   local: {
     adminLogin: '/adminLogin',
     createAccount: '/createAccount',
+    getUserToken: '/getUserToken',
     userLogin: '/login',
     parser: (projectName: string) => `/parser?parserName=${projectName}`,
     interpreter: '/interpreter',
@@ -68,6 +69,14 @@ export const apiRoutes = {
       },
       addresses: {
         create: '/pagarme/addresses/create'
+      },
+      cards: {
+        create: `/pagarme/cards/create`,
+        delete: `/pagarme/cards/delete`,
+        list: (customerId: string) =>
+          `/pagarme/cards/list?customerId=${customerId}`,
+        getCard: (customerId: string, cardId: string) =>
+          `/pagarme/cards/getCard?customerId=${customerId}&cardId=${cardId}`
       }
     }
   }

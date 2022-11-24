@@ -207,3 +207,17 @@ export function parseJwt(token: string) {
 
   return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
 }
+
+export function validationReqBody({
+  body,
+  validationArray
+}: {
+  body: { [variable: string]: string }
+  validationArray: string[]
+}) {
+  for (const key of validationArray) {
+    if (!body[key]) {
+      throw new Error(`${key} is required`)
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as utils from 'utils'
+const validationArray = ['plan_id', 'payment_method', 'customer_id', 'card']
 
 export default async function createSubscriptions(
   req: NextApiRequest,
@@ -7,7 +8,7 @@ export default async function createSubscriptions(
 ) {
   if (req.method === 'POST') {
     try {
-      await validationReqBody(req.body)
+      utils.validationReqBody({ body: req.body, validationArray })
 
       const { data } = await utils.apiPagarme.post(
         utils.apiPagarmeRoutes.subscriptions.create,
@@ -27,13 +28,4 @@ export default async function createSubscriptions(
     }
   }
   return res.status(404).json({ message: 'Not found! :(' })
-}
-
-function validationReqBody(body: { [variable: string]: string }) {
-  const validationArray = ['plan_id', 'payment_method', 'customer_id', 'card']
-  for (const key of validationArray) {
-    if (!body[key]) {
-      throw new Error(`${key} is required`)
-    }
-  }
 }

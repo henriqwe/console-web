@@ -73,14 +73,14 @@ export function Modal({
                         aria-hidden="true"
                       />
                     </div>
-                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full ">
                       <Dialog.Title
                         as="h3"
-                        className="text-lg font-medium leading-6 text-gray-900 dark:text-text-primary"
+                        className="text-lg font-medium leading-6 text-gray-900 dark:text-text-primary "
                       >
                         {title}
                       </Dialog.Title>
-                      <div className="mt-2 dark:text-text-primary">
+                      <div className="mt-2 dark:text-text-primary  w-full">
                         {description}
                       </div>
                     </div>

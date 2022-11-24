@@ -20,8 +20,6 @@ export function ViewConsole() {
       break
     case 'USERS':
       tab = <consoleSection.UsersSection />
-      console.log('USERS')
-
       break
   }
   useEffect(() => {
