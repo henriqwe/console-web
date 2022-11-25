@@ -14,7 +14,19 @@ export function UpdateEntityName() {
   const { setOpenSlide, setReload, reload, selectedEntity, setSelectedEntity } =
     consoleData.useSchemaManager()
 
-  const yupSchema = yup.object().shape({ Name: yup.string().required() })
+  const yupSchema = yup.object().shape({
+    Name: yup
+      .string()
+      .required('Entity name is required')
+      .test('equal', 'Entity name must contain only letters', (val) => {
+        const validation = new RegExp(/^[A-Za-z ]*$/)
+        return validation.test(val as string)
+      })
+      .test('equal', 'Entity name cannot contain spaces', (val) => {
+        const validation = new RegExp(/\s/g)
+        return !validation.test(val as string)
+      })
+  })
 
   const {
     control,
@@ -67,17 +79,22 @@ export function UpdateEntityName() {
           defaultValue={selectedEntity}
           control={control}
           render={({ field: { onChange, value } }) => (
-            <common.Input
-              placeholder="field name"
-              value={value}
-              onChange={onChange}
-              errors={errors.Name}
-            />
+            <div className="w-full flex flex-col gap-y-2">
+              <common.Input
+                placeholder="field name"
+                value={value}
+                onChange={onChange}
+              />
+              {errors.Name && (
+                <p className="text-sm text-red-500">{errors.Name.message}</p>
+              )}
+            </div>
           )}
         />
       </div>
       <common.Separator />
       <common.Buttons.WhiteOutline
+        type="submit"
         disabled={loading}
         loading={loading}
         icon={<CheckIcon className="w-3 h-3" />}

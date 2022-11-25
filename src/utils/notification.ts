@@ -35,7 +35,7 @@ function showError(err: any) {
         return
       }
 
-      notification('Oops! Something went wrong', 'error')
+      notification('Ops! Something went wrong', 'error')
       return
     }
 

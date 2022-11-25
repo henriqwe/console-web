@@ -69,6 +69,7 @@ type SchemaManagerContextProps = {
   createEntitySchema: (columnsGroup: number[]) => yup.AnyObjectSchema
   columnNames: string[]
   setColumnNames: Dispatch<SetStateAction<string[]>>
+  addAttributeSchema: yup.AnyObjectSchema
 }
 
 type ProviderProps = {
@@ -246,6 +247,10 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
           const validation = new RegExp(/^[A-Za-z ]*$/)
           return validation.test(val as string)
         })
+        .test('equal', 'Entity name cannot contain spaces', (val) => {
+          const validation = new RegExp(/\s/g)
+          return !validation.test(val as string)
+        })
     }
 
     for (const col of columnsGroup.filter((col) => col !== 0)) {
@@ -285,6 +290,28 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
 
     return yup.object().shape(shape)
   }
+
+  const addAttributeSchema = yup.object().shape({
+    ColumnName: yup
+      .string()
+      .required('Column name is required')
+      .test('equal', 'Column cannot contain spaces', (val) => {
+        const validation = new RegExp(/\s/g)
+        return !validation.test(val as string)
+      })
+      .test('equal', 'Column name must contain only letters', (val) => {
+        const validation = new RegExp(/^[A-Za-z ]*$/)
+        return validation.test(val as string)
+      }),
+    Type: yup.object(),
+    Length: yup
+      .number()
+      .typeError('Length must be a number')
+      .nullable()
+      .moreThan(-1, 'Length must be positive')
+      .transform((_, val) => (val !== '' ? Number(val) : null)),
+    Comment: yup.string()
+  })
 
   return (
     <SchemaManagerContext.Provider
@@ -334,7 +361,8 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         setEntitiesLoading,
         createEntitySchema,
         columnNames,
-        setColumnNames
+        setColumnNames,
+        addAttributeSchema
       }}
     >
       {children}

@@ -103,7 +103,7 @@ export function CardCreditCard(card: CardCreditCardProps) {
               </span>
             </div>
             <p className="text-sm font-bold text-gray-600">
-              this action is irreversible!!!
+              This action is irreversible
             </p>
           </>
         }

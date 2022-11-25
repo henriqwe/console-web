@@ -6,6 +6,7 @@ import { XIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline'
 import { SetStateAction, useState, Dispatch } from 'react'
 import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 type ModifyTabProps = {
   loading: boolean
@@ -153,7 +154,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
               Are you sure you want to remove this entity?{' '}
             </p>
             <p className="text-sm font-bold text-gray-600">
-              this action is irreversible!!!
+              This action is irreversible
             </p>
           </>
         }
@@ -177,23 +178,19 @@ function AttributeForm({
 }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const { addAttributeSchema } = consoleSection.useSchemaManager()
   const {
     control,
     watch,
     formState: { errors },
     handleSubmit
-  } = useForm()
+  } = useForm({
+    resolver: yupResolver(addAttributeSchema)
+  })
 
   async function Submit(data: any) {
     try {
       setLoading(true)
-      if (!data.ColumnName || !data.Type) {
-        throw new Error('Missing required fields')
-      }
-
-      if (data.Type.value === 'String' && !data.Length) {
-        throw new Error('String length is required')
-      }
 
       await utils.api.post(
         utils.apiRoutes.attribute({

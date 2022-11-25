@@ -35,7 +35,7 @@ export function Create() {
     setLoading(true)
     try {
       if (!user?.gatewayPaymentKey) {
-        throw new Error('Oops something wrong happened')
+        throw new Error('Ops! Something wrong happened')
       }
       if (!cardBrand) {
         throw new Error('unidentified credit card brand')
