@@ -70,17 +70,18 @@ export const LoginProvider = ({ children }: ProviderProps) => {
 
     if (step === 0) {
       yupObject = {
-        userName: yup.string().required('This field is required')
+        userName: yup.string().required('Username is required')
       }
     }
 
     if (step !== 0) {
       yupObject = {
-        email: yup.string().email().required(),
+        userName: yup.string().required('Username is required'),
         password: yup
           .string()
-          .required()
-          .min(6, 'password must be at least 6 characters')
+          .required('Password is required')
+          .min(6, 'Password must be at least 6 characters'),
+        recoverHash: yup.string().required('Recover Hash is required')
       }
     }
 
