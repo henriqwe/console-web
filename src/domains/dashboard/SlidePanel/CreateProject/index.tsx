@@ -43,16 +43,70 @@ export function Create() {
   } = useForm({ resolver: yupResolver(createProjectSchema(submittedSchema)) })
 
   async function Submit(data: { ProjectName: string }) {
+    let projectName = ''
     try {
       setLoading(true)
-      const spaceValidation = new RegExp(/\s/g)
+
+      const schemas = await utils.api
+        .get(utils.apiRoutes.schemas, {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${utils.getCookie('access_token')}`
+          }
+        })
+        .then((res) =>
+          res ? res.data.map((schema: { name: string }) => schema.name) : []
+        )
+        .catch((err) => console.log('Error getting schemas', err))
 
       if (submittedSchema) {
-        const schemaParsed = utils.ycl_transpiler.parse(submittedSchema, false)
+        let schemaParsed: {
+          code: string
+          schema: {}
+          src: any
+          types: {}
+        }
+        try {
+          schemaParsed = utils.ycl_transpiler.parse(submittedSchema, false)
+        } catch (err) {
+          utils.notification('Ops! Something went wrong', 'error')
+          console.error('Error parsing schema', err)
+          return
+        }
+
+        projectName = schemaParsed.schema.name
+        if (projectName.length < 3) {
+          utils.notification(
+            'Project name must be at least 3 characters long',
+            'error'
+          )
+          return
+        }
+
         utils.ycl_transpiler.deploy(schemaParsed.schema, async () => {
-          setReload(!reload)
+          if (schemas.includes(projectName)) {
+            utils.notification(`Schema ${projectName} already exists`, 'error')
+
+            return
+          }
+
+          //create project
+          await utils.api.post(
+            utils.apiRoutes.schemas,
+            {
+              name: projectName
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${utils.getCookie('access_token')}`
+              }
+            }
+          )
+
           const { data: schemaData } = await utils.api.get(
-            `${utils.apiRoutes.schemas}/${schemaParsed.schema.name}`,
+            `${utils.apiRoutes.schemas}/${projectName}`,
             {
               headers: {
                 Authorization: `Bearer ${utils.getCookie('access_token')}`
@@ -62,7 +116,7 @@ export function Create() {
 
           for (const entity of schemaParsed.schema.entities) {
             await utils.api.post(
-              utils.apiRoutes.entity(schemaParsed.schema.name as string),
+              utils.apiRoutes.entity(projectName as string),
               {
                 name: entity.name,
                 attributes: entity.attributes.map((attribute) => {
@@ -82,58 +136,47 @@ export function Create() {
             )
           }
 
+          const AdminAccount = await utils.api
+            .post(
+              utils.apiRoutes.createAdminAccount(projectName),
+              {},
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                  Authorization: `Bearer ${utils.getCookie('access_token')}`
+                }
+              }
+            )
+            .catch((err) => console.log('Error creating admin account', err))
+
+          setAdminUser(AdminAccount?.data)
+          setCreatedSchemaName(projectName)
+
           utils.setCookie('X-TenantID', schemaData.tenantId)
           utils.setCookie('X-TenantAC', schemaData.tenantAc)
+          setReload(!reload)
           utils.notification(
-            `Project ${schemaParsed.schema.name} created successfully`,
+            `Project ${projectName} created successfully`,
             'success'
           )
-
-          const AdminAccount = await utils.api.post(
-            utils.apiRoutes.createAdminAccount(data.ProjectName),
-            {},
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                Authorization: `Bearer ${utils.getCookie('access_token')}`
-              }
-            }
-          )
-          setAdminUser(AdminAccount.data)
-          setCreatedSchemaName(data.ProjectName)
           setSlideType('ViewAdminUser')
           setSlideSize('normal')
         })
 
         return
       }
-      if (spaceValidation.test(data.ProjectName)) {
-        throw new Error('Project name cannot contain spaces')
-      }
 
-      const response = await utils.api
-        .get(utils.apiRoutes.schemas, {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        })
-        .catch(() => null)
+      projectName = data.ProjectName
 
-      const schemas = response
-        ? response.data.map((schema: { name: string }) => schema.name)
-        : []
-
-      if (schemas.includes(data.ProjectName.toLowerCase())) {
-        throw new Error(`Project ${data.ProjectName} already exists`)
+      if (schemas.includes(projectName.toLowerCase())) {
+        throw new Error(`Project ${projectName} already exists`)
       }
 
       await utils.api.post(
         utils.apiRoutes.schemas,
         {
-          name: data.ProjectName
+          name: projectName
         },
         {
           headers: {
@@ -144,7 +187,7 @@ export function Create() {
       )
 
       const { data: schemaData } = await utils.api.get(
-        `${utils.apiRoutes.schemas}/${data.ProjectName}`,
+        `${utils.apiRoutes.schemas}/${projectName}`,
         {
           headers: {
             Authorization: `Bearer ${utils.getCookie('access_token')}`
@@ -152,25 +195,28 @@ export function Create() {
         }
       )
 
-      const AdminAccount = await utils.api.post(
-        utils.apiRoutes.createAdminAccount(data.ProjectName),
-        {},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
+      const AdminAccount = await utils.api
+        .post(
+          utils.apiRoutes.createAdminAccount(projectName),
+          {},
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              Authorization: `Bearer ${utils.getCookie('access_token')}`
+            }
           }
-        }
-      )
-      setAdminUser(AdminAccount.data)
-      setCreatedSchemaName(data.ProjectName)
+        )
+        .catch((err) => console.log('Error creating admin account', err))
+
+      setAdminUser(AdminAccount?.data)
+      setCreatedSchemaName(projectName)
 
       utils.setCookie('X-TenantID', schemaData.tenantId)
       utils.setCookie('X-TenantAC', schemaData.tenantAc)
       setReload(!reload)
       utils.notification(
-        `Project ${data.ProjectName} created successfully`,
+        `Project ${projectName} created successfully`,
         'success'
       )
       setSlideType('ViewAdminUser')
@@ -217,8 +263,12 @@ export function Create() {
                   }
                   value={value}
                   onChange={onChange}
-                  errors={errors.ProjectName}
                 />
+                {errors.ProjectName && (
+                  <p className="text-sm text-red-500">
+                    {errors.ProjectName.message}
+                  </p>
+                )}
               </div>
             )}
           />
