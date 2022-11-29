@@ -33,7 +33,7 @@ export function CardCreditCard(card: CardCreditCardProps) {
         <div className="flex justify-between">
           <div className=" flex justify-center items-center">
             <span className="">
-              {card.first_six_digits}*****
+              **********
               {card.last_four_digits}
             </span>
           </div>
