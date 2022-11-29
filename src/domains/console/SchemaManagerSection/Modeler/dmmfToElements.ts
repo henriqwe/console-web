@@ -34,11 +34,12 @@ const generateEntityNode = (
   })
 
   const relationsTarget = attributes.filter((attribute) => {
-    if (relations[attribute?._conf.type.value] as Relation | undefined) {
-      relationType.push(relations[attribute._conf.type.value].type)
+    if (relations[attribute?.name] as Relation | undefined) {
+      relationType.push(relations[attribute.name].type)
       return true
     }
   })
+
   const obj = {
     id: name,
     type: 'entity',
@@ -178,7 +179,6 @@ export const schemaToElements = (data: schemaType): DMMFToElementsResult => {
 
   const relations: Readonly<Record<string, Relation>> =
     Object.fromEntries(intermediate2)
-
   for (const entity of data.entities) {
     for (const attribute of entity.attributes) {
       if (entitiesName.includes(attribute._conf.type.value)) {

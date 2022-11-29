@@ -1,5 +1,4 @@
-/* This example requires Tailwind CSS v2.0+ */
-import * as dashboard from 'domains/dashboard'
+import * as common from 'common'
 import { ReactNode, useState } from 'react'
 import {
   LogoutIcon,
@@ -8,7 +7,10 @@ import {
   HomeIcon,
   BookOpenIcon,
   MenuIcon,
-  UserIcon
+  UserIcon,
+  UserCircleIcon,
+  UserGroupIcon,
+  PlusIcon
 } from '@heroicons/react/outline'
 import { removeCookie } from 'utils'
 import { ToggleTheme } from 'common'
@@ -16,15 +18,21 @@ import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
 import { BetaTag } from 'common/BetaTag'
+import { useUser } from 'contexts/UserContext'
 
 type TemplateProps = {
   children: ReactNode
 }
 
 export function Template({ children }: TemplateProps) {
+  const { user } = useUser()
+
   const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-
+  const [selectedOrganization, setSelectedOrganization] = useState<{
+    name: string
+    plan: string
+  }>({ name: 'Seniors Demais', plan: 'Starter' })
   const navigation = [
     {
       name: 'Projects',
@@ -47,11 +55,40 @@ export function Template({ children }: TemplateProps) {
     {
       name: 'My Account',
       onClick: () => router.push(routes.myAccount),
-      icon: UserIcon,
+      icon: UserCircleIcon,
       current: router.asPath === routes.myAccount
     }
   ]
-
+  const dropdownActions = [
+    {
+      title: 'Seniors Demais',
+      onClick: () => {
+        setSelectedOrganization({ name: 'Seniors Demais', plan: 'Starter' })
+      }
+    },
+    {
+      title: 'UX-tudo',
+      onClick: () => {
+        setSelectedOrganization({ name: 'UX-tudo', plan: 'Free' })
+      }
+    },
+    ,
+    {
+      title: 'Org TOP',
+      onClick: () => {
+        setSelectedOrganization({ name: 'Org TOP', plan: 'Top' })
+      }
+    }
+  ]
+  const dropdownSubActions = [
+    {
+      title: 'Create new organization',
+      onClick: () => {
+        return
+      },
+      icon: <PlusIcon className={`flex-shrink-0 h-4 w-4`} />
+    }
+  ]
   return (
     <div>
       {/* Static sidebar for desktop */}
@@ -73,7 +110,40 @@ export function Template({ children }: TemplateProps) {
                 <ToggleTheme changeColor={false} />
               </div>
             </div>
-            <nav className="flex-1 px-2 mt-5 space-y-1">
+            <div className="flex gap-2 px-4 items-center">
+              <UserIcon className={`flex-shrink-0 h-6 w-6 text-text-primary`} />
+              <div>
+                <div
+                  className="flex  text-text-secondary  items-center h-8 px-2 text-lg "
+                  title="Username"
+                >
+                  <span>{user?.userData?.username}</span>
+                </div>
+
+                <common.Dropdown
+                  actions={dropdownActions.filter(
+                    (option) => option?.title !== selectedOrganization.name
+                  )}
+                  subActions={dropdownSubActions}
+                  withoutHover
+                  title="Organization"
+                  darkBackground
+                >
+                  <div className="flex w-full gap-2 items-center">
+                    <span className="truncate text-xs">
+                      {selectedOrganization.name}
+                    </span>
+                    <span className="text-[.7rem] px-2 py-1  rounded-full border border-yc  text-text-primary">
+                      {selectedOrganization.plan}
+                    </span>
+                  </div>
+                </common.Dropdown>
+              </div>
+            </div>
+            <div className="px-4 my-2">
+              <common.Separator className="border-gray-700 rounded-full" />
+            </div>
+            <nav className="flex-1 px-2 space-y-1">
               {navigation.map((item, index) => (
                 <button
                   key={item.name}
