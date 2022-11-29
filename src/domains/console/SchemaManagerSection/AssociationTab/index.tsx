@@ -165,7 +165,7 @@ export function AssociationTab({ loading }: AssociationTabProps) {
               Are you sure you want to remove this entity?{' '}
             </p>
             <p className="text-sm font-bold text-gray-600">
-              this action is irreversible!!!
+              This action is irreversible
             </p>
           </>
         }

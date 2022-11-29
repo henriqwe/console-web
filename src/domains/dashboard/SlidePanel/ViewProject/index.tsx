@@ -233,7 +233,7 @@ export function ViewSchema() {
               Are you sure you want to remove this project?{' '}
             </p>
             <p className="text-sm font-bold text-gray-600 dark:text-gray-300">
-              this action is irreversible!!!
+              This action is irreversible
             </p>
           </>
         }

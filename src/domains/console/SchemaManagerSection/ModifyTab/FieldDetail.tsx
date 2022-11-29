@@ -313,7 +313,7 @@ export function FieldDetail({
               Are you sure you want to remove this attribute?{' '}
             </p>
             <p className="text-sm font-bold text-gray-600">
-              this action is irreversible!!!
+              This action is irreversible
             </p>
           </>
         }
@@ -391,7 +391,7 @@ function FormField({
                 <XIcon />
               </div>
             </common.Buttons.RedOutline>
-            <common.Buttons.GreenOutline>
+            <common.Buttons.GreenOutline type="submit">
               <div className="w-5 h-5">
                 <CheckIcon />
               </div>
