@@ -23,9 +23,16 @@ export default async function createCustomer(
   if (req.method === 'POST') {
     try {
       utils.validationReqBody({ body: req.body, validationArray })
+      const billing_address = {
+        line_1: req.body.line_1,
+        zip_code: req.body.zip_code,
+        city: req.body.city,
+        state: req.body.state,
+        country: req.body.country
+      }
       const { data } = await utils.apiPagarme.post(
         utils.apiPagarmeRoutes.cards.create(req.body.customerId),
-        { ...req.body, verify_card: true },
+        { ...req.body, billing_address, verify_card: true },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -42,3 +49,6 @@ export default async function createCustomer(
   }
   return res.status(404).json({ message: 'Not found! :(' })
 }
+
+// reduzir o espaçamento entre username e org
+// corrigir dropdown

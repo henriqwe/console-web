@@ -79,7 +79,6 @@ const FlowView = ({ schema }: FlowViewProps) => {
         : ({ nodes: [], edges: [] } as DMMFToElementsResult),
     [schema]
   )
-  // console.log({ nodes, edges })
   const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
     nodes,
     edges
