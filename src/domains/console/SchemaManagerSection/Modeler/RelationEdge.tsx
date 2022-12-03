@@ -1,10 +1,5 @@
 import React, { memo } from 'react'
-import {
-  EdgeProps,
-  EdgeText,
-  getEdgeCenter,
-  getSmoothStepPath
-} from 'react-flow-renderer'
+import { EdgeProps, EdgeLabelRenderer, getSmoothStepPath } from 'reactflow'
 
 import { RelationEdgeData } from './types'
 
@@ -23,7 +18,7 @@ const RelationEdge = ({
   labelBgStyle,
   data
 }: EdgeProps<RelationEdgeData>) => {
-  const [centerX, centerY] = getEdgeCenter({
+  const [path, centerX, centerY] = getSmoothStepPath({
     sourceX,
     sourceY,
     targetX,
@@ -31,18 +26,8 @@ const RelationEdge = ({
     sourcePosition,
     targetPosition
   })
-  const path = getSmoothStepPath({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-    sourcePosition,
-    targetPosition,
-    borderRadius: 16
-  })
-
   const text = label ? (
-    <EdgeText
+    <EdgeLabelRenderer
       x={centerX}
       y={centerY}
       label={label}
@@ -51,6 +36,8 @@ const RelationEdge = ({
       labelBgStyle={labelBgStyle}
       labelBgPadding={labelBgPadding}
       labelBgBorderRadius={labelBgBorderRadius}
+      className={'z-50'}
+      style={{ zIndex: 99999 }}
     />
   ) : null
 
@@ -72,7 +59,17 @@ const RelationEdge = ({
         markerStart={markerStart}
         markerEnd={markerEnd}
       />
-      {text}
+      <EdgeLabelRenderer>
+        <div
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${centerX}px,${centerY}px)`
+          }}
+          className="bg-white text-xs p-1 dark:bg-slate-600 rounded-md"
+        >
+          {label}
+        </div>
+      </EdgeLabelRenderer>
     </>
   )
 }

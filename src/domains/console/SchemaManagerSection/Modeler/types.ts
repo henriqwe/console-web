@@ -1,4 +1,4 @@
-import { Edge, Node } from 'react-flow-renderer'
+import { Edge, Node } from 'reactflow'
 
 export type RelationType = '1-1' | '1-n' | 'm-n'
 
@@ -26,13 +26,14 @@ export interface ModelNodeData {
   relationType?: string[]
   columns: Array<{
     name: string
-    command: '' | 'c' | 'd'
+    command: '' | 'c' | 'd' | 'u'
     type: string
     displayType: string
     kind: string
     documentation?: string
     isList: boolean
     isRequired: boolean
+    relation?: boolean
     relationName?: string | null
     relationFromFields?: string[] | null
     relationToFields?: string[] | null

@@ -1,11 +1,6 @@
 import cc from 'classcat'
-import React from 'react'
-import {
-  Handle,
-  Position,
-  useReactFlow,
-  useStoreApi
-} from 'react-flow-renderer'
+import React, { useEffect, useState } from 'react'
+import { Handle, Position } from 'reactflow'
 
 import { ModelNodeData } from './types'
 
@@ -30,29 +25,40 @@ const isSource = ({ isList, relationFromFields, relationType }: ColumnData) =>
   (relationType === '1-1' && !!relationFromFields?.length)
 
 const ModelNode = ({ data }: ModelNodeProps) => {
-  const store = useStoreApi()
-  const { setCenter, getZoom } = useReactFlow()
-
+  const [additionalColumns, setAdditionalColumns] = useState<number[]>([])
   function handleStyle(index: number) {
     return { top: 78 + index * 33, right: -6 }
   }
 
-  const focusNode = (nodeId: string) => {
-    const { nodeInternals } = store.getState()
-    const nodes = Array.from(nodeInternals).map(([, node]) => node)
+  useEffect(() => {
+    if (data) {
+      const columnsLength = data.columns.filter(
+        (col) => col.relation !== true
+      )?.length
+      const relationsTargetLength = data?.relationsTarget?.length!
+      const relationsSourceLength = data?.relationsSource?.length!
 
-    if (nodes.length > 0) {
-      const node = nodes.find((iterNode) => iterNode.id === nodeId)
+      if (
+        columnsLength < relationsTargetLength ||
+        columnsLength < relationsSourceLength
+      ) {
+        const _additionalColumns: number[] = []
+        if (
+          relationsTargetLength === relationsSourceLength ||
+          relationsTargetLength > relationsSourceLength
+        ) {
+          _additionalColumns.length = relationsTargetLength - columnsLength
+        }
 
-      if (!node) return
-
-      const x = node.position.x + node.width! / 2
-      const y = node.position.y + node.height! / 2
-      const zoom = getZoom()
-
-      setCenter(x, y, { zoom, duration: 1000 })
+        if (relationsTargetLength < relationsSourceLength) {
+          _additionalColumns.length = relationsSourceLength - columnsLength
+        }
+        _additionalColumns.fill(1, 0)
+        setAdditionalColumns(_additionalColumns)
+      }
     }
-  }
+  }, [data])
+
   return (
     <table
       className="font-sans bg-white border-2 border-separate border-black dark:border-gray-400 rounded-lg"
@@ -109,7 +115,18 @@ const ModelNode = ({ data }: ModelNodeProps) => {
               </td>
             </tr>
           ))}
-
+        {additionalColumns.map((_, idx) => (
+          <tr
+            key={idx}
+            className={
+              '!first:!border-4 !first:!border-red-500 dark:bg-gray-700'
+            }
+          >
+            <td className="font-mono font-semibold">
+              <div className={cc(['relative', 'py-1', 'px-2', 'h-6'])}></div>
+            </td>
+          </tr>
+        ))}
         {data.relationsTarget?.map((relations, idx) => {
           return (
             <Handle
@@ -117,7 +134,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
               className={'!border-4 !h-4 !w-4 !bg-gray-700 -ml-1'}
               type="source"
               id={`${data.name}-${relations.name}-${relations._conf.type.value}`}
-              position={Position.Left}
+              position={Position.Right}
               isConnectable={false}
               style={handleStyle(idx)}
             />
@@ -130,7 +147,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
               className={'!border-4 !h-4 !w-4 bg-gray-700'}
               type="target"
               id={`${data.name}-${relations.name}`}
-              position={Position.Right}
+              position={Position.Left}
               isConnectable={false}
               style={handleStyle(idx)}
             />

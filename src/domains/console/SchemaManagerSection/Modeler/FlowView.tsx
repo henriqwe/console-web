@@ -1,9 +1,13 @@
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactFlow, {
   Background,
   BackgroundVariant,
-  Controls
-} from 'react-flow-renderer'
+  Controls,
+  Edge,
+  Node,
+  applyNodeChanges,
+  applyEdgeChanges
+} from 'reactflow'
 import dagre from 'dagre'
 import EnumNode from './EnumNode'
 import ModelNode from './ModelNode'
@@ -15,7 +19,6 @@ import type {
   ModelNodeData,
   schemaType
 } from './types'
-import { Edge, Node } from 'react-flow-renderer'
 
 const nodeTypes = {
   entity: ModelNode,
@@ -33,8 +36,8 @@ const FlowView = ({ schema }: FlowViewProps) => {
   const dagreGraph = new dagre.graphlib.Graph()
   dagreGraph.setDefaultEdgeLabel(() => ({}))
 
-  const nodeWidth = 200
-  const nodeHeight = 200
+  const nodeWidth = 250
+  const nodeHeight = 250
 
   const getLayoutedElements = (
     nodes: (Node<EnumNodeData> | Node<ModelNodeData>)[],
@@ -79,19 +82,39 @@ const FlowView = ({ schema }: FlowViewProps) => {
         : ({ nodes: [], edges: [] } as DMMFToElementsResult),
     [schema]
   )
-  const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-    nodes,
-    edges
+
+  const [initialNodes, setInitialNodes] = useState(nodes)
+  const [initialEdges, setInitialEdges] = useState(edges)
+
+  const onNodesChange = useCallback(
+    (changes) => setInitialNodes((nds) => applyNodeChanges(changes, nds)),
+    []
   )
+  const onEdgesChange = useCallback(
+    (changes) => setInitialEdges((eds) => applyEdgeChanges(changes, eds)),
+    []
+  )
+
+  useEffect(() => {
+    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+      nodes,
+      edges
+    )
+    setInitialNodes(layoutedNodes)
+    setInitialEdges(layoutedEdges)
+  }, [nodes, edges])
+
   return (
     <>
       <ReactFlow
-        defaultNodes={layoutedNodes}
-        defaultEdges={layoutedEdges}
+        nodes={initialNodes}
+        edges={initialEdges}
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
         minZoom={0.1}
-        defaultZoom={0.8}
+        defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
         fitView
       >
         <Background
@@ -103,47 +126,46 @@ const FlowView = ({ schema }: FlowViewProps) => {
         />
         <Controls />
       </ReactFlow>
-      {/* <svg width="0" height="0">
+      <svg width="0" height="0">
         <defs>
           <marker
             id="er-1n"
-            markerWidth="32.5"
+            markerWidth="12.5"
             markerHeight="12.5"
-            viewBox="-20 0 20 20"
+            viewBox="-10 -10 20 20"
             orient="auto-start-reverse"
             refX="0"
             refY="0"
           >
-            <text
-              x="-35"
-              y="15"
-              fill="gray"
-              className="text-gray-400 stroke-current text-xs"
-            >
-              1..*
-            </text>
+            <polyline
+              className="text-gray-400 stroke-current"
+              strokeWidth="3"
+              strokeLinecap="square"
+              fill="none"
+              points="-10,-8 -10,8"
+            />
           </marker>
+
           <marker
             id="er-n1"
-            markerWidth="22.5"
+            markerWidth="12.5"
             markerHeight="12.5"
-            viewBox="-10 -20 20 20"
+            viewBox="-10 -10 20 20"
             orient="auto-start-reverse"
             refX="0"
             refY="0"
           >
-            <text
-              x="-10"
-              y="-15"
-              fill="gray"
-              className="text-gray-400 stroke-current text-xs"
-              rotate={180}
-            >
-              1
-            </text>
+            <polyline
+              className="text-gray-400 stroke-current"
+              strokeLinejoin="round"
+              strokeLinecap="square"
+              strokeWidth="1.5"
+              fill="none"
+              points="0,-8 -10,0 0,8"
+            />
           </marker>
         </defs>
-      </svg> */}
+      </svg>
     </>
   )
 }
