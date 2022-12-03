@@ -1,4 +1,4 @@
-import { Edge, Node } from 'react-flow-renderer'
+import { Edge, Node } from 'reactflow'
 
 import {
   EnumNodeData,
@@ -21,7 +21,7 @@ const letters = ['A', 'B']
 // TODO: figure out a good way to random spread the nodes
 const generateEntityNode = (
   { name, attributes, command }: entitiesType,
-  relations: Readonly<Record<string, Relation>>
+  relations: Readonly<Record<string, Relation & { relationName: string }>>
 ): Node<ModelNodeData> => {
   const relationType: string[] = []
   const relationsSource: attributesTYPE[] = []
@@ -43,7 +43,9 @@ const generateEntityNode = (
   const obj = {
     id: name,
     type: 'entity',
-    position: { x: 250, y: 25 },
+    position: { x: 0, y: 0 },
+    draggable: true,
+    dragging: true,
     data: {
       type: 'entity',
       name,
@@ -103,18 +105,19 @@ const generateEntityNode = (
   return obj
 }
 
-const generateRelationEdge = ([relationName, { type, fields }]: [
+const generateRelationEdge = ([relationId, { type, fields, relationName }]: [
   string,
-  Relation
+  Relation & { relationName: string }
 ]): Edge[] => {
   const base = {
-    id: `e${relationName}`,
+    id: `e${relationId}-${fields[0].name}-${fields[1].name}`,
     type: 'relation',
     label: relationName,
     data: { relationType: type }
   }
   const source = fields[0]
   const target = fields[1]
+
   if (type === 'm-n') {
     return fields.map((col, i) => ({
       ...base,
@@ -122,7 +125,7 @@ const generateRelationEdge = ([relationName, { type, fields }]: [
       source: col.name,
       target: `_${relationName}`,
       sourceHandle: `${source.name}-${relationName}-${target.name}`,
-      targetHandle: `_${target.name}-${relationName}`
+      targetHandle: `_${target.name}-${relationId}`
     }))
   }
   if (type === '1-n') {
@@ -132,7 +135,7 @@ const generateRelationEdge = ([relationName, { type, fields }]: [
         source: source.name,
         target: target.name,
         sourceHandle: `${source.name}-${relationName}-${target.name}`,
-        targetHandle: `${target.name}-${relationName}`
+        targetHandle: `${target.name}-${relationId}`
       }
     ]
   }
@@ -142,7 +145,7 @@ const generateRelationEdge = ([relationName, { type, fields }]: [
       source: source.name,
       target: target.name,
       sourceHandle: `${source.name}-${relationName}-${target.name}`,
-      targetHandle: `${target.name}-${relationName}`
+      targetHandle: `${target.name}-${relationId}`
     }
   ]
 }
@@ -167,8 +170,11 @@ export const schemaToElements = (data: schemaType): DMMFToElementsResult => {
   })
 
   const intermediate2 = Object.entries(intermediate1).map(
-    ([key, [one, two]]) => {
-      return [key, { type: '1-n', fields: [one, two] }]
+    ([key, { relationName, relations }]) => {
+      return [
+        key,
+        { type: '1-n', fields: [relations[0], relations[1]], relationName }
+      ]
       // if (one.isList && two.isList)
       //   return [key, { type: "m-n", fields: [one, two] }];
       // else if (one.isList || two.isList)
@@ -177,8 +183,9 @@ export const schemaToElements = (data: schemaType): DMMFToElementsResult => {
     }
   )
 
-  const relations: Readonly<Record<string, Relation>> =
-    Object.fromEntries(intermediate2)
+  const relations: Readonly<
+    Record<string, Relation & { relationName: string }>
+  > = Object.fromEntries(intermediate2)
   for (const entity of data.entities) {
     for (const attribute of entity.attributes) {
       if (entitiesName.includes(attribute._conf.type.value)) {
@@ -186,6 +193,7 @@ export const schemaToElements = (data: schemaType): DMMFToElementsResult => {
       }
     }
   }
+
   return {
     nodes: [
       ...[...data.entities].map((entity) =>
@@ -203,8 +211,20 @@ export function groupByRelationship({
   entities: entitiesType[]
   relationFields: relationFieldType[]
 }) {
-  const objRelation: Record<string, entitiesType[]> = {}
+  const objRelation: Record<
+    string,
+    { relationName: string; relations: entitiesType[] }
+  > = {}
+  const validationNameNotRepeat: string[] = []
   for (const relation of relationFields) {
+    let name = relation.name
+    if (validationNameNotRepeat.includes(name)) {
+      name += validationNameNotRepeat.filter(
+        (name) => name === relation.name
+      ).length
+    }
+    validationNameNotRepeat.push(name)
+
     let entityRelation1: entitiesType
     let entityRelation2: entitiesType
 
@@ -217,7 +237,10 @@ export function groupByRelationship({
         entityRelation2 = entity
       }
     }
-    objRelation[relation.name] = [entityRelation1, entityRelation2]
+    objRelation[name] = {
+      relationName: relation.name,
+      relations: [entityRelation1!, entityRelation2!]
+    }
   }
   return objRelation
 }

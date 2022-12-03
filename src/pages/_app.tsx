@@ -1,5 +1,7 @@
 import 'styles/main.css'
 import 'react-toastify/dist/ReactToastify.css'
+import 'reactflow/dist/style.css'
+
 import * as ThemeContext from 'contexts/ThemeContext'
 import * as PixelContext from 'contexts/PixelContext'
 import * as common from 'common'

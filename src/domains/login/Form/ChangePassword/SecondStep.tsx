@@ -4,7 +4,7 @@ import * as utils from 'utils'
 import * as login from 'domains/login'
 import { routes } from 'domains/routes'
 import { useRouter } from 'next/router'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import {
   Controller,
   FieldValues,
@@ -34,7 +34,6 @@ export function SecondStep({ setRecoverStep, username }: SecondStepProps) {
     recoverHash: string
     password: string
   }) {
-    console.log(formData)
     setLoading(true)
     try {
       await utils.api.post(utils.apiRoutes.changePassword, {
@@ -59,10 +58,6 @@ export function SecondStep({ setRecoverStep, username }: SecondStepProps) {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    console.log('errors', errors)
-  }, [errors])
 
   return (
     <form

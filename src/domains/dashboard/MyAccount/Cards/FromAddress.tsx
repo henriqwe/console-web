@@ -61,8 +61,6 @@ export function FromAddress() {
   function Submit(formData: formProps) {
     setLoading(true)
 
-    console.log(formData)
-
     utils.api
       .post(
         utils.apiRoutes.updateAccount,
