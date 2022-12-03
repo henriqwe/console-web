@@ -70,8 +70,6 @@ export function Create() {
         try {
           schemaParsed = utils.ycl_transpiler.parse(submittedSchema, false)
         } catch (err) {
-          utils.notification('Ops! Something went wrong', 'error')
-          console.error('Error parsing schema', err)
           return
         }
 
