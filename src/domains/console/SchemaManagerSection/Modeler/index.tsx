@@ -10,18 +10,23 @@ import { schemaType } from 'domains/console/SchemaManagerSection/Modeler/types'
 import * as utils from 'utils'
 import * as consoleEditor from 'domains/console/ConsoleEditorContext'
 import { Tour } from './Tour'
-import { TourProvider } from '@reactour/tour'
+import { Icon } from '@iconify/react'
 
 export function Modeler() {
   const { isDark } = ThemeContext.useTheme()
   const { documentationValue, textModeler, setTextModeler } =
     consoleEditor.useConsoleEditor()
-
+  const [errorMessage, setErrorMessage] = useState<string>()
   const [schema, setSchema] = useState<schemaType>()
   const update = async () => {
-    const { schema: _schema } = utils.ycl_transpiler.parse(textModeler, false)
-    if (Object.keys(_schema).length > 0) {
-      setSchema(_schema as schemaType)
+    try {
+      const { schema: _schema } = utils.ycl_transpiler.parse(textModeler, false)
+      if (Object.keys(_schema).length > 0) {
+        setSchema(_schema as schemaType)
+        setErrorMessage(undefined)
+      }
+    } catch (err) {
+      setErrorMessage(err?.message as string)
     }
   }
   useDebounce(update, 1000, [textModeler])
@@ -45,6 +50,19 @@ export function Modeler() {
             theme={isDark ? dracula : 'light'}
             extensions={[json(), EditorView.lineWrapping]}
           />
+          <div className="absolute bottom-2 right-3 flex gap-1">
+            {errorMessage && (
+              <div
+                className="flex items-center justify-center rounded-full cursor-pointer  w-7 h-7 "
+                title={errorMessage}
+              >
+                <Icon
+                  icon="eva:alert-circle-fill"
+                  className="w-6 h-6 text-red-600 dark:text-red-600"
+                />
+              </div>
+            )}
+          </div>
         </section>
         <div className="modeler-step-5 overflow-auto border-l-2 w-[65%]">
           <FlowView schema={schema} />
