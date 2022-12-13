@@ -1,11 +1,12 @@
 export const plans = [
   {
-    name: 'Free',
+    name: 'Sandbox',
     price: 'R$0,00',
     description: 'Small scale',
     href: 'https://console.ycodify.com/register',
     features: [
-      'Models: 10',
+      'Data models: 1',
+      'Graphic modeling',
       'Monthly deductible: 500 MB',
       '60 requests per minute',
       'Community support',
@@ -19,7 +20,8 @@ export const plans = [
     description: 'Medium scale',
     href: 'https://console.ycodify.com/register',
     features: [
-      'Unlimited data models',
+      'Data models: unlimited',
+      'Graphic modeling',
       'Monthly deductible: 5 GB*',
       'Unlimited requests',
       'High availability',
@@ -33,7 +35,7 @@ export const plans = [
     description: 'Large scale',
     href: 'https://console.ycodify.com/register',
     features: [
-      'Unlimited data models',
+      'Data models: unlimited',
       'Graphic modeling',
       'Monthly deductible: 15 GB*',
       'Unlimited requests',
