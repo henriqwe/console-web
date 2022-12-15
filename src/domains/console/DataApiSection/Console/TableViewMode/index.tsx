@@ -85,7 +85,7 @@ export function TableViewMode() {
   }, [consoleResponse])
 
   return tableColumns.length === 0 ? (
-    <div className="flex items-center justify-center w-full ">
+    <div className="flex items-center justify-center w-full h-full">
       <div className="flex flex-col items-center ">
         <div className="mb-5 w-72">
           <common.illustrations.Empty />

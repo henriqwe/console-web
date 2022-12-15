@@ -306,7 +306,7 @@ function AttributeForm({
           name={'Nullable'}
           control={control}
           render={({ field: { onChange } }) => (
-            <div className="flex items-center gap-2 h-[50%] self-end ">
+            <div className="flex items-center mt-7 gap-2">
               <input type="checkbox" id={'Nullable'} onChange={onChange} />
               <label htmlFor={'Nullable'}>Nullable</label>
             </div>

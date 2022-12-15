@@ -197,12 +197,18 @@ export function SchemaManagerSection() {
               )}
             </div>
           </div>
-          <div className={`${selectedEntity ? '' : 'hidden '} w-1/3 `}>
-            <common.Tabs
-              selectedTab={selectedEntityTab}
-              setSelectedTab={setSelectedEntityTab}
-              tabs={[{ name: 'Attributes' }, { name: 'Associations' }]}
-            />
+          <div
+            className={`${
+              selectedEntity ? '' : 'hidden'
+            } w-full flex justify-end`}
+          >
+            <div className="w-1/3">
+              <common.Tabs
+                selectedTab={selectedEntityTab}
+                setSelectedTab={setSelectedEntityTab}
+                tabs={[{ name: 'Attributes' }, { name: 'Associations' }]}
+              />
+            </div>
           </div>
           <consoleSection.SlidePanel />
           <div className="bg-white rounded-md dark:bg-menu-primary w-full">

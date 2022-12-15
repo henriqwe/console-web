@@ -31,9 +31,11 @@ export function FirstStep({ setRecoverStep, setUsername }: FirstStepProps) {
   async function Submit(formData: { userName: string }) {
     setLoading(true)
     try {
-      await utils.api.get(
-        utils.apiRoutes.getUserHash({ username: formData.userName })
-      )
+      await utils.api
+        .get(utils.apiRoutes.getUserHash({ username: formData.userName }))
+        .then((res) => {
+          console.log('res', res)
+        })
 
       setRecoverStep(1)
       utils.notification('User found! check your email account', 'success')
@@ -76,7 +78,9 @@ export function FirstStep({ setRecoverStep, setUsername }: FirstStepProps) {
           className="w-full md:w-max md:self-end"
           type="button"
           disabled={loading}
-          icon={<ReplyIcon className="w-3 h-3 text-gray-800" />}
+          icon={
+            <ReplyIcon className="w-3 h-3 text-gray-800 dark:text-text-primary" />
+          }
           onClick={() => {
             router.push(routes.login)
           }}

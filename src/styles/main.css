@@ -30,3 +30,19 @@
 .dark .Toastify__close-button {
   color: white;
 }
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+.dark input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #1e293b inset;
+}
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: #333;
+}
+
+.dark input:-webkit-autofill {
+  -webkit-text-fill-color: #ffffff;
+}

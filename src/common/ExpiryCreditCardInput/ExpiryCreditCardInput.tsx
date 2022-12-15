@@ -32,7 +32,7 @@ export function ExpiryCreditCardInput({
           value={value}
         >
           <common.Input
-            label="Expiry"
+            label="Expiration date"
             placeholder="Expiry"
             errors={error}
             value={value}

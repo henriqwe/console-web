@@ -55,7 +55,7 @@ export function FieldDetail({
         }
       )
       setReload(!reload)
-      utils.notification('attribute updated successfully', 'success')
+      utils.notification('Attribute updated successfully', 'success')
       setShowDetails(false)
     } catch (err) {
       utils.showError(err)
@@ -79,7 +79,7 @@ export function FieldDetail({
         }
       )
       setReload(!reload)
-      utils.notification('attribute updated successfully', 'success')
+      utils.notification('Attribute updated successfully', 'success')
       setShowDetails(false)
     } catch (err) {
       utils.showError(err)

@@ -91,45 +91,39 @@ export function HelpAndSupport() {
       </div>
       <div className="z-20 flex flex-col w-full gap-y-6">
         <section className="flex justify-between w-full mx-auto">
-          <div className="flex flex-col">
+          <div className="flex w-full flex-col">
             <common.Breadcrumb
               pages={[
                 { content: 'Help and support', current: false },
                 { content: '', current: false }
               ]}
             />
-            <div className="flex">
+            <div className="flex w-full justify-between">
               <h1 className="pr-4 text-2xl font-semibold text-gray-900 dark:text-white">
                 Ticket
               </h1>
               <div className="flex items-center">
                 {!selectedTicket ? (
-                  <button
-                    className="px-1 py-1 bg-white rounded-md"
+                  <common.Buttons.White
                     onClick={() => {
                       setOpenSlide(true)
                       setSlideType('createTicket')
                       setSlideSize('normal')
                       // router.push(routes.createProject)
                     }}
+                    icon={<PlusIcon className="w-3 h-3" />}
                   >
-                    <div className="flex items-center gap-2 dark:text-primary">
-                      <p className="text-xs ">Create</p>
-                      <PlusIcon className="w-3 h-3" />
-                    </div>
-                  </button>
+                    <p className="text-xs">Create</p>
+                  </common.Buttons.White>
                 ) : (
-                  <button
-                    className="px-1 py-1 bg-gray-600 rounded-md"
+                  <common.Buttons.White
                     onClick={() => {
                       setSelectedTicket(undefined)
                     }}
+                    icon={<ReplyIcon className="w-3 h-3" />}
                   >
-                    <div className="flex items-center gap-2 text-gray-300 dark:text-primary">
-                      <ReplyIcon className="w-3 h-3" />
-                      <span className="text-xs ">Back</span>
-                    </div>
-                  </button>
+                    <p className="text-xs">Back</p>
+                  </common.Buttons.White>
                 )}
               </div>
             </div>

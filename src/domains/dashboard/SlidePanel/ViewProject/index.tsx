@@ -25,8 +25,6 @@ export function ViewSchema() {
   const [adminUser, setAdminUser] = useState<AdminUser>()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-  const [showCopyIdText, setShowCopyIdText] = useState(false)
-  const [showCopyAcText, setShowCopyAcText] = useState(false)
 
   const yupSchema = yup.object().shape({ Name: yup.string().required() })
 
@@ -120,19 +118,15 @@ export function ViewSchema() {
     >
       <div className="flex justify-between w-full">
         <div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Project plan
-          </p>
-          <p className="font-bold dark:text-gray-300">Sandbox</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-gray-600 dark:text-gray-200">
             Created at:
           </p>
-          <p className="text-sm dark:text-gray-300">
+          <p className="text-sm dark:text-gray-400">
             {new Date(selectedSchema?.createdat as number).toLocaleString()}
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Status:</p>
-          <p className="text-sm dark:text-gray-300">{selectedSchema?.status}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-gray-600 dark:text-gray-200">Status:</p>
+          <p className="text-sm dark:text-gray-400">{selectedSchema?.status}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-200">
             Project tenantAc:
           </p>
           <div className="flex w-full">
@@ -140,20 +134,17 @@ export function ViewSchema() {
               value={selectedSchema?.tenantAc}
               disabled
               type="password"
-              className="w-40 text-xs bg-transparent dark:text-gray-300"
+              className="w-40 text-xs bg-transparent dark:text-gray-400"
             />
             <CopyToClipboard
               text="Copy to clipboard"
               onCopy={() => {
-                setShowCopyAcText(true)
-                setTimeout(() => {
-                  setShowCopyAcText(false)
-                }, 800)
+                utils.notification('Copied to clipboard', 'success')
               }}
             >
               <div className="flex items-center">
                 <DocumentDuplicateIcon
-                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-300"
+                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-400"
                   onClick={() =>
                     navigator.clipboard.writeText(
                       selectedSchema?.tenantAc as string
@@ -162,11 +153,8 @@ export function ViewSchema() {
                 />
               </div>
             </CopyToClipboard>
-            {showCopyAcText && (
-              <span className="ml-2 dark:text-gray-400">Copied!</span>
-            )}
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-gray-600 dark:text-gray-200">
             Project tenantId:
           </p>
           <div className="flex w-full">
@@ -174,20 +162,17 @@ export function ViewSchema() {
               value={selectedSchema?.tenantId}
               disabled
               type="password"
-              className="w-40 text-xs bg-transparent dark:text-gray-300"
+              className="w-40 text-xs bg-transparent dark:text-gray-400"
             />
             <CopyToClipboard
               text="Copy to clipboard"
               onCopy={() => {
-                setShowCopyIdText(true)
-                setTimeout(() => {
-                  setShowCopyIdText(false)
-                }, 800)
+                utils.notification('Copied to clipboard', 'success')
               }}
             >
               <div className="flex items-center">
                 <DocumentDuplicateIcon
-                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-300"
+                  className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-400"
                   onClick={() =>
                     navigator.clipboard.writeText(
                       selectedSchema?.tenantId as string
@@ -196,9 +181,6 @@ export function ViewSchema() {
                 />
               </div>
             </CopyToClipboard>
-            {showCopyIdText && (
-              <span className="ml-2 dark:text-gray-400">Copied!</span>
-            )}
           </div>
         </div>
       </div>
@@ -226,18 +208,18 @@ export function ViewSchema() {
         setOpen={setOpenModal}
         loading={submitLoading}
         disabled={submitLoading}
-        title={`Remove ${selectedSchema} project?`}
+        title={`Delete ${selectedSchema?.name} project?`}
         description={
           <>
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              Are you sure you want to remove this project?{' '}
+              Are you sure you want to delete this project?{' '}
             </p>
             <p className="text-sm font-bold text-gray-600 dark:text-gray-300">
               This action is irreversible
             </p>
           </>
         }
-        buttonTitle="Remove project"
+        buttonTitle="Delete project"
         handleSubmit={DeleteProject}
       />
     </div>

@@ -132,7 +132,17 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const [schemaStatus, setSchemaStatus] = useState<number>()
 
   const fieldSchema = yup.object().shape({
-    // Name: yup.string().required(),
+    Name: yup
+      .string()
+      .required('Entity name is required')
+      .test('equal', 'Entity name must contain only letters', (val) => {
+        const validation = new RegExp(/^[A-Za-z ]*$/)
+        return validation.test(val as string)
+      })
+      .test('equal', 'Entity name cannot contain spaces', (val) => {
+        const validation = new RegExp(/\s/g)
+        return !validation.test(val as string)
+      }),
     Type: yup.object().required(),
     Nullable: yup.object().required(),
     Unique: yup.object().required(),
@@ -302,8 +312,14 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
       .test('equal', 'Column name must contain only letters', (val) => {
         const validation = new RegExp(/^[A-Za-z ]*$/)
         return validation.test(val as string)
+      })
+      .test('equal', 'Column name must be unique', (val) => {
+        if (columnNames.indexOf(val ?? '') > -1) {
+          return false
+        }
+        return true
       }),
-    Type: yup.object(),
+    Type: yup.object().required('Column type is required'),
     Length: yup
       .number()
       .typeError('Length must be a number')
