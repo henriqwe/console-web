@@ -19,6 +19,7 @@ import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
 import { BetaTag } from 'common/BetaTag'
 import { useUser } from 'contexts/UserContext'
+import { CogIcon } from '@heroicons/react/outline'
 
 type TemplateProps = {
   children: ReactNode
@@ -55,7 +56,7 @@ export function Template({ children }: TemplateProps) {
     {
       name: 'My Account',
       onClick: () => router.push(routes.myAccount),
-      icon: UserCircleIcon,
+      icon: CogIcon,
       current: router.asPath === routes.myAccount
     }
   ]
@@ -110,35 +111,37 @@ export function Template({ children }: TemplateProps) {
                 <ToggleTheme changeColor={false} />
               </div>
             </div>
-            <div className="flex gap-2 px-4 items-center">
-              <UserIcon className={`flex-shrink-0 h-6 w-6 text-text-primary`} />
-              <div>
-                <div
-                  className="flex  text-text-secondary  items-center h-8 px-2 text-lg "
-                  title="Username"
-                >
-                  <span>{user?.userData?.username}</span>
-                </div>
+            <div className="flex gap-2 items-center w-full px-4">
+              <common.Dropdown
+                actions={dropdownActions.filter(
+                  (option) => option?.title !== selectedOrganization.name
+                )}
+                subActions={dropdownSubActions}
+                withoutHover
+                title="Organization"
+                darkBackground
+              >
+                <UserCircleIcon
+                  className={`flex-shrink-0 -ml-1 stroke-1 h-14 w-14 text-text-primary`}
+                />
+                <div className="flex flex-col -space-y-1 space-x-2 w-full">
+                  <div
+                    className="flex text-text-secondary items-center px-2 text-lg "
+                    title="Username"
+                  >
+                    <span className="text-xl">{user?.userData?.username}</span>
+                  </div>
 
-                <common.Dropdown
-                  actions={dropdownActions.filter(
-                    (option) => option?.title !== selectedOrganization.name
-                  )}
-                  subActions={dropdownSubActions}
-                  withoutHover
-                  title="Organization"
-                  darkBackground
-                >
                   <div className="flex w-full gap-2 items-center">
                     <span className="truncate text-xs">
                       {selectedOrganization.name}
                     </span>
-                    <span className="text-[.7rem] px-2 py-1  rounded-full border border-yc  text-text-primary">
+                    <span className="text-[.7rem] px-2 py-1  rounded-full border border-yc text-text-primary">
                       {selectedOrganization.plan}
                     </span>
                   </div>
-                </common.Dropdown>
-              </div>
+                </div>
+              </common.Dropdown>
             </div>
             <div className="px-4 my-2">
               <common.Separator className="border-gray-700 rounded-full" />

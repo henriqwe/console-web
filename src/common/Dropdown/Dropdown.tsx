@@ -25,7 +25,7 @@ export function Dropdown({
     <Menu as="div" className="relative inline-block text-left w-full ">
       <div className="w-full ">
         <Menu.Button
-          className={`flex w-full items-center px-2 py-1  rounded-md  focus:outline-none  font-medium ${
+          className={`flex w-full items-center rounded-md  focus:outline-none  font-medium ${
             withoutHover
               ? ''
               : 'hover:text-gray-800 dark:hover:text-text-primary'
@@ -36,10 +36,7 @@ export function Dropdown({
         >
           {children}
           {!withoutChevronDownIcon && (
-            <ChevronDownIcon
-              className="-mr-1 ml-2 h-5 w-5"
-              aria-hidden="true"
-            />
+            <ChevronDownIcon className="-mr-1 h-5 w-5" aria-hidden="true" />
           )}
         </Menu.Button>
       </div>
