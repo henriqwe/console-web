@@ -11,8 +11,15 @@ import { CheckIcon } from '@heroicons/react/outline'
 export function UpdateEntityName() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const { setOpenSlide, setReload, reload, selectedEntity, setSelectedEntity } =
-    consoleData.useSchemaManager()
+  const {
+    setOpenSlide,
+    setReload,
+    reload,
+    selectedEntity,
+    setSelectedEntity,
+    setBreadcrumbPages,
+    breadcrumbPagesData
+  } = consoleData.useSchemaManager()
 
   const yupSchema = yup.object().shape({
     Name: yup
@@ -60,6 +67,7 @@ export function UpdateEntityName() {
       setOpenSlide(false)
       setLoading(false)
       utils.notification('Operation performed successfully', 'success')
+      setBreadcrumbPages(breadcrumbPagesData.viewEntity(formData.Name))
     } catch (err: any) {
       utils.showError(err)
     } finally {

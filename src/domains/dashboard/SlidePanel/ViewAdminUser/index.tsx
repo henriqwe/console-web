@@ -57,7 +57,7 @@ export function ViewAdminUser() {
                       <DocumentDuplicateIcon
                         className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
                         onClick={() => {
-                          utils.notification('Copied!', 'success')
+                          utils.notification('Copied to clipboard', 'success')
                           navigator.clipboard.writeText(
                             adminUser?.username as string
                           )
@@ -86,7 +86,7 @@ export function ViewAdminUser() {
                       <DocumentDuplicateIcon
                         className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
                         onClick={() => {
-                          utils.notification('Copied!', 'success')
+                          utils.notification('Copied to clipboard', 'success')
                           navigator.clipboard.writeText(
                             adminUser?.password as string
                           )
@@ -108,10 +108,10 @@ export function ViewAdminUser() {
         </div>
 
         <common.Separator />
-        <div className="flex items-center w-full gap-4">
+        <div className="flex w-full gap-x-2">
           <input
             type="checkbox"
-            className="w-10 h-10"
+            className="w-5 h-5"
             onChange={() => {
               setAllowConclude(!allowConclude)
             }}

@@ -65,8 +65,8 @@ export function SecondStep({ setRecoverStep, username }: SecondStepProps) {
       className="flex flex-col mt-6"
     >
       <p className="mb-4 text-xs text-green-500">
-        Account found! we sent an email with a hash code to validate a new
-        password
+        Account found! We sent an email with a hash code to validate a new
+        password. Be aware that the hash code is valid for 72 hours.
       </p>
       <Controller
         name="userName"
@@ -76,6 +76,7 @@ export function SecondStep({ setRecoverStep, username }: SecondStepProps) {
           <div className="w-full">
             <common.Input
               onChange={onChange}
+              value={username}
               label="Username to recover your password"
               placeholder="Username"
               id="username"
@@ -142,7 +143,9 @@ export function SecondStep({ setRecoverStep, username }: SecondStepProps) {
             className="w-full md:w-max md:self-end"
             type="button"
             disabled={loading}
-            icon={<ReplyIcon className="w-3 h-3 text-gray-800" />}
+            icon={
+              <ReplyIcon className="w-3 h-3 text-gray-800 dark:text-text-primary" />
+            }
             onClick={() => {
               setRecoverStep(0)
             }}

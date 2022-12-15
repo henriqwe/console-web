@@ -32,6 +32,7 @@ export function Slide({
       slidePanelWidth = 'max-w-[80%]'
       break
   }
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -69,7 +70,7 @@ export function Slide({
                       <div className="flex items-center ml-3 h-7">
                         <button
                           type="button"
-                          className="text-gray-400 bg-white rounded-md dark:text-text-tertiary dark:bg-menu-primary hover:text-text-tertiary dark:hover:text-text-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          className="text-gray-400 bg-white rounded-md dark:text-text-tertiary dark:bg-menu-primary hover:text-text-tertiary dark:hover:text-text-secondary focus:outline-none"
                           onClick={() => setOpen(false)}
                           title="Close"
                         >

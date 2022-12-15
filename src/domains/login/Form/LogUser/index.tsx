@@ -111,23 +111,25 @@ export function LogUser() {
         </Link>
       </div>
 
-
-      <div className='flex justify-between'>
-      <a className=' w-max h-max '  href="https://ycodify.com/">
-        <common.Buttons.Clean iconPosition='left' icon={<ArrowLeftIcon className='w-4 h-4'/>}>Go back</common.Buttons.Clean>  
+      <div className="flex justify-between">
+        <a className=" w-max h-max " href="https://ycodify.com/">
+          <common.Buttons.Clean
+            iconPosition="left"
+            icon={<ArrowLeftIcon className="w-4 h-4 dark:text-text-primary" />}
+          >
+            <p className="dark:text-text-primary">Go back</p>
+          </common.Buttons.Clean>
         </a>
-      <common.Buttons.Ycodify
-        className="w-full md:w-max md:self-end"
-        type="submit"
-        loading={loading}
-        disabled={loading}
-        icon={<ArrowRightIcon className="w-5 h-5 text-white" />}
-      >
-        Login
-      </common.Buttons.Ycodify>
+        <common.Buttons.Ycodify
+          className="w-full md:w-max md:self-end"
+          type="submit"
+          loading={loading}
+          disabled={loading}
+          icon={<ArrowRightIcon className="w-5 h-5 text-white" />}
+        >
+          Login
+        </common.Buttons.Ycodify>
       </div>
-
-
     </form>
   )
 }

@@ -54,7 +54,7 @@ export function AssociateAccount() {
       setLoading(false)
       utils.notification('User created successfully', 'success')
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.notification(err.response.data.message, 'error')
     } finally {
       setLoading(false)
     }

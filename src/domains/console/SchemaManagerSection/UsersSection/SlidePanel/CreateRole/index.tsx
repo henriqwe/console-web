@@ -33,6 +33,7 @@ export function CreateRole() {
     Active: { name: string; value: string }
   }) => {
     setLoading(true)
+
     await utils.api
       .post(
         utils.apiRoutes.createRole,
@@ -61,7 +62,14 @@ export function CreateRole() {
         utils.notification('Operation performed successfully', 'success')
       })
       .catch((err) => {
-        utils.notification(err.message, 'error')
+        if (err.response.status === 417)
+          utils.notification('Role name must be unique', 'error')
+        else
+          utils.notification(
+            `Ops! Something went wrong: ${err.response.data.message}`,
+            'error'
+          )
+        setLoading(false)
       })
   }
 

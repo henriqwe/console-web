@@ -12,7 +12,7 @@ type FormData = {
   comment?: string
   isIndex?: boolean
   nullable?: boolean
-  isUnique?: boolean
+  unique?: boolean
   name?: string
   length?: number
   type?: string
@@ -40,7 +40,7 @@ export function FieldDetail({
     Index: true,
     Comment: true
   })
-  const { fieldSchema, selectedEntity, setReload, reload } =
+  const { fieldSchema, selectedEntity, setReload, reload, columnNames } =
     consoleData.useSchemaManager()
 
   const {
@@ -50,6 +50,24 @@ export function FieldDetail({
   } = useForm({ resolver: yupResolver(fieldSchema) })
 
   async function Save(formData: FormData) {
+    if (formData.name) {
+      if (columnNames.indexOf(formData.name!) > -1) {
+        utils.notification('Column name already exists', 'error')
+        return
+      }
+
+      const validation = new RegExp(/^[A-Za-z ]*$/) // only letters
+      if (!validation.test(formData.name)) {
+        utils.notification('Column name can only contain letters', 'error')
+        return
+      }
+      const validation2 = new RegExp(/\s/g) // no spaces
+      if (validation2.test(formData.name)) {
+        utils.notification('Column name cannot contain spaces', 'error')
+        return
+      }
+    }
+
     try {
       await utils.api.put(
         `${utils.apiRoutes.attribute({
@@ -194,8 +212,8 @@ export function FieldDetail({
           <Controller
             name="Nullable"
             defaultValue={{
-              name: data.isNullable ? 'True' : 'False',
-              value: data.isNullable
+              name: data.nullable ? 'True' : 'False',
+              value: data.nullable
             }}
             control={control}
             render={({ field: { onChange, value } }) => (
@@ -216,14 +234,14 @@ export function FieldDetail({
         </FormField>
         <FormField
           title="Unique"
-          handleSubmit={() => Save({ isUnique: watch('Unique').value })}
+          handleSubmit={() => Save({ unique: watch('Unique').value })}
           setActiveFields={setActiveFields}
         >
           <Controller
             name="Unique"
             defaultValue={{
-              name: data.isUnique ? 'True' : 'False',
-              value: data.isUnique
+              name: data.unique ? 'True' : 'False',
+              value: data.unique
             }}
             control={control}
             render={({ field: { onChange, value } }) => (

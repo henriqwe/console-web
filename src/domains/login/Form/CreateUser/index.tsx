@@ -13,7 +13,6 @@ import { useState } from 'react'
 import { routes } from 'domains/routes'
 import { ArrowRightIcon } from '@heroicons/react/solid'
 import { signIn } from 'next-auth/react'
-import * as yup from 'yup'
 import { usePixel } from 'contexts/PixelContext'
 
 type formDataType = {

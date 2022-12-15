@@ -3,7 +3,7 @@ import * as utils from 'utils'
 import * as common from 'common'
 import * as consoleSection from 'domains/console'
 import { XIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline'
-import { SetStateAction, useState, Dispatch } from 'react'
+import { SetStateAction, useState, Dispatch, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -24,7 +24,8 @@ export function ModifyTab({ loading }: ModifyTabProps) {
     reload,
     setSelectedEntity,
     schemaTables,
-    privateAttributes
+    privateAttributes,
+    setColumnNames
   } = consoleSection.useSchemaManager()
 
   async function RemoveEntity() {
@@ -41,7 +42,6 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           }
         }
       )
-      setReload(!reload)
       setSelectedEntity(undefined)
       utils.notification(
         `Entity ${selectedEntity} deleted successfully`,
@@ -50,9 +50,24 @@ export function ModifyTab({ loading }: ModifyTabProps) {
     } catch (err: any) {
       utils.showError(err)
     } finally {
+      setReload(!reload)
       setSubmitLoading(false)
     }
   }
+
+  useEffect(() => {
+    const columnNames = entityData
+      ?.filter((data) => {
+        const entities = Object.keys(schemaTables!)
+        if (entities.includes(data.type)) {
+          return false
+        }
+        return data.name !== '_conf' && !privateAttributes.includes(data.name)
+      })
+      .map((data) => data.name)
+
+    setColumnNames(columnNames ?? [])
+  }, [schemaTables])
 
   if (loading) {
     return (
@@ -96,7 +111,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
       <common.Separator />
       <div className="flex flex-col gap-6 mt-4">
         <div className="flex flex-col gap-2">
-          <span className="text-gray-600 font-semibold text-lg">
+          <span className="text-gray-600 dark:text-text-primary font-semibold text-lg">
             Ycodify control attributes
           </span>
           {entityData
@@ -114,7 +129,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
             ))}
         </div>
         <div className="flex flex-col gap-2">
-          <span className="text-gray-600 font-semibold text-lg">
+          <span className="text-gray-600 dark:text-text-primary font-semibold text-lg">
             Entity attributes
           </span>
           {entityData
@@ -225,6 +240,7 @@ function AttributeForm({
       setLoading(false)
     }
   }
+
   return (
     <form
       className="grid grid-cols-12 gap-4 px-4 py-5 bg-white border border-gray-300 rounded-lg dark:bg-menu-primary"
@@ -234,13 +250,17 @@ function AttributeForm({
         name={'ColumnName'}
         control={control}
         render={({ field: { onChange, value } }) => (
-          <div className="col-span-3">
+          <div className="col-span-3 w-full flex flex-col gap-y-2">
             <common.Input
               placeholder="Column name"
               value={value}
               onChange={onChange}
-              errors={errors.ColumnName}
             />
+            {errors.ColumnName && (
+              <p className="text-sm text-red-500">
+                {errors.ColumnName.message}
+              </p>
+            )}
           </div>
         )}
       />
@@ -249,7 +269,7 @@ function AttributeForm({
         name={'Type'}
         control={control}
         render={({ field: { onChange, value } }) => (
-          <div className="col-span-2">
+          <div className="col-span-2 w-full flex flex-col gap-y-2">
             <common.Select
               options={[
                 { name: 'String', value: 'String' },
@@ -264,6 +284,9 @@ function AttributeForm({
               onChange={onChange}
               placeholder="Type"
             />
+            {errors.Type && (
+              <p className="text-sm text-red-500">{errors.Type.message}</p>
+            )}
           </div>
         )}
       />

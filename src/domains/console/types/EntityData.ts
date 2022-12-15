@@ -3,8 +3,8 @@ export type EntityData = {
   comment: string
   createdAt: number
   isIndex: boolean
-  isNullable: boolean
-  isUnique: boolean
+  nullable: boolean
+  unique: boolean
   length: number
   type: string
 }

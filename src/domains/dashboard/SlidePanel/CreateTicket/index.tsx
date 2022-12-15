@@ -162,11 +162,11 @@ export function CreateTicket() {
           render={({ field: { onChange, value } }) => (
             <div className="col-span-2">
               <common.Select
-                placeholder="Select a Ticket Category..."
+                placeholder="Select a support Category..."
                 label="Category"
                 options={[
-                  { name: 'Financeiro', value: 'Financeiro' },
-                  { name: 'Técnico', value: 'Técnico' }
+                  { name: 'Financial', value: 'Financial' },
+                  { name: 'Technical', value: 'Thecnical' }
                 ]}
                 value={value}
                 onChange={onChange}

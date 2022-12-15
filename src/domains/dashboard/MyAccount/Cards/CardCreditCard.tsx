@@ -31,8 +31,8 @@ export function CardCreditCard(card: CardCreditCardProps) {
     <div className="flex flex-col border-2 w-52 h-52">
       <div className="flex flex-col p-4 w-full h-full justify-between">
         <div className="flex justify-between">
-          <div className=" flex justify-center items-center">
-            <span className="">
+          <div className="flex justify-center items-center">
+            <span className="dark:text-text-primary">
               **********
               {card.last_four_digits}
             </span>
@@ -47,20 +47,20 @@ export function CardCreditCard(card: CardCreditCardProps) {
         </div>
 
         <div className=" flex justify-between items-center ">
-          <div className="flex flex-col">
+          <div className="flex flex-col dark:text-text-primary">
             <span className="text-tiny font-light">Created at</span>
             <span className="text-xs">
               {new Date(card.created_at).toLocaleDateString()}
             </span>
           </div>
-          <div className="flex flex-col">
-            <span className="text-tiny font-light">Expiry</span>
+          <div className="flex flex-col dark:text-text-primary">
+            <span className="text-tiny font-light">Expiration date</span>
             <span className="text-xs">
               {card.exp_month}/{card.exp_year.toString().slice(2, 4)}
             </span>
           </div>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col dark:text-text-primary">
           <span className="text-tiny font-light">Holder</span>
           <span className="truncate" title={card.holder_name}>
             {card.holder_name}
@@ -73,7 +73,7 @@ export function CardCreditCard(card: CardCreditCardProps) {
             <StarIcon className={`w-5 h-5 text-yellow-500 fill-yellow-300`} />
           ) : (
             <div className="dark:text-text-primary text-slate-900 hover:cursor-pointer">
-              Set principal
+              Set default
             </div>
           )}
         </div>

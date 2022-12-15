@@ -22,7 +22,7 @@ export function Dropdown({
   darkBackground
 }: DropdownProps) {
   return (
-    <Menu as="div" className="relative inline-block text-left w-full ">
+    <Menu as="div" className="relative inline-block text-left w-full">
       <div className="w-full ">
         <Menu.Button
           className={`flex w-full items-center rounded-md  focus:outline-none  font-medium ${
@@ -51,7 +51,7 @@ export function Dropdown({
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items
-          className={`flex flex-col absolute w-full my-1 origin-top-right  rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
+          className={`flex w-max flex-col absolute justify-center my-1 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
             darkBackground
               ? 'bg-menu-primary'
               : 'dark:bg-menu-primary bg-white '
@@ -64,16 +64,11 @@ export function Dropdown({
                   className={`${index === 0 ? 'rounded-t-md' : ''} 
                   ${index === actions.length - 1 ? 'rounded-b-md' : ''}
                   ${
-                    active && !darkBackground
-                      ? `bg-gray-100 dark:bg-menu-secondary text-gray-900 dark:text-text-primary`
+                    active
+                      ? 'text-gray-900 dark:text-text-primary'
                       : 'text-gray-700 dark:text-text-secondary'
                   }
-                  ${
-                    active && darkBackground
-                      ? 'bg-menu-secondary text-text-primary'
-                      : 'text-text-secondary'
-                  }
-                  block px-4 py-2 text-sm cursor-pointer`}
+                  block px-4 py-2 text-sm cursor-pointer text-center `}
                   onClick={action.onClick}
                   title={action.title}
                 >

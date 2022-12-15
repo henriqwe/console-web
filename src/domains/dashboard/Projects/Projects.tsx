@@ -195,17 +195,10 @@ export function Project({
   schema: Schemas
   onConfigClick: (schema: Schemas) => void
 }) {
-  const [showCopyText, setShowCopyText] = useState(false)
   const router = useRouter()
   return (
     <div className="flex flex-col gap-y-3">
-      <div className="flex items-center gap-x-3">
-        <p className="text-2xl dark:text-text-primary">{schema.name}</p>
-        <span className="h-full border-r border-r-gray-300 dark:border-r-gray-600" />
-        <p className="text-xs text-gray-600 dark:text-text-tertiary">
-          Standard
-        </p>
-      </div>
+      <p className="text-2xl dark:text-text-primary">{schema.name}</p>
       <common.Card
         className="flex p-6 bg-white border shadow-sm dark:bg-menu-primary dark:border-gray-700"
         key={schema.createdat}
@@ -223,16 +216,10 @@ export function Project({
               <CopyToClipboard
                 text="Copy to clipboard"
                 onCopy={() => {
-                  setShowCopyText(true)
-                  setTimeout(() => {
-                    setShowCopyText(false)
-                  }, 800)
+                  utils.notification('Copied to clipboard', 'success')
                 }}
               >
                 <div>
-                  {showCopyText && (
-                    <span className="absolute right-0 bottom-5">Copied!</span>
-                  )}
                   <DocumentDuplicateIcon
                     className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
                     onClick={() =>

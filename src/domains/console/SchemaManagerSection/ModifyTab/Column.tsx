@@ -29,12 +29,12 @@ export function Column({
       ) : (
         <div className="ml-1 w-1 h-1 rounded-full bg-slate-700" />
       )}
-      <p className="font-semibold">
+      <p className="font-semibold dark:text-text-secondary">
         {data.name} -{' '}
-        <span className="font-normal text-gray-700 dark:text-gray-400">
+        <span className="font-normal text-gray-700 dark:text-text-tertiary">
           {data.type}
-          {data.isNullable ? ', Nullable' : ''}
-          {data.isUnique ? ', Unique' : ''}
+          {data.nullable ? ', Nullable' : ''}
+          {data.unique ? ', Unique' : ''}
           {data.isIndex ? ', Index' : ''}
         </span>
       </p>
