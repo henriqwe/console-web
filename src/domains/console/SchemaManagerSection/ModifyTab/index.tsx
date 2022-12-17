@@ -114,6 +114,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
           <span className="text-gray-600 dark:text-text-primary font-semibold text-lg">
             Ycodify control attributes
           </span>
+          <Column key={'id'} data={idColumnData} noEdit />
           {entityData
             ?.filter((data) => {
               const entities = Object.keys(schemaTables!)
@@ -358,4 +359,15 @@ function AttributeForm({
       </div>
     </form>
   )
+}
+
+const idColumnData = {
+  name: 'id',
+  comment: 'metadata controller by YCodify platform',
+  nullable: false,
+  unique: true,
+  isIndex: false,
+  length: 0,
+  createdAt: 0,
+  type: 'Integer'
 }
