@@ -45,7 +45,21 @@ export function DataApiTab() {
         _schemaEntities.push({ name: entity, data: response?.data[entity] })
       }
 
-      setSchemaEntities(_schemaEntities)
+      setSchemaEntities(
+        _schemaEntities.map((entity) => ({
+          name: entity.name,
+          data: {
+            id: {
+              createdat: 0,
+              nullable: false,
+              type: 'Integer',
+              unique: true,
+              comment: 'metadata controlled by YCodify platform'
+            },
+            ...entity.data
+          }
+        }))
+      )
     } catch (err: any) {
       if (err?.response?.status !== 404) {
         utils.showError(err)
