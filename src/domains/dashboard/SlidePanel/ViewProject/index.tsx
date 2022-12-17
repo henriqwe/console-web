@@ -85,7 +85,7 @@ export function ViewSchema() {
         'success'
       )
     } catch (err: any) {
-      utils.notification(err.message, 'error')
+      utils.notification(err.response.data.message, 'error')
     } finally {
       setSubmitLoading(false)
     }
