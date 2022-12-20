@@ -231,15 +231,15 @@ describe('EditableTable', () => {
 
     expect(inputValue).toBeDisabled()
     expect(inputValue.parentElement).toHaveClass(
-      'bg-gray-100 dark:bg-darkmode-800'
+      'bg-gray-100 dark:bg-menu-secondary'
     )
     expect(passwordValue).toBeDisabled()
     expect(passwordValue.parentElement).toHaveClass(
-      'bg-gray-100 dark:bg-darkmode-800'
+      'bg-gray-100 dark:bg-menu-secondary'
     )
     expect(checkBoxValue).toBeDisabled()
     expect(checkBoxValue.parentElement).toHaveClass(
-      'bg-gray-100 dark:bg-darkmode-800'
+      'bg-gray-100 dark:bg-menu-secondary'
     )
   })
 })

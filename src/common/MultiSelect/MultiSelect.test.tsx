@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { MultiSelect } from '.'
 import '@testing-library/jest-dom'
 
@@ -126,18 +126,28 @@ describe('MultiSelect', () => {
     expect(errorMessage).toBeInTheDocument()
   })
 
-  it('should handle the selected value', () => {
-    let item: { name: string; value: string }[] = []
-    render(
-      <MultiSelect
-        edit={true}
-        options={[{ name: 'test1', value: 'test1' }]}
-        value={[{ name: 'test1', value: 'test1' }]}
-        onChange={(value) => (item = value)}
-        errors={{ message: 'Please select option' }}
-      />
-    )
+  it('should handle the selected value', async () => {
+    const onChange = jest.fn()
+    act(() => {
+      render(
+        <MultiSelect
+          edit={true}
+          options={[
+            { name: 'test1', value: 'test1' },
+            { name: 'test2', value: 'test2' }
+          ]}
+          value={[{ name: 'test1', value: 'test1' }]}
+          onChange={onChange}
+          errors={{ message: 'Please select option' }}
+        />
+      )
+    })
 
-    expect(item.length).toBe(1)
+    await sleep(3000)
+    expect(onChange).toBeCalled()
   })
 })
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
