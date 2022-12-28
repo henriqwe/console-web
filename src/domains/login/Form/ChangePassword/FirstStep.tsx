@@ -1,7 +1,7 @@
 import { ArrowRightIcon, ReplyIcon } from '@heroicons/react/solid'
 import * as common from 'common'
 import * as utils from 'utils'
-import * as login from 'domains/login'
+import * as yup from 'yup'
 import { routes } from 'domains/routes'
 import { useRouter } from 'next/router'
 import { Dispatch, SetStateAction, useState } from 'react'
@@ -21,21 +21,25 @@ type FirstStepProps = {
 export function FirstStep({ setRecoverStep, setUsername }: FirstStepProps) {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const { changePasswordSchema } = login.useLogin()
+
   const {
     formState: { errors },
     handleSubmit,
     control
-  } = useForm({ resolver: yupResolver(changePasswordSchema(0)) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        userName: yup.string().required('Username is required')
+      })
+    )
+  })
 
   async function Submit(formData: { userName: string }) {
     setLoading(true)
     try {
-      await utils.api
-        .get(utils.apiRoutes.getUserHash({ username: formData.userName }))
-        .then((res) => {
-          console.log('res', res)
-        })
+      const res = await utils.api.get(
+        utils.apiRoutes.getUserHash({ username: formData.userName })
+      )
 
       setRecoverStep(1)
       utils.notification('User found! check your email account', 'success')
@@ -65,11 +69,9 @@ export function FirstStep({ setRecoverStep, setUsername }: FirstStepProps) {
               id="username"
               name="username"
               type="text"
+              errors={errors}
               autoComplete="username"
             />
-            {errors.userName && (
-              <p className="text-sm text-red-500">{errors.userName.message}</p>
-            )}
           </div>
         )}
       />

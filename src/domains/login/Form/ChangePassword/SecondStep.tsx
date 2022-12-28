@@ -2,6 +2,7 @@ import { ArrowRightIcon, ReplyIcon } from '@heroicons/react/solid'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as login from 'domains/login'
+import * as yup from 'yup'
 import { routes } from 'domains/routes'
 import { useRouter } from 'next/router'
 import { Dispatch, SetStateAction, useState } from 'react'
@@ -22,12 +23,22 @@ type SecondStepProps = {
 export function SecondStep({ setRecoverStep, username }: SecondStepProps) {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const { changePasswordSchema } = login.useLogin()
   const {
     formState: { errors },
     handleSubmit,
     control
-  } = useForm({ resolver: yupResolver(changePasswordSchema(1)) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        userName: yup.string().required('Username is required'),
+        password: yup
+          .string()
+          .required('Password is required')
+          .min(6, 'Password must be at least 6 characters'),
+        recoverHash: yup.string().required('Recover Hash is required')
+      })
+    )
+  })
 
   async function ValidateHash(formData: {
     userName: string
@@ -84,10 +95,8 @@ export function SecondStep({ setRecoverStep, username }: SecondStepProps) {
               type="text"
               disabled
               autoComplete="username"
+              errors={errors.userName}
             />
-            {errors.userName && (
-              <p className="text-sm text-red-500">{errors.userName.message}</p>
-            )}
           </div>
         )}
       />
@@ -105,12 +114,8 @@ export function SecondStep({ setRecoverStep, username }: SecondStepProps) {
                 name="password"
                 type="password"
                 autoComplete="current-password"
+                errors={errors.password}
               />
-              {errors.password && (
-                <p className="text-sm text-red-500">
-                  {errors.password.message}
-                </p>
-              )}
             </div>
           )}
         />
@@ -128,12 +133,8 @@ export function SecondStep({ setRecoverStep, username }: SecondStepProps) {
                 name="recoverHash"
                 type="text"
                 autoComplete="recoverHash"
+                errors={errors.recoverHash}
               />
-              {errors.recoverHash && (
-                <p className="text-sm text-red-500">
-                  {errors.recoverHash.message}
-                </p>
-              )}
             </div>
           )}
         />

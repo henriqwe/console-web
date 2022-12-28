@@ -50,7 +50,7 @@ jest.mock('next/router', () => ({
   }
 }))
 
-describe('BetaTag', () => {
+describe('LogUser', () => {
   afterEach(() => {
     toastCalls = []
   })
