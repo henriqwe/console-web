@@ -91,9 +91,10 @@ export const DataProvider = ({ children }: ProviderProps) => {
         ? yup.string().nullable()
         : yup
             .string()
-            .min(3, 'Project name must be at least 3 characters')
-            .matches(/^[A-Za-z ]*$/, 'Project name must be only letters')
             .required('Project name is a required field')
+            .min(3, 'Project name must be at least 3 characters')
+            .matches(/^[a-z ]*$/, 'Project name must be only lowercase letters')
+            .lowercase('Project name must be lowercase')
             .test(
               'space',
               'Project name should not contain spaces',
