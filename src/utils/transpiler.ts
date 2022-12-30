@@ -210,6 +210,15 @@ export const ycl_transpiler = {
 
     ycl_transpiler.refs = {}
 
+    entity_names.forEach((entity_name) => {
+      if (!ycl_transpiler.is_alpha(entity_name))
+        throw new Error(
+          "error: model inconsistency. entity name '" +
+            entity_name +
+            "' contains invalid characters."
+        )
+    })
+
     while (index < tokens.length) {
       if (from == 0 && tokens[index].symbol == 'schema') {
         {
@@ -236,7 +245,8 @@ export const ycl_transpiler = {
         }
         if (
           !ycl_transpiler.ycl_reserved_word_contains(schema.name) &&
-          ycl_transpiler.check_schema_object_name(schema.name)
+          ycl_transpiler.check_schema_object_name(schema.name) &&
+          ycl_transpiler.is_alpha(schema.name)
         ) {
           /*
            * reconhecer a declaração de schema
