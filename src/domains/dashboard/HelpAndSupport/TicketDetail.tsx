@@ -113,7 +113,7 @@ export function TicketDetail({ user }: TicketDetail) {
 
       const data = await result.json()
       setMessages(
-        data?.[0]?.ticketsmessages?.map((ticket) => ({
+        data?.[0]?.ticketsmessages?.map((ticket: any) => ({
           ...ticket,
           name: ticket?.createdbyuser ? user?.username : 'Ycodify'
         })) ?? []
@@ -159,6 +159,7 @@ export function TicketDetail({ user }: TicketDetail) {
             <common.Textarea
               placeholder="Enter a new message here..."
               label="New message"
+              id="textAreaNewMessage"
               value={value}
               onChange={onChange}
               errors={errors.Content}

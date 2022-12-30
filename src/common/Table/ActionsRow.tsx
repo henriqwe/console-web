@@ -37,7 +37,7 @@ export function ActionsRow({ actions }: ActionsRowProps) {
               }
               item.handler()
             }}
-            data-testid="button"
+            data-testid={`button-${item.title}`}
           >
             {item.icon}
           </span>

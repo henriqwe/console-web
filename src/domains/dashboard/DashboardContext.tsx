@@ -51,7 +51,7 @@ type Schemas = {
   tenantId: string
 }
 
-type Tickets = {
+export type Tickets = {
   logversion: number
   id: number
   project: string
