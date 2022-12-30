@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { FirstStep } from './FirstStep'
+import { SecondStep } from './SecondStep'
+import * as utils from 'utils'
 import '@testing-library/jest-dom'
 
 let toastCalls: string[] = []
@@ -27,40 +28,43 @@ let requestedRoute = ''
 jest.mock('utils/api', () => {
   return {
     ...jest.requireActual('utils/api'),
-    localApi: {
+    api: {
       post: (
         url: string,
         data: {
-          name: string
-          username: string
+          userName: string
+          passwordRecoveryHash: string
           password: string
-          email: string
-        }
-      ) => {
-        if (url === '/pagarme/customers/create') {
-          return { data: '123' }
-        }
-        if (url === '/getUserToken') {
-          return { data: '123' }
-        }
-      }
-    },
-    api: {
-      get: (
-        url: string,
-        data: {
-          name: string
-          username: string
-          password: string
-          email: string
         }
       ) => {
         requestedRoute = url
-        return 'response'
+        if (data.passwordRecoveryHash !== 'aaa') {
+          throw new Error('test')
+        }
+        if (url === 'v0/id/account/change-password') {
+          return { data: '123' }
+        }
+        
       }
     }
   }
 })
+
+jest.mock('next-auth/react', () => ({
+  signIn: async (
+    credentials: string,
+    data: {
+      username: string
+      password: string
+      redirect: boolean
+    }
+  ) => {
+    return {
+      ok: true,
+      status: 200
+    }
+  }
+}))
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
@@ -68,78 +72,74 @@ global.fetch = jest.fn(() =>
   })
 ) as jest.Mock
 
-describe('FirstStep', () => {
+describe('SecondStep', () => {
   afterEach(() => {
     toastCalls = []
   })
-  it('should render FirstStep component', () => {
+  it('should render SecondStep component', () => {
     const { container } = render(
-      <FirstStep setRecoverStep={jest.fn()} setUsername={jest.fn()} />
+      <SecondStep setRecoverStep={jest.fn()} username="" />
     )
     expect(container.firstChild).toBeInTheDocument()
   })
 
-  it('should go back to login page', async () => {
-    render(
-      <FirstStep
-        setRecoverStep={jest.fn()}
-        setUsername={jest.fn()}
-      />
-    )
+  it('should go back to the previous step', async () => {
+    let step = 1
+    render(<SecondStep setRecoverStep={jest.fn(() => {
+      step = 0
+    })} username="" />)
 
     const goBackButton = screen.getByText('Go back')
 
     fireEvent.click(goBackButton)
 
     await waitFor(() => {
-      expect(pushedRouter).toBe('/login')
+      expect(step).toBe(0)
     })
   })
 
   it('should break the submit function', async () => {
-    render(
-      <FirstStep
-        setRecoverStep={jest.fn(() => {
-          throw new Error('test')
-        })}
-        setUsername={jest.fn()}
-      />
-    )
+    render(<SecondStep setRecoverStep={jest.fn()} username="" />)
 
-    const registerButton = screen.getByText('Confirm')
+    const validateButton = screen.getByText('Validate')
 
     const usernameInput = screen.getByPlaceholderText('Username')
+    const passwordInput = screen.getByPlaceholderText('Password')
+    const recoverHashInput = screen.getByPlaceholderText('Recover hash')
 
     fireEvent.change(usernameInput, { target: { value: 'Aleatorio da silva' } })
+    fireEvent.change(passwordInput, { target: { value: '123456' } })
+    fireEvent.change(recoverHashInput, {
+      target: { value: 'Aleatorio da silva' }
+    })
 
-    fireEvent.click(registerButton)
+    fireEvent.click(validateButton)
 
     await waitFor(() => {
-      expect(requestedRoute).toBe(
-        'v0/id/account/recovery-password/Aleatorio da silva'
-      )
       expect(toastCalls.includes('test')).toBe(true)
     })
   })
 
   it('should handle the submit function', async () => {
-    render(<FirstStep setRecoverStep={jest.fn()} setUsername={jest.fn()} />)
+    render(<SecondStep setRecoverStep={jest.fn()} username="" />)
 
-    const registerButton = screen.getByText('Confirm')
+    const validateButton = screen.getByText('Validate')
 
     const usernameInput = screen.getByPlaceholderText('Username')
+    const passwordInput = screen.getByPlaceholderText('Password')
+    const recoverHashInput = screen.getByPlaceholderText('Recover hash')
 
     fireEvent.change(usernameInput, { target: { value: 'Aleatorio da silva' } })
+    fireEvent.change(passwordInput, { target: { value: '123456' } })
+    fireEvent.change(recoverHashInput, {
+      target: { value: 'aaa' }
+    })
 
-    fireEvent.click(registerButton)
+    fireEvent.click(validateButton)
 
     await waitFor(() => {
-      expect(requestedRoute).toBe(
-        'v0/id/account/recovery-password/Aleatorio da silva'
-      )
-      expect(toastCalls.includes('User found! check your email account')).toBe(
-        true
-      )
+      expect(requestedRoute).toBe('v0/id/account/change-password')
+      expect(toastCalls.includes('Password changed successfully')).toBe(true)
     })
   })
 })

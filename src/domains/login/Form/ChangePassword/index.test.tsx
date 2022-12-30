@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
+import React, { useState as useStateMock } from 'react'
+import { render } from '@testing-library/react'
 import { ChangePassword } from '.'
 import '@testing-library/jest-dom'
 
@@ -102,6 +103,11 @@ jest.mock('contexts/PixelContext', () => ({
   })
 }))
 
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
+  useState: jest.fn(),
+}))
+
 global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () => Promise.resolve({ test: 100 })
@@ -109,14 +115,25 @@ global.fetch = jest.fn(() =>
 ) as jest.Mock
 
 describe('ChangePassword', () => {
+  const setState = jest.fn()
+
+  beforeEach(() => {
+    useStateMock.mockImplementation(init => [init, setState])
+  })
+
   afterEach(() => {
     toastCalls = []
   })
-  it('should render ChangePassword component', () => {
+  it('should render ChangePassword component at the first step', () => {
     const { container } = render(<ChangePassword />)
     expect(container.firstChild).toBeInTheDocument()
   })
 
+  it('should render ChangePassword component at the second step', () => {
+    setState(1)
+    const { container } = render(<ChangePassword />)
+    expect(container.firstChild).toBeInTheDocument()
+  })
 })
 
 // "jsonwebtoken": "^8.5.1",
