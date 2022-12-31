@@ -1,5 +1,4 @@
-import React, { useState as useStateMock } from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { ChangePassword } from '.'
 import '@testing-library/jest-dom'
 
@@ -15,35 +14,6 @@ jest.mock('react-toastify', () => ({
   }
 }))
 
-jest.mock('next-auth/react', () => ({
-  signIn: async (
-    credentials: string,
-    data: {
-      username: string
-      password: string
-      redirect: boolean
-    }
-  ) => {
-    if (data.username === 'break') {
-      throw { response: { status: 417, message: 'Break' } }
-    }
-    if (data.username === 'breakUnknown') {
-      throw new Error('break')
-    }
-    if (data.username === 'Aleatorio') {
-      return {
-        ok: false,
-        status: 200
-      }
-    }
-
-    return {
-      ok: true,
-      status: 200
-    }
-  }
-}))
-
 let pushedRouter = ''
 jest.mock('next/router', () => ({
   useRouter: () => ({
@@ -53,6 +23,7 @@ jest.mock('next/router', () => ({
   })
 }))
 
+let requestedRoute = ''
 jest.mock('utils/api', () => {
   return {
     ...jest.requireActual('utils/api'),
@@ -75,7 +46,7 @@ jest.mock('utils/api', () => {
       }
     },
     api: {
-      post: (
+      get: (
         url: string,
         data: {
           name: string
@@ -84,29 +55,12 @@ jest.mock('utils/api', () => {
           email: string
         }
       ) => {
-        if (url === '/pagarme/customers/create') {
-          return { data: '123' }
-        }
-        if (url === '/getUserToken') {
-          return { data: '123' }
-        }
+        requestedRoute = url
+        return 'response'
       }
     }
   }
 })
-
-jest.mock('contexts/PixelContext', () => ({
-  usePixel: () => ({
-    pixel: {
-      track: () => null
-    }
-  })
-}))
-
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useState: jest.fn(),
-}))
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
@@ -115,24 +69,29 @@ global.fetch = jest.fn(() =>
 ) as jest.Mock
 
 describe('ChangePassword', () => {
-  const setState = jest.fn()
-
-  beforeEach(() => {
-    useStateMock.mockImplementation(init => [init, setState])
-  })
-
   afterEach(() => {
     toastCalls = []
   })
+
   it('should render ChangePassword component at the first step', () => {
     const { container } = render(<ChangePassword />)
     expect(container.firstChild).toBeInTheDocument()
   })
 
-  it('should render ChangePassword component at the second step', () => {
-    setState(1)
-    const { container } = render(<ChangePassword />)
-    expect(container.firstChild).toBeInTheDocument()
+  it('should render ChangePassword component at the second step', async () => {
+    render(<ChangePassword />)
+
+    const registerButton = screen.getByText('Confirm')
+
+    const usernameInput = screen.getByPlaceholderText('Username')
+
+    fireEvent.change(usernameInput, { target: { value: 'Aleatorio da silva' } })
+
+    fireEvent.click(registerButton)
+
+    await waitFor(() => {
+      expect(screen.getByText('Validate')).toBeInTheDocument()
+    })
   })
 })
 
