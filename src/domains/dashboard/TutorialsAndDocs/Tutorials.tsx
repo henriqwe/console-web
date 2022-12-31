@@ -104,7 +104,7 @@ export function Tutorials() {
         content: (
           <ul className="space-y-2 border-l-2 border-slate-100 dark:border-slate-700/80 lg:mt-4 lg:space-y-4 lg:border-slate-200">
             {topic.subtopics.map((subtopic) => (
-              <li className="relative">
+              <li className="relative" key={subtopic.title}>
                 <button
                   className={`flex w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full
                   ${
@@ -127,7 +127,7 @@ export function Tutorials() {
   }
 
   return (
-    <section className="grid grid-cols-4 gap-x-6 pr-6 py-10">
+    <section className="grid grid-cols-4 py-10 pr-6 gap-x-6">
       <div className="col-span-1">
         <Common.AccordionGroup
           style="docs"
@@ -153,7 +153,7 @@ export function Tutorials() {
                     <p className="text-3xl dark:text-text-primary">
                       {subtopic.title}
                     </p>
-                    <div className="dark:text-text-primary font-light">
+                    <div className="font-light dark:text-text-primary">
                       {subtopic.content}
                     </div>
                   </div>

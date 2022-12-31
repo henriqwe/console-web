@@ -14,7 +14,7 @@ const customJestConfig = {
   testPathIgnorePatterns: ['<rootDir>/src/common'],
   moduleDirectories: ['node_modules', '<rootDir>/src'],
   collectCoverage: true,
-  collectCoverageFrom: ['./src/domains/login/**/*.tsx','!./src/**/*.stories.tsx'],
+  collectCoverageFrom: ['./src/domains/dashboard/**/*.tsx','!./src/**/*.stories.tsx'],
   testEnvironment: 'jest-environment-jsdom',
 }
 
