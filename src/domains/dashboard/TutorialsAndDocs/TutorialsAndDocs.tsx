@@ -1,5 +1,4 @@
 import * as common from 'common'
-import { Tutorials } from './Tutorials'
 import { Docs } from './Docs'
 import { useState } from 'react'
 
@@ -26,7 +25,8 @@ export function TutorialsAndDocs() {
               ]}
             />
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-              {selectedTab.name === 'Tutorials' ? 'Tutorials' : 'Docs'}
+              {/* {selectedTab.name === 'Tutorials' ? 'Tutorials' : 'Docs'} */}
+              Docs
             </h1>
           </div>
           <div className="w-full sm:w-48 rounded-t-lg overflow-hidden self-end dark:border-gray-700 sm:border sm:border-b-0 -mb-[1px] z-10 h-20">
@@ -40,11 +40,12 @@ export function TutorialsAndDocs() {
           </div>
         </div>
         <div className="flex flex-col gap-y-8 sm:gap-y-0">
-          <section className="flex dark:bg-menu-primary dark:border-gray-700 sm:border bg-white overflow-hidden rounded-lg rounded-tr-none">
+          <section className="flex overflow-hidden bg-white rounded-lg rounded-tr-none dark:bg-menu-primary dark:border-gray-700 sm:border">
             <div className="flex flex-col w-full">
-              {selectedTab.name === 'Tutorials' ? /* <Tutorials /> */ null : (
-                <Docs />
-              )}
+              {/*selectedTab.name === 'Tutorials' ? <Tutorials />  null : (*/}
+
+              <Docs />
+              {/* )} */}
             </div>
           </section>
         </div>

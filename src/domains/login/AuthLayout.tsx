@@ -1,11 +1,8 @@
 import { ToggleTheme } from 'common'
 import * as ThemeContext from 'contexts/ThemeContext'
 import { useEffect, useState } from 'react'
-import * as login from 'domains/login'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import * as Buttons from 'common/Button' 
-import { ArrowLeftIcon } from '@heroicons/react/solid'
 const backgroundImage = '/assets/images/bg-green-2-darker.jpg'
 
 type AuthLayoutProps = {
@@ -13,7 +10,6 @@ type AuthLayoutProps = {
 }
 
 export function AuthLayout({ children }: AuthLayoutProps) {
-  const { formType, setFormType } = login.useLogin()
   const { isDark } = ThemeContext.useTheme()
   const [logoImgSrc, setLogoImgSrc] = useState<string>('')
   const router = useRouter()
@@ -36,6 +32,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
                 
                   <img
                     src={logoImgSrc}
+                    data-testid="Logo"
                     alt="Logo"
                     className="self-start object-contain h-10"
                   />

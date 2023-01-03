@@ -3,13 +3,10 @@ import { ReactNode, useState } from 'react'
 import {
   LogoutIcon,
   InformationCircleIcon,
-  CashIcon,
   HomeIcon,
   BookOpenIcon,
   MenuIcon,
-  UserIcon,
   UserCircleIcon,
-  UserGroupIcon,
   PlusIcon
 } from '@heroicons/react/outline'
 import { removeCookie } from 'utils'
@@ -93,14 +90,14 @@ export function Template({ children }: TemplateProps) {
   return (
     <div>
       {/* Static sidebar for desktop */}
-      <div className="dashboard-step-1 z-20 hidden bg-bg-navigation md:flex md:w-96 md:flex-col md:fixed md:inset-y-0">
+      <div className="z-20 hidden dashboard-step-1 bg-bg-navigation md:flex md:w-96 md:flex-col md:fixed md:inset-y-0">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex flex-col flex-1 min-h-0 border-r border-r-gray-700">
           <div className="flex flex-col flex-1 pt-5 pb-4 mx-4 overflow-y-auto">
             <div className="flex items-center justify-between flex-shrink-0 px-4 my-10">
               <div className="flex w-max gap-x-4">
                 <img
-                  className="h-6 w-auto"
+                  className="w-auto h-6"
                   src="/assets/images/logoTextLight.png"
                   alt="Workflow"
                 />
@@ -111,7 +108,7 @@ export function Template({ children }: TemplateProps) {
                 <ToggleTheme changeColor={false} />
               </div>
             </div>
-            <div className="flex gap-2 items-center w-full px-4">
+            <div className="flex items-center w-full gap-2 px-4">
               <common.Dropdown
                 actions={dropdownActions.filter(
                   (option) => option?.title !== selectedOrganization.name
@@ -124,16 +121,16 @@ export function Template({ children }: TemplateProps) {
                 <UserCircleIcon
                   className={`flex-shrink-0 -ml-1 stroke-1 h-14 w-14 text-text-primary`}
                 />
-                <div className="flex flex-col -space-y-1 space-x-2 w-full">
+                <div className="flex flex-col w-full space-x-2 -space-y-1">
                   <div
-                    className="flex text-text-secondary items-center px-2 text-lg "
+                    className="flex items-center px-2 text-lg text-text-secondary "
                     title="Username"
                   >
                     <span className="text-xl">{user?.userData?.username}</span>
                   </div>
 
-                  <div className="flex w-full gap-2 items-center">
-                    <span className="truncate text-xs">
+                  <div className="flex items-center w-full gap-2">
+                    <span className="text-xs truncate">
                       {selectedOrganization.name}
                     </span>
                     <span className="text-[.7rem] px-2 py-1  rounded-full border border-yc text-text-primary">
@@ -203,13 +200,14 @@ export function Template({ children }: TemplateProps) {
                   : 'text-text-secondary hover:text-text-primary'
               }`}
               onClick={() => setSidebarOpen(!sidebarOpen)}
+              title="open sidebar"
             >
               <span className="sr-only">Open sidebar</span>
               <MenuIcon className="w-7 h-7" aria-hidden="true" />
             </button>
             <div className="flex gap-x-4">
               <img
-                className="h-6 w-auto"
+                className="w-auto h-6"
                 src="/assets/images/logomarkTextLight.png"
                 alt="Workflow"
               />
@@ -234,6 +232,7 @@ export function Template({ children }: TemplateProps) {
                           ? 'bg-menuItem-ativoEscuro text-text-primary'
                           : 'text-text-tertiary hover:bg-gray-700 hover:text-text-primary'
                       }`}
+                      data-testid={item.name}
                     >
                       <item.icon
                         className={`mr-4 flex-shrink-0 h-6 w-6 ${
@@ -255,6 +254,7 @@ export function Template({ children }: TemplateProps) {
                     removeCookie('access_token')
                     signOut()
                   }}
+                  data-testid="sidebarLogout"
                 >
                   <LogoutIcon
                     className={`mr-3 text-xs flex-shrink-0 h-6 w-6 text-text-secondary group-hover:text-text-secondary`}
