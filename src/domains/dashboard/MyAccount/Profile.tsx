@@ -11,7 +11,7 @@ import {
   useForm
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import Error from 'next/error'
+import { changePassword } from './services'
 
 type formDataType = {
   oldPassword: string
@@ -25,40 +25,32 @@ export function Profile() {
   const {
     formState: { errors },
     handleSubmit,
-    control
+    control,
+    reset
   } = useForm({ resolver: yupResolver(passwordSchema) })
 
   const [loading, setLoading] = useState(false)
 
-  function Submit(formData: formDataType) {
+  async function Submit(formData: formDataType) {
     setLoading(true)
 
-    utils.api
-      .post(
-        utils.apiRoutes.changePassword,
-        {
-          username,
-          password: formData.password,
-          oldPassword: formData.oldPassword
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          utils.notification('Password changed successfully!', 'success')
-        } else {
-          console.log('res', res)
-          utils.notification(res.data.message, 'error')
-        }
+    try {
+      const res = await changePassword({
+        username,
+        password: formData.password,
+        oldPassword: formData.oldPassword
       })
-      .finally(() => setLoading(false))
-      .catch((err) => {
-        utils.notification(err.response.data.message, 'error')
-      })
+      if (res.status === 200) {
+        utils.notification('Password changed successfully!', 'success')
+        reset()
+        return
+      }
+      utils.notification(res.data.message, 'error')
+    } catch (err: any) {
+      utils.notification(err.response.data.message, 'error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -89,60 +81,51 @@ export function Profile() {
             <Controller
               name="oldPassword"
               control={control}
-              render={({ field: { onChange } }) => (
+              render={({ field: { value, onChange } }) => (
                 <div className="w-full flex flex-col gap-y-2">
                   <Common.Input
                     onChange={onChange}
+                    value={value}
                     placeholder="Old Password"
                     label="Old Password"
                     name="oldPassword"
                     type="password"
+                    errors={errors.oldPassword}
                   />
-                  {errors.oldPassword && (
-                    <p className="text-sm text-red-500">
-                      {errors.oldPassword.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
             <Controller
               name="password"
               control={control}
-              render={({ field: { onChange } }) => (
+              render={({ field: { value, onChange } }) => (
                 <div className="w-full flex flex-col gap-y-2">
                   <Common.Input
                     onChange={onChange}
+                    value={value}
                     placeholder="New Password"
                     label="New Password"
                     name="newPassword"
                     type="password"
+                    errors={errors.password}
                   />
-                  {errors.password && (
-                    <p className="text-sm text-red-500">
-                      {errors.password.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
             <Controller
               name="passwordConfirmation"
               control={control}
-              render={({ field: { onChange } }) => (
+              render={({ field: { value, onChange } }) => (
                 <div className="w-full flex flex-col gap-y-2">
                   <Common.Input
                     onChange={onChange}
+                    value={value}
                     placeholder="Password Confirmation"
                     label="Password Confirmation"
                     name="passwordConfirmation"
                     type="password"
+                    errors={errors.passwordConfirmation}
                   />
-                  {errors.passwordConfirmation && (
-                    <p className="text-sm text-red-500">
-                      {errors.passwordConfirmation.message}
-                    </p>
-                  )}
                 </div>
               )}
             />

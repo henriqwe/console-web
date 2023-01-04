@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom'
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { TicketDetail } from './TicketDetail'
-import * as dashboard from 'domains/dashboard'
+import type { Tickets } from 'domains/dashboard/DashboardContext'
+import React from 'react'
 
 let toastCalls: string[] = []
 jest.mock('react-toastify', () => ({
@@ -20,9 +21,6 @@ global.fetch = jest.fn(() =>
     json: () => Promise.resolve({ test: 100 })
   })
 ) as jest.Mock
-
-import type { Tickets } from 'domains/dashboard/DashboardContext'
-import React from 'react'
 
 let mockSelectedTicket: Tickets = {
   id: 1,
@@ -74,18 +72,4 @@ describe('TicketDetail component', () => {
 
     expect(mockSelectedTicket).toEqual(undefined)
   })
-
-  // it('should set state loading', async () => {
-  //   render(<TicketDetail />)
-
-  //   const createMessageButton = screen.getByText('Create message')
-  //   const textArea = screen.getByTestId('textAreaNewMessage')
-  //   textArea.innerHTML = ''
-  //   expect(textArea).toBeInTheDocument()
-  //   expect(createMessageButton).toBeInTheDocument()
-
-  //   fireEvent.click(createMessageButton)
-  //   console.log({ toastCalls })
-  //   expect(toastCalls.includes('Cannot create a empty message')).toBe(true)
-  // })
 })
