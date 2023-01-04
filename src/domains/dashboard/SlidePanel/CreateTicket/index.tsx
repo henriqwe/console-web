@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { CheckIcon } from '@heroicons/react/outline'
 import * as common from 'common'
 import * as utils from 'utils'
+import * as yup from 'yup'
 import * as dashboard from 'domains/dashboard'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
@@ -36,14 +37,23 @@ type Schema = {
 export function CreateTicket() {
   const [loading, setLoading] = useState(false)
   const [schemas, setSchemas] = useState<Schema[]>([])
-  const { createTicketSchema, setOpenSlide, setReload, reload } =
-    dashboard.useData()
+  const { setOpenSlide, setReload, reload } = dashboard.useData()
 
   const {
     control,
     handleSubmit,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(createTicketSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Project: yup.object().required('This field is required'),
+        Priority: yup.object().required('This field is required'),
+        Category: yup.object().required('This field is required'),
+        Title: yup.string().required('This field is required'),
+        Content: yup.string().required('This field is required')
+      })
+    )
+  })
 
   async function Submit(formData: FormData) {
     try {
@@ -84,6 +94,7 @@ export function CreateTicket() {
       setOpenSlide(false)
       utils.notification(`Ticket created successfully`, 'success')
     } catch (err: any) {
+      console.log('err',err)
       utils.showError(err)
     } finally {
       setLoading(false)

@@ -22,7 +22,6 @@ type DataContextProps = {
   setSlideSize: Dispatch<SetStateAction<SlideSize>>
   schemas: Schemas[]
   setSchemas: Dispatch<SetStateAction<Schemas[]>>
-  createTicketSchema: yup.AnyObjectSchema
   tickets: Tickets[]
   setTickets: Dispatch<SetStateAction<Tickets[]>>
   selectedTicket?: Tickets
@@ -102,14 +101,6 @@ export const DataProvider = ({ children }: ProviderProps) => {
     })
   }
 
-  const createTicketSchema = yup.object().shape({
-    Project: yup.object().required('This field is required'),
-    Priority: yup.object().required('This field is required'),
-    Category: yup.object().required('This field is required'),
-    Title: yup.string().required('This field is required'),
-    Content: yup.string().required('This field is required')
-  })
-
   return (
     <DataContext.Provider
       value={{
@@ -126,7 +117,6 @@ export const DataProvider = ({ children }: ProviderProps) => {
         setSlideSize,
         schemas,
         setSchemas,
-        createTicketSchema,
         tickets,
         setTickets,
         selectedTicket,
