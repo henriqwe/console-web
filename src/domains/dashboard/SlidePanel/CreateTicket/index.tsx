@@ -94,7 +94,6 @@ export function CreateTicket() {
       setOpenSlide(false)
       utils.notification(`Ticket created successfully`, 'success')
     } catch (err: any) {
-      console.log('err',err)
       utils.showError(err)
     } finally {
       setLoading(false)

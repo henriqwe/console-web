@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { CreateUser } from '.'
 import '@testing-library/jest-dom'
 
@@ -124,6 +124,12 @@ describe('CreateUser', () => {
     const registerButton = screen.getByText('Register')
     fireEvent.click(registerButton)
 
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+    });
+
     await waitFor(() => {
       const nameErrorMessage = screen.getByText('Name is required')
       const usernameErrorMessage = screen.getByText('Username is required')
@@ -150,6 +156,12 @@ describe('CreateUser', () => {
 
     fireEvent.click(registerButton)
 
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+    });
+
     await waitFor(() => {
       const usernameErrorMessage = screen.getByText(
         'This field cannot contain spaces'
@@ -171,6 +183,12 @@ describe('CreateUser', () => {
     fireEvent.change(passwordInput, { target: { value: '12345' } })
 
     fireEvent.click(registerButton)
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+    });
 
     await waitFor(() => {
       const usernameErrorMessage = screen.getByText(
@@ -197,6 +215,12 @@ describe('CreateUser', () => {
     const registerButton = screen.getByText('Register')
     fireEvent.click(registerButton)
 
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+    });
+
     await waitFor(() => {
       expect(toastCalls.includes('Username already exists')).toBe(true)
     })
@@ -218,6 +242,12 @@ describe('CreateUser', () => {
 
     const registerButton = screen.getByText('Register')
     fireEvent.click(registerButton)
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+    });
 
     await waitFor(() => {
       expect(toastCalls.includes('break')).toBe(true)
@@ -242,6 +272,12 @@ describe('CreateUser', () => {
 
     fireEvent.click(registerButton)
 
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+    });
+
     await waitFor(() => {
       expect(pushedRouter).toBe('/')
     })
@@ -264,6 +300,12 @@ describe('CreateUser', () => {
     const registerButton = screen.getByText('Register')
 
     fireEvent.click(registerButton)
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+    });
 
     await waitFor(() => {
       expect(pushedRouter).toBe('/')
