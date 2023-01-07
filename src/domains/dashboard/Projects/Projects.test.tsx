@@ -1,7 +1,14 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import {
+  act,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  waitFor
+} from '@testing-library/react'
 import { Projects } from '.'
 import '@testing-library/jest-dom'
+import * as tour from 'contexts/TourContext'
 
 type Schema = {
   createdat: number
@@ -20,7 +27,7 @@ jest.mock('utils/api', () => ({
   api: {
     get: async (url: string, config: any) => {
       if (itShouldBreak) {
-        throw {response:{status: 400, message: 'it broke'}}
+        throw { response: { status: 400, message: 'it broke' } }
       }
       if (url === 'v0/modeling/project-name') {
         return {
@@ -67,27 +74,45 @@ jest.mock('utils/cookies', () => {
 })
 
 let receivedSchemas: Schema[] = []
+let selectedSchema: Schema
+let slideType: string
+let openSlide: boolean
+let slideSize: string
 jest.mock('domains/dashboard/DashboardContext', () => {
   return {
     ...jest.requireActual('domains/dashboard/DashboardContext'),
     useData: () => ({
-      setOpenSlide: () => null,
-      setSlideType: () => null,
-      setSlideSize: () => 'normal',
-      setSelectedSchema: () => null,
+      setOpenSlide: (val: boolean) => {
+        openSlide = val
+      },
+      setSlideType: (val: string) => {
+        slideType = val
+      },
+      setSlideSize: (val: string) => {
+        slideSize = val
+      },
+      setSelectedSchema: (val: Schema) => {
+        selectedSchema = val
+      },
+      selectedSchema,
       reload: false,
       schemas: receivedSchemas,
       setSchemas: (val: Schema[]) => {
-        console.log('val', val)
         receivedSchemas = val
       },
       openSlide: true,
       slideType: '',
-      selectedSchema: { name: 'schema' },
       slideSize: 'normal'
     })
   }
 })
+
+let pushedRoute: string
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    push: (route: string) => {pushedRoute = route}
+  })
+}))
 
 const mock = function () {
   return {
@@ -104,8 +129,13 @@ describe('Projects', () => {
     schemas = []
     toastCalls = []
     cookiesSetted = []
+    selectedSchema = {} as Schema
+    slideType = ''
+    openSlide = false
+    slideSize = ''
     itShouldBreak = false
   })
+
   it('should render Projects component', async () => {
     const { container } = render(<Projects />)
 
@@ -198,5 +228,194 @@ describe('Projects', () => {
     await waitFor(() => {
       expect(toastCalls.includes('it broke')).toBe(true)
     })
+  })
+
+  it('should render all projects and filter one', async () => {
+    jest.useFakeTimers()
+    schemas = [
+      {
+        createdat: 1,
+        name: 'schema 1',
+        status: 'active',
+        tenantAc: '123',
+        tenantId: '456'
+      },
+      {
+        createdat: 2,
+        name: 'schema 2',
+        status: 'unactive',
+        tenantAc: '12357',
+        tenantId: '45689'
+      }
+    ]
+    const { container } = render(<Projects />)
+    expect(screen.getByText('Loading projects')).toBeInTheDocument()
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+        jest.runOnlyPendingTimers()
+      })
+    })
+
+    expect(container.firstChild).toBeInTheDocument()
+
+    expect(screen.queryByText('Projects not found')).not.toBeInTheDocument()
+    const projectList = screen.queryByTestId('projects')
+    expect(projectList?.childElementCount).toBe(2)
+
+    const schema2 = screen.getByText('schema 2')
+
+    const searchInput = screen.getByPlaceholderText('Search Projects...')
+    fireEvent.change(searchInput, { target: { value: 'schema 1' } })
+
+    act(() => {
+      jest.runOnlyPendingTimers()
+    })
+
+    expect(schema2).not.toBeInTheDocument()
+    expect(projectList?.childElementCount).toBe(1)
+  })
+
+  it('should open config slide of selected project', async () => {
+    jest.useFakeTimers()
+    schemas = [
+      {
+        createdat: 2,
+        name: 'schema 2',
+        status: 'unactive',
+        tenantAc: '12357',
+        tenantId: '45689'
+      }
+    ]
+    const { container } = render(<Projects />)
+    expect(screen.getByText('Loading projects')).toBeInTheDocument()
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+        jest.runOnlyPendingTimers()
+      })
+    })
+
+    expect(container.firstChild).toBeInTheDocument()
+
+    const schema2 = screen.getByTitle('configuration')
+
+    fireEvent.click(schema2)
+
+    expect(selectedSchema.name).toBe('schema 2')
+    expect(slideType).toBe('viewProject')
+    expect(openSlide).toBe(true)
+    expect(slideSize).toBe('normal')
+  })
+
+  it('should open config slide to create a new project', async () => {
+    jest.useFakeTimers()
+    schemas = [
+      {
+        createdat: 2,
+        name: 'schema 2',
+        status: 'unactive',
+        tenantAc: '12357',
+        tenantId: '45689'
+      }
+    ]
+const nextTour = jest.fn()
+    const { result } = renderHook(() => tour.useLocalTour())
+    jest.spyOn(tour, 'useLocalTour').mockImplementation(() => ({
+      ...result.current,
+      nextStep: nextTour
+    }))
+    render(<Projects />)
+
+    
+
+    expect(screen.getByText('Loading projects')).toBeInTheDocument()
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+        jest.runOnlyPendingTimers()
+      })
+    })
+
+    const createProjectButton = screen.getByText('New Project')
+
+    fireEvent.click(createProjectButton)
+
+    expect(slideType).toBe('createProject')
+    expect(openSlide).toBe(true)
+    expect(slideSize).toBe('normal')
+    expect(nextTour).toBeCalled()
+  })
+
+  it('should copy project secret', async () => {
+    jest.useFakeTimers()
+
+    Object.assign(window.navigator, {
+      clipboard: {
+        writeText: jest.fn().mockImplementation(() => Promise.resolve()),
+      },
+    })
+
+    schemas = [
+      {
+        createdat: 2,
+        name: 'schema 2',
+        status: 'unactive',
+        tenantAc: '12357',
+        tenantId: '45689'
+      }
+    ]
+    render(<Projects />)
+    expect(screen.getByText('Loading projects')).toBeInTheDocument()
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+        jest.runOnlyPendingTimers()
+      })
+    })
+
+    const copyProjectDiv = screen.getByTitle('Copy')
+
+    jest.spyOn(navigator.clipboard, 'writeText')
+    fireEvent.click(copyProjectDiv.firstElementChild as Element)
+
+    jest.runOnlyPendingTimers()
+
+    expect(navigator.clipboard.writeText).toBeCalledWith('12357')
+    expect(toastCalls.includes('Copied to clipboard')).toBe(true)
+  })
+
+  it('should access selected project', async () => {
+    jest.useFakeTimers()
+
+    schemas = [
+      {
+        createdat: 2,
+        name: 'schema2',
+        status: 'unactive',
+        tenantAc: '12357',
+        tenantId: '45689'
+      }
+    ]
+    render(<Projects />)
+    expect(screen.getByText('Loading projects')).toBeInTheDocument()
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+        jest.runOnlyPendingTimers()
+      })
+    })
+
+    const playButton = screen.getByTitle('Access project')
+
+    jest.spyOn(navigator.clipboard, 'writeText')
+    fireEvent.click(playButton)
+
+    expect(pushedRoute).toBe('/console/schema2')
   })
 })

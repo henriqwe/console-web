@@ -55,8 +55,8 @@ export function MyAccount() {
           </div>
         </div>
         <div className="flex flex-col gap-y-8 sm:gap-y-0">
-          <section className="flex dark:bg-menu-primary dark:border-gray-700 sm:border sm:rounded-tr-none bg-white overflow-hidden rounded-lg">
-            <div className="flex flex-col py-10 w-full">
+          <section className="flex overflow-hidden bg-white rounded-lg dark:bg-menu-primary dark:border-gray-700 sm:border sm:rounded-tr-none">
+            <div className="flex flex-col w-full py-10">
               {tabs[selectedTab.name]}
             </div>
           </section>

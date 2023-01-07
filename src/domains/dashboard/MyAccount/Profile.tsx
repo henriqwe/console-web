@@ -58,7 +58,7 @@ export function Profile() {
       <div className="flex flex-col px-4 gap-y-4 ">
         <p className="text-xl dark:text-text-primary">My Info</p>
         <div className="grid grid-cols-2 gap-8">
-          <div className="flex flex-col gap-y-4 h-full">
+          <div className="flex flex-col h-full gap-y-4">
             <Common.Input
               placeholder="Username"
               label="Username"
@@ -76,13 +76,14 @@ export function Profile() {
           </div>
           <form
             onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
-            className="flex flex-col gap-y-4 h-full"
+            className="flex flex-col h-full gap-y-4"
           >
             <Controller
               name="oldPassword"
               control={control}
+              defaultValue={''}
               render={({ field: { value, onChange } }) => (
-                <div className="w-full flex flex-col gap-y-2">
+                <div className="flex flex-col w-full gap-y-2">
                   <Common.Input
                     onChange={onChange}
                     value={value}
@@ -98,8 +99,9 @@ export function Profile() {
             <Controller
               name="password"
               control={control}
+              defaultValue={''}
               render={({ field: { value, onChange } }) => (
-                <div className="w-full flex flex-col gap-y-2">
+                <div className="flex flex-col w-full gap-y-2">
                   <Common.Input
                     onChange={onChange}
                     value={value}
@@ -115,8 +117,9 @@ export function Profile() {
             <Controller
               name="passwordConfirmation"
               control={control}
+              defaultValue={''}
               render={({ field: { value, onChange } }) => (
-                <div className="w-full flex flex-col gap-y-2">
+                <div className="flex flex-col w-full gap-y-2">
                   <Common.Input
                     onChange={onChange}
                     value={value}
@@ -129,15 +132,10 @@ export function Profile() {
                 </div>
               )}
             />
-            <span className="flex self-end mt-auto px-3 lg:col-start-2">
+            <span className="flex self-end px-3 mt-auto lg:col-start-2">
               <Common.Buttons.Ycodify
-                icon={
-                  loading ? (
-                    <Common.Spinner className="w-4 h-4" />
-                  ) : (
-                    <ChevronRightIcon className="w-4 h-4" />
-                  )
-                }
+                icon={<ChevronRightIcon className="w-4 h-4" />}
+                loading={loading}
                 className="w-max"
                 type="submit"
               >

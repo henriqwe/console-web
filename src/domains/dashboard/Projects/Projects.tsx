@@ -71,8 +71,7 @@ export function Projects() {
     return schemas.filter((v) => v.name.match(re))
   }
 
-  function filterSchemas() {
-    setFilteredSchemas(match(watch('search')))
+  function filterSchemas() {    setFilteredSchemas(match(watch('search')))
     setShowFiltered(true)
   }
   function removeFilterSchemas() {
@@ -93,8 +92,9 @@ export function Projects() {
   }, [reload])
 
   useEffect(() => {
-    if (watch('search')) {
-      const timeoutId = setTimeout(() => filterSchemas(), 1000)
+    if (watch('search') && watch('search') !== '') {
+      const timeoutId = setTimeout(() => {
+        filterSchemas()}, 1000)
       return () => clearTimeout(timeoutId)
     }
     removeFilterSchemas()
@@ -140,6 +140,7 @@ export function Projects() {
             <Controller
               name="search"
               control={control}
+              defaultValue={''}
               render={({ field: { onChange, value } }) => (
                 <common.Input
                   placeholder="Search Projects..."
@@ -222,7 +223,7 @@ export function Project({
                   utils.notification('Copied to clipboard', 'success')
                 }}
               >
-                <div>
+                <div title='Copy'>
                   <DocumentDuplicateIcon
                     className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
                     onClick={() =>
@@ -255,6 +256,7 @@ export function Project({
                 utils.setCookie('X-TenantAC', schema.tenantAc)
                 router.push(`${routes.console}/${schema.name}`)
               }}
+              title="Access project"
             >
               <PlayIcon className="w-6 h-6 text-iconGreen" />
             </button>
@@ -263,6 +265,7 @@ export function Project({
               onClick={() => {
                 onConfigClick(schema)
               }}
+              title="configuration"
             >
               <CogIcon className="w-6 h-6 text-gray-600 dark:text-text-secondary" />
             </button>

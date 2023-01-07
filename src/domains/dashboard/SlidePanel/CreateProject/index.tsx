@@ -243,6 +243,7 @@ export function Create() {
           <Controller
             name={'ProjectName'}
             control={control}
+            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <div className="col-span-3">
                 <common.Input
