@@ -16,6 +16,7 @@ export function TableViewMode() {
   const { consoleResponse } = consoleEditor.useConsoleEditor()
   const [tableColumns, setTableColumns] = useState<tableColumnType[]>([])
   const [tableValues, setTableValues] = useState()
+
   function handleTableColumns() {
     try {
       if (consoleResponse?.length === 0) {
@@ -68,7 +69,6 @@ export function TableViewMode() {
           if (a.name === 'id') {
             return -1
           }
-
           if (a.name > b.name) {
             return -1
           }

@@ -1,6 +1,6 @@
 import * as common from 'common'
 import * as utils from 'utils'
-import * as SchemaManagerContext from 'domains/console'
+import * as yup from 'yup'
 import {
   useForm,
   FieldValues,
@@ -15,16 +15,22 @@ import { routes } from 'domains/routes'
 export function AdminLogin() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const { logUserSchema } = SchemaManagerContext.useUser()
   const {
     formState: { errors },
     handleSubmit,
     control
-  } = useForm({ resolver: yupResolver(logUserSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        userName: yup.string().required(),
+        password: yup.string().required()
+      })
+    )
+  })
 
   async function Submit(formData: { userName: string; password: string }) {
-    setLoading(true)
     try {
+      setLoading(true)
       const { data } = await utils.localApi.post(
         utils.apiRoutes.local.adminLogin,
         {
@@ -37,7 +43,7 @@ export function AdminLogin() {
       utils.setCookie('X-TenantID', data.data.username)
       router.push(routes.console + '/' + router.query.name)
     } catch (err: any) {
-      if (err.response.status === 401) {
+      if (err?.response?.status === 401) {
         return utils.notification(
           'Ops! Incorrect username or password',
           'error'
@@ -73,6 +79,7 @@ export function AdminLogin() {
             <Controller
               name="userName"
               control={control}
+              defaultValue={''}
               render={({ field: { onChange } }) => (
                 <div className="w-full">
                   <common.Input
@@ -87,6 +94,7 @@ export function AdminLogin() {
             <Controller
               name="password"
               control={control}
+              defaultValue={''}
               render={({ field: { onChange } }) => (
                 <div className="w-full">
                   <common.Input

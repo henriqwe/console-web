@@ -13,7 +13,6 @@ type UserContextProps = {
   setCurrentTab: Dispatch<SetStateAction<'ACCOUNT' | 'ROLE'>>
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
-  logUserSchema: yup.AnyObjectSchema
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
   slideType: slideTypeTypes
@@ -68,11 +67,6 @@ export const UserProvider = ({ children }: ProviderProps) => {
   const [roles, setRoles] = useState<{ name: string }[]>()
   const [currentTab, setCurrentTab] = useState<'ACCOUNT' | 'ROLE'>('ACCOUNT')
 
-  const logUserSchema = yup.object().shape({
-    userName: yup.string().required(),
-    password: yup.string().required()
-  })
-
   const roleSchema = yup.object().shape({
     Name: yup.string().required(),
     Active: yup.object().required()
@@ -96,7 +90,6 @@ export const UserProvider = ({ children }: ProviderProps) => {
         setCurrentTab,
         reload,
         setReload,
-        logUserSchema,
         openSlide,
         setOpenSlide,
         slideType,

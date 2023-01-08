@@ -21,10 +21,10 @@ export function CodeExporterView() {
   }, [consoleValueLastOperation])
 
   return (
-    <div className="border-2 border-gray-200 flex-1 p-2 rounded-md">
+    <div className="flex-1 p-2 border-2 border-gray-200 rounded-md">
       <CodeMirror
         value={codeExporterValue}
-        className=" text-xs rounded-md break-all"
+        className="text-xs break-all rounded-md "
         editable={false}
         theme={isDark ? dracula : 'light'}
         basicSetup={{
@@ -34,14 +34,14 @@ export function CodeExporterView() {
         extensions={[javascript({ jsx: true })]}
       />
 
-      <div className="flex  justify-end flex-1">
+      <div className="flex justify-end flex-1">
         <div className="relative">
           <div
             onClick={() => {
               navigator.clipboard.writeText(codeExporterValue)
               utils.notification('Copied to clipboard', 'success')
             }}
-            className="absolute -mt-8 -ml-8 hover:cursor-pointer text-gray-600  hover:text-gray-700"
+            className="absolute -mt-8 -ml-8 text-gray-600 hover:cursor-pointer hover:text-gray-700"
             title="Click to copy!"
           >
             <common.icons.ClipboardIcon />
