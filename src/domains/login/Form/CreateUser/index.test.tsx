@@ -86,7 +86,7 @@ jest.mock('utils/api', () => {
         if (url === '/pagarme/customers/create') {
           return { data: '123' }
         }
-        if (url === '/getUserToken') {
+        if (url === 'v0/auth/oauth/token') {
           return { data: '123' }
         }
       }
@@ -308,6 +308,7 @@ describe('CreateUser', () => {
     });
 
     await waitFor(() => {
+      expect(global.fetch).toBeCalled()
       expect(pushedRouter).toBe('/')
     })
   })

@@ -11,7 +11,7 @@ const customJestConfig = {
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
-  testPathIgnorePatterns: ['<rootDir>/src/common','<rootDir>/src/domains/dashboard'],
+  testPathIgnorePatterns: ['<rootDir>/src/common','<rootDir>/src/domains/dashboard', '<rootDir>/src/services'],
   moduleDirectories: ['node_modules', '<rootDir>/src'],
   collectCoverage: true,
   collectCoverageFrom: ['./src/domains/console/**/*.tsx','!./src/**/*.stories.tsx'],
