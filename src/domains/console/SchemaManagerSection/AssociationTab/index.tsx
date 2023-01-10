@@ -14,23 +14,13 @@ import {
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-type AssociationTabProps = {
-  loading: boolean
-}
-
-export function AssociationTab({ loading }: AssociationTabProps) {
+export function AssociationTab() {
   const router = useRouter()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [openForm, setOpenForm] = useState(false)
-  const {
-    entityData,
-    selectedEntity,
-    setReload,
-    reload,
-    setSelectedEntity,
-    schemaTables
-  } = consoleSection.useSchemaManager()
+  const { selectedEntity, setReload, reload, setSelectedEntity, schemaTables } =
+    consoleSection.useSchemaManager()
 
   async function RemoveTable() {
     try {
@@ -306,7 +296,7 @@ function AttributeForm({
           name={'Nullable'}
           control={control}
           render={({ field: { onChange } }) => (
-            <div className="flex items-center mt-7 gap-2">
+            <div className="flex items-center gap-2 mt-7">
               <input type="checkbox" id={'Nullable'} onChange={onChange} />
               <label htmlFor={'Nullable'}>Nullable</label>
             </div>
