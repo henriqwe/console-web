@@ -26,7 +26,6 @@ type Schemas = {
 }
 
 export function Projects() {
-  const router = useRouter()
   const { control, watch } = useForm()
   const {
     setOpenSlide,
@@ -37,6 +36,7 @@ export function Projects() {
     schemas,
     setSchemas
   } = dashboard.useData()
+
   const [showFiltered, setShowFiltered] = useState(false)
   const [filteredSchemas, setFilteredSchemas] = useState<Schemas[]>([])
   const [loadingSchemas, setLoadingSchemas] = useState(true)
@@ -71,8 +71,7 @@ export function Projects() {
     return schemas.filter((v) => v.name.match(re))
   }
 
-  function filterSchemas() {
-    setFilteredSchemas(match(watch('search')))
+  function filterSchemas() {    setFilteredSchemas(match(watch('search')))
     setShowFiltered(true)
   }
   function removeFilterSchemas() {
@@ -93,15 +92,16 @@ export function Projects() {
   }, [reload])
 
   useEffect(() => {
-    if (watch('search')) {
-      const timeoutId = setTimeout(() => filterSchemas(), 1000)
+    if (watch('search') && watch('search') !== '') {
+      const timeoutId = setTimeout(() => {
+        filterSchemas()}, 1000)
       return () => clearTimeout(timeoutId)
     }
     removeFilterSchemas()
   }, [watch('search')])
 
   return (
-    <div className="dashboard-step-6 flex justify-center">
+    <div className="flex justify-center dashboard-step-6">
       <div className="absolute inset-x-0 top-0 z-10 flex justify-center pointer-events-none blur-xl">
         <div className="flex justify-end flex-none w-full">
           <img
@@ -128,18 +128,19 @@ export function Projects() {
                   // router.push(routes.createProject)
                 }}
               >
-                <div className="dashboard-step-8 flex items-center gap-2 dark:text-text-primary">
+                <div className="flex items-center gap-2 dashboard-step-8 dark:text-text-primary">
                   <p className="text-xs">New Project</p>
                   <PlusIcon className="w-3 h-3" />
                 </div>
               </button>
             </div>
           </div>
-          <div className="dashboard-step-7 relative flex items-center">
+          <div className="relative flex items-center dashboard-step-7">
             <SearchIcon className="absolute w-4 h-4 text-gray-400 dark:text-text-primary left-2" />
             <Controller
               name="search"
               control={control}
+              defaultValue={''}
               render={({ field: { onChange, value } }) => (
                 <common.Input
                   placeholder="Search Projects..."
@@ -152,7 +153,10 @@ export function Projects() {
           </div>
         </section>
 
-        <section className="grid w-full grid-cols-1 gap-6 mx-auto">
+        <section
+          className="grid w-full grid-cols-1 gap-6 mx-auto"
+          data-testid="projects"
+        >
           {loadingSchemas ? (
             <div className="flex flex-col items-center justify-center col-span-2 gap-2 mt-32">
               <div className="w-20 h-20 dark:text-text-primary">
@@ -219,7 +223,7 @@ export function Project({
                   utils.notification('Copied to clipboard', 'success')
                 }}
               >
-                <div>
+                <div title='Copy'>
                   <DocumentDuplicateIcon
                     className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
                     onClick={() =>
@@ -252,6 +256,7 @@ export function Project({
                 utils.setCookie('X-TenantAC', schema.tenantAc)
                 router.push(`${routes.console}/${schema.name}`)
               }}
+              title="Access project"
             >
               <PlayIcon className="w-6 h-6 text-iconGreen" />
             </button>
@@ -260,6 +265,7 @@ export function Project({
               onClick={() => {
                 onConfigClick(schema)
               }}
+              title="configuration"
             >
               <CogIcon className="w-6 h-6 text-gray-600 dark:text-text-secondary" />
             </button>

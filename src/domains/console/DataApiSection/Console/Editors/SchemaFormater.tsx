@@ -11,13 +11,12 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 
 export function SchemaFormater() {
-  const [documentationValueParsed, setDocumentationValueParsed] = useState<{
-    code: string
-    schema: {}
-    src: any
-  }>()
-  const { documentationValue, setSchemaTabData } =
-    consoleEditor.useConsoleEditor()
+  // const [documentationValueParsed, setDocumentationValueParsed] = useState<{
+  //   code: string
+  //   schema: {}
+  //   src: any
+  // }>()
+  const { documentationValue } = consoleEditor.useConsoleEditor()
   const { isDark } = ThemeContext.useTheme()
   const router = useRouter()
 
@@ -28,26 +27,27 @@ export function SchemaFormater() {
     })
     element.href = URL.createObjectURL(file)
     element.download = `schema ${router.query.name}.yc`
+    element.title="download link"
     document.body.appendChild(element)
     element.click()
   }
 
-  useEffect(() => {
-    if (documentationValue) {
-      try {
-        const parse = utils.ycl_transpiler.parse(documentationValue, false)
-        setDocumentationValueParsed(parse)
-      } catch (err) {
-        console.error(err)
-      }
-    }
-  }, [documentationValue])
+  // useEffect(() => {
+  //   if (documentationValue) {
+  //     try {
+  //       // const parse = utils.ycl_transpiler.parse(documentationValue, false)
+  //       // setDocumentationValueParsed(parse)
+  //     } catch (err) {
+  //       console.error(err)
+  //     }
+  //   }
+  // }, [documentationValue])
 
   return (
     <div className="relative">
       <CodeMirror
         value={documentationValue}
-        className=" text-xs rounded-md break-all"
+        className="text-xs break-all rounded-md "
         editable={false}
         theme={isDark ? dracula : 'light'}
         basicSetup={{
@@ -78,12 +78,12 @@ export function SchemaFormater() {
   //     <div className="ml-8">
   //       <span className="text-blue-500">enable</span>
   //     </div>
-  //     <div className="ml-4 flex gap-2">
+  //     <div className="flex gap-2 ml-4">
   //       <span className="text-yellow-500">&#41;</span>{' '}
   //       <span className="text-yellow-500">&#123;</span>
   //     </div>
   //     {/* entities */}
-  //     <div className="ml-4 flex gap-4 flex-col">
+  //     <div className="flex flex-col gap-4 ml-4">
   //       {documentationValueParsed?.schema.entities?.map((entity, idx) => {
   //         return (
   //           <div key={idx} className="ml-4">
@@ -110,7 +110,7 @@ export function SchemaFormater() {
   //                                 return (
   //                                   <span
   //                                     key={idx}
-  //                                     className="text-blue-500 ml-2"
+  //                                     className="ml-2 text-blue-500"
   //                                   >
   //                                     {attribute?._conf[value]?.value !== false
   //                                       ? attribute?._conf[value]?.value

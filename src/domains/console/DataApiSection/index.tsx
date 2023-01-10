@@ -46,7 +46,7 @@ export function DataApiSection() {
         onClickMask={() => {}}
       >
         <Tour />
-        <div className="flex w-full h-full py-4 px-8 ">
+        <div className="flex w-full h-full px-8 py-4 ">
           <Editors />
         </div>
       </TourProvider>

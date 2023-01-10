@@ -32,7 +32,6 @@ export function Editors() {
     consoleResponseFormated,
     consoleResponseLoading,
     responseTime,
-    consoleValueLastOperation,
     handleFormat,
     handleChange,
     handleFormatQueryOrMutationAction,
@@ -94,8 +93,8 @@ export function Editors() {
       <common.ContentSection
         variant="WithoutTitleBackgroundColor"
         title={
-          <div className="grid grid-cols-2 items-center justify-between w-full">
-            <div className="flex items-center z-50">
+          <div className="grid items-center justify-between w-full grid-cols-2">
+            <div className="z-50 flex items-center">
               <common.Breadcrumb
                 pages={[
                   { content: 'Data API', current: false },
@@ -117,7 +116,7 @@ export function Editors() {
             <div className="flex items-center justify-end gap-2">
               <div title="Endpoint and request headers">
                 <common.icons.DotsVerticalIcon
-                  className="dataapi-step-7 w-5 h-5 cursor-pointer"
+                  className="w-5 h-5 cursor-pointer dataapi-step-7"
                   onClick={() => {
                     setSlideState({
                       open: true,
@@ -179,10 +178,10 @@ export function Editors() {
                   placeholder(placeholderCode)
                 ]}
               />
-              <div className="absolute bottom-2 right-3 flex gap-1">
+              <div className="absolute flex gap-1 bottom-2 right-3">
                 {consoleFormaterMensageError && (
                   <div
-                    className="flex items-center justify-center rounded-full cursor-pointer  w-7 h-7 "
+                    className="flex items-center justify-center rounded-full cursor-pointer w-7 h-7 "
                     title={consoleFormaterMensageError}
                   >
                     <Icon
@@ -209,7 +208,7 @@ export function Editors() {
                   onClick={() => {
                     setSlideState({ open: true, type: 'CodeExporterView' })
                   }}
-                  className="dataapi-step-6 flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7"
+                  className="flex items-center justify-center rounded-full cursor-pointer dataapi-step-6 hover:bg-gray-200/50 w-7 h-7"
                 >
                   <common.icons.DownloadIcon className="w-5 h-5 text-gray-600 dark:text-text-primary" />
                 </button>
@@ -222,7 +221,7 @@ export function Editors() {
               showTableViewMode ? 'col-span-8' : 'col-span-6'
             }  h-full flex flex-col`}
           >
-            <div className="flex relative w-full h-full overflow-hidden border-l border-gray-200 dark:border-gray-700 rounded-r-lg">
+            <div className="relative flex w-full h-full overflow-hidden border-l border-gray-200 rounded-r-lg dark:border-gray-700">
               {consoleResponseLoading ? (
                 <div className="flex items-center justify-center w-full h-full">
                   <div className="flex items-center gap-2">
@@ -256,7 +255,7 @@ export function Editors() {
                           onClick={() => {
                             setShowTableViewMode(false)
                           }}
-                          className="flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7 bg-white dark:bg-gray-900"
+                          className="flex items-center justify-center bg-white rounded-full cursor-pointer hover:bg-gray-200/50 w-7 h-7 dark:bg-gray-900"
                         >
                           <Icon
                             icon="ph:brackets-curly-bold"
@@ -282,7 +281,7 @@ export function Editors() {
                   {!showTableViewMode && (
                     <div className="flex items-center justify-end h-6 px-2">
                       {responseTime && (
-                        <div className="text-xs  h-8 flex items-center">
+                        <div className="flex items-center h-8 text-xs">
                           Response time: {responseTime} ms
                         </div>
                       )}

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { CreateTicket } from '.'
 import '@testing-library/jest-dom'
 
@@ -101,12 +101,22 @@ describe('CreateTicket', () => {
   it('should render CreateTicket component', async () => {
     const { container } = render(<CreateTicket />)
 
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+      })
+    })
     expect(container.firstChild).toBeInTheDocument()
   })
 
   it('should handle the submit action', async () => {
     render(<CreateTicket />)
 
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+      })
+    })
     await waitFor(() => {
       const projectSelect = screen.getByText('Select a Project...')
 
@@ -144,6 +154,11 @@ describe('CreateTicket', () => {
 
     fireEvent.click(createButton)
 
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+      })
+    })
     await waitFor(() => {
       expect(toastCalls.includes('Ticket created successfully')).toBe(true)
     })
@@ -152,6 +167,12 @@ describe('CreateTicket', () => {
   it('should break the delete schema action', async () => {
     itShouldBreak = true
     render(<CreateTicket />)
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+      })
+    })
     await waitFor(() => {
       const projectSelect = screen.getByText('Select a Project...')
 
@@ -188,6 +209,12 @@ describe('CreateTicket', () => {
     const createButton = screen.getByText('Create ticket')
 
     fireEvent.click(createButton)
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+      })
+    })
 
     await waitFor(() => {
       expect(toastCalls.includes('It broke')).toBe(true)

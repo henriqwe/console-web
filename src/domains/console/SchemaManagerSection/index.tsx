@@ -102,7 +102,7 @@ export function SchemaManagerSection() {
 
   if (showCreateEntitySection) {
     return (
-      <div className="w-full h-full py-4 px-8 ">
+      <div className="w-full h-full px-8 py-4 ">
         <consoleSection.CreateEntity />
       </div>
     )
@@ -145,7 +145,7 @@ export function SchemaManagerSection() {
       beforeClose={() => beforeClose()}
       onClickMask={() => {}}
     >
-      <div className="w-full h-full py-4 px-8 ">
+      <div className="w-full h-full px-8 py-4 ">
         <common.Card className="flex flex-col h-full">
           <div className="flex w-full h-[3.3rem]">
             <div className="flex items-center justify-between w-full">
@@ -207,14 +207,14 @@ export function SchemaManagerSection() {
             </div>
           </div>
           <consoleSection.SlidePanel />
-          <div className="bg-white rounded-md dark:bg-menu-primary w-full">
+          <div className="w-full bg-white rounded-md dark:bg-menu-primary">
             <common.ContentSection variant="WithoutTitleBackgroundColor">
               {currentTabSchema === 'Databases' ? (
                 selectedEntity ? (
                   selectedEntityTab.name === 'Attributes' ? (
                     <consoleSection.ModifyTab loading={loading} />
                   ) : (
-                    <consoleSection.AssociationTab loading={loading} />
+                    <consoleSection.AssociationTab />
                   )
                 ) : (
                   <consoleSection.DefaultPage />

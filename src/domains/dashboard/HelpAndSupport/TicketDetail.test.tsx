@@ -44,31 +44,54 @@ jest.mock('domains/dashboard/DashboardContext', () => ({
 }))
 
 describe('TicketDetail component', () => {
-  it('should render TicketDetail component', () => {
+  it('should render TicketDetail component', async () => {
     render(<TicketDetail />)
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+      })
+    })
     expect(
       screen.getByText(`Ticket ${mockSelectedTicket?.id}`)
     ).toBeInTheDocument()
   })
 
-  it('should render TicketDetail title', () => {
+  it('should render TicketDetail title', async () => {
     render(<TicketDetail />)
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+      })
+    })
     expect(screen.getByText(`${mockSelectedTicket?.title}`)).toBeInTheDocument()
   })
 
-  it('should render TicketDetail content', () => {
+  it('should render TicketDetail content', async () => {
     render(<TicketDetail />)
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+      })
+    })
     expect(
       screen.getByText(`${mockSelectedTicket?.content}`)
     ).toBeInTheDocument()
   })
 
-  it('should set state selectedTicket undefined after click', () => {
+  it('should set state selectedTicket undefined after click', async () => {
     render(<TicketDetail />)
     const backToListButton = screen.getByText('Back to list')
     expect(backToListButton).toBeInTheDocument()
 
     fireEvent.click(backToListButton)
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50)
+      })
+    })
+
 
     expect(mockSelectedTicket).toEqual(undefined)
   })

@@ -46,9 +46,18 @@ export function CreateTicket() {
   } = useForm({
     resolver: yupResolver(
       yup.object().shape({
-        Project: yup.object().required('This field is required'),
-        Priority: yup.object().required('This field is required'),
-        Category: yup.object().required('This field is required'),
+        Project: yup
+          .object()
+          .test('empty', 'This field is required', (val) => !!val.value)
+          .required('This field is required'),
+        Priority: yup
+          .object()
+          .test('empty', 'This field is required', (val) => !!val.value)
+          .required('This field is required'),
+        Category: yup
+          .object()
+          .test('empty', 'This field is required', (val) => !!val.value)
+          .required('This field is required'),
         Title: yup.string().required('This field is required'),
         Content: yup.string().required('This field is required')
       })
@@ -94,7 +103,6 @@ export function CreateTicket() {
       setOpenSlide(false)
       utils.notification(`Ticket created successfully`, 'success')
     } catch (err: any) {
-      console.log('err',err)
       utils.showError(err)
     } finally {
       setLoading(false)
@@ -126,6 +134,7 @@ export function CreateTicket() {
         <Controller
           name={'Project'}
           control={control}
+          defaultValue={{}}
           render={({ field: { onChange, value } }) => (
             <div className="col-span-2">
               <common.Select
@@ -148,6 +157,7 @@ export function CreateTicket() {
         <Controller
           name={'Priority'}
           control={control}
+          defaultValue={{}}
           render={({ field: { onChange, value } }) => (
             <div className="col-span-2">
               <common.Select
@@ -170,6 +180,7 @@ export function CreateTicket() {
         <Controller
           name={'Category'}
           control={control}
+          defaultValue={{}}
           render={({ field: { onChange, value } }) => (
             <div className="col-span-2">
               <common.Select
@@ -190,6 +201,7 @@ export function CreateTicket() {
         <Controller
           name={'Title'}
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="col-span-3">
               <common.Input
@@ -206,6 +218,7 @@ export function CreateTicket() {
         <Controller
           name={'Content'}
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="col-span-3">
               <common.Textarea
