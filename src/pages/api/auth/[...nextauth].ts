@@ -1,8 +1,6 @@
 import NextAuth from 'next-auth'
-import jwt from 'jsonwebtoken'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { stringify } from 'qs'
-import * as utils from 'utils'
+import * as services from 'services'
 
 const options = {
   jwt: {
@@ -30,24 +28,10 @@ const options = {
       async authorize(credentials, req) {
         try {
           if (credentials?.username && credentials?.password) {
-            const res = await utils.api.post(
-              utils.apiRoutes.getUserToken,
-              stringify({
-                username: credentials?.username,
-                password: credentials?.password,
-                grant_type: 'password'
-              }),
-              {
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
-                  Authorization: 'Basic '.concat(
-                    Buffer.from(
-                      'yc:c547d72d-607c-429c-81e2-0baec7dd068b'
-                    ).toString('base64')
-                  )
-                }
-              }
-            )
+            const res = await services.ycodify.getUserToken({
+              username: credentials?.username,
+              password: credentials?.password
+            })
             if (res.status === 200 && res.data) {
               return { ...res.data }
             }
@@ -64,13 +48,13 @@ const options = {
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: any; user: any }) {
       if (user) {
         token.accessToken = user.access_token
       }
       return token
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token: any }) {
       session.accessToken = token.accessToken
       return session
     }

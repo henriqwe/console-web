@@ -1,6 +1,7 @@
 import * as common from 'common'
 import * as utils from 'utils'
 import * as yup from 'yup'
+
 import {
   useForm,
   FieldValues,
@@ -14,6 +15,7 @@ import { routes } from 'domains/routes'
 import { ArrowRightIcon } from '@heroicons/react/solid'
 import { signIn } from 'next-auth/react'
 import { usePixel } from 'contexts/PixelContext'
+import * as services from 'services'
 
 type formDataType = {
   name: string
@@ -61,45 +63,35 @@ export function CreateUser() {
     try {
       setLoading(true)
       //create customer pagarme
-      const { data: pagarme_customer } = await utils.localApi.post(
-        utils.apiRoutes.local.pagarme.customers.create,
+      const { data: pagarme_customer } = await services.pagarme.customersCreate(
         {
           name: formData.name,
           email: formData.email,
           username: formData.userName
         }
       )
+
       // create user ycodify
-      await utils.localApi.post(utils.apiRoutes.local.createAccount, {
+      await services.ycodify.createAccount({
         name: formData.name,
         username: formData.userName,
         password: formData.password,
         email: formData.email
       })
+
       // get user ycodify token
-      const { data: userData } = await utils.localApi.post(
-        utils.apiRoutes.local.getUserToken,
-        {
-          username: formData.userName,
-          password: formData.password
-        }
-      )
+      const { data: userData } = await services.ycodify.getUserToken({
+        username: formData.userName,
+        password: formData.password
+      })
 
       // update user ycodify with gatewayPaymentKey
-      await utils.api.post(
-        utils.apiRoutes.updateAccount,
-        {
-          username: formData.userName,
-          password: formData.password,
-          gatewayPaymentKey: pagarme_customer?.id as string
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: userData?.access_token as string
-          }
-        }
-      )
+      await services.ycodify.updateAccountGatewayPaymentKey({
+        username: formData.userName,
+        password: formData.password,
+        gatewayPaymentKey: pagarme_customer?.id,
+        accessToken: userData?.access_token
+      })
 
       const res = await signIn('credentials', {
         username: formData.userName,

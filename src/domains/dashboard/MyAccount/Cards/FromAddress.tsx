@@ -1,5 +1,7 @@
 import * as common from 'common'
 import * as utils from 'utils'
+import * as services from 'services'
+
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import {
@@ -10,8 +12,7 @@ import {
 } from 'react-hook-form'
 import { ChevronRightIcon } from '@heroicons/react/solid'
 import { useUser } from 'contexts/UserContext'
-import { useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
+import { useState } from 'react'
 
 type formProps = {
   addrStreet: string
@@ -25,7 +26,6 @@ type formProps = {
 export function FromAddress() {
   const { user, setUser } = useUser()
   const [loading, setLoading] = useState(false)
-  const { data: session } = useSession()
 
   const {
     username,
@@ -45,51 +45,38 @@ export function FromAddress() {
     control
   } = useForm({ resolver: yupResolver(addressSchema) })
 
-  async function getUserData() {
-    const { data } = await utils.api.get(utils.apiRoutes.userData, {
-      headers: {
-        Authorization: session?.accessToken as string
-      }
-    })
-    return data
-  }
-
   const refreshUserData = async () => {
-    getUserData().then((userData) => setUser((prev) => ({ ...prev, userData })))
+    services.ycodify
+      .getUserData({ accessToken: user?.accessToken as string })
+      .then((userData) => setUser((prev) => ({ ...prev, userData })))
   }
 
-  function Submit(formData: formProps) {
+  async function Submit(formData: formProps) {
     setLoading(true)
 
-    utils.api
-      .post(
-        utils.apiRoutes.updateAccount,
-        {
-          username,
-          email: email,
-          status,
-          addrStreet: formData.addrStreet,
-          addrNumber: formData.addrNumber,
-          addrCountry: formData.addrCountry,
-          addrDistrict: formData.addrDistrict,
-          addrCity: formData.addrCity,
-          addrZip: formData.addrZip
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: session?.accessToken as string
-          }
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          refreshUserData()
-
-          utils.notification('Address updated successfully!', 'success')
-        } else utils.notification(res.data.message, 'error')
+    try {
+      const res = await services.ycodify.updateAccountAddress({
+        username,
+        email,
+        status,
+        addrStreet: formData.addrStreet,
+        addrNumber: formData.addrNumber,
+        addrCountry: formData.addrCountry,
+        addrDistrict: formData.addrDistrict,
+        addrCity: formData.addrCity,
+        addrZip: formData.addrZip,
+        accessToken: user?.accessToken as string
       })
-      .then(() => setLoading(false))
+
+      if (res.status === 200) {
+        refreshUserData()
+        utils.notification('Address updated successfully!', 'success')
+        return
+      }
+      utils.notification(res.data.message, 'error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -114,12 +101,8 @@ export function FromAddress() {
                     id="street"
                     name="street"
                     defaultValue={addrStreet}
+                    errors={errors.addrStreet}
                   />
-                  {errors.addrStreet && (
-                    <p className="text-sm text-red-500">
-                      {errors.addrStreet.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
@@ -134,12 +117,8 @@ export function FromAddress() {
                     label="Number"
                     defaultValue={addrNumber}
                     onChange={onChange}
+                    errors={errors.addrNumber}
                   />
-                  {errors.addrNumber && (
-                    <p className="text-sm text-red-500">
-                      {errors.addrNumber.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
@@ -157,12 +136,8 @@ export function FromAddress() {
                     defaultValue={addrCountry}
                     className="col-span-3 sm:col-span-1"
                     onChange={onChange}
+                    errors={errors.addrCountry}
                   />
-                  {errors.addrCountry && (
-                    <p className="text-sm text-red-500">
-                      {errors.addrCountry.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
@@ -178,12 +153,8 @@ export function FromAddress() {
                     defaultValue={addrDistrict}
                     className="col-span-3 sm:col-span-1"
                     onChange={onChange}
+                    errors={errors.addrDistrict}
                   />
-                  {errors.addrDistrict && (
-                    <p className="text-sm text-red-500">
-                      {errors.addrDistrict.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
@@ -202,12 +173,8 @@ export function FromAddress() {
                     defaultValue={addrCity}
                     className="col-span-3 sm:col-span-1"
                     onChange={onChange}
+                    errors={errors.addrCity}
                   />
-                  {errors.addrCity && (
-                    <p className="text-sm text-red-500">
-                      {errors.addrCity.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
@@ -223,12 +190,8 @@ export function FromAddress() {
                     defaultValue={addrZip}
                     className="col-span-3 sm:col-span-1"
                     onChange={onChange}
+                    errors={errors.addrZip}
                   />
-                  {errors.addrZip && (
-                    <p className="text-sm text-red-500">
-                      {errors.addrZip.message}
-                    </p>
-                  )}
                 </div>
               )}
             />

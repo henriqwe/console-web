@@ -1,7 +1,7 @@
 import { ArrowRightIcon, ReplyIcon } from '@heroicons/react/solid'
 import * as common from 'common'
 import * as utils from 'utils'
-import * as login from 'domains/login'
+import * as services from 'services'
 import * as yup from 'yup'
 import { routes } from 'domains/routes'
 import { useRouter } from 'next/router'
@@ -47,7 +47,7 @@ export function SecondStep({ setRecoverStep, username }: SecondStepProps) {
   }) {
     setLoading(true)
     try {
-      await utils.api.post(utils.apiRoutes.changePassword, {
+      await services.ycodify.changePasswordRecoveryHash({
         username: formData.userName,
         password: formData.password,
         passwordRecoveryHash: formData.recoverHash

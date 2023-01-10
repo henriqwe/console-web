@@ -1,0 +1,8 @@
+export { changePassword } from './changePassword'
+export { getUserHash } from './getUserHash'
+export { changePasswordRecoveryHash } from './changePasswordRecoveryHash'
+export { updateAccountGatewayPaymentKey } from './updateAccountGatewayPaymentKey'
+export { getUserData } from './getUserData'
+export { getUserToken } from './getUserToken'
+export { createAccount } from './createAccount'
+export { updateAccountAddress } from './updateAccountAddress'

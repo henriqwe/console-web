@@ -11,7 +11,7 @@ import {
   useForm
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { changePassword } from './services'
+import * as services from 'services'
 
 type formDataType = {
   oldPassword: string
@@ -35,7 +35,7 @@ export function Profile() {
     setLoading(true)
 
     try {
-      const res = await changePassword({
+      const res = await services.ycodify.changePassword({
         username,
         password: formData.password,
         oldPassword: formData.oldPassword

@@ -1,6 +1,5 @@
 import * as common from 'common'
 import * as utils from 'utils'
-import * as login from 'domains/login'
 import * as yup from 'yup'
 import {
   useForm,

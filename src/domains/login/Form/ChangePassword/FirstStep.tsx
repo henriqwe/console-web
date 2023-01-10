@@ -12,6 +12,7 @@ import {
   useForm
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import * as services from 'services'
 
 type FirstStepProps = {
   setRecoverStep: Dispatch<SetStateAction<number>>
@@ -37,9 +38,9 @@ export function FirstStep({ setRecoverStep, setUsername }: FirstStepProps) {
   async function Submit(formData: { userName: string }) {
     setLoading(true)
     try {
-      const res = await utils.api.get(
-        utils.apiRoutes.getUserHash({ username: formData.userName })
-      )
+      const res = await services.ycodify.getUserHash({
+        userName: formData.userName
+      })
 
       setRecoverStep(1)
       utils.notification('User found! check your email account', 'success')

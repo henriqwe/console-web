@@ -8,6 +8,8 @@ import {
 } from 'react'
 import * as yup from 'yup'
 import * as utils from 'utils'
+import * as services from 'services'
+
 import { useUser } from 'contexts/UserContext'
 type CreditCardContextProps = {
   openSlide: boolean
@@ -66,9 +68,9 @@ export const DataProvider = ({ children }: ProviderProps) => {
       if (!user?.gatewayPaymentKey) {
         throw new Error('Unable to load credit cards')
       }
-      const { data } = await utils.localApi.get(
-        utils.apiRoutes.local.pagarme.cards.list(user?.gatewayPaymentKey!)
-      )
+      const { data } = await services.pagarme.getCustomersCards({
+        gatewayPaymentKey: user?.gatewayPaymentKey!
+      })
       setCardsData(data)
     } catch (err) {
       utils.showError(err)

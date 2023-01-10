@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
-import { changePassword } from './changePassword'
+import { createAccount } from '.'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -13,17 +13,18 @@ jest.mock('utils/api', () => {
   }
 })
 
-describe('changePassword function', () => {
+describe('createAccount function', () => {
   it('should changer user password', async () => {
     await act(async () => {
-      const result = await changePassword({
-        oldPassword: '123123',
+      const result = await createAccount({
+        email: '123123',
+        name: '123123',
         password: '123123',
         username: 'chteste'
       })
       expect(result.status).toEqual(200)
-      expect(result.config.data).toEqual(
-        '{"username":"chteste","password":"123123","oldPassword":"123123"}'
+      expect(result.data).toEqual(
+        '{"username":"chteste","password":"1231234","oldPassword":"1231234"}'
       )
     })
   })
