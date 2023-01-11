@@ -8,7 +8,7 @@ export async function getUserToken({
   username: string
   password: string
 }) {
-  const res = await utils.api.post(
+  return utils.api.post(
     utils.apiRoutes.getUserToken,
     stringify({
       username,
@@ -26,5 +26,4 @@ export async function getUserToken({
       }
     }
   )
-  return res
 }

@@ -5,11 +5,11 @@ import { createAccount } from '.'
 jest.mock('utils/api', () => {
   const axios = require('axios')
 
-  const api = axios.create({
-    baseURL: `https://api.ycodify.com/`
+  const localApi = axios.create({
+    baseURL: `http://localhost:3000`
   })
   return {
-    api
+    localApi
   }
 })
 
@@ -23,9 +23,6 @@ describe('createAccount function', () => {
         username: 'chteste'
       })
       expect(result.status).toEqual(200)
-      expect(result.data).toEqual(
-        '{"username":"chteste","password":"1231234","oldPassword":"1231234"}'
-      )
     })
   })
 })

@@ -147,7 +147,7 @@ export const DataProvider = ({ children }: ProviderProps) => {
 
   async function deleteCard(cardId: string) {
     try {
-      await utils.localApi.post(utils.apiRoutes.local.pagarme.cards.delete, {
+      await services.pagarme.deleteCard({
         customerId: user?.gatewayPaymentKey!,
         cardId
       })

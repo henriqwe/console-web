@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
-import { customersCreate } from '.'
+import { getParser } from '.'
+import * as services from 'services'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -17,18 +18,18 @@ jest.mock('utils/api', () => {
   }
 })
 
-describe('customersCreate function', () => {
+describe('getParser function', () => {
   it('should changer user password', async () => {
     await act(async () => {
-      const result = await customersCreate({
-        name: 'John Doe',
-        email: 'john@doe.com',
-        username: 'JohnDoe'
+      const userData = await services.ycodify.getUserToken({
+        password: '1231234',
+        username: 'chteste'
+      })
+      const result = await getParser({
+        accessToken: userData.data.access_token,
+        name: 'teste'
       })
       expect(result.status).toEqual(200)
-      expect(result.config.data).toEqual(
-        '{"name":"John Doe","email":"john@doe.com","username":"JohnDoe"}'
-      )
     })
   })
 })

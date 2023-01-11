@@ -16,6 +16,7 @@ type formData = {
   number: string
 }
 import * as creditCardContext from 'domains/dashboard/MyAccount/Cards/CreditCardContext'
+import * as services from 'services'
 
 export function Create() {
   const [loading, setLoading] = useState(false)
@@ -43,28 +44,21 @@ export function Create() {
       const [month, year] = formData.expiry.split('/')
       const brandName = utils.handleBrandName(cardBrand!)
 
-      await utils.localApi.post(
-        utils.apiRoutes.local.pagarme.cards.create,
-        {
-          customerId: user?.gatewayPaymentKey,
-          number: formData.number,
-          holder_name: formData.name,
-          exp_month: month,
-          exp_year: year,
-          cvv: formData.cvv,
-          brand: brandName,
-          line_1: `${user?.userData?.addrNumber}, ${user?.userData?.addrStreet}`,
-          zip_code: user?.userData?.addrZip,
-          city: user?.userData?.addrCity,
-          state: user?.userData?.addrDistrict,
-          country: user?.userData?.addrCountry
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
+      await services.pagarme.createCard({
+        customerId: user?.gatewayPaymentKey,
+        number: formData.number,
+        holder_name: formData.name,
+        exp_month: month,
+        exp_year: year,
+        cvv: formData.cvv,
+        brand: brandName,
+        line_1: `${user?.userData?.addrNumber}, ${user?.userData?.addrStreet}`,
+        zip_code: user?.userData?.addrZip,
+        city: user?.userData?.addrCity,
+        state: user?.userData?.addrDistrict,
+        country: user?.userData?.addrCountry
+      })
+
       await getCards()
       setOpenSlide(false)
       utils.notification('Credit card successfully added', 'success')

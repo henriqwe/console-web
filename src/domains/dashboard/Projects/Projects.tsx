@@ -1,8 +1,7 @@
 import * as common from 'common'
 import * as utils from 'utils'
 import * as dashboard from 'domains/dashboard'
-import axios from 'axios'
-import { Icon } from '@iconify/react'
+import * as services from 'services'
 import {
   PlusIcon,
   SearchIcon,
@@ -14,7 +13,7 @@ import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { routes } from 'domains/routes'
-import { useId } from 'react'
+import { useUser } from 'contexts/UserContext'
 import { useLocalTour } from 'contexts/TourContext'
 
 type Schemas = {
@@ -26,6 +25,8 @@ type Schemas = {
 }
 
 export function Projects() {
+  const { user } = useUser()
+
   const { control, watch } = useForm()
   const {
     setOpenSlide,
@@ -44,13 +45,10 @@ export function Projects() {
 
   async function loadSchemas() {
     try {
-      const { data } = await utils.api.get(utils.apiRoutes.schemas, {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
-        }
+      const { data } = await services.ycodify.getSchemas({
+        accessToken: user?.accessToken!
       })
+
       setSchemas(data)
     } catch (err: any) {
       if (err.response.status !== 404) {
@@ -71,7 +69,8 @@ export function Projects() {
     return schemas.filter((v) => v.name.match(re))
   }
 
-  function filterSchemas() {    setFilteredSchemas(match(watch('search')))
+  function filterSchemas() {
+    setFilteredSchemas(match(watch('search')))
     setShowFiltered(true)
   }
   function removeFilterSchemas() {
@@ -94,7 +93,8 @@ export function Projects() {
   useEffect(() => {
     if (watch('search') && watch('search') !== '') {
       const timeoutId = setTimeout(() => {
-        filterSchemas()}, 1000)
+        filterSchemas()
+      }, 1000)
       return () => clearTimeout(timeoutId)
     }
     removeFilterSchemas()
@@ -223,7 +223,7 @@ export function Project({
                   utils.notification('Copied to clipboard', 'success')
                 }}
               >
-                <div title='Copy'>
+                <div title="Copy">
                   <DocumentDuplicateIcon
                     className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
                     onClick={() =>

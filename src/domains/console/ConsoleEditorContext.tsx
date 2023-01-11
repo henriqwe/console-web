@@ -12,9 +12,12 @@ import {
   MutableRefObject
 } from 'react'
 import * as common from 'common'
+import * as services from 'services'
+
 import { javascriptLanguage } from '@codemirror/lang-javascript'
 import { completeFromGlobalScope } from './DataApiSection/Console/Editors/Autocomplete'
 import { useRouter } from 'next/router'
+import { useUser } from 'contexts/UserContext'
 
 import * as data from 'domains/console'
 import * as utils from 'utils'
@@ -127,7 +130,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [activeEntitiesSidebar, setActiveEntitiesSidebar] = useState(
     new Set<string>()
   )
-
+  const { user } = useUser()
   const [currentEditorAction, setCurrentEditorAction] =
     useState<actionType>('READ')
   const [textModeler, setTextModeler] = useState<string>('')
@@ -165,14 +168,11 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
   async function loadParser() {
     try {
-      const { data } = await utils.localApi.get(
-        utils.apiRoutes.local.parser(router.query.name as string),
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      const { data } = await services.ycodify.getParser({
+        name: router.query.name as string,
+        accessToken: user?.accessToken!
+      })
+
       setdocumentationValue(data.data)
     } catch (err: any) {
       console.log(err)
