@@ -1,6 +1,7 @@
 import { AssociationCard } from './AssociationCard'
 import * as utils from 'utils'
 import * as common from 'common'
+import * as yup from 'yup'
 import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
 import { PlusIcon } from '@heroicons/react/outline'
@@ -15,39 +16,9 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup'
 
 export function AssociationTab() {
-  const router = useRouter()
-  const [submitLoading, setSubmitLoading] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
   const [openForm, setOpenForm] = useState(false)
   const { selectedEntity, setReload, reload, setSelectedEntity, schemaTables } =
     consoleSection.useSchemaManager()
-
-  async function RemoveTable() {
-    try {
-      setSubmitLoading(true)
-      await utils.api.delete(
-        `${utils.apiRoutes.entity(
-          router.query.name as string
-        )}/${selectedEntity}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
-      setReload(!reload)
-      setSelectedEntity(undefined)
-      utils.notification(
-        `Table ${selectedEntity} deleted successfully`,
-        'success'
-      )
-    } catch (err: any) {
-      utils.showError(err)
-    } finally {
-      setSubmitLoading(false)
-    }
-  }
 
   // if (loading) {
   //   return (
@@ -89,8 +60,8 @@ export function AssociationTab() {
           <AssociationCard
             key={attribute}
             attribute={attribute}
-            schemaTables={schemaTables}
-            selectedEntity={selectedEntity}
+            schemaTables={schemaTables!}
+            selectedEntity={selectedEntity!}
           />
         ))}
       {Object.keys(schemaTables!)
@@ -110,7 +81,7 @@ export function AssociationTab() {
             <AssociationCard
               key={attribute}
               attribute={attribute}
-              schemaTables={schemaTables}
+              schemaTables={schemaTables!}
               selectedEntity={entity}
               noEdit
               reverse
@@ -143,25 +114,6 @@ export function AssociationTab() {
           />
         </>
       )}
-      <common.Modal
-        open={openModal}
-        setOpen={setOpenModal}
-        loading={submitLoading}
-        disabled={submitLoading}
-        title={`Remove ${selectedEntity} entity?`}
-        description={
-          <>
-            <p className="text-sm text-gray-600">
-              Are you sure you want to remove this entity?{' '}
-            </p>
-            <p className="text-sm font-bold text-gray-600">
-              This action is irreversible
-            </p>
-          </>
-        }
-        buttonTitle="Remove entity"
-        handleSubmit={RemoveTable}
-      />
     </div>
   )
 }
@@ -179,14 +131,23 @@ function AttributeForm({
   selectedEntity?: string
   schemaTables?: types.SchemaTable
 }) {
-  const { associationSchema } = consoleSection.useSchemaManager()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const {
     control,
     formState: { errors },
     handleSubmit
-  } = useForm({ resolver: yupResolver(associationSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        AssociationName: yup.string().required('This field is required'),
+        ReferenceEntity: yup
+          .object()
+          .test('empty', 'This field is required', (val) => !!val.value)
+          .required('This field is required')
+      })
+    )
+  })
 
   async function Submit(data: {
     AssociationName: string
@@ -225,7 +186,6 @@ function AttributeForm({
         'success'
       )
     } catch (err: any) {
-      console.log(err)
       utils.showError(err)
     } finally {
       setLoading(false)
@@ -241,6 +201,7 @@ function AttributeForm({
         <Controller
           name={'AssociationName'}
           control={control}
+          defaultValue=''
           render={({ field: { onChange, value } }) => (
             <div className="w-1/3">
               <common.Input
@@ -257,6 +218,7 @@ function AttributeForm({
         <Controller
           name={'ReferenceEntity'}
           control={control}
+          defaultValue={{}}
           render={({ field: { onChange, value } }) => (
             <div className="w-1/3 pr-2">
               <common.Select
@@ -279,6 +241,7 @@ function AttributeForm({
         <Controller
           name={'Comment'}
           control={control}
+          defaultValue=''
           render={({ field: { onChange, value } }) => (
             <div>
               <common.Input

@@ -1,8 +1,6 @@
 import * as common from 'common'
 import * as utils from 'utils'
 import * as dashboard from 'domains/dashboard'
-import axios from 'axios'
-import { Icon } from '@iconify/react'
 import {
   PlusIcon,
   SearchIcon,

@@ -1,3 +1,4 @@
+import * as yup from 'yup'
 import * as utils from 'utils'
 import * as common from 'common'
 import * as types from 'domains/console/types'
@@ -28,14 +29,19 @@ export function FieldDetail({
 }) {
   const router = useRouter()
   const [openModal, setOpenModal] = useState(false)
-  const { updateAssociationSchema, selectedEntity, setReload, reload } =
-    consoleData.useSchemaManager()
+  const { selectedEntity, setReload, reload } = consoleData.useSchemaManager()
 
   const {
     formState: { errors },
     control,
     handleSubmit
-  } = useForm({ resolver: yupResolver(updateAssociationSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Name: yup.string().required()
+      })
+    )
+  })
 
   async function Save(formData: FormData) {
     try {
