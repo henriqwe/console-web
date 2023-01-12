@@ -64,7 +64,6 @@ type SchemaManagerContextProps = {
   loadEntities(): Promise<void>
   entitiesLoading: boolean
   setEntitiesLoading: Dispatch<SetStateAction<boolean>>
-  createEntitySchema: (columnsGroup: number[]) => yup.AnyObjectSchema
   columnNames: string[]
   setColumnNames: Dispatch<SetStateAction<string[]>>
   addAttributeSchema: yup.AnyObjectSchema
@@ -238,58 +237,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
 
   const [columnNames, setColumnNames] = useState<string[]>([])
 
-  function createEntitySchema(columnsGroup: number[]) {
-    let shape = {
-      Name: yup
-        .string()
-        .required('Entity name is required')
-        .test('equal', 'Entity name must contain only letters', (val) => {
-          const validation = new RegExp(/^[A-Za-z ]*$/)
-          return validation.test(val as string)
-        })
-        .test('equal', 'Entity name cannot contain spaces', (val) => {
-          const validation = new RegExp(/\s/g)
-          return !validation.test(val as string)
-        })
-    }
-
-    for (const col of columnsGroup.filter((col) => col !== 0)) {
-      shape = {
-        ...shape,
-        [`ColumnName${col}`]: yup
-          .string()
-          .required('Column name is required')
-          .test('equal', 'Column cannot contain spaces', (val) => {
-            const validation = new RegExp(/\s/g)
-            return !validation.test(val as string)
-          })
-          .test('equal', 'Column name must contain only letters', (val) => {
-            const validation = new RegExp(/^[A-Za-z ]*$/)
-            return validation.test(val as string)
-          })
-          .test('equal', 'Column name must be unique', (val) => {
-            if (
-              columnNames
-                .filter((col) => col !== '0' && col !== undefined)
-                .filter((col) => col === val).length > 1
-            ) {
-              return false
-            }
-            return true
-          }),
-        [`Type${col}`]: yup.object(),
-        [`Length${col}`]: yup
-          .number()
-          .typeError('Length must be a number')
-          .nullable()
-          .moreThan(-1, 'Length must be positive')
-          .transform((_, val) => (val !== '' ? Number(val) : null)),
-        [`Comment${col}`]: yup.string()
-      }
-    }
-
-    return yup.object().shape(shape)
-  }
 
   const addAttributeSchema = yup.object().shape({
     ColumnName: yup
@@ -363,7 +310,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         loadEntities,
         entitiesLoading,
         setEntitiesLoading,
-        createEntitySchema,
         columnNames,
         setColumnNames,
         addAttributeSchema

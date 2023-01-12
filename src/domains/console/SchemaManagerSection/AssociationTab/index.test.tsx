@@ -119,8 +119,8 @@ describe('AssociationTab', () => {
     const referenceEntitySelect = screen.getAllByText('Reference entity')
 
     fireEvent.click(referenceEntitySelect[1])
-    const referenceOption = screen.getByText('books')
-    fireEvent.click(referenceOption)
+    const referenceOption = screen.getAllByText('books')
+    fireEvent.click(referenceOption[1])
 
     const commentInput = screen.getByPlaceholderText('Comment')
     fireEvent.change(commentInput, { target: { value: 'comments' } })
@@ -156,8 +156,8 @@ describe('AssociationTab', () => {
     const referenceEntitySelect = screen.getAllByText('Reference entity')
 
     fireEvent.click(referenceEntitySelect[1])
-    const referenceOption = screen.getByText('books')
-    fireEvent.click(referenceOption)
+    const referenceOption = screen.getAllByText('books')
+    fireEvent.click(referenceOption[1])
 
     const commentInput = screen.getByPlaceholderText('Comment')
     fireEvent.change(commentInput, { target: { value: 'comments' } })
