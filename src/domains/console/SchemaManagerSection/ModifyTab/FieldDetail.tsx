@@ -1,4 +1,5 @@
 import * as utils from 'utils'
+import * as yup from 'yup'
 import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleData from 'domains/console'
@@ -19,11 +20,6 @@ type FormData = {
   type?: string
 }
 
-type SelectValue = {
-  name: any
-  value: any
-}
-
 export function FieldDetail({
   data,
   setShowDetails
@@ -41,14 +37,14 @@ export function FieldDetail({
     Index: true,
     Comment: true
   })
-  const { fieldSchema, selectedEntity, setReload, reload, columnNames } =
+  const { selectedEntity, setReload, reload, columnNames } =
     consoleData.useSchemaManager()
 
   const {
     watch,
     formState: { errors },
     control
-  } = useForm({ resolver: yupResolver(fieldSchema) })
+  } = useForm()
 
   async function Save(formData: FormData) {
     if (formData.name) {
@@ -79,7 +75,7 @@ export function FieldDetail({
       })
 
       setReload(!reload)
-      utils.notification('attribute updated successfully', 'success')
+      utils.notification('Attribute updated successfully', 'success')
       setShowDetails(false)
     } catch (err) {
       utils.showError(err)
@@ -96,7 +92,10 @@ export function FieldDetail({
       })
 
       setReload(!reload)
-      utils.notification('attribute updated successfully', 'success')
+      utils.notification(
+        `Attribute ${data.name} deleted successfully`,
+        'success'
+      )
       setShowDetails(false)
     } catch (err) {
       utils.showError(err)
@@ -104,8 +103,8 @@ export function FieldDetail({
   }
 
   return (
-    <common.Card className="p-6 bg-white dark:bg-menu-primary border border-gray-300">
-      <div className="flex gap-4 items-center">
+    <common.Card className="p-6 bg-white border border-gray-300 dark:bg-menu-primary">
+      <div className="flex items-center gap-4">
         <common.Buttons.WhiteOutline
           type="button"
           onClick={() => setShowDetails(false)}
@@ -361,6 +360,7 @@ function FormField({
         event.preventDefault()
         handleSubmit()
       }}
+      data-testid={`form-${title}`}
     >
       <p className="flex items-center content-center">{title}</p>
       <div className="flex items-center w-full gap-4">
@@ -368,6 +368,7 @@ function FormField({
         {!activeEdit ? (
           <common.Buttons.GreenOutline
             type="button"
+            data-testid={`edit-${title}`}
             onClick={() => {
               setActiveFields((old) => {
                 return {
@@ -386,6 +387,7 @@ function FormField({
           <div className="flex gap-2">
             <common.Buttons.RedOutline
               type="button"
+              data-testid={`cancel-${title}`}
               onClick={() => {
                 setActiveFields((old) => {
                   return {
@@ -400,7 +402,10 @@ function FormField({
                 <XIcon />
               </div>
             </common.Buttons.RedOutline>
-            <common.Buttons.GreenOutline type="submit">
+            <common.Buttons.GreenOutline
+              type="submit"
+              data-testid={`submit-${title}`}
+            >
               <div className="w-5 h-5">
                 <CheckIcon />
               </div>

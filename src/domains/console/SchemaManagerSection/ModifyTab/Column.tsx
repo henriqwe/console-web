@@ -24,10 +24,10 @@ export function Column({
           type="button"
           onClick={() => setShowDetails(true)}
         >
-          <PencilIcon className="w-5 h-5" />
+          <PencilIcon className="w-5 h-5" data-testid="edit" />
         </common.Buttons.WhiteOutline>
       ) : (
-        <div className="ml-1 w-1 h-1 rounded-full bg-slate-700" />
+        <div className="w-1 h-1 ml-1 rounded-full bg-slate-700" />
       )}
       <p className="font-semibold dark:text-text-secondary">
         {data.name} -{' '}
