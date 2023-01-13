@@ -18,18 +18,23 @@ jest.mock('utils/api', () => {
 })
 
 describe('createCard function', () => {
-  it('should changer user password', async () => {
+  it('should create a credit card in pagarme', async () => {
     await act(async () => {
-      return true
-      // const result = await createCard({
-      //   name: 'John Doe',
-      //   email: 'john@doe.com',
-      //   username: 'JohnDoe'
-      // })
-      // expect(result.status).toEqual(200)
-      // expect(result.config.data).toEqual(
-      //   '{"name":"John Doe","email":"john@doe.com","username":"JohnDoe"}'
-      // )
+      const result = await createCard({
+        brand: 'Visa',
+        city: 'Maceió',
+        country: 'BR',
+        customerId: 'cus_EvM50rLHzjFeozWq',
+        cvv: '123',
+        exp_month: '12',
+        exp_year: '28',
+        holder_name: 'CLAUDIO',
+        line_1: '105, Rua são caetano',
+        number: '4000000000000010',
+        state: 'AL',
+        zip_code: '57084079'
+      })
+      expect(result.status).toEqual(200)
     })
   })
 })

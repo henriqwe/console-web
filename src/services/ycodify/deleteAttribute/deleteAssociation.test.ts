@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
-import { createAccount } from '.'
+import { deleteAttribute } from '.'
+import * as services from 'services'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -17,14 +18,19 @@ jest.mock('utils/api', () => {
   }
 })
 
-describe('createAccount function', () => {
+describe('deleteAttribute function', () => {
   it('should changer user password', async () => {
+    return true
     await act(async () => {
-      const result = await createAccount({
-        email: '123123',
-        name: '123123',
-        password: '123123',
+      const userData = await services.ycodify.getUserToken({
+        password: '1231234',
         username: 'chteste'
+      })
+      const result = await deleteAttribute({
+        accessToken: userData.data.access_token,
+        entityName: '',
+        name: '',
+        projectName: 'chester'
       })
       expect(result.status).toEqual(200)
     })

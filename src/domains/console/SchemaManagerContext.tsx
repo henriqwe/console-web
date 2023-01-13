@@ -9,6 +9,8 @@ import {
 import * as yup from 'yup'
 import * as types from 'domains/console/types'
 import * as utils from 'utils'
+import * as services from 'services'
+
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 
@@ -146,7 +148,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     Index: yup.object().required(),
     Comment: yup.string().required()
   })
- 
 
   function goToEntitiesPage() {
     setShowCreateEntitySection(false)
@@ -216,14 +217,11 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     try {
       setEntitiesLoading(true)
 
-      const { data } = await utils.api.get(
-        `${utils.apiRoutes.entityList(router.query.name as string)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
-          }
-        }
-      )
+      const { data } = await services.ycodify.getEntityList({
+        accessToken: getCookie('access_token') as string,
+        name: router.query.name as string
+      })
+
       setSchemaTables(data)
       setEntities(Object.keys(data) as string[])
     } catch (err: any) {
@@ -236,7 +234,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   }
 
   const [columnNames, setColumnNames] = useState<string[]>([])
-
 
   const addAttributeSchema = yup.object().shape({
     ColumnName: yup

@@ -1,6 +1,8 @@
 import * as common from 'common'
 import * as utils from 'utils'
 import * as yup from 'yup'
+import * as services from 'services'
+
 import {
   useForm,
   FieldValues,
@@ -31,13 +33,11 @@ export function AdminLogin() {
   async function Submit(formData: { userName: string; password: string }) {
     try {
       setLoading(true)
-      const { data } = await utils.localApi.post(
-        utils.apiRoutes.local.adminLogin,
-        {
-          username: formData.userName,
-          password: formData.password
-        }
-      )
+      const { data } = await services.ycodify.adminLogin({
+        username: formData.userName,
+        password: formData.password
+      })
+
       utils.notification('Login successfully', 'success')
       utils.setCookie('admin_access_token', data.data.access_token)
       utils.setCookie('X-TenantID', data.data.username)

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
-import { deleteCard } from '.'
+import { adminLogin } from '.'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -17,19 +17,14 @@ jest.mock('utils/api', () => {
   }
 })
 
-describe('deleteCard function', () => {
+describe('adminLogin function', () => {
   it('should changer user password', async () => {
     await act(async () => {
-      return true
-      // const result = await deleteCard({
-      //   name: 'John Doe',
-      //   email: 'john@doe.com',
-      //   username: 'JohnDoe'
-      // })
-      // expect(result.status).toEqual(200)
-      // expect(result.config.data).toEqual(
-      //   '{"name":"John Doe","email":"john@doe.com","username":"JohnDoe"}'
-      // )
+      const result = await adminLogin({
+        password: 'A2vWiOx1O0P2NTGK',
+        username: 'chteste@chester'
+      })
+      expect(result.status).toEqual(200)
     })
   })
 })

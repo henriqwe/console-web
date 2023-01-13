@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { PlusIcon, CheckIcon } from '@heroicons/react/outline'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import * as services from 'services'
 
 export function CreateEntity() {
   const router = useRouter()
@@ -87,20 +88,6 @@ export function CreateEntity() {
   async function Submit(data: any) {
     try {
       setLoading(true)
-      // const response = await utils.api
-      //   .get(`${utils.apiRoutes.schemas}/${router.query.name}`, {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //       Accept: 'application/json',
-      //       Authorization: `Bearer ${utils.getCookie('access_token')}`
-      //     }
-      //   })
-      //   .catch(() => null)
-
-      // const tables = Object.keys(response ? response.data.data : {})
-      // if (tables.includes(data.Name.toLowerCase())) {
-      //   throw new Error(`Entity ${data.Name} already exists`)
-      // }
 
       const filteredData = columnsGroup.filter((column) => column !== 0)
 
@@ -115,20 +102,12 @@ export function CreateEntity() {
         })
       }
 
-      await utils.api.post(
-        utils.apiRoutes.entity(router.query.name as string),
-        {
-          name: data.Name,
-          attributes: columnValues,
-          associations: []
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.createEntitySchema({
+        accessToken: utils.getCookie('access_token') as string,
+        attributes: columnValues,
+        entityName: router.query.name as string,
+        name: data.Name
+      })
 
       // for (const column of columnValues) {
       //   await utils.api.post(

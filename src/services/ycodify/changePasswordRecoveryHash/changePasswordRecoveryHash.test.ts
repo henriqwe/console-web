@@ -8,24 +8,26 @@ jest.mock('utils/api', () => {
   const api = axios.create({
     baseURL: `https://api.ycodify.com/`
   })
+  const localApi = axios.create({
+    baseURL: `http://localhost:3000`
+  })
   return {
-    api
+    api,
+    localApi
   }
 })
 
 describe('changePasswordRecoveryHash function', () => {
   it('should changer user password using hash', async () => {
     return true
-    // await act(async () => {
-    //   const result = await changePasswordRecoveryHash({
-    //     oldPassword: '1231234',
-    //     password: '1231234',
-    //     username: 'chteste'
-    //   })
-    //   expect(result.status).toEqual(200)
-    //   expect(result.config.data).toEqual(
-    //     '{"username":"chteste","password":"1231234","oldPassword":"1231234"}'
-    //   )
-    // })
+    //  COMO OBTER O passwordRecoveryHash?
+    await act(async () => {
+      const result = await changePasswordRecoveryHash({
+        password: '',
+        passwordRecoveryHash: '',
+        username: ''
+      })
+      expect(result.status).toEqual(200)
+    })
   })
 })

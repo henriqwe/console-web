@@ -1,5 +1,6 @@
 import * as utils from 'utils'
 import * as common from 'common'
+import * as services from 'services'
 import * as consoleSection from 'domains/console'
 import { useEffect, useId, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -43,16 +44,12 @@ export function DefaultPage() {
 
   async function publishSchema(value: boolean) {
     try {
-      await utils.api.put(
-        `${utils.apiRoutes.schemas}/${router.query.name}`,
-        { status: value ? 2 : 1 },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.updatePublishSchema({
+        accessToken: utils.getCookie('access_token') as string,
+        name: router.query.name as string,
+        status: value ? 2 : 1
+      })
+
       setSchemaStatus(value ? 2 : 1)
     } catch (err) {
       utils.showError(err)

@@ -43,7 +43,6 @@ export function Create() {
       }
       const [month, year] = formData.expiry.split('/')
       const brandName = utils.handleBrandName(cardBrand!)
-
       await services.pagarme.createCard({
         customerId: user?.gatewayPaymentKey,
         number: formData.number,

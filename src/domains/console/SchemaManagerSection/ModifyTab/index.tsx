@@ -1,6 +1,7 @@
 import { Column } from './Column'
 import * as utils from 'utils'
 import * as common from 'common'
+import * as services from 'services'
 import * as consoleSection from 'domains/console'
 import { XIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline'
 import { SetStateAction, useState, Dispatch, useEffect } from 'react'
@@ -31,17 +32,17 @@ export function ModifyTab({ loading }: ModifyTabProps) {
   async function RemoveEntity() {
     try {
       setSubmitLoading(true)
-      await utils.api.delete(
-        `${utils.apiRoutes.entity(
-          router.query.name as string
-        )}/${selectedEntity}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      console.log({
+        accessToken: utils.getCookie('access_token') as string,
+        name: router.query.name as string,
+        selectedEntity: selectedEntity as string
+      })
+      await services.ycodify.deleteEntity({
+        accessToken: utils.getCookie('access_token') as string,
+        name: router.query.name as string,
+        selectedEntity: selectedEntity as string
+      })
+
       setSelectedEntity(undefined)
       utils.notification(
         `Entity ${selectedEntity} deleted successfully`,

@@ -2,6 +2,7 @@ import { AssociationCard } from './AssociationCard'
 import * as utils from 'utils'
 import * as common from 'common'
 import * as yup from 'yup'
+import * as services from 'services'
 import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
 import { PlusIcon } from '@heroicons/react/outline'
@@ -160,24 +161,16 @@ function AttributeForm({
   }) {
     try {
       setLoading(true)
-      await utils.api.post(
-        utils.apiRoutes.association({
-          projectName: router.query.name as string,
-          entityName: selectedEntity as string
-        }),
-        {
-          name: data.AssociationName,
-          type: data.ReferenceEntity.name,
-          nullable: data.Nullable || false,
-          comment: data.Comment
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+
+      await services.ycodify.createAssociation({
+        accessToken: utils.getCookie('access_token') as string,
+        Comment: data.Comment as string,
+        name: data.AssociationName,
+        type: data.ReferenceEntity.name,
+        Nullable: data.Nullable || false,
+        projectName: router.query.name as string,
+        selectedEntity: selectedEntity as string
+      })
 
       setReload(!reload)
       setOpenForm(false)
@@ -201,7 +194,7 @@ function AttributeForm({
         <Controller
           name={'AssociationName'}
           control={control}
-          defaultValue=''
+          defaultValue=""
           render={({ field: { onChange, value } }) => (
             <div className="w-1/3">
               <common.Input
@@ -241,7 +234,7 @@ function AttributeForm({
         <Controller
           name={'Comment'}
           control={control}
-          defaultValue=''
+          defaultValue=""
           render={({ field: { onChange, value } }) => (
             <div>
               <common.Input

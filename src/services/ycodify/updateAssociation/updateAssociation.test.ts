@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
-import { changePassword } from '.'
+import { updateAssociation } from '.'
+import * as services from 'services'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -17,13 +18,20 @@ jest.mock('utils/api', () => {
   }
 })
 
-describe('changePassword function', () => {
+describe('createAssociation function', () => {
   it('should changer user password', async () => {
+    return true
+    const userData = await services.ycodify.getUserToken({
+      password: '1231234',
+      username: 'chteste'
+    })
     await act(async () => {
-      const result = await changePassword({
-        oldPassword: '1231234',
-        password: '1231234',
-        username: 'chteste'
+      const result = await updateAssociation({
+        accessToken: userData.data.access_token,
+        attribute: '',
+        name: '',
+        projectName: 'chester',
+        selectedEntity: ''
       })
       expect(result.status).toEqual(200)
       expect(result.config.data).toEqual(

@@ -8,8 +8,12 @@ jest.mock('utils/api', () => {
   const api = axios.create({
     baseURL: `https://api.ycodify.com/`
   })
+  const localApi = axios.create({
+    baseURL: `http://localhost:3000`
+  })
   return {
-    api
+    api,
+    localApi
   }
 })
 

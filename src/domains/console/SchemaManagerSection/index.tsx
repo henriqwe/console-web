@@ -3,6 +3,8 @@ import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
 import { useEffect, useState } from 'react'
 import * as utils from 'utils'
+import * as services from 'services'
+
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
@@ -40,16 +42,12 @@ export function SchemaManagerSection() {
 
   async function loadEntityData() {
     try {
-      const { data } = await utils.api.get(
-        `${utils.apiRoutes.entity(
-          router.query.name as string
-        )}/${selectedEntity}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
-          }
-        }
-      )
+      const { data } = await services.ycodify.getEntity({
+        accessToken: getCookie('access_token') as string,
+        name: router.query.name as string,
+        selectedEntity: selectedEntity as string
+      })
+
       const entityData: types.EntityData[] = []
       Object.keys(data).map((key) => {
         if (key !== '_classDef') {
@@ -76,11 +74,10 @@ export function SchemaManagerSection() {
   }, [selectedEntity, reload])
 
   useEffect(() => {
-    utils.api
-      .get(`${utils.apiRoutes.schemas}/${router.query.name as string}`, {
-        headers: {
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
-        }
+    services.ycodify
+      .getSchema({
+        accessToken: utils.getCookie('access_token') as string,
+        name: router.query.name as string
       })
       .then(({ data }) => {
         setSchemaStatus(data.status)

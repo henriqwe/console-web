@@ -2,6 +2,7 @@ import * as utils from 'utils'
 import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleData from 'domains/console'
+import * as services from 'services'
 import { PencilIcon, XIcon, CheckIcon } from '@heroicons/react/outline'
 import { Dispatch, ReactNode, SetStateAction, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
@@ -69,19 +70,14 @@ export function FieldDetail({
     }
 
     try {
-      await utils.api.put(
-        `${utils.apiRoutes.attribute({
-          entityName: selectedEntity as string,
-          projectName: router.query.name as string
-        })}/${data.name}`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.updateAttribute({
+        accessToken: utils.getCookie('access_token') as string,
+        entityName: selectedEntity as string,
+        formData: formData,
+        name: data.name,
+        projectName: router.query.name as string
+      })
+
       setReload(!reload)
       utils.notification('attribute updated successfully', 'success')
       setShowDetails(false)
@@ -92,18 +88,13 @@ export function FieldDetail({
 
   async function Remove() {
     try {
-      await utils.api.delete(
-        `${utils.apiRoutes.attribute({
-          projectName: router.query.name as string,
-          entityName: selectedEntity as string
-        })}/${data.name}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.deleteAttribute({
+        accessToken: utils.getCookie('access_token') as string,
+        entityName: selectedEntity as string,
+        name: data.name,
+        projectName: router.query.name as string
+      })
+
       setReload(!reload)
       utils.notification('attribute updated successfully', 'success')
       setShowDetails(false)

@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
-import { createAccount } from '.'
+import { updatePublishSchema } from '.'
+import * as services from 'services'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -17,16 +18,22 @@ jest.mock('utils/api', () => {
   }
 })
 
-describe('createAccount function', () => {
+describe('updatePublishSchema function', () => {
   it('should changer user password', async () => {
     await act(async () => {
-      const result = await createAccount({
-        email: '123123',
-        name: '123123',
-        password: '123123',
+      const userData = await services.ycodify.getUserToken({
+        password: '1231234',
         username: 'chteste'
       })
+      const result = await updatePublishSchema({
+        accessToken: userData.data.access_token,
+        name: 'chester',
+        status: 1
+      })
       expect(result.status).toEqual(200)
+      expect(result.config.data).toEqual(
+        '{"username":"chteste","password":"1231234","oldPassword":"1231234"}'
+      )
     })
   })
 })
