@@ -4,43 +4,13 @@ import * as services from 'services'
 import * as consoleSection from 'domains/console'
 import { useEffect, useId, useState } from 'react'
 import { useRouter } from 'next/router'
-import { ArrowRightIcon, PlusIcon } from '@heroicons/react/solid'
+import { ArrowRightIcon } from '@heroicons/react/solid'
 import { Tour } from './Tour'
-import { TourProvider } from '@reactour/tour'
 
 export function DefaultPage() {
   const router = useRouter()
   const [publish, setPublish] = useState(false)
   const { schemaStatus, setSchemaStatus } = consoleSection.useSchemaManager()
-  const sections = [
-    {
-      name: {
-        type: 'title',
-        value: 'Getting started'
-      }
-    },
-    {
-      name: {
-        type: 'link',
-        value: 'Hello world'
-      },
-      description: 'Docs about the console.'
-    },
-    {
-      name: {
-        type: 'link',
-        value: 'Hello world'
-      },
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-    },
-    {
-      name: {
-        type: 'link',
-        value: 'Getting started'
-      },
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-    }
-  ]
 
   async function publishSchema(value: boolean) {
     try {
@@ -63,7 +33,7 @@ export function DefaultPage() {
   return (
     <>
       <Tour />
-      <div className="database-step-1 flex flex-col w-full h-full p-6">
+      <div className="flex flex-col w-full h-full p-6 database-step-1">
         <div className="flex items-center justify-between">
           <div>
             <p className="font-semibold">Publish console version</p>
@@ -72,10 +42,11 @@ export function DefaultPage() {
               version
             </p>
           </div>
-          <div className="database-step-2 flex gap-2">
+          <div className="flex gap-2 database-step-2">
             Publish version
             <common.Toggle
               enabled={publish}
+              data-testid="toggle"
               onChange={(value) => {
                 publishSchema(value)
                 setPublish(value)
@@ -84,9 +55,9 @@ export function DefaultPage() {
           </div>
         </div>
         <common.Separator />
-        <div className="mx-auto max-w-7xl py-12">
-          <div className="overflow-hidden rounded-lg border border-gray-300 dark:border-gray-700 shadow-lg lg:grid lg:grid-cols-2 lg:gap-4 relative">
-            <Waveform className="absolute inset-0 h-20 w-full -top-2" />
+        <div className="py-12 mx-auto max-w-7xl">
+          <div className="relative overflow-hidden border border-gray-300 rounded-lg shadow-lg dark:border-gray-700 lg:grid lg:grid-cols-2 lg:gap-4">
+            <Waveform className="absolute inset-0 w-full h-20 -top-2" />
             <div className="px-6 pt-10 pb-12 sm:px-16 sm:pt-16 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
               <div className="lg:self-center">
                 <h2 className="text-3xl font-bold tracking-tight dark:text-text-primary sm:text-4xl">
@@ -101,7 +72,7 @@ export function DefaultPage() {
                   icon={<ArrowRightIcon className="w-5 h-5" />}
                 >
                   <a
-                    className="text-lg font-semibold py-1"
+                    className="py-1 text-lg font-semibold"
                     target="_blank"
                     rel="noreferrer noopener"
                     href="https://www.blog.codify.com/"
@@ -112,7 +83,7 @@ export function DefaultPage() {
               </div>
             </div>
             <img
-              className="translate-x-6 translate-y-6 rounded-md object-cover object-left-top sm:translate-x-16 lg:translate-y-12"
+              className="object-cover object-left-top translate-x-6 translate-y-6 rounded-md sm:translate-x-16 lg:translate-y-12"
               src="/assets/images/blog.png"
             />
           </div>
