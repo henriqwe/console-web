@@ -11,11 +11,6 @@ const RelationEdge = ({
   sourcePosition,
   targetPosition,
   label,
-  labelStyle,
-  labelShowBg,
-  labelBgBorderRadius,
-  labelBgPadding,
-  labelBgStyle,
   data
 }: EdgeProps<RelationEdgeData>) => {
   const [path, centerX, centerY] = getSmoothStepPath({
@@ -26,20 +21,6 @@ const RelationEdge = ({
     sourcePosition,
     targetPosition
   })
-  const text = label ? (
-    <EdgeLabelRenderer
-      x={centerX}
-      y={centerY}
-      label={label}
-      labelStyle={labelStyle}
-      labelShowBg={labelShowBg}
-      labelBgStyle={labelBgStyle}
-      labelBgPadding={labelBgPadding}
-      labelBgBorderRadius={labelBgBorderRadius}
-      className={'z-50'}
-      style={{ zIndex: 99999 }}
-    />
-  ) : null
 
   const { relationType } = data!
   const [markerStart, markerEnd] = {
@@ -65,7 +46,7 @@ const RelationEdge = ({
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${centerX}px,${centerY}px)`
           }}
-          className="bg-white text-xs p-1 dark:bg-slate-600 rounded-md"
+          className="p-1 text-xs bg-white rounded-md dark:bg-slate-600"
         >
           {label}
         </div>
