@@ -78,6 +78,10 @@ export const apiRoutes = {
         getCard: (customerId: string, cardId: string) =>
           `/pagarme/cards/getCard?customerId=${customerId}&cardId=${cardId}`
       }
+    },
+    support: {
+      ticket: '/support/ticket',
+      message: '/support/message'
     }
   }
 }
