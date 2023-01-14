@@ -12,6 +12,7 @@ type SelectProps = {
     value: any
     name: any
   }
+  setValue?: (val: any) => void
   onChange?: (val: any) => void
   errors?: DeepMap<FieldValues, FieldError> & { message?: string }
   disabled?: boolean
@@ -22,6 +23,7 @@ type SelectProps = {
 export const Select = ({
   options,
   value,
+  setValue = undefined,
   onChange,
   errors,
   disabled = false,
@@ -32,7 +34,7 @@ export const Select = ({
 
   return (
     <Listbox
-      value={selected}
+      value={setValue ? value : selected}
       onChange={(val) => {
         setSelected(val)
         onChange && onChange(val)
@@ -54,12 +56,12 @@ export const Select = ({
             >
               <span
                 className={`block truncate ${
-                  !selected?.name
+                  !selected?.name || (setValue && !value?.name)
                     ? 'text-gray-400 dark:text-text-tertiary'
                     : 'dark:text-text-primary'
                 }`}
               >
-                {selected?.name || placeholder}
+                {setValue ? value?.name : selected?.name || placeholder}
               </span>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <SelectorIcon
@@ -95,7 +97,8 @@ export const Select = ({
                         <span
                           className={`
                             ${
-                              selected?.name === option.name
+                              selected?.name === option.name ||
+                              (setValue && value?.name === option.name)
                                 ? 'font-semibold'
                                 : 'font-normal'
                             }
@@ -106,7 +109,8 @@ export const Select = ({
                           {option.name}
                         </span>
 
-                        {selected?.name === option.name ? (
+                        {selected?.name === option.name ||
+                        (setValue && value?.name === option.name) ? (
                           <span
                             className={`
                               ${

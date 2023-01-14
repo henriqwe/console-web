@@ -98,8 +98,7 @@ export function CardCreditCard(card: CardCreditCardProps) {
             <div className="flex w-full p-4 justify-center items-center ">
               {' '}
               <span className="font-semibold">
-                {card.first_six_digits}*****
-                {card.last_four_digits}
+                **********{card.last_four_digits}
               </span>
             </div>
             <p className="text-sm font-bold text-gray-600">

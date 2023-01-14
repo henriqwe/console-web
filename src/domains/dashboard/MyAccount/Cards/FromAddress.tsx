@@ -10,14 +10,22 @@ import {
 } from 'react-hook-form'
 import { ChevronRightIcon } from '@heroicons/react/solid'
 import { useUser } from 'contexts/UserContext'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useSession } from 'next-auth/react'
+import * as iso1 from 'iso-3166-1'
+import * as iso2 from 'iso-3166-2'
 
 type formProps = {
   addrStreet: string
   addrNumber: string
-  addrCountry: string
-  addrDistrict: string
+  addrCountry: {
+    name: string
+    value: string
+  }
+  addrDistrict: {
+    name: string
+    value: string
+  }
   addrCity: string
   addrZip: string
 }
@@ -26,7 +34,6 @@ export function FromAddress() {
   const { user, setUser } = useUser()
   const [loading, setLoading] = useState(false)
   const { data: session } = useSession()
-
   const {
     username,
     email,
@@ -38,6 +45,26 @@ export function FromAddress() {
     addrZip,
     status
   } = user?.userData || {}
+
+  const defaultCountry = iso1.whereAlpha2(addrCountry) ?? iso1.whereAlpha2('BR')
+  const [currentCountry, setCurrentCountry] = useState({
+    name: defaultCountry!.country,
+    value: defaultCountry!.alpha2
+  })
+
+  const defaultDistrict = {
+    name:
+      iso2.data[currentCountry.value].sub[addrDistrict]?.name ??
+      'Rio Grande do Norte',
+    code: iso2.data[currentCountry.value].sub[addrDistrict]
+      ? addrDistrict
+      : 'BR-RN'
+  }
+
+  const [currentDistrict, setCurrentDistrict] = useState({
+    name: defaultDistrict.name,
+    value: defaultDistrict.code
+  })
 
   const {
     formState: { errors },
@@ -61,6 +88,8 @@ export function FromAddress() {
   function Submit(formData: formProps) {
     setLoading(true)
 
+    console.log('formData', formData)
+
     utils.api
       .post(
         utils.apiRoutes.updateAccount,
@@ -70,8 +99,8 @@ export function FromAddress() {
           status,
           addrStreet: formData.addrStreet,
           addrNumber: formData.addrNumber,
-          addrCountry: formData.addrCountry,
-          addrDistrict: formData.addrDistrict,
+          addrCountry: currentCountry.value,
+          addrDistrict: currentDistrict.value,
           addrCity: formData.addrCity,
           addrZip: formData.addrZip
         },
@@ -145,48 +174,66 @@ export function FromAddress() {
             />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2 gap-y-4">
-            <Controller
-              name="addrCountry"
-              control={control}
-              defaultValue={addrCountry}
-              render={({ field: { onChange } }) => (
-                <div className="w-full flex flex-col gap-y-2">
-                  <common.Input
-                    placeholder="Country"
-                    label="Country"
-                    defaultValue={addrCountry}
-                    className="col-span-3 sm:col-span-1"
-                    onChange={onChange}
-                  />
-                  {errors.addrCountry && (
-                    <p className="text-sm text-red-500">
-                      {errors.addrCountry.message}
-                    </p>
-                  )}
-                </div>
+            <div className="w-full flex flex-col gap-y-2 overflow-visible z-50">
+              <label
+                htmlFor="addrCountry"
+                className="text-sm font-medium text-gray-700 dark:text-text-primary"
+              >
+                Country
+              </label>
+              <common.Select
+                options={iso1
+                  .all()
+                  .filter(({ alpha2 }) => alpha2 !== 'CG')
+                  .map((country) => ({
+                    name: country.country,
+                    value: country.alpha2
+                  }))}
+                value={currentCountry}
+                onChange={(e) => {
+                  setCurrentCountry(e)
+
+                  const newDistrict = {
+                    name: iso2.data[e.value].sub[
+                      Object.keys(iso2.data[e.value].sub)[0]
+                    ].name,
+                    value: Object.keys(iso2.data[e.value].sub)[0]
+                  }
+                  setCurrentDistrict(newDistrict)
+                }}
+              />
+              {errors.addrCountry && (
+                <p className="text-sm text-red-500">
+                  {errors.addrCountry.message}
+                </p>
               )}
-            />
-            <Controller
-              name="addrDistrict"
-              control={control}
-              defaultValue={addrDistrict}
-              render={({ field: { onChange } }) => (
-                <div className="w-full flex flex-col gap-y-2">
-                  <common.Input
-                    placeholder="State"
-                    label="State"
-                    defaultValue={addrDistrict}
-                    className="col-span-3 sm:col-span-1"
-                    onChange={onChange}
-                  />
-                  {errors.addrDistrict && (
-                    <p className="text-sm text-red-500">
-                      {errors.addrDistrict.message}
-                    </p>
-                  )}
-                </div>
+            </div>
+            <div className="w-full flex flex-col gap-y-2 overflow-visible z-50">
+              <label
+                htmlFor="addrDistrict"
+                className="text-sm font-medium text-gray-700 dark:text-text-primary"
+              >
+                District
+              </label>
+              <common.Select
+                options={Object.keys(iso2.data[currentCountry.value].sub).map(
+                  (subCode) => ({
+                    name: iso2.country(currentCountry.value)?.sub[subCode].name,
+                    value: subCode
+                  })
+                )}
+                value={currentDistrict}
+                setValue={setCurrentDistrict}
+                onChange={(e) => {
+                  setCurrentDistrict(e)
+                }}
+              />
+              {errors.addrDistrict && (
+                <p className="text-sm text-red-500">
+                  {errors.addrDistrict.message}
+                </p>
               )}
-            />
+            </div>
           </div>
 
           <div className="grid w-full grid-cols-1 lg:grid-cols-2 gap-x-2 justify-evenly gap-y-4">
@@ -257,8 +304,6 @@ export function FromAddress() {
 const addressSchema = yup.object().shape({
   addrStreet: yup.string().required('Street is required'),
   addrNumber: yup.string().required('Number is required'),
-  addrCountry: yup.string().required('Country is required'),
-  addrDistrict: yup.string().required('State is required'),
   addrCity: yup.string().required('City is required'),
   addrZip: yup.string().required('Zip is required')
 })

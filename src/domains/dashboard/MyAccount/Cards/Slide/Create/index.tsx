@@ -38,7 +38,7 @@ export function Create() {
         throw new Error('Ops! Something wrong happened')
       }
       if (!cardBrand) {
-        throw new Error('unidentified credit card brand')
+        throw new Error('Unidentified credit card brand')
       }
       const [month, year] = formData.expiry.split('/')
       const brandName = utils.handleBrandName(cardBrand!)
