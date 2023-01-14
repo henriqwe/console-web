@@ -51,32 +51,17 @@ export function TicketDetail({ user }: TicketDetail) {
       if (!formData.Content || formData.Content === '') {
         throw new Error('Cannot create a empty message')
       }
-      let currentDate = new Date()
-      const offset = currentDate.getTimezoneOffset()
-      currentDate = new Date(currentDate.getTime() - offset * 60 * 1000)
 
-      await fetch('https://api.ycodify.com/v0/persistence/s/no-ac', {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'CREATE',
-          data: [
-            {
-              ticketsmessages: {
-                date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms'),
-                createdbyuser: !(user?.email === 'suporte@ycodify.com'),
-                content: formData.Content,
-                ticket: selectedTicket?.id
-              }
-            }
-          ]
-        }),
-        headers: {
-          'X-TenantAC': 'b44f7fc8-e2b7-3cc8-9a3d-04b3dac69886',
-          'X-TenantID': '9316c346-4db5-35aa-896f-f61fe1a7d9d8',
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
+      await utils.localApi.post(utils.apiRoutes.local.support.message, {
+        message: {
+          date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms'),
+          createdbyuser: user?.email !== process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
+          content: formData.Content,
+          ticketid: selectedTicket?.id,
+          ticket: selectedTicket?.id
         }
       })
+
       setReloadMessages(!reloadMessages)
       setValue('Content', '')
     } catch (err) {
@@ -88,32 +73,17 @@ export function TicketDetail({ user }: TicketDetail) {
 
   async function loadMessages() {
     try {
-      const result = await fetch(
-        'https://api.ycodify.com/v0/persistence/s/no-ac',
+      const { data } = await utils.localApi.get(
+        `${utils.apiRoutes.local.support.message}`,
         {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'READ',
-            data: [
-              {
-                ticketsmessages: {
-                  ticket: selectedTicket?.id
-                }
-              }
-            ]
-          }),
-          headers: {
-            'X-TenantAC': 'b44f7fc8-e2b7-3cc8-9a3d-04b3dac69886',
-            'X-TenantID': '9316c346-4db5-35aa-896f-f61fe1a7d9d8',
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
+          params: {
+            ticketid: selectedTicket?.id
           }
         }
       )
 
-      const data = await result.json()
       setMessages(
-        data?.[0]?.ticketsmessages?.map((ticket) => ({
+        data?.[0]?.message?.map((ticket) => ({
           ...ticket,
           name: ticket?.createdbyuser ? user?.username : 'Ycodify'
         })) ?? []
@@ -157,8 +127,7 @@ export function TicketDetail({ user }: TicketDetail) {
         render={({ field: { onChange, value } }) => (
           <div className="col-span-3">
             <common.Textarea
-              placeholder="Enter a new message here..."
-              label="New message"
+              placeholder="Enter your message here..."
               value={value}
               onChange={onChange}
               errors={errors.Content}
@@ -169,25 +138,15 @@ export function TicketDetail({ user }: TicketDetail) {
         )}
       />
 
-      <div className="flex items-center justify-between w-full mt-2">
-        <common.Buttons.WhiteOutline
-          onClick={() => setSelectedTicket(undefined)}
-          loading={loading}
-          disabled={loading}
-          type="button"
-          icon={<ReplyIcon className="w-3 h-3" />}
-        >
-          Back to list
-        </common.Buttons.WhiteOutline>
-
-        <common.Buttons.GreenOutline
+      <div className="flex items-center justify-end w-full mt-2">
+        <common.Buttons.Ycodify
           loading={loading}
           disabled={loading}
           type="submit"
           icon={<CheckIcon className="w-3 h-3" />}
         >
-          Create message
-        </common.Buttons.GreenOutline>
+          Send
+        </common.Buttons.Ycodify>
       </div>
     </form>
   )

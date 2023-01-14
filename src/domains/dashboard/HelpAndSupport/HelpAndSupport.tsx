@@ -5,16 +5,10 @@ import { PlusIcon, ReplyIcon } from '@heroicons/react/outline'
 import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
 import { TicketDetail } from './TicketDetail'
-import axios from 'axios'
-
-type User = {
-  email: string
-  id: number
-  username: string
-}
+import { useUser } from 'contexts/UserContext'
 
 export function HelpAndSupport() {
-  const [user, setUser] = useState<User>()
+  const { user } = useUser()
   const {
     setOpenSlide,
     setSlideType,
@@ -28,48 +22,37 @@ export function HelpAndSupport() {
 
   async function loadTickets() {
     try {
-      const { data } = await axios.get(
-        'https://api.ycodify.com/v0/id/account/get',
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
-      let tickets: any = {
-        userid: data.id
-      }
+      const ticket =
+        user?.userData.email === process.env.NEXT_PUBLIC_SUPPORT_EMAIL
+          ? {}
+          : {
+              userid: user?.userData.id
+            }
 
-      if (data.email === 'suporte@ycodify.com') {
-        tickets = {}
-      }
-      const result = await fetch(
-        'https://api.ycodify.com/v0/persistence/s/no-ac',
+      console.log('ticket data', ticket)
+
+      const { data } = await utils.localApi.get(
+        utils.apiRoutes.local.support.ticket,
         {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'READ',
-            data: [
-              {
-                tickets: {
-                  ...tickets
-                }
-              }
-            ]
-          }),
-          headers: {
-            'X-TenantAC': 'b44f7fc8-e2b7-3cc8-9a3d-04b3dac69886',
-            'X-TenantID': '9316c346-4db5-35aa-896f-f61fe1a7d9d8',
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-          }
+          params: ticket
         }
       )
 
-      const response = await result.json()
+      const tmpTickets = data?.[0]?.ticket ?? []
 
-      setUser(data)
-      setTickets(response?.[0]?.tickets ?? [])
+      //tickets ativos mais antigos primeiro
+      const sortedTickets = tmpTickets.sort((a: any, b: any) => {
+        const aDate = new Date(a.date)
+        const bDate = new Date(b.date)
+
+        return a.status !== 'Active'
+          ? 1
+          : b.status !== 'Active'
+          ? -1
+          : aDate.getTime() - bDate.getTime()
+      })
+
+      setTickets(sortedTickets)
     } catch (err) {
       utils.showError(err)
     }
@@ -104,17 +87,19 @@ export function HelpAndSupport() {
               </h1>
               <div className="flex items-center">
                 {!selectedTicket ? (
-                  <common.Buttons.White
-                    onClick={() => {
-                      setOpenSlide(true)
-                      setSlideType('createTicket')
-                      setSlideSize('normal')
-                      // router.push(routes.createProject)
-                    }}
-                    icon={<PlusIcon className="w-3 h-3" />}
-                  >
-                    <p className="text-xs">Create</p>
-                  </common.Buttons.White>
+                  user?.email !== process.env.NEXT_PUBLIC_SUPPORT_EMAIL && (
+                    <common.Buttons.White
+                      onClick={() => {
+                        setOpenSlide(true)
+                        setSlideType('createTicket')
+                        setSlideSize('normal')
+                        // router.push(routes.createProject)
+                      }}
+                      icon={<PlusIcon className="w-3 h-3" />}
+                    >
+                      <p className="text-xs">Create</p>
+                    </common.Buttons.White>
+                  )
                 ) : (
                   <common.Buttons.White
                     onClick={() => {
@@ -132,11 +117,21 @@ export function HelpAndSupport() {
 
         <section className="flex flex-col w-full gap-8 mx-auto">
           {selectedTicket ? (
-            <TicketDetail user={user} />
+            <TicketDetail
+              user={{
+                id: user?.userData.id,
+                email: user?.userData.email,
+                username: user?.userData.username
+              }}
+            />
           ) : (
             <common.Table
               tableColumns={[
                 { name: 'id', displayName: 'Ticket Id' },
+                {
+                  name: 'title',
+                  displayName: 'Title'
+                },
                 {
                   name: 'project',
                   displayName: 'Project'
@@ -144,10 +139,6 @@ export function HelpAndSupport() {
                 {
                   name: 'category',
                   displayName: 'Category'
-                },
-                {
-                  name: 'title',
-                  displayName: 'Title'
                 },
                 {
                   name: 'status',
