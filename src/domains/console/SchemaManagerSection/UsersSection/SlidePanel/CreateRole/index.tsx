@@ -12,34 +12,41 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { CheckIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import * as UserContext from 'contexts/UserContext'
+import * as yup from 'yup'
 
 export function CreateRole() {
   const router = useRouter()
   const { user } = UserContext.useUser()
 
   const [loading, setLoading] = useState(false)
-  const { roleSchema, reload, setReload, setOpenSlide } =
-    consoleSection.useUser()
+  const { reload, setReload, setOpenSlide } = consoleSection.useUser()
 
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(roleSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Name: yup.string().required(),
+        Active: yup.object().required()
+      })
+    )
+  })
 
   const onSubmit = async (formData: {
     Name: string
     Active: { name: string; value: string }
   }) => {
-    setLoading(true)
+    try {
+      setLoading(true)
 
-    await utils.api
-      .post(
+      await utils.api.post(
         utils.apiRoutes.createRole,
         {
           username: `${
-            utils.parseJwt(utils.getCookie('access_token'))?.username
+            utils.parseJwt(utils.getCookie('access_token') as string)?.username
           }@${router.query.name}`,
           password: user?.adminSchemaPassword,
           role: {
@@ -54,23 +61,27 @@ export function CreateRole() {
           }
         }
       )
-      .then(() => {
-        reset()
-        setReload(!reload)
-        setOpenSlide(false)
-        setLoading(false)
-        utils.notification('Operation performed successfully', 'success')
-      })
-      .catch((err) => {
-        if (err.response.status === 417)
-          utils.notification('Role name must be unique', 'error')
-        else
-          utils.notification(
-            `Ops! Something went wrong: ${err.response.data.message}`,
-            'error'
-          )
-        setLoading(false)
-      })
+
+      reset()
+      setReload(!reload)
+      setOpenSlide(false)
+      setLoading(false)
+      utils.notification('Operation performed successfully', 'success')
+    } catch (err: any) {
+      if (err?.response?.status === 417) {
+        return utils.notification('Role name must be unique', 'error')
+      }
+
+      if (err?.response?.data?.message) {
+        return utils.notification(
+          `Ops! Something went wrong: ${err.response.data.message}`,
+          'error'
+        )
+      }
+      utils.showError(err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -79,6 +90,7 @@ export function CreateRole() {
         <Controller
           name={'Name'}
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input
@@ -118,7 +130,7 @@ export function CreateRole() {
         type="button"
         onClick={() => handleSubmit(onSubmit as SubmitHandler<FieldValues>)()}
       >
-        <div className="flex">Create</div>
+        <p className="flex">Create</p>
       </common.Buttons.WhiteOutline>
     </form>
   )

@@ -7,6 +7,7 @@ import {
 import { useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
+import * as yup from 'yup'
 import * as utils from 'utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { CheckIcon } from '@heroicons/react/outline'
@@ -18,15 +19,20 @@ export function AssociateAccount() {
   const { user } = UserContext.useUser()
 
   const router = useRouter()
-  const { createUserSchema, reload, setReload, setOpenSlide, roles } =
-    consoleSection.useUser()
+  const { reload, setReload, setOpenSlide, roles } = consoleSection.useUser()
 
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm()
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Username: yup.string().required()
+      })
+    )
+  })
 
   const onSubmit = async (formData: {
     Username: string
@@ -34,16 +40,13 @@ export function AssociateAccount() {
   }) => {
     setLoading(true)
     try {
-      if (!formData.Username) {
-        throw new Error('Please enter a username')
-      }
       const roles =
         formData?.Roles?.map(({ name }) => {
           return { name }
-        }) || []
+        })
       await utils.api.post(utils.apiRoutes.updateAccount, {
         username: `${
-          utils.parseJwt(utils.getCookie('access_token'))?.username
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
         }@${router.query.name}`,
         password: user?.adminSchemaPassword,
         account: { username: formData.Username, roles }
@@ -54,7 +57,10 @@ export function AssociateAccount() {
       setLoading(false)
       utils.notification('User created successfully', 'success')
     } catch (err: any) {
-      utils.notification(err.response.data.message, 'error')
+      if (err?.response?.data?.message) {
+        return utils.notification(err.response.data.message, 'error')
+      }
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
@@ -70,6 +76,7 @@ export function AssociateAccount() {
         <Controller
           name={'Username'}
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input

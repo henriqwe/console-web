@@ -27,7 +27,6 @@ export function SchemaManagerSection() {
     reload,
     setEntityData,
     showCreateEntitySection,
-    setSlideType,
     breadcrumbPages,
     setSchemaStatus,
     breadcrumbPagesData,
@@ -153,7 +152,6 @@ export function SchemaManagerSection() {
                     className="w-3 h-3 text-gray-500 cursor-pointer"
                     onClick={() => {
                       setOpenSlide(true)
-                      setSlideType('UPDATE ENTITY')
                     }}
                   />
                 )}

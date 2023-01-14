@@ -18,18 +18,18 @@ export function RowActions({ item }: { item: any }) {
         setOpenSlide(true)
         setSlideType(`UPDATEROLE`)
       },
-      icon: <common.icons.EditIcon />
+      icon: <common.icons.EditIcon data-testid="update" />
     },
     {
       title: 'Delete',
       handler: async () => {
-        event?.preventDefault()
-        await utils.api
-          .post(
+        try {
+          await utils.api.post(
             utils.apiRoutes.deleteRole,
             {
               username: `${
-                utils.parseJwt(utils.getCookie('access_token'))?.username
+                utils.parseJwt(utils.getCookie('access_token') as string)
+                  ?.username
               }@${router.query.name}`,
               password: user?.adminSchemaPassword,
               role: {
@@ -42,15 +42,14 @@ export function RowActions({ item }: { item: any }) {
               }
             }
           )
-          .then(() => {
-            setReload(!reload)
-            utils.notification('Operation performed successfully', 'success')
-          })
-          .catch((err) => {
-            utils.notification(err.message, 'error')
-          })
+
+          setReload(!reload)
+          utils.notification('Operation performed successfully', 'success')
+        } catch (err) {
+          utils.showError(err)
+        }
       },
-      icon: <common.icons.DeleteIcon />
+      icon: <common.icons.DeleteIcon data-testid="delete" />
     }
   ]
   return <common.ActionsRow actions={actions} />

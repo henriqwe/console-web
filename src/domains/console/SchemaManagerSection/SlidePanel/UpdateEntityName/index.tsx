@@ -87,15 +87,13 @@ export function UpdateEntityName() {
           defaultValue={selectedEntity}
           control={control}
           render={({ field: { onChange, value } }) => (
-            <div className="w-full flex flex-col gap-y-2">
+            <div className="flex flex-col w-full gap-y-2">
               <common.Input
                 placeholder="field name"
                 value={value}
                 onChange={onChange}
+                errors={errors.Name}
               />
-              {errors.Name && (
-                <p className="text-sm text-red-500">{errors.Name.message}</p>
-              )}
             </div>
           )}
         />

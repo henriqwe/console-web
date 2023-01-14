@@ -36,8 +36,6 @@ type SchemaManagerContextProps = {
   setShowCreateEntitySection: Dispatch<SetStateAction<boolean>>
   showTableViewMode: boolean
   setShowTableViewMode: Dispatch<SetStateAction<boolean>>
-  slideType: 'UPDATE' | 'UPDATE ENTITY'
-  setSlideType: Dispatch<SetStateAction<'UPDATE' | 'UPDATE ENTITY'>>
   slideState: slideState
   setSlideState: Dispatch<SetStateAction<slideState>>
   schemaTables?: types.SchemaTable
@@ -95,9 +93,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const router = useRouter()
 
   const [openSlide, setOpenSlide] = useState(false)
-  const [slideType, setSlideType] = useState<'UPDATE' | 'UPDATE ENTITY'>(
-    'UPDATE'
-  )
   const [selectedTabUsersAndRoles, setSelectedTabUsersAndRoles] =
     useState<selectedTabUsersAndRolesType>({
       name: 'Roles'
@@ -233,8 +228,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         setShowCreateEntitySection,
         showTableViewMode,
         setShowTableViewMode,
-        slideType,
-        setSlideType,
         slideState,
         setSlideState,
         schemaTables,
