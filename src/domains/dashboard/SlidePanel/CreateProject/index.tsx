@@ -173,9 +173,9 @@ export function Create() {
         return
       }
 
-      projectName = data.ProjectName
+      projectName = data.ProjectName.toLowerCase()
 
-      if (schemas.includes(projectName.toLowerCase())) {
+      if (schemas.includes(projectName)) {
         throw new Error(`Project ${projectName} already exists`)
       }
 

@@ -16,7 +16,7 @@ export function Cards() {
   }, [])
 
   return (
-    <div className="flex flex-col px-4 gap-4">
+    <div className="flex flex-col px-4 gap-4 overflow-auto">
       <section className="flex flex-col gap-y-8 ">
         <p className="text-2xl font-semibold dark:text-text-primary text-slate-900">
           Your credit cards

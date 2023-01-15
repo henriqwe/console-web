@@ -11,7 +11,8 @@ import * as utils from 'utils'
 import * as yup from 'yup'
 import * as dashboard from 'domains/dashboard'
 import { yupResolver } from '@hookform/resolvers/yup'
-import axios from 'axios'
+import { useUser } from 'contexts/UserContext'
+import { format } from 'date-fns'
 
 type FormData = {
   Project: SelectObject
@@ -35,6 +36,7 @@ type Schema = {
 }
 
 export function CreateTicket() {
+  const { user } = useUser()
   const [loading, setLoading] = useState(false)
   const [schemas, setSchemas] = useState<Schema[]>([])
   const { setOpenSlide, setReload, reload } = dashboard.useData()
@@ -66,39 +68,18 @@ export function CreateTicket() {
 
   async function Submit(formData: FormData) {
     try {
-      const { data } = await axios.get(
-        'https://api.ycodify.com/v0/id/account/get',
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
-
-      await fetch('https://api.ycodify.com/v0/persistence/s/no-ac', {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'CREATE',
-          data: [
-            {
-              tickets: {
-                project: formData.Project.value,
-                userid: data.id,
-                title: formData.Title,
-                content: formData.Content,
-                category: formData.Category.value,
-                status: 'Active'
-              }
-            }
-          ]
-        }),
-        headers: {
-          'X-TenantAC': 'b44f7fc8-e2b7-3cc8-9a3d-04b3dac69886',
-          'X-TenantID': '9316c346-4db5-35aa-896f-f61fe1a7d9d8',
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
+      await utils.localApi.post(utils.apiRoutes.local.support.ticket, {
+        ticket: {
+          project: formData.Project.value,
+          userid: user?.userData.id,
+          title: formData.Title,
+          content: formData.Content,
+          category: formData.Category.value,
+          status: 'Active',
+          date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms')
         }
       })
+
       setReload(!reload)
       setOpenSlide(false)
       utils.notification(`Ticket created successfully`, 'success')
@@ -117,6 +98,7 @@ export function CreateTicket() {
         Authorization: `Bearer ${utils.getCookie('access_token')}`
       }
     })
+
     setSchemas(data)
   }
 
