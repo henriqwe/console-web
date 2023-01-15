@@ -1,9 +1,10 @@
 import { Controller, useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import * as consoleData from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as yup from 'yup'
+import * as services from 'services'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { getCookie } from 'utils/cookies'
 
@@ -60,40 +61,32 @@ export function Update() {
 
   const onSubmit = async (formData: any) => {
     try {
-      await utils.localApi.post(
-        utils.apiRoutes.local.interpreter,
-        {
-          data: JSON.parse(
-            `{\n 
-              "action":"UPDATE",\n 
-              "object":{\n 
-                "classUID": "${selectedEntity}",\n 
-                "id": ${selectedItemToExclude.id},\n 
-                "role": "ROLE_ADMIN",\n 
-                ${entityData
-                  ?.filter((field) => field.name !== 'id')
-                  .map(
-                    (field, index) =>
-                      `"${field.name}":"${
-                        field.type === 'Boolean'
-                          ? formData[field.name].key
-                          : formData[field.name]
-                      }"${index !== entityData?.length - 2 ? ',' : ''}\n`
-                  )
-                  .join('')}
-              }\n
-            }`
-          ),
-          access_token: getCookie('admin_access_token'),
-          'X-TenantID': getCookie('X-TenantID'),
-          'X-TenantAC': getCookie('X-TenantAC')
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.runInterpreter({
+        accessToken: getCookie('admin_access_token') as string,
+        data: JSON.parse(
+          `{\n 
+            "action":"UPDATE",\n 
+            "object":{\n 
+              "classUID": "${selectedEntity}",\n 
+              "id": ${selectedItemToExclude.id},\n 
+              "role": "ROLE_ADMIN",\n 
+              ${entityData
+                ?.filter((field) => field.name !== 'id')
+                .map(
+                  (field, index) =>
+                    `"${field.name}":"${
+                      field.type === 'Boolean'
+                        ? formData[field.name].key
+                        : formData[field.name]
+                    }"${index !== entityData?.length - 2 ? ',' : ''}\n`
+                )
+                .join('')}
+            }\n
+          }`
+        ),
+        XTenantAC: getCookie('X-TenantAC') as string,
+        XTenantID: getCookie('X-TenantID') as string
+      })
 
       reset()
       setReload(!reload)

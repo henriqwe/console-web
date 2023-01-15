@@ -8,7 +8,7 @@ import { useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
-import { yupResolver } from '@hookform/resolvers/yup'
+import * as services from 'services'
 import { CheckIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import * as UserContext from 'contexts/UserContext'
@@ -18,8 +18,7 @@ export function AssociateAccount() {
   const { user } = UserContext.useUser()
 
   const router = useRouter()
-  const { createUserSchema, reload, setReload, setOpenSlide, roles } =
-    consoleSection.useUser()
+  const { reload, setReload, setOpenSlide, roles } = consoleSection.useUser()
 
   const {
     control,
@@ -41,13 +40,16 @@ export function AssociateAccount() {
         formData?.Roles?.map(({ name }) => {
           return { name }
         }) || []
-      await utils.api.post(utils.apiRoutes.updateAccount, {
-        username: `${
-          utils.parseJwt(utils.getCookie('access_token'))?.username
-        }@${router.query.name}`,
-        password: user?.adminSchemaPassword,
-        account: { username: formData.Username, roles }
+
+      await services.ycodify.updateAccountAndRole({
+        password: user?.adminSchemaPassword as string,
+        roles: roles,
+        username: formData.Username,
+        usernameAdmin: `${
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
+        }@${router.query.name}`
       })
+
       reset()
       setReload(!reload)
       setOpenSlide(false)

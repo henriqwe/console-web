@@ -349,20 +349,12 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     try {
       setConsoleValueLastOperation(consoleValue)
       setconsoleResponseLoading(true)
-      const { data } = await utils.localApi.post(
-        utils.apiRoutes.local.interpreter,
-        {
-          data: JSON.parse(consoleValue),
-          access_token: `${utils.getCookie('access_token')}`,
-          'X-TenantID': utils.getCookie('X-TenantID'),
-          'X-TenantAC': utils.getCookie('X-TenantAC')
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      const { data } = await services.ycodify.runInterpreter({
+        accessToken: utils.getCookie('access_token') as string,
+        data: consoleValue,
+        XTenantAC: utils.getCookie('X-TenantAC') as string,
+        XTenantID: utils.getCookie('X-TenantID') as string
+      })
       let formatedValue = ''
       formatedValue = format?.current
         ? format?.current(JSON.stringify(data.data, null, 4))

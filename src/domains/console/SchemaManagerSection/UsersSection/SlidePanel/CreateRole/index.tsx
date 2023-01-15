@@ -8,6 +8,7 @@ import { useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
+import * as services from 'services'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { CheckIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
@@ -33,44 +34,31 @@ export function CreateRole() {
     Active: { name: string; value: string }
   }) => {
     setLoading(true)
-
-    await utils.api
-      .post(
-        utils.apiRoutes.createRole,
-        {
-          username: `${
-            utils.parseJwt(utils.getCookie('access_token'))?.username
-          }@${router.query.name}`,
-          password: user?.adminSchemaPassword,
-          role: {
-            name: formData.Name,
-            status: formData.Active.value
-          }
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-TenantID': utils.getCookie('X-TenantID') as string
-          }
-        }
-      )
-      .then(() => {
-        reset()
-        setReload(!reload)
-        setOpenSlide(false)
-        setLoading(false)
-        utils.notification('Operation performed successfully', 'success')
+    try {
+      await services.ycodify.createRole({
+        Name: formData.Name,
+        password: user?.adminSchemaPassword as string,
+        Status: formData.Active.value,
+        username: `${
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
+        }@${router.query.name}`,
+        XTenantID: utils.getCookie('X-TenantID') as string
       })
-      .catch((err) => {
-        if (err.response.status === 417)
-          utils.notification('Role name must be unique', 'error')
-        else
-          utils.notification(
-            `Ops! Something went wrong: ${err.response.data.message}`,
-            'error'
-          )
-        setLoading(false)
-      })
+      reset()
+      setReload(!reload)
+      setOpenSlide(false)
+      utils.notification('Operation performed successfully', 'success')
+    } catch (err: any) {
+      if (err.response.status === 417)
+        utils.notification('Role name must be unique', 'error')
+      else
+        utils.notification(
+          `Ops! Something went wrong: ${err.response.data.message}`,
+          'error'
+        )
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

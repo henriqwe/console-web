@@ -209,25 +209,16 @@ function AttributeForm({
     try {
       setLoading(true)
 
-      await utils.api.post(
-        utils.apiRoutes.attribute({
-          projectName: router.query.name as string,
-          entityName: selectedEntity as string
-        }),
-        {
-          name: data.ColumnName,
-          comment: data.Comment,
-          isNullable: data.Nullable || false,
-          length: data.Length,
-          type: data.Type.value
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.createAttribute({
+        accessToken: utils.getCookie('access_token') as string,
+        ColumnName: data.ColumnName,
+        Comment: data.Comment,
+        entityName: selectedEntity as string,
+        Length: data.Length,
+        Nullable: data.Nullable || false,
+        projectName: router.query.name as string,
+        Type: data.Type.value
+      })
 
       setReload(!reload)
       setOpenForm(false)

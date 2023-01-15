@@ -1,6 +1,7 @@
 import * as common from 'common'
 import * as consoleData from 'domains/console'
 import * as utils from 'utils'
+import * as services from 'services'
 import { useState } from 'react'
 import { CheckIcon } from '@heroicons/react/outline'
 import * as UserContext from 'contexts/UserContext'
@@ -22,20 +23,13 @@ export function AdminLogin() {
       if (!formData.Password) {
         throw new Error('Please enter a password')
       }
-      const { data } = await utils.api.post(
-        utils.apiRoutes.roles,
-        {
-          username: `${
-            utils.parseJwt(utils.getCookie('access_token'))?.username
-          }@${router.query.name}`,
-          password: formData.Password
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
+      const { data } = await services.ycodify.getAdminData({
+        password: formData.Password,
+        username: `${
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
+        }@${router.query.name}`
+      })
+
       setRoles(data)
       setUser({ ...user, adminSchemaPassword: formData.Password })
       reset()
@@ -53,9 +47,9 @@ export function AdminLogin() {
     <form className="flex flex-col p-4 gap-4 ">
       <div className="flex flex-col">
         <span className="font-semibold">Username</span>
-        {`${utils.parseJwt(utils.getCookie('access_token'))?.username}@${
-          router.query.name
-        }`}
+        {`${
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
+        }@${router.query.name}`}
       </div>
       <Controller
         name={'Password'}

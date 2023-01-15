@@ -1,4 +1,5 @@
 import * as utils from 'utils'
+import * as services from 'services'
 import * as common from 'common'
 import * as consoleData from 'domains/console'
 import { useRouter } from 'next/router'
@@ -24,31 +25,20 @@ export function RowActions({ item }: { item: any }) {
       title: 'Delete',
       handler: async () => {
         event?.preventDefault()
-        await utils.api
-          .post(
-            utils.apiRoutes.deleteRole,
-            {
-              username: `${
-                utils.parseJwt(utils.getCookie('access_token'))?.username
-              }@${router.query.name}`,
-              password: user?.adminSchemaPassword,
-              role: {
-                name: item.name
-              }
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }
-          )
-          .then(() => {
-            setReload(!reload)
-            utils.notification('Operation performed successfully', 'success')
+        try {
+          await services.ycodify.deleteRole({
+            password: user?.adminSchemaPassword as string,
+            roleName: item.name,
+            username: `${
+              utils.parseJwt(utils.getCookie('access_token') as string)
+                ?.username
+            }@${router.query.name}`
           })
-          .catch((err) => {
-            utils.notification(err.message, 'error')
-          })
+          setReload(!reload)
+          utils.notification('Operation performed successfully', 'success')
+        } catch (err: any) {
+          utils.notification(err.message, 'error')
+        }
       },
       icon: <common.icons.DeleteIcon />
     }

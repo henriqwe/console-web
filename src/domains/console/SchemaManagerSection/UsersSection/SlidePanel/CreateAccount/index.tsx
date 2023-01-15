@@ -12,6 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { CheckIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import * as UserContext from 'contexts/UserContext'
+import * as services from 'services'
 
 export function CreateAccount() {
   const [loading, setLoading] = useState(false)
@@ -45,13 +46,16 @@ export function CreateAccount() {
         formData?.Roles?.map(({ name }) => {
           return { name }
         }) || []
-      await utils.api.post(utils.apiRoutes.updateAccount, {
-        username: `${
-          utils.parseJwt(utils.getCookie('access_token'))?.username
-        }@${router.query.name}`,
-        password: user?.adminSchemaPassword,
-        account: { username: formData.Username, roles }
+
+      await services.ycodify.updateAccountAndRole({
+        password: user?.adminSchemaPassword as string,
+        roles: roles,
+        username: formData.Username,
+        usernameAdmin: `${
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
+        }@${router.query.name}`
       })
+
       reset()
       setReload(!reload)
       setOpenSlide(false)

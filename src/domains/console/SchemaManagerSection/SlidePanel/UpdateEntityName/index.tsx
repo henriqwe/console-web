@@ -3,6 +3,7 @@ import { useState } from 'react'
 import * as consoleData from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
+import * as services from 'services'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
@@ -45,21 +46,12 @@ export function UpdateEntityName() {
   const onSubmit = async (formData: any) => {
     try {
       setLoading(true)
-      await utils.api.put(
-        `${utils.apiRoutes.entity(
-          router.query.name as string
-        )}/${selectedEntity}`,
-        {
-          name: formData.Name,
-          _conf: {}
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.updateEntityName({
+        accessToken: utils.getCookie('access_token') as string,
+        Name: formData.Name,
+        projectName: router.query.name as string,
+        selectedEntity: selectedEntity as string
+      })
 
       reset()
       setSelectedEntity(formData.Name)
