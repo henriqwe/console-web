@@ -19,7 +19,7 @@ export function RowActions({ item }: { item: any }) {
         setOpenSlide(true)
         setSlideType(`UPDATEROLE`)
       },
-      icon: <common.icons.EditIcon />
+      icon: <common.icons.EditIcon data-testid="update" />
     },
     {
       title: 'Delete',
@@ -40,7 +40,7 @@ export function RowActions({ item }: { item: any }) {
           utils.notification(err.message, 'error')
         }
       },
-      icon: <common.icons.DeleteIcon />
+      icon: <common.icons.DeleteIcon data-testid="delete" />
     }
   ]
   return <common.ActionsRow actions={actions} />

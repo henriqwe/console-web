@@ -11,20 +11,15 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { CheckIcon } from '@heroicons/react/outline'
 import * as utils from 'utils'
 import { useRouter } from 'next/router'
+import * as yup from 'yup'
 import * as UserContext from 'contexts/UserContext'
 
 export function UpdateAccount() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { user } = UserContext.useUser()
-  const {
-    updateUserSchema,
-    reload,
-    setReload,
-    setOpenSlide,
-    selectedUser,
-    roles
-  } = consoleSection.useUser()
+  const { reload, setReload, setOpenSlide, selectedUser, roles } =
+    consoleSection.useUser()
 
   const {
     control,
@@ -32,7 +27,14 @@ export function UpdateAccount() {
     reset,
     formState: { errors },
     setValue
-  } = useForm({ resolver: yupResolver(updateUserSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Active: yup.object().required(),
+        Roles: yup.array().min(1, 'Select at least one role').required()
+      })
+    )
+  })
 
   const onSubmit = async (formData: {
     Email: string
@@ -45,7 +47,7 @@ export function UpdateAccount() {
       const roles =
         formData?.Roles?.map(({ name }) => {
           return { name }
-        }) || []
+        })
 
       await utils.api.post(
         utils.apiRoutes.updateAccount,

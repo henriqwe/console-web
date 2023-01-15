@@ -26,7 +26,6 @@ type SchemaManagerContextProps = {
   setSelectedEntity: Dispatch<SetStateAction<string | undefined>>
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
-  fieldSchema: yup.AnyObjectSchema
   selectedItemToExclude: any
   setSelectedItemToExclude: Dispatch<SetStateAction<any>>
   openSlide: boolean
@@ -37,8 +36,6 @@ type SchemaManagerContextProps = {
   setShowCreateEntitySection: Dispatch<SetStateAction<boolean>>
   showTableViewMode: boolean
   setShowTableViewMode: Dispatch<SetStateAction<boolean>>
-  slideType: 'UPDATE' | 'UPDATE ENTITY'
-  setSlideType: Dispatch<SetStateAction<'UPDATE' | 'UPDATE ENTITY'>>
   slideState: slideState
   setSlideState: Dispatch<SetStateAction<slideState>>
   schemaTables?: types.SchemaTable
@@ -68,7 +65,6 @@ type SchemaManagerContextProps = {
   setEntitiesLoading: Dispatch<SetStateAction<boolean>>
   columnNames: string[]
   setColumnNames: Dispatch<SetStateAction<string[]>>
-  addAttributeSchema: yup.AnyObjectSchema
 }
 
 type ProviderProps = {
@@ -97,9 +93,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const router = useRouter()
 
   const [openSlide, setOpenSlide] = useState(false)
-  const [slideType, setSlideType] = useState<'UPDATE' | 'UPDATE ENTITY'>(
-    'UPDATE'
-  )
   const [selectedTabUsersAndRoles, setSelectedTabUsersAndRoles] =
     useState<selectedTabUsersAndRolesType>({
       name: 'Roles'
@@ -129,25 +122,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   })
 
   const [schemaStatus, setSchemaStatus] = useState<number>()
-
-  const fieldSchema = yup.object().shape({
-    Name: yup
-      .string()
-      .required('Entity name is required')
-      .test('equal', 'Entity name must contain only letters', (val) => {
-        const validation = new RegExp(/^[A-Za-z ]*$/)
-        return validation.test(val as string)
-      })
-      .test('equal', 'Entity name cannot contain spaces', (val) => {
-        const validation = new RegExp(/\s/g)
-        return !validation.test(val as string)
-      }),
-    Type: yup.object().required(),
-    Nullable: yup.object().required(),
-    Unique: yup.object().required(),
-    Index: yup.object().required(),
-    Comment: yup.string().required()
-  })
 
   function goToEntitiesPage() {
     setShowCreateEntitySection(false)
@@ -235,34 +209,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
 
   const [columnNames, setColumnNames] = useState<string[]>([])
 
-  const addAttributeSchema = yup.object().shape({
-    ColumnName: yup
-      .string()
-      .required('Column name is required')
-      .test('equal', 'Column cannot contain spaces', (val) => {
-        const validation = new RegExp(/\s/g)
-        return !validation.test(val as string)
-      })
-      .test('equal', 'Column name must contain only letters', (val) => {
-        const validation = new RegExp(/^[A-Za-z ]*$/)
-        return validation.test(val as string)
-      })
-      .test('equal', 'Column name must be unique', (val) => {
-        if (columnNames.indexOf(val ?? '') > -1) {
-          return false
-        }
-        return true
-      }),
-    Type: yup.object().required('Column type is required'),
-    Length: yup
-      .number()
-      .typeError('Length must be a number')
-      .nullable()
-      .moreThan(-1, 'Length must be positive')
-      .transform((_, val) => (val !== '' ? Number(val) : null)),
-    Comment: yup.string()
-  })
-
   return (
     <SchemaManagerContext.Provider
       value={{
@@ -272,7 +218,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         setSelectedEntity,
         reload,
         setReload,
-        fieldSchema,
         openSlide,
         setOpenSlide,
         selectedItemToExclude,
@@ -283,8 +228,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         setShowCreateEntitySection,
         showTableViewMode,
         setShowTableViewMode,
-        slideType,
-        setSlideType,
         slideState,
         setSlideState,
         schemaTables,
@@ -308,8 +251,7 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         entitiesLoading,
         setEntitiesLoading,
         columnNames,
-        setColumnNames,
-        addAttributeSchema
+        setColumnNames
       }}
     >
       {children}

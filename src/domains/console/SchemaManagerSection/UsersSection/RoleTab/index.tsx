@@ -15,7 +15,6 @@ export function RoleTab() {
   const { selectedEntity } = consoleData.useSchemaManager()
   const { reload, setSlideType, setOpenSlide, setRoles, roles } =
     consoleData.useUser()
-
   async function loadData() {
     try {
       const { data } = await services.ycodify.getRoles({
@@ -45,9 +44,10 @@ export function RoleTab() {
       loadData()
     }
   }, [selectedEntity, reload, user?.adminSchemaPassword])
+
   if (!user?.adminSchemaPassword) {
     return (
-      <div className="flex  p-8 justify-between ">
+      <div className="flex justify-between p-8 ">
         You need admin authorization to access this section
         <common.Buttons.WhiteOutline
           icon={<CheckIcon className="w-3 h-3" />}
@@ -78,7 +78,7 @@ export function RoleTab() {
           </p>
         </div>
       ) : (
-        <div className="w-full h-full  rounded-b-lg overflow-y pt-2">
+        <div className="w-full h-full pt-2 rounded-b-lg overflow-y">
           <div className="flex items-center w-full px-4 py-2">
             <common.Buttons.WhiteOutline
               type="button"

@@ -3,7 +3,7 @@ import * as common from 'common'
 import * as dashboard from 'domains/dashboard'
 
 export function RowActions({ item }: { item: any }) {
-  const { setReload, reload, setOpenSlide, setSlideType, setSelectedTicket } =
+  const { setSelectedTicket } =
     dashboard.useData()
   const actions = [
     {

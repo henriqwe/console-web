@@ -13,21 +13,28 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { CheckIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import * as UserContext from 'contexts/UserContext'
+import * as yup from 'yup'
 
 export function CreateRole() {
   const router = useRouter()
   const { user } = UserContext.useUser()
 
   const [loading, setLoading] = useState(false)
-  const { roleSchema, reload, setReload, setOpenSlide } =
-    consoleSection.useUser()
+  const { reload, setReload, setOpenSlide } = consoleSection.useUser()
 
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(roleSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Name: yup.string().required(),
+        Active: yup.object().required()
+      })
+    )
+  })
 
   const onSubmit = async (formData: {
     Name: string
@@ -67,6 +74,7 @@ export function CreateRole() {
         <Controller
           name={'Name'}
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input
@@ -106,7 +114,7 @@ export function CreateRole() {
         type="button"
         onClick={() => handleSubmit(onSubmit as SubmitHandler<FieldValues>)()}
       >
-        <div className="flex">Create</div>
+        <p className="flex">Create</p>
       </common.Buttons.WhiteOutline>
     </form>
   )

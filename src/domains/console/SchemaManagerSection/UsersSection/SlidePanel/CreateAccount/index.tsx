@@ -8,6 +8,7 @@ import { useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
 import * as utils from 'utils'
+import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { CheckIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
@@ -19,15 +20,22 @@ export function CreateAccount() {
   const { user } = UserContext.useUser()
 
   const router = useRouter()
-  const { createUserSchema, reload, setReload, setOpenSlide, roles } =
-    consoleSection.useUser()
+  const { reload, setReload, setOpenSlide, roles } = consoleSection.useUser()
 
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(createUserSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Username: yup.string().required(),
+        Email: yup.string().email().required(),
+        Password: yup.string().required()
+      })
+    )
+  })
 
   const onSubmit = async (formData: {
     Email: string
@@ -78,6 +86,7 @@ export function CreateAccount() {
         <Controller
           name={'Username'}
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input
@@ -94,6 +103,7 @@ export function CreateAccount() {
         <Controller
           name={'Email'}
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input
@@ -110,6 +120,7 @@ export function CreateAccount() {
         <Controller
           name={'Password'}
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input

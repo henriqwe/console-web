@@ -115,7 +115,7 @@ describe('DefaultPage', () => {
 
     await waitFor(() => {
       expect(requestedUrl).toBe('v0/modeling/project-name/schema1')
-      expect(schemaStatus).toBe(1)
     })
+    expect(schemaStatus).toBe(1)
   })
 })

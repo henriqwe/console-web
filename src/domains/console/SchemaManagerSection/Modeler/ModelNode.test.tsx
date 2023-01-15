@@ -213,29 +213,29 @@ describe('ModelNode', () => {
           data={{
             type: 'model',
             name: 'name',
-            command: '',
+            command: 'c',
             relationsSource: [
               {
                 name: 'name',
-                command: '',
-                _conf: { nullable: false, type: { value: '134', command: '' } }
+                command: '-',
+                _conf: { nullable: false, type: { value: '134', command: 'c' } }
               },
               {
                 name: 'type',
-                command: '',
-                _conf: { nullable: false, type: { value: '134', command: '' } }
+                command: '+',
+                _conf: { nullable: false, type: { value: '134', command: 'd' } }
               }
             ],
             relationsTarget: [
               {
                 name: 'name',
-                command: '',
-                _conf: { nullable: false, type: { value: '134', command: '' } }
+                command: 'o',
+                _conf: { nullable: false, type: { value: '134', command: 'f' } }
               }
             ],
             columns: [
               {
-                name: '',
+                name: 'test',
                 command: 'u',
                 type: 'string',
                 displayType: 'string',
@@ -246,7 +246,7 @@ describe('ModelNode', () => {
                 isRequired: false
               },
               {
-                name: '',
+                name: 'est',
                 command: 'u',
                 type: 'string',
                 displayType: 'string',
@@ -256,7 +256,7 @@ describe('ModelNode', () => {
                 isRequired: false
               },
               {
-                name: '',
+                name: 'st',
                 command: 'u',
                 type: 'string',
                 displayType: 'string',

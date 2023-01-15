@@ -7,11 +7,13 @@ import {
 import { useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
+import * as yup from 'yup'
 import * as utils from 'utils'
 import * as services from 'services'
 import { CheckIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import * as UserContext from 'contexts/UserContext'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 export function AssociateAccount() {
   const [loading, setLoading] = useState(false)
@@ -25,7 +27,13 @@ export function AssociateAccount() {
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm()
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Username: yup.string().required()
+      })
+    )
+  })
 
   const onSubmit = async (formData: {
     Username: string
@@ -33,9 +41,6 @@ export function AssociateAccount() {
   }) => {
     setLoading(true)
     try {
-      if (!formData.Username) {
-        throw new Error('Please enter a username')
-      }
       const roles =
         formData?.Roles?.map(({ name }) => {
           return { name }
@@ -56,7 +61,10 @@ export function AssociateAccount() {
       setLoading(false)
       utils.notification('User created successfully', 'success')
     } catch (err: any) {
-      utils.notification(err.response.data.message, 'error')
+      if (err?.response?.data?.message) {
+        return utils.notification(err.response.data.message, 'error')
+      }
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
@@ -72,6 +80,7 @@ export function AssociateAccount() {
         <Controller
           name={'Username'}
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input
