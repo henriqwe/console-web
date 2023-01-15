@@ -21,7 +21,12 @@ export function AdminLogin() {
   const { user, setUser } = UserContext.useUser()
   const [loading, setLoading] = useState(false)
   const { setRoles, setOpenSlide } = consoleData.useUser()
-  const { control, handleSubmit, reset } = useForm({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm({
     resolver: yupResolver(
       yup.object().shape({
         Password: yup.string().required()
@@ -33,9 +38,6 @@ export function AdminLogin() {
     setLoading(true)
 
     try {
-      if (!formData.Password) {
-        throw new Error('Please enter a password')
-      }
       const { data } = await services.ycodify.getAdminData({
         password: formData.Password,
         username: `${
@@ -79,6 +81,7 @@ export function AdminLogin() {
               type="password"
               value={value}
               onChange={onChange}
+              errors={errors.Password}
             />
           </div>
         )}

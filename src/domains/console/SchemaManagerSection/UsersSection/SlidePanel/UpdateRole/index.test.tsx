@@ -88,9 +88,22 @@ jest.mock('domains/console/UserContext', () => ({
     roles,
     reload: false,
     setReload: () => null,
-    selectedUser
+    selectedUser,
+    slideData: { Name: 'role1', status: 0 }
   })
 }))
+
+jest.mock('react-hook-form', () => {
+  const hookForm = jest.requireActual('react-hook-form')
+  return {
+    ...hookForm,
+    useForm: () => ({
+      ...hookForm.useForm(),
+      setValue: jest.fn(),
+      reset: jest.fn()
+    })
+  }
+})
 
 describe('UpdateRole', () => {
   afterEach(() => {
@@ -140,7 +153,11 @@ describe('UpdateRole', () => {
     const usernameInput = screen.getByPlaceholderText('Name')
     fireEvent.change(usernameInput, { target: { value: 'role3' } })
 
-    const activeSelect = screen.getByText('Status')
+    const activeSelect = screen.getByText('Suspended')
+    fireEvent.click(activeSelect)
+
+    const activeOption = screen.getByText('Active')
+    fireEvent.click(activeOption)
 
     const submitButton = screen.getByText('Update')
     fireEvent.click(submitButton)
@@ -161,6 +178,12 @@ describe('UpdateRole', () => {
 
     const usernameInput = screen.getByPlaceholderText('Name')
     fireEvent.change(usernameInput, { target: { value: 'role3' } })
+
+    const activeSelect = screen.getByText('Suspended')
+    fireEvent.click(activeSelect)
+
+    const activeOption = screen.getByText('Active')
+    fireEvent.click(activeOption)
 
     const submitButton = screen.getByText('Update')
     fireEvent.click(submitButton)

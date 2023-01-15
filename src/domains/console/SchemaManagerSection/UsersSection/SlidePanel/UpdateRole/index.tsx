@@ -92,6 +92,7 @@ export function UpdateRole() {
       <div className="flex flex-col w-full gap-2 mb-2">
         <Controller
           name={'Name'}
+          defaultValue={''}
           control={control}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">

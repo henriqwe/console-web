@@ -56,13 +56,17 @@ export function CreateRole() {
       setOpenSlide(false)
       utils.notification('Operation performed successfully', 'success')
     } catch (err: any) {
-      if (err.response.status === 417)
-        utils.notification('Role name must be unique', 'error')
-      else
-        utils.notification(
+      if (err?.response?.status === 417) {
+        return utils.notification('Role name must be unique', 'error')
+      }
+
+      if (err?.response?.data?.message) {
+        return utils.notification(
           `Ops! Something went wrong: ${err.response.data.message}`,
           'error'
         )
+      }
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
