@@ -2,9 +2,9 @@ import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import * as dashboard from 'domains/dashboard'
 import * as common from 'common'
+import * as services from 'services'
 import * as utils from 'utils'
 import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import { DocumentDuplicateIcon } from '@heroicons/react/outline'
@@ -67,15 +67,11 @@ export function ViewSchema() {
   async function DeleteProject() {
     try {
       setSubmitLoading(true)
-      await utils.api.delete(
-        `${utils.apiRoutes.schemas}/${selectedSchema?.name}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+
+      await services.ycodify.deleteSchema({
+        accessToken: utils.getCookie('access_token') as string,
+        selectedSchema: selectedSchema?.name as string
+      })
       setReload(!reload)
       setSelectedSchema(undefined)
       setOpenSlide(false)

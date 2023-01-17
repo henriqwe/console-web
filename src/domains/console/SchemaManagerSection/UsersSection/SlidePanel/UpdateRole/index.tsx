@@ -7,6 +7,7 @@ import {
 import { useEffect, useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
+import * as services from 'services'
 import * as utils from 'utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { CheckIcon } from '@heroicons/react/outline'
@@ -48,25 +49,18 @@ export function UpdateRole() {
   }) => {
     try {
       setLoading(true)
-      await utils.api.post(
-        utils.apiRoutes.updateRole,
-        {
-          username: `${
-            utils.parseJwt(utils.getCookie('access_token') as string)?.username
-          }@${router.query.name}`,
-          password: user?.adminSchemaPassword,
-          role: {
-            name: formData.Name,
-            status: formData.Active.value
-          }
+      await services.ycodify.updateRole({
+        adminUsername: `${
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
+        }@${router.query.name}`,
+        password: user?.adminSchemaPassword as string,
+        role: {
+          name: formData.Name,
+          status: formData.Active.value
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-TenantID': utils.getCookie('X-TenantID') as string
-          }
-        }
-      )
+        XTenantID: utils.getCookie('X-TenantID') as string
+      })
+
       reset()
       setReload(!reload)
       setOpenSlide(false)
@@ -120,7 +114,7 @@ export function UpdateRole() {
                 label="Status"
                 options={options}
                 errors={errors.Active}
-                placeholder='Status'
+                placeholder="Status"
               />
             </div>
           )}

@@ -45,10 +45,10 @@ export function CreateAccount() {
   }) => {
     setLoading(true)
     try {
-      await utils.localApi.post(utils.apiRoutes.local.createAccount, {
-        username: formData.Username,
+      await services.ycodify.createAccount({
+        email: formData.Email,
         password: formData.Password,
-        email: formData.Email
+        username: formData.Username
       })
       const roles =
         formData?.Roles?.map(({ name }) => {

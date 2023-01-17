@@ -1,5 +1,6 @@
 import * as common from 'common'
 import * as utils from 'utils'
+import * as services from 'services'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -30,13 +31,10 @@ export function DataApiTab() {
       setLoading(true)
       const _schemaEntities: schemaEntitiesType[] = []
 
-      const response = await utils.api
-        .get(`${utils.apiRoutes.entityList(router.query.name as string)}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
+      const response = await services.ycodify
+        .getEntityList({
+          accessToken: utils.getCookie('access_token') as string,
+          name: router.query.name as string
         })
         .catch(() => null)
 

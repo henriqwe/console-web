@@ -1,8 +1,9 @@
 import * as common from 'common'
 import * as utils from 'utils'
+import * as services from 'services'
 import * as dashboard from 'domains/dashboard'
 import { PlusIcon, ReplyIcon } from '@heroicons/react/outline'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { RowActions } from './RowActions'
 import { TicketDetail } from './TicketDetail'
 import { useUser } from 'contexts/UserContext'
@@ -29,14 +30,7 @@ export function HelpAndSupport() {
               userid: user?.userData.id
             }
 
-      console.log('ticket data', ticket)
-
-      const { data } = await utils.localApi.get(
-        utils.apiRoutes.local.support.ticket,
-        {
-          params: ticket
-        }
-      )
+      const { data } = await services.ycodify.getTicketData({ ticket: ticket })
 
       const tmpTickets = data?.[0]?.ticket ?? []
 

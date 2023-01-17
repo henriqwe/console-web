@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { CheckIcon, UploadIcon } from '@heroicons/react/outline'
 import { InformationCircleIcon } from '@heroicons/react/solid'
 import * as common from 'common'
+import * as services from 'services'
 import * as utils from 'utils'
 import * as yup from 'yup'
 import * as ThemeContext from 'contexts/ThemeContext'
@@ -66,14 +67,8 @@ export function Create() {
     try {
       setLoading(true)
 
-      const schemas = await utils.api
-        .get(utils.apiRoutes.schemas, {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        })
+      const schemas = await services.ycodify
+        .getSchemas({ accessToken: utils.getCookie('access_token') as string })
         .then((res) =>
           res ? res.data.map((schema: { name: string }) => schema.name) : []
         )
@@ -101,61 +96,35 @@ export function Create() {
           }
 
           //create project
-          await utils.api.post(
-            utils.apiRoutes.schemas,
-            {
-              name: projectName
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${utils.getCookie('access_token')}`
-              }
-            }
-          )
+          await services.ycodify.createProject({
+            accessToken: utils.getCookie('access_token') as string,
+            projectName: projectName
+          })
 
-          const { data: schemaData } = await utils.api.get(
-            `${utils.apiRoutes.schemas}/${projectName}`,
-            {
-              headers: {
-                Authorization: `Bearer ${utils.getCookie('access_token')}`
-              }
-            }
-          )
+          const { data: schemaData } = await services.ycodify.getSchema({
+            accessToken: utils.getCookie('access_token') as string,
+            name: projectName
+          })
 
           for (const entity of schemaParsed.schema.entities) {
-            await utils.api.post(
-              utils.apiRoutes.entity(projectName as string),
-              {
-                name: entity.name,
-                attributes: entity.attributes.map((attribute) => {
-                  return {
-                    ...attribute,
-                    type: attribute._conf.type.value
-                  }
-                }),
-                associations: entity.associations ?? []
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${utils.getCookie('access_token')}`
+            await services.ycodify.createEntitySchema({
+              accessToken: utils.getCookie('access_token') as string,
+              attributes: entity.attributes.map((attribute) => {
+                return {
+                  ...attribute,
+                  type: attribute._conf.type.value
                 }
-              }
-            )
+              }),
+              entityName: '',
+              name: entity.name,
+              associations: entity.associations ?? []
+            })
           }
 
-          const AdminAccount = await utils.api.post(
-            utils.apiRoutes.createAdminAccount(projectName),
-            {},
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                Authorization: `Bearer ${utils.getCookie('access_token')}`
-              }
-            }
-          )
+          const AdminAccount = await services.ycodify.createAdminAccount({
+            accessToken: utils.getCookie('access_token') as string,
+            projectName: projectName
+          })
 
           setAdminUser(AdminAccount?.data)
           setCreatedSchemaName(projectName)
@@ -179,39 +148,20 @@ export function Create() {
         throw new Error(`Project ${projectName} already exists`)
       }
 
-      await utils.api.post(
-        utils.apiRoutes.schemas,
-        {
-          name: projectName
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.createSchema({
+        accessToken: utils.getCookie('access_token') as string,
+        projectName: projectName
+      })
 
-      const { data: schemaData } = await utils.api.get(
-        `${utils.apiRoutes.schemas}/${projectName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      const { data: schemaData } = await services.ycodify.getSchema({
+        accessToken: utils.getCookie('access_token') as string,
+        name: projectName
+      })
 
-      const AdminAccount = await utils.api.post(
-        utils.apiRoutes.createAdminAccount(projectName),
-        {},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      const AdminAccount = await services.ycodify.createAdminAccount({
+        accessToken: utils.getCookie('access_token') as string,
+        projectName: projectName
+      })
 
       setAdminUser(AdminAccount?.data)
       setCreatedSchemaName(projectName)

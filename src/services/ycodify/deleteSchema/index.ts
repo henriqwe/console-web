@@ -1,16 +1,15 @@
 import * as utils from 'utils'
 
-export async function getEntityList({
-  name,
+export async function deleteSchema({
+  selectedSchema,
   accessToken
 }: {
-  name: string
+  selectedSchema: string
   accessToken: string
 }) {
-  return utils.api.get(`${utils.apiRoutes.entityList(name)}`, {
+  return utils.api.delete(`${utils.apiRoutes.schemas}/${selectedSchema}`, {
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
       Authorization: `Bearer ${accessToken}`
     }
   })

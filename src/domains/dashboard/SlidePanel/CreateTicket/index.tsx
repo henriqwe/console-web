@@ -9,6 +9,7 @@ import { CheckIcon } from '@heroicons/react/outline'
 import * as common from 'common'
 import * as utils from 'utils'
 import * as yup from 'yup'
+import * as services from 'services'
 import * as dashboard from 'domains/dashboard'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useUser } from 'contexts/UserContext'
@@ -68,16 +69,14 @@ export function CreateTicket() {
 
   async function Submit(formData: FormData) {
     try {
-      await utils.localApi.post(utils.apiRoutes.local.support.ticket, {
-        ticket: {
-          project: formData.Project.value,
-          userid: user?.userData.id,
-          title: formData.Title,
-          content: formData.Content,
-          category: formData.Category.value,
-          status: 'Active',
-          date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms')
-        }
+      await services.ycodify.createTicket({
+        project: formData.Project.value,
+        userid: user?.userData.id,
+        title: formData.Title,
+        content: formData.Content,
+        category: formData.Category.value,
+        status: 'Active',
+        date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms')
       })
 
       setReload(!reload)
@@ -91,12 +90,8 @@ export function CreateTicket() {
   }
 
   async function loadSchemas() {
-    const { data } = await utils.api.get(utils.apiRoutes.schemas, {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: `Bearer ${utils.getCookie('access_token')}`
-      }
+    const { data } = await services.ycodify.getSchemas({
+      accessToken: utils.getCookie('access_token') as string
     })
 
     setSchemas(data)

@@ -8,7 +8,7 @@ export async function getAdminData({
   password: string
 }) {
   return utils.api.post(
-    utils.apiRoutes.roles,
+    utils.apiRoutes.userAccount,
     {
       username: username,
       password: password

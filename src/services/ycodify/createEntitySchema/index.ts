@@ -4,11 +4,13 @@ export async function createEntitySchema({
   name,
   accessToken,
   entityName,
-  attributes
+  attributes,
+  associations = []
 }: {
   name: string
   accessToken: string
   entityName: string
+  associations?: any[]
   attributes: {
     name: any
     type: any
@@ -22,7 +24,7 @@ export async function createEntitySchema({
     {
       name: name,
       attributes: attributes,
-      associations: []
+      associations: associations
     },
     {
       headers: {

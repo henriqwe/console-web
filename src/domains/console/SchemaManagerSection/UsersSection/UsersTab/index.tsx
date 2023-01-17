@@ -1,6 +1,7 @@
 import * as common from 'common'
 import * as consoleData from 'domains/console'
 import * as utils from 'utils'
+import * as services from 'services'
 import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
 import { CheckIcon, LinkIcon, PlusIcon } from '@heroicons/react/outline'
@@ -30,20 +31,12 @@ export function UsersTab() {
 
   async function loadData() {
     try {
-      const { data } = await utils.api.post(
-        utils.apiRoutes.userAccount,
-        {
-          username: `${
-            utils.parseJwt(utils.getCookie('access_token'))?.username
-          }@${router.query.name}`,
-          password: user?.adminSchemaPassword
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
+      const { data } = await services.ycodify.getAdminData({
+        password: user?.adminSchemaPassword as string,
+        username: `${
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
+        }@${router.query.name}`
+      })
       setUsersData(data)
     } catch (err: any) {
       setUser({ ...user, adminSchemaPassword: undefined })

@@ -36,7 +36,7 @@ export function AdminLogin() {
       if (!formData.Password) {
         throw new Error('Please enter a password')
       }
-      const { data } = await services.ycodify.getAdminData({
+      const { data } = await services.ycodify.getRoles({
         password: formData.Password,
         username: `${
           utils.parseJwt(utils.getCookie('access_token') as string)?.username

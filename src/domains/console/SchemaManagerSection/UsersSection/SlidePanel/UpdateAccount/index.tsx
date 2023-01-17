@@ -13,6 +13,7 @@ import * as utils from 'utils'
 import { useRouter } from 'next/router'
 import * as yup from 'yup'
 import * as UserContext from 'contexts/UserContext'
+import * as services from 'services'
 
 export function UpdateAccount() {
   const [loading, setLoading] = useState(false)
@@ -44,32 +45,20 @@ export function UpdateAccount() {
   }) => {
     setLoading(true)
     try {
-      const roles =
-        formData?.Roles?.map(({ name }) => {
-          return { name }
-        })
+      const roles = formData?.Roles?.map(({ name }) => {
+        return { name }
+      })
 
-      await utils.api.post(
-        utils.apiRoutes.updateAccount,
-        {
-          username: `${
-            utils.parseJwt(utils.getCookie('access_token')!)?.username
-          }@${router.query.name}`,
-          password: user?.adminSchemaPassword,
-          account: {
-            username: selectedUser?.username,
-            // email: formData.Email,
-            roles,
-            status: formData.Active.value
-          }
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-TenantID': utils.getCookie('X-TenantID') as string
-          }
-        }
-      )
+      await services.ycodify.updateUser({
+        adminUsername: `${
+          utils.parseJwt(utils.getCookie('access_token')!)?.username
+        }@${router.query.name}`,
+        password: user?.adminSchemaPassword as string,
+        roles: roles,
+        status: formData.Active.value,
+        username: selectedUser?.username as string,
+        XTenantID: utils.getCookie('X-TenantID') as string
+      })
 
       reset()
       setReload(!reload)
