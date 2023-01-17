@@ -88,13 +88,31 @@ describe('RowActions', () => {
   })
 
   it('should render RowActions component', async () => {
-    const { container } = render(<RowActions item={{ name: 'name' }} />)
+    const { container } = render(
+      <table>
+        <thead />
+        <tbody>
+          <tr>
+            <RowActions item={{ name: 'name' }} />
+          </tr>
+        </tbody>
+      </table>
+    )
 
     expect(container.firstChild).toBeInTheDocument()
   })
 
   it('should handle update action', async () => {
-    render(<RowActions item={{ name: 'name' }} />)
+    render(
+      <table>
+        <thead />
+        <tbody>
+          <tr>
+            <RowActions item={{ name: 'name' }} />
+          </tr>
+        </tbody>
+      </table>
+    )
 
     const updateAction = screen.getByTestId('update')
     fireEvent.click(updateAction)
@@ -109,7 +127,16 @@ describe('RowActions', () => {
       requestedUrl = url
     })
 
-    render(<RowActions item={{ name: 'name' }} />)
+    render(
+      <table>
+        <thead />
+        <tbody>
+          <tr>
+            <RowActions item={{ name: 'name' }} />
+          </tr>
+        </tbody>
+      </table>
+    )
 
     const deleteAction = screen.getByTestId('delete')
     fireEvent.click(deleteAction)
@@ -128,7 +155,16 @@ describe('RowActions', () => {
       throw new Error('it broke')
     })
 
-    render(<RowActions item={{ name: 'name' }} />)
+    render(
+      <table>
+        <thead />
+        <tbody>
+          <tr>
+            <RowActions item={{ name: 'name' }} />
+          </tr>
+        </tbody>
+      </table>
+    )
 
     const deleteAction = screen.getByTestId('delete')
     fireEvent.click(deleteAction)

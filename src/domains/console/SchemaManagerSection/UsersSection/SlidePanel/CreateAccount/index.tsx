@@ -53,7 +53,7 @@ export function CreateAccount() {
       const roles =
         formData?.Roles?.map(({ name }) => {
           return { name }
-        }) || []
+        })
 
       await services.ycodify.updateAccountAndRole({
         password: user?.adminSchemaPassword as string,

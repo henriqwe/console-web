@@ -68,6 +68,18 @@ jest.mock('contexts/UserContext', () => ({
 
 const setOpenSlide = jest.fn()
 
+jest.mock('react-hook-form', () => {
+const hookForm = jest.requireActual('react-hook-form')
+  return {
+    ...hookForm,
+  useForm: () => ({
+    ...hookForm.useForm(),
+    setValue: jest.fn()
+  })
+  }
+  
+})
+
 let roles = [{ name: 'role1', status: 0 }] as any
 let selectedUser = {
   createdAt: 0,
@@ -142,6 +154,12 @@ describe('UpdateAccount', () => {
 
     const emailInput = screen.getByPlaceholderText('E-mail')
     fireEvent.change(emailInput, { target: { value: 'aleatorio@random.com' } })
+
+    const rolesMultiSelect = screen.getAllByText('Roles')
+    fireEvent.click(rolesMultiSelect[1])
+
+    const roleOption = screen.getByText('role1')
+    fireEvent.click(roleOption)
 
     const submitButton = screen.getByText('Update')
     fireEvent.click(submitButton)
