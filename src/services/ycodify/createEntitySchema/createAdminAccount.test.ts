@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
-import { createAdminAccount } from '.'
+import { createEntitySchema } from '.'
 import * as services from 'services'
 
 jest.mock('utils/api', () => {
@@ -18,15 +18,14 @@ jest.mock('utils/api', () => {
   }
 })
 
-describe('createAdminAccount function', () => {
-  return true
+describe('createEntitySchema function', () => {
   it('should create a schema entity', async () => {
     await act(async () => {
       const userData = await services.ycodify.getUserToken({
         password: '1231234',
         username: 'chteste'
       })
-      const result = await createAdminAccount({
+      const result = await createEntitySchema({
         accessToken: userData.data.access_token,
         attributes: [
           {

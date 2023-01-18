@@ -11,7 +11,7 @@ export async function updateRole({
   XTenantID: string
   role: {
     name: string
-    status: string
+    status: number
   }
 }) {
   return utils.api.post(

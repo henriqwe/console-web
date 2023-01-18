@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
 import { deleteSchema } from '.'
+import * as services from 'services'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -18,12 +19,15 @@ jest.mock('utils/api', () => {
 })
 
 describe('deleteSchema function', () => {
-  return true
-  it('should changer user password', async () => {
+  it('should delete a schema', async () => {
     await act(async () => {
+      const userToken = await services.ycodify.getUserToken({
+        password: '1231234',
+        username: 'chteste'
+      })
       const result = await deleteSchema({
-        password: 'A2vWiOx1O0P2NTGK',
-        username: 'chteste@chester'
+        accessToken: userToken.data.access_token,
+        selectedSchema: 'fakeSchema'
       })
       expect(result.status).toEqual(200)
     })

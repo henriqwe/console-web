@@ -31,9 +31,7 @@ describe('updatePublishSchema function', () => {
         status: 1
       })
       expect(result.status).toEqual(200)
-      expect(result.config.data).toEqual(
-        '{"username":"chteste","password":"1231234","oldPassword":"1231234"}'
-      )
+      expect(result.config.data).toEqual('{"status":1}')
     })
   })
 })

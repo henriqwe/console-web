@@ -18,8 +18,7 @@ jest.mock('utils/api', () => {
 })
 
 describe('getAdminData function', () => {
-  return true
-  it('should changer user password', async () => {
+  it('should get admin data', async () => {
     await act(async () => {
       const result = await getAdminData({
         password: 'A2vWiOx1O0P2NTGK',

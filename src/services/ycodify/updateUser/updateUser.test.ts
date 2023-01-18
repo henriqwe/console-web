@@ -19,21 +19,23 @@ jest.mock('utils/api', () => {
 })
 
 describe('updateUser function', () => {
-  return true
-  it('should create association', async () => {
-    const userData = await services.ycodify.getUserToken({
-      password: '1231234',
-      username: 'chteste'
-    })
+  it('should updata userData', async () => {
     await act(async () => {
+      const userToken = await services.ycodify.getUserToken({
+        password: '1231234',
+        username: 'chteste'
+      })
+      const { data: schemaData } = await services.ycodify.getSchema({
+        accessToken: userToken.data.access_token,
+        name: 'chester'
+      })
       const result = await updateUser({
-        accessToken: userData.data.access_token,
-        Comment: '',
-        name: 'fakeassociation',
-        type: 'asdasd',
-        Nullable: false,
-        projectName: 'chester',
-        selectedEntity: 'asdasd'
+        adminUsername: 'chteste@chester',
+        password: 'A2vWiOx1O0P2NTGK',
+        roles: [],
+        status: 1,
+        username: 'fakeUser',
+        XTenantID: schemaData.tenantId
       })
       expect(result.status).toEqual(201)
     })

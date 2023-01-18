@@ -18,12 +18,13 @@ jest.mock('utils/api', () => {
 })
 
 describe('updateAccountAndRole function', () => {
-  return true
-  it('should changer user password', async () => {
+  it('should updata account and role', async () => {
     await act(async () => {
       const result = await updateAccountAndRole({
+        roles: [],
+        usernameAdmin: 'chteste@chester',
         password: 'A2vWiOx1O0P2NTGK',
-        username: 'chteste@chester'
+        username: 'fakeUser'
       })
       expect(result.status).toEqual(200)
     })

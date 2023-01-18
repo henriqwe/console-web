@@ -39,7 +39,7 @@ export function UpdateAccount() {
 
   const onSubmit = async (formData: {
     Email: string
-    Active: { name: string; value: string }
+    Active: { name: string; value: number }
     Roles: { name: string; value: string }[]
     Username: string
   }) => {

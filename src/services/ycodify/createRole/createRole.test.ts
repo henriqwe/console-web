@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
 import { createRole } from '.'
+import * as services from 'services'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -18,10 +19,20 @@ jest.mock('utils/api', () => {
 })
 
 describe('createRole function', () => {
-  return true
-  it('should changer user password', async () => {
+  it('should create a role', async () => {
     await act(async () => {
+      const userToken = await services.ycodify.getUserToken({
+        password: '1231234',
+        username: 'chteste'
+      })
+      const { data: schemaData } = await services.ycodify.getSchema({
+        accessToken: userToken.data.access_token,
+        name: 'chester'
+      })
       const result = await createRole({
+        Name: 'fakeRole',
+        Status: 1,
+        XTenantID: schemaData.tenantId,
         password: 'A2vWiOx1O0P2NTGK',
         username: 'chteste@chester'
       })

@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
 import { createProject } from '.'
+import * as services from 'services'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -18,15 +19,17 @@ jest.mock('utils/api', () => {
 })
 
 describe('createProject function', () => {
-  it('should changer user password', async () => {
+  it('should create project', async () => {
     await act(async () => {
-      const result = await createProject({
-        email: '123123',
-        name: '123123',
-        password: '123123',
+      const userData = await services.ycodify.getUserToken({
+        password: '1231234',
         username: 'chteste'
       })
-      expect(result.status).toEqual(200)
+      const result = await createProject({
+        accessToken: userData.data.access_token,
+        projectName: 'fakeProject' + new Date()
+      })
+      expect(result.status).toEqual(201)
     })
   })
 })

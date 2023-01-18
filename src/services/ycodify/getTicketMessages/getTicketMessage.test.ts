@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
-import { getTicketMessage } from '.'
+import { getTicketMessages } from '.'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -17,13 +17,11 @@ jest.mock('utils/api', () => {
   }
 })
 
-describe('getTicketMessage function', () => {
-  return true
-  it('should changer user password', async () => {
+describe('getTicketMessages function', () => {
+  it('should get ticket messages data', async () => {
     await act(async () => {
-      const result = await getTicketMessage({
-        password: 'A2vWiOx1O0P2NTGK',
-        username: 'chteste@chester'
+      const result = await getTicketMessages({
+        ticketid: 1
       })
       expect(result.status).toEqual(200)
     })

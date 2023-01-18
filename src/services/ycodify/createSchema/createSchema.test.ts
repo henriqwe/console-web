@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
 import { createSchema } from '.'
+import * as services from 'services'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -18,14 +19,15 @@ jest.mock('utils/api', () => {
 })
 
 describe('createSchema function', () => {
-  return true
-  it('should changer user password', async () => {
+  it('should create a schema', async () => {
     await act(async () => {
-      const result = await createSchema({
-        email: '123123',
-        name: '123123',
-        password: '123123',
+      const userToken = await services.ycodify.getUserToken({
+        password: '1231234',
         username: 'chteste'
+      })
+      const result = await createSchema({
+        accessToken: userToken.data.access_token,
+        projectName: 'chester'
       })
       expect(result.status).toEqual(200)
     })

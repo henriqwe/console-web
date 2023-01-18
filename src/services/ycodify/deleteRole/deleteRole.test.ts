@@ -18,11 +18,11 @@ jest.mock('utils/api', () => {
 })
 
 describe('deleteRole function', () => {
-  return true
   it('should changer user password', async () => {
     await act(async () => {
       const result = await deleteRole({
         password: 'A2vWiOx1O0P2NTGK',
+        roleName: 'fakeRole',
         username: 'chteste@chester'
       })
       expect(result.status).toEqual(200)

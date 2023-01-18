@@ -27,10 +27,11 @@ describe('updateAccountGatewayPaymentKey function', () => {
     const userData = await services.ycodify.getUserData({
       accessToken: userToken.data.access_token
     })
+
     await act(async () => {
       const result = await updateAccountGatewayPaymentKey({
         accessToken: userToken.data.access_token,
-        gatewayPaymentKey: userData.data.gatewayPaymentKey,
+        gatewayPaymentKey: userData.gatewayPaymentKey,
         password: '1231234',
         username: 'chteste'
       })

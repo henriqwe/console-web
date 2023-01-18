@@ -9,7 +9,7 @@ export async function createRole({
 }: {
   username: string
   password: string
-  Status: string
+  Status: number
   Name: string
   XTenantID: string
 }) {

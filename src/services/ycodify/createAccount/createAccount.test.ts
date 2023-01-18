@@ -18,7 +18,7 @@ jest.mock('utils/api', () => {
 })
 
 describe('createAccount function', () => {
-  it('should changer user password', async () => {
+  it('should create a user account', async () => {
     await act(async () => {
       const result = await createAccount({
         email: '123123',

@@ -18,8 +18,7 @@ jest.mock('utils/api', () => {
 })
 
 describe('getRoles function', () => {
-  return true
-  it('should changer user password', async () => {
+  it('should get roles data', async () => {
     await act(async () => {
       const result = await getRoles({
         password: 'A2vWiOx1O0P2NTGK',

@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
 import { createAttribute } from '.'
+import * as services from 'services'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -18,14 +19,23 @@ jest.mock('utils/api', () => {
 })
 
 describe('createAttribute function', () => {
-  return true
   it('should changer user password', async () => {
     await act(async () => {
-      const result = await createAttribute({
-        password: 'A2vWiOx1O0P2NTGK',
-        username: 'chteste@chester'
+      const userData = await services.ycodify.getUserToken({
+        password: '1231234',
+        username: 'chteste'
       })
-      expect(result.status).toEqual(200)
+      const result = await createAttribute({
+        accessToken: userData.data.access_token,
+        ColumnName: 'fakeColumn',
+        Comment: '',
+        entityName: 'fakeEntity',
+        Length: '64',
+        Nullable: true,
+        projectName: 'chester',
+        Type: 'Text'
+      })
+      expect(result.status).toEqual(201)
     })
   })
 })

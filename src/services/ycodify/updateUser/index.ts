@@ -12,7 +12,7 @@ export async function updateUser({
   password: string
   username: string
   XTenantID: string
-  status: string
+  status: number
   roles: {
     name: string
   }[]

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
-import { updateUser } from '.'
+import { updateRole } from '.'
 import * as services from 'services'
 
 jest.mock('utils/api', () => {
@@ -18,24 +18,27 @@ jest.mock('utils/api', () => {
   }
 })
 
-describe('updateUser function', () => {
-  return true
-  it('should create association', async () => {
+describe('updateRole function', () => {
+  it('should update role', async () => {
     const userData = await services.ycodify.getUserToken({
       password: '1231234',
       username: 'chteste'
     })
+    const { data: schemaData } = await services.ycodify.getSchema({
+      accessToken: userData.data.access_token,
+      name: 'chester'
+    })
     await act(async () => {
-      const result = await updateUser({
-        accessToken: userData.data.access_token,
-        Comment: '',
-        name: 'fakeassociation',
-        type: 'asdasd',
-        Nullable: false,
-        projectName: 'chester',
-        selectedEntity: 'asdasd'
+      const result = await updateRole({
+        adminUsername: 'chteste@chester',
+        password: 'A2vWiOx1O0P2NTGK',
+        role: {
+          name: 'fakeRole',
+          status: 1
+        },
+        XTenantID: schemaData.tenantId
       })
-      expect(result.status).toEqual(201)
+      expect(result.status).toEqual(200)
     })
   })
 })

@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
 import { runInterpreter } from '.'
+import * as services from 'services'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -18,12 +19,28 @@ jest.mock('utils/api', () => {
 })
 
 describe('runInterpreter function', () => {
-  return true
   it('should changer user password', async () => {
     await act(async () => {
+      const userToken = await services.ycodify.getUserToken({
+        password: '1231234',
+        username: 'chteste'
+      })
+      const { data: schemaData } = await services.ycodify.getSchema({
+        accessToken: userToken.data.access_token,
+        name: 'chester'
+      })
       const result = await runInterpreter({
-        password: 'A2vWiOx1O0P2NTGK',
-        username: 'chteste@chester'
+        accessToken: userToken.data.access_token,
+        data: `{
+          "action": "READ",
+          "data": [
+            {
+              "asdasd": {}
+            }
+          ]
+        }`,
+        XTenantAC: schemaData.tenantAc,
+        XTenantID: schemaData.tenantId
       })
       expect(result.status).toEqual(200)
     })

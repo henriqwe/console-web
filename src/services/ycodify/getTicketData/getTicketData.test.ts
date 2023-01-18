@@ -18,12 +18,10 @@ jest.mock('utils/api', () => {
 })
 
 describe('getTicketData function', () => {
-  return true
-  it('should changer user password', async () => {
+  it('should get ticket data', async () => {
     await act(async () => {
       const result = await getTicketData({
-        password: 'A2vWiOx1O0P2NTGK',
-        username: 'chteste@chester'
+        ticket: {}
       })
       expect(result.status).toEqual(200)
     })
