@@ -31,12 +31,10 @@ export function DataApiTab() {
       setLoading(true)
       const _schemaEntities: schemaEntitiesType[] = []
 
-      const response = await services.ycodify
-        .getEntityList({
-          accessToken: utils.getCookie('access_token') as string,
-          name: router.query.name as string
-        })
-        .catch(() => null)
+      const response = await services.ycodify.getEntityList({
+        accessToken: utils.getCookie('access_token') as string,
+        name: router.query.name as string
+      })
 
       for (const entity of Object.keys(response?.data)) {
         delete response?.data[entity]?._conf
@@ -74,7 +72,7 @@ export function DataApiTab() {
   }, [router.query.name])
 
   return (
-    <div className="dataapi-step-1 flex flex-col flex-1 h-full gap-1 px-4 pt-3 overflow-y-auto rounded-b-lg">
+    <div className="flex flex-col flex-1 h-full gap-1 px-4 pt-3 overflow-y-auto rounded-b-lg dataapi-step-1">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <div className="w-8 h-8 mr-8">

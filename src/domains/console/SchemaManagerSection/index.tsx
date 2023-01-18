@@ -81,9 +81,11 @@ export function SchemaManagerSection() {
       .then(({ data }) => {
         setSchemaStatus(data.status)
       })
+      .catch((err) => utils.showError(err))
   }, [])
 
   function beforeClose() {
+    console.log('passou')
     if (currentTabSchema === 'Databases')
       window.localStorage.setItem('toured-database', 'true')
     else if (currentTabSchema === 'Modeler')
@@ -153,6 +155,7 @@ export function SchemaManagerSection() {
                     onClick={() => {
                       setOpenSlide(true)
                     }}
+                    data-testid="editIcon"
                   />
                 )}
               </div>

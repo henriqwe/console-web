@@ -38,9 +38,6 @@ export function AdminLogin() {
     setLoading(true)
 
     try {
-      if (!formData.Password) {
-        throw new Error('Please enter a password')
-      }
       const { data } = await services.ycodify.getRoles({
         password: formData.Password,
         username: `${
