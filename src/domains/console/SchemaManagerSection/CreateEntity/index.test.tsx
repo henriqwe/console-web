@@ -229,7 +229,6 @@ describe('CreateEntity', () => {
     await waitFor(() => {
       const error = screen.getByText('Entity name is required')
       expect(error).toBeInTheDocument()
-      // screen.debug(screen.getByTestId('main'))
       const duplicatedErrorMessage = screen.getAllByText(
         'Column name must be unique'
       )
