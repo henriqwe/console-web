@@ -96,7 +96,7 @@ export function Create() {
           }
 
           //create project
-          await services.ycodify.createProject({
+          await services.ycodify.createSchema({
             accessToken: utils.getCookie('access_token') as string,
             projectName: projectName
           })

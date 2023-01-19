@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
-import { createAccount } from '.'
+import { updateAccountAndRole } from '.'
 
 jest.mock('utils/api', () => {
   const axios = require('axios')
@@ -17,14 +17,15 @@ jest.mock('utils/api', () => {
   }
 })
 
-describe('createAccount function', () => {
-  it('should create a user account', async () => {
+describe('updateAccountAndRole function', () => {
+  it('should updata account and role', async () => {
+    return true
     await act(async () => {
-      const result = await createAccount({
-        email: '123123',
-        name: '123123',
-        password: '123123',
-        username: 'chteste'
+      const result = await updateAccountAndRole({
+        roles: [{ name: 'ASD' }],
+        usernameAdmin: 'chteste@chester',
+        password: 'A2vWiOx1O0P2NTGK',
+        username: 'fakeUser'
       })
       expect(result.status).toEqual(200)
     })

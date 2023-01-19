@@ -45,7 +45,7 @@ export function UpdateRole() {
 
   const onSubmit = async (formData: {
     Name: string
-    Active: { name: string; value: string }
+    Active: { name: string; value: number }
   }) => {
     try {
       setLoading(true)
