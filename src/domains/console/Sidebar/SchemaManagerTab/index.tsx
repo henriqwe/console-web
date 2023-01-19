@@ -34,7 +34,7 @@ export function SchemaManagerTab() {
   }, [router.query.name, reload])
 
   return (
-    <div className="modeler-step-2 flex flex-col h-full gap-1 px-4 pt-3 overflow-y-auto">
+    <div className="flex flex-col h-full gap-1 px-4 pt-3 overflow-y-auto modeler-step-2">
       <div className="flex flex-col w-full">
         <div
           className={`modeler-step-3 flex items-center gap-2 text-sm hover:cursor-pointer ${
@@ -50,10 +50,11 @@ export function SchemaManagerTab() {
         <common.Separator className="dark:border-gray-500/50" />
 
         <div
-          className="flex items-center gap-2  text-sm hover:cursor-pointer"
+          className="flex items-center gap-2 text-sm hover:cursor-pointer"
           onClick={() => {
             setShowDatabase(true)
           }}
+          data-testid="showDatabase"
         >
           <div
             onClick={goToEntitiesPage}

@@ -32,7 +32,7 @@ export function ViewConsole() {
     <div className="bg-[#EDEDEC] dark:bg-bg-page h-[100vh] max-h-[100vh] flex flex-col">
       <common.SlideWithTabs tabsData={tabsData ?? []} />
       <Header />
-      <div className="flex h-full w-full ">
+      <div className="flex w-full h-full ">
         <consoleSection.SideBar />
         <div className="flex flex-1 h-full ">{tab}</div>
       </div>
