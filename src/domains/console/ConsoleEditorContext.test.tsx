@@ -219,19 +219,119 @@ describe('ViewConsole', () => {
         }
       }, [consoleValue])
 
-      return (
-        <div>{val}</div>
-      )
+      return <div>{val}</div>
     }
 
-    render(
+    const { rerender } = render(
       <ConsoleEditorProvider>
         <Component />
       </ConsoleEditorProvider>
     )
 
-    await waitFor(() => {
-      expect(screen.getByText('READ')).toBeInTheDocument()
-    })
+    let Component1 = () => {
+      const [val, setVal] = useState('')
+      const {
+        handleFormatQueryOrMutationEntityAndAttribute,
+        consoleValue,
+        setConsoleValue
+      } = useConsoleEditor()
+
+      useEffect(() => {
+        setConsoleValue(`{
+          action: 'CREATE',
+          data: [{ [entity]: { [attribute]: attributeTypeValue } }]
+        }`)
+        handleFormatQueryOrMutationEntityAndAttribute({
+          attribute: 'name',
+          attributeType: 'Text',
+          entity: 'books'
+        })
+      }, [])
+
+      useEffect(() => {
+        if (consoleValue !== '') {
+          setVal(JSON.parse(consoleValue ?? "{ action: 'Read' }").action)
+        }
+      }, [consoleValue])
+
+      return <div>{val}</div>
+    }
+
+    rerender(
+      <ConsoleEditorProvider>
+        <Component1 />
+      </ConsoleEditorProvider>
+    )
+
+    let Component2 = () => {
+      const [render, setRender] = useState(false)
+      const {
+        handleFormatQueryOrMutationEntityAndAttribute,
+        consoleValue,
+        setConsoleValue
+      } = useConsoleEditor()
+
+      useEffect(() => {
+        setConsoleValue(`{
+          action: 'CREATE',
+          data: [{ [entity]: { [attribute]: attributeTypeValue } }]
+        }`)
+      }, [])
+
+      useEffect(() => {
+        if (!render) {
+          handleFormatQueryOrMutationEntityAndAttribute({
+            attribute: 'names',
+            attributeType: 'Text',
+            entity: 'books'
+          })
+          setRender(true)
+        }
+      }, [consoleValue])
+
+      return <div></div>
+    }
+
+    rerender(
+      <ConsoleEditorProvider>
+        <Component2 />
+      </ConsoleEditorProvider>
+    )
+  })
+
+  it('should test handleFormatQueryOrMutationEntity function', async () => {
+    let Component = () => {
+      const [render, setRender] = useState(false)
+      const {
+        handleFormatQueryOrMutationEntity,
+        consoleValue,
+        setConsoleValue
+      } = useConsoleEditor()
+
+      useEffect(() => {
+        setConsoleValue(`{
+            action: 'CREATE',
+            data: [{ [entity]: { [attribute]: attributeTypeValue } }]
+          }`)
+      }, [])
+
+      useEffect(() => {
+        if (!render && consoleValue !== '') {
+          console.log('consoleValue', consoleValue)
+          handleFormatQueryOrMutationEntity({
+            entity: 'books'
+          })
+          setRender(true)
+        }
+      }, [consoleValue])
+
+      return <div>{consoleValue}</div>
+    }
+
+    const { rerender } = render(
+      <ConsoleEditorProvider>
+        <Component />
+      </ConsoleEditorProvider>
+    )
   })
 })

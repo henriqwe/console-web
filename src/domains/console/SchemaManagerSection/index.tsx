@@ -85,7 +85,6 @@ export function SchemaManagerSection() {
   }, [])
 
   function beforeClose() {
-    console.log('passou')
     if (currentTabSchema === 'Databases')
       window.localStorage.setItem('toured-database', 'true')
     else if (currentTabSchema === 'Modeler')
