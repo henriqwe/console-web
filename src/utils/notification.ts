@@ -39,6 +39,7 @@ function showError(err: any) {
       return
     }
 
+    console.log(err.response.message,'err')
     notification(err.response.message, 'error')
     return
   }

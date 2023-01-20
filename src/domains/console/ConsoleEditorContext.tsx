@@ -150,7 +150,6 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         setTimeout(() => setConsoleValue(valueToFormat.current.slice(0, -1)), 0)
       }
     } catch (error) {
-      console.log('error', error)
       utils.notification('There was an error formatting', 'error')
     }
   }, [consoleValue])
@@ -175,7 +174,6 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
       setdocumentationValue(data.data)
     } catch (err: any) {
-      console.log(err)
       if (err?.response?.status !== 404) {
         utils.showError(err)
       }
