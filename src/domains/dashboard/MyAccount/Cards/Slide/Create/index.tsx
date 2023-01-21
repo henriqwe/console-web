@@ -17,12 +17,13 @@ type formData = {
 }
 import * as creditCardContext from 'domains/dashboard/MyAccount/Cards/CreditCardContext'
 import * as services from 'services'
+import * as yup from 'yup'
 
 export function Create() {
   const [loading, setLoading] = useState(false)
   const [cardBrand, setCardBrand] = useState<string>()
   const { user } = useUser()
-  const { creditCardSchema, setCreditCardNumber, setOpenSlide, getCards } =
+  const { setCreditCardNumber, creditCardNumber, setOpenSlide, getCards } =
     creditCardContext.useData()
 
   const {
@@ -30,7 +31,76 @@ export function Create() {
     handleSubmit,
     watch,
     control
-  } = useForm({ resolver: yupResolver(creditCardSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        number: yup
+          .string()
+          .min(14)
+          .max(16)
+          .test('equal', 'Number must contain only numbers', (val) => {
+            const validation = new RegExp(/^[0-9]*$/)
+            return validation.test(val as string)
+          })
+          .test('equal', 'Number invalid', (val) => {
+            if (!val) {
+              return false
+            }
+            const brand = utils.getCardBrand(val)
+            if (brand) {
+              return true
+            }
+            return false
+          })
+          .required('This field is required'),
+        cvv: yup
+          .string()
+          .required('This field is required')
+          .test('equal', 'Cvv must contain only numbers', (val) => {
+            const validation = new RegExp(/^[0-9]*$/)
+            return validation.test(val as string)
+          })
+          .test('equal', 'CVV invalid', (val) => {
+            if (!val || !creditCardNumber) {
+              return false
+            }
+            const validation = utils.validateCVV({
+              creditCard: creditCardNumber,
+              cvv: val
+            })
+            return validation
+          }),
+        expiry: yup
+          .string()
+          .required('This field is required')
+          .test('equal', 'Invalid date', (val) => {
+            if (!val) {
+              return false
+            }
+            if (val.includes('_')) {
+              return false
+            }
+
+            const [month, year] = val.split('/')
+            if (Number(month) === 0 || Number(month) > 12) {
+              return false
+            }
+
+            const expiryCreditCard = new Date(
+              Number(`20${year}`),
+              Number(month),
+              1
+            )
+            if (new Date() > expiryCreditCard) {
+              return false
+            }
+
+            return true
+          }),
+        name: yup.string().required('This field is required')
+      })
+    )
+  })
 
   async function onSubmit(formData: formData) {
     setLoading(true)
@@ -41,8 +111,10 @@ export function Create() {
       if (!cardBrand) {
         throw new Error('Unidentified credit card brand')
       }
+
       const [month, year] = formData.expiry.split('/')
       const brandName = utils.handleBrandName(cardBrand!)
+
       await services.pagarme.createCard({
         customerId: user?.gatewayPaymentKey,
         number: formData.number,
@@ -62,6 +134,7 @@ export function Create() {
       setOpenSlide(false)
       utils.notification('Credit card successfully added', 'success')
     } catch (err) {
+      console.log('err',err)
       utils.showError(err)
     } finally {
       setLoading(false)
@@ -100,6 +173,7 @@ export function Create() {
         <Controller
           name="name"
           control={control}
+          defaultValue={''}
           render={({ field: { onChange } }) => (
             <div className="w-full">
               <common.Input
@@ -115,6 +189,7 @@ export function Create() {
         <Controller
           name="number"
           control={control}
+          defaultValue={''}
           render={({ field: { onChange } }) => (
             <div className="w-full">
               <common.Input
@@ -129,7 +204,7 @@ export function Create() {
           )}
         />
 
-        <div className="flex gap-4 justify-between">
+        <div className="flex justify-between gap-4">
           <div className="w-[40%]">
             <common.ExpiryCreditCardInput
               placeholder="Expiry"
@@ -142,6 +217,7 @@ export function Create() {
             <Controller
               name="cvv"
               control={control}
+              defaultValue={''}
               render={({ field: { onChange } }) => (
                 <div className="w-full">
                   <common.Input

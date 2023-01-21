@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { CreateTicket } from '.'
+import * as utils from 'utils'
 import '@testing-library/jest-dom'
 
 window.prompt = jest.fn()
@@ -36,6 +37,9 @@ jest.mock('utils/api', () => ({
         ]
       }
     }
+  },
+  localApi: {
+    post: jest.fn()
   }
 }))
 
@@ -50,21 +54,6 @@ jest.mock('react-toastify', () => ({
     })
   }
 }))
-
-jest.mock('axios', () => {
-  return {
-    get: () => {
-      if (itShouldBreak) {
-        throw new Error('It broke')
-      }
-      return {
-        data: {
-          id: '123'
-        }
-      }
-    }
-  }
-})
 
 jest.mock('utils/cookies', () => {
   return {
@@ -81,8 +70,6 @@ jest.mock('domains/dashboard/DashboardContext', () => ({
     reload: null
   })
 }))
-
-global.fetch = jest.fn(() => null)
 
 const mock = function () {
   return {
@@ -110,6 +97,13 @@ describe('CreateTicket', () => {
   })
 
   it('should handle the submit action', async () => {
+    let requestedUrl = ''
+    jest
+      .spyOn(utils.localApi, 'post')
+      .mockImplementation(async (url: string) => {
+        requestedUrl = url
+      })
+
     render(<CreateTicket />)
 
     await act(async () => {
@@ -161,11 +155,16 @@ describe('CreateTicket', () => {
     })
     await waitFor(() => {
       expect(toastCalls.includes('Ticket created successfully')).toBe(true)
+      expect(requestedUrl).toBe('/support/ticket')
     })
   })
 
-  it('should break the delete schema action', async () => {
-    itShouldBreak = true
+  it('should break the create ticket action', async () => {
+    jest
+      .spyOn(utils.localApi, 'post')
+      .mockImplementation(async () => {
+        throw new Error('It broke')
+      })
     render(<CreateTicket />)
 
     await act(async () => {

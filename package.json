@@ -19,7 +19,7 @@
     "@emotion/react": "^11.9.3",
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
-    "@hookform/resolvers": "^2.9.1",
+    "@hookform/resolvers": "^2.9.10",
     "@iconify/react": "^3.2.2",
     "@reactour/mask": "^1.0.4",
     "@reactour/tour": "^3.1.6",

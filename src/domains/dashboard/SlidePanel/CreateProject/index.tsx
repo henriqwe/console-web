@@ -169,6 +169,7 @@ export function Create() {
       utils.setCookie('X-TenantID', schemaData.tenantId)
       utils.setCookie('X-TenantAC', schemaData.tenantAc)
       setReload(!reload)
+
       utils.notification(
         `Project ${projectName} created successfully`,
         'success'

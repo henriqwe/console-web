@@ -77,7 +77,7 @@ export function TicketDetail({ user }: TicketDetail) {
       })
 
       setMessages(
-        data?.[0]?.message?.map((ticket) => ({
+        data?.[0]?.message?.map((ticket: Message) => ({
           ...ticket,
           name: ticket?.createdbyuser ? user?.username : 'Ycodify'
         })) ?? []

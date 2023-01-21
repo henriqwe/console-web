@@ -3,23 +3,7 @@ import { SchemaManagerSection } from '.'
 import * as utils from 'utils'
 import '@testing-library/jest-dom'
 
-class ResizeObserver {
-  callback: globalThis.ResizeObserverCallback
-
-  constructor(callback: globalThis.ResizeObserverCallback) {
-    this.callback = callback
-  }
-
-  observe(target: Element) {
-    this.callback([{ target } as globalThis.ResizeObserverEntry], this)
-  }
-
-  unobserve() {}
-
-  disconnect() {}
-}
-
-global.ResizeObserver = ResizeObserver
+global.ResizeObserver = require('resize-observer-polyfill')
 
 let toastCalls: string[] = []
 jest.mock('react-toastify', () => ({
@@ -148,7 +132,7 @@ jest.mock('domains/console/SchemaManagerContext', () => ({
   })
 }))
 
-describe('AssociateAccount', () => {
+describe('SchemaManagerSection', () => {
   jest.spyOn(Object.getPrototypeOf(window.localStorage), 'setItem')
   Object.setPrototypeOf(window.localStorage.setItem, jest.fn())
   afterEach(() => {
@@ -168,7 +152,7 @@ describe('AssociateAccount', () => {
     }
   })
 
-  it('should render AssociateAccount component', async () => {
+  it('should render SchemaManagerSection component', async () => {
     let requestedUrl: string[] = []
     jest.spyOn(utils.api, 'get').mockImplementation(async (url: string) => {
       requestedUrl.push(url)
@@ -205,7 +189,7 @@ describe('AssociateAccount', () => {
     })
   })
 
-  it('should render AssociateAccount component with create entity content', async () => {
+  it('should render SchemaManagerSection component with create entity content', async () => {
     showCreateEntitySection = true
     let requestedUrl: string[] = []
     jest.spyOn(utils.api, 'get').mockImplementation(async (url: string) => {
@@ -220,7 +204,7 @@ describe('AssociateAccount', () => {
     })
   })
 
-  it('should render AssociateAccount component with create entity content', async () => {
+  it('should render SchemaManagerSection component with create entity content', async () => {
     let requestedUrl: string[] = []
     jest.spyOn(utils.api, 'get').mockImplementation(async (url: string) => {
       requestedUrl.push(url)

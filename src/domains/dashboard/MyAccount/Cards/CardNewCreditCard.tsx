@@ -18,7 +18,7 @@ export function CardNewCreditCard() {
 
   return (
     <div
-      className="flex flex-col justify-center items-center p-4 border-dashed border-2 w-52 h-52 cursor-pointer"
+      className="flex flex-col items-center justify-center p-4 border-2 border-dashed cursor-pointer w-52 h-52"
       onClick={() => {
         for (const data of [
           addrStreet,
@@ -41,9 +41,9 @@ export function CardNewCreditCard() {
         setOpenSlide(true)
       }}
     >
-      <div className="dark:text-text-primary text-slate-900 flex justify-start items-center flex-col">
+      <div className="flex flex-col items-center justify-start dark:text-text-primary text-slate-900">
         <PlusIcon className="w-8 h-8" />
-        <span className=" text-lg font-semibold">Add new card</span>
+        <span className="text-lg font-semibold ">Add new card</span>
       </div>
     </div>
   )

@@ -15,7 +15,7 @@ jest.mock('react-toastify', () => ({
   }
 }))
 
-jest.mock('domains/dashboard/MyAccount/services/changePassword', () => ({
+jest.mock('services/ycodify/account/changePassword', () => ({
   changePassword: ({ password }: { password: string }) => {
     if (password === 'breakProcess') {
       throw { response: { data: { message: 'it broke' } } }

@@ -18,7 +18,6 @@ type CreditCardContextProps = {
   setSlideType: Dispatch<SetStateAction<SlideType>>
   slideSize: SlideSize
   setSlideSize: Dispatch<SetStateAction<SlideSize>>
-  creditCardSchema: yup.AnyObjectSchema
   creditCardNumber: string | undefined
   setCreditCardNumber: Dispatch<SetStateAction<string | undefined>>
   getCards(): Promise<void>
@@ -79,72 +78,6 @@ export const DataProvider = ({ children }: ProviderProps) => {
     }
   }
 
-  const creditCardSchema = yup.object().shape({
-    number: yup
-      .string()
-      .min(14)
-      .max(16)
-      .test('equal', 'Number must contain only numbers', (val) => {
-        const validation = new RegExp(/^[0-9]*$/)
-        return validation.test(val as string)
-      })
-      .test('equal', 'Number invalid', (val) => {
-        if (!val) {
-          return false
-        }
-        const brand = utils.getCardBrand(val)
-        if (brand) {
-          return true
-        }
-        return false
-      })
-      .required('This field is required'),
-    cvv: yup
-      .string()
-      .required('This field is required')
-      .test('equal', 'Cvv must contain only numbers', (val) => {
-        const validation = new RegExp(/^[0-9]*$/)
-        return validation.test(val as string)
-      })
-      .test('equal', 'CVV invalid', (val) => {
-        if (!val || !creditCardNumber) {
-          return false
-        }
-        const validation = utils.validateCVV({
-          creditCard: creditCardNumber,
-          cvv: val
-        })
-        if (validation) {
-          return true
-        }
-        return false
-      }),
-    expiry: yup
-      .string()
-      .required('This field is required')
-      .test('equal', 'Invalid date', (val) => {
-        if (!val) {
-          return false
-        }
-        if (val.includes('_')) {
-          return false
-        }
-
-        const [month, year] = val.split('/')
-        if (Number(month) === 0 || Number(month) > 12) {
-          return false
-        }
-
-        const expiryCreditCard = new Date(Number(`20${year}`), Number(month), 1)
-        if (new Date() > expiryCreditCard) {
-          return false
-        }
-
-        return true
-      }),
-    name: yup.string().required('This field is required')
-  })
-
   async function deleteCard(cardId: string) {
     try {
       await services.pagarme.deleteCard({
@@ -165,7 +98,6 @@ export const DataProvider = ({ children }: ProviderProps) => {
         setSlideType,
         slideSize,
         setSlideSize,
-        creditCardSchema,
         creditCardNumber,
         setCreditCardNumber,
         getCards,

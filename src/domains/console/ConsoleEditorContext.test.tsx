@@ -317,7 +317,6 @@ describe('ViewConsole', () => {
 
       useEffect(() => {
         if (!render && consoleValue !== '') {
-          console.log('consoleValue', consoleValue)
           handleFormatQueryOrMutationEntity({
             entity: 'books'
           })

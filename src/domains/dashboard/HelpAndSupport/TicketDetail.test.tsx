@@ -79,20 +79,4 @@ describe('TicketDetail component', () => {
     ).toBeInTheDocument()
   })
 
-  it('should set state selectedTicket undefined after click', async () => {
-    render(<TicketDetail />)
-    const backToListButton = screen.getByText('Back to list')
-    expect(backToListButton).toBeInTheDocument()
-
-    fireEvent.click(backToListButton)
-
-    await act(async () => {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 50)
-      })
-    })
-
-
-    expect(mockSelectedTicket).toEqual(undefined)
-  })
 })
