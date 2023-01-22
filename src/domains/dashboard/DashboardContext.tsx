@@ -13,7 +13,6 @@ type DataContextProps = {
   setSelectedSchema: Dispatch<SetStateAction<Schemas | undefined>>
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
-  createProjectSchema: (submittedSchema?: string) => yup.AnyObjectSchema
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
   slideType: SlideType
@@ -84,30 +83,11 @@ export const DataProvider = ({ children }: ProviderProps) => {
 
   const [adminUser, setAdminUser] = useState<AdminUser>()
 
-  const createProjectSchema = (submittedSchema?: string) => {
-    return yup.object().shape({
-      ProjectName: submittedSchema
-        ? yup.string().nullable()
-        : yup
-            .string()
-            .required('Project name is a required field')
-            .min(3, 'Project name must be at least 3 characters')
-            .matches(/^[a-z ]*$/, 'Project name must be only lowercase letters')
-            .lowercase('Project name must be lowercase')
-            .test(
-              'space',
-              'Project name should not contain spaces',
-              (value) => !value?.includes(' ')
-            )
-    })
-  }
-
   return (
     <DataContext.Provider
       value={{
         reload,
         setReload,
-        createProjectSchema,
         openSlide,
         setOpenSlide,
         slideType,

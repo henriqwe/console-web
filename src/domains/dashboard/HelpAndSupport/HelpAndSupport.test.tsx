@@ -4,6 +4,16 @@ import { HelpAndSupport } from './HelpAndSupport'
 import React from 'react'
 import * as utils from 'utils'
 
+type Tickets = {
+  logversion: number
+  id: number
+  project: string
+  category: string
+  title: string
+  status: string
+  content: string
+}
+
 let toastCalls: string[] = []
 jest.mock('react-toastify', () => ({
   toast: {
@@ -38,6 +48,7 @@ let setSlideSize = jest.fn()
 let setTickets = jest.fn()
 let selectedTicket: string | undefined = 'ticket'
 let setSelectedTicket = jest.fn()
+let tickets: Tickets[] = []
 jest.mock('domains/dashboard/DashboardContext', () => ({
   useData: () => ({
     openSlide: false,
@@ -49,7 +60,7 @@ jest.mock('domains/dashboard/DashboardContext', () => ({
     setSlideType: jest.fn((val) => setSlideType(val)),
     setSlideSize: jest.fn((val) => setSlideSize(val)),
     reload: false,
-    tickets: [],
+    tickets,
     setTickets: jest.fn((val) => setTickets(val)),
     selectedTicket,
     setSelectedTicket: jest.fn((val) => setSelectedTicket(val))
@@ -57,9 +68,16 @@ jest.mock('domains/dashboard/DashboardContext', () => ({
 }))
 
 describe('HelpAndSupport component', () => {
+  const OLD_ENV = process.env
+
+  beforeEach(() => {
+    process.env = { ...OLD_ENV }
+  })
   afterEach(() => {
     toastCalls = []
     gatewayPaymentKey = '123'
+    selectedTicket = 'ticket'
+    process.env = OLD_ENV
   })
 
   it('should render HelpAndSupport component', async () => {
@@ -74,7 +92,7 @@ describe('HelpAndSupport component', () => {
               { date: new Date(), status: 'Active' },
               { date: new Date(), status: 'Inactive' },
               { date: new Date(), status: 'Inactive' },
-              { date: new Date(), status: 'Active' },
+              { date: new Date(), status: 'Active' }
             ]
           }
         ]
@@ -86,6 +104,106 @@ describe('HelpAndSupport component', () => {
 
     await waitFor(() => {
       expect(requestedUrl).toBe('/support/ticket')
+    })
+  })
+
+  it('should test create ticket action', async () => {
+    selectedTicket = undefined
+    let requestedUrl = ''
+    jest.spyOn(utils.localApi, 'get').mockImplementation(async (url) => {
+      requestedUrl = url
+      return {
+        data: [
+          {
+            ticket: []
+          }
+        ]
+      }
+    })
+
+    const { container } = render(<HelpAndSupport />)
+    expect(container.firstChild).toBeInTheDocument()
+
+    await waitFor(() => {
+      expect(requestedUrl).toBe('/support/ticket')
+    })
+
+    const createButton = screen.getByText('Create')
+    fireEvent.click(createButton)
+
+    expect(setSlideType).toBeCalledWith('createTicket')
+    expect(setOpenSlide).toBeCalledWith(true)
+    expect(setSlideSize).toBeCalledWith('normal')
+  })
+
+  it('should test back to ticket list action', async () => {
+    let requestedUrl = ''
+    jest.spyOn(utils.localApi, 'get').mockImplementation(async (url) => {
+      requestedUrl = url
+      return {
+        data: [
+          {
+            ticket: []
+          }
+        ]
+      }
+    })
+
+    const { container } = render(<HelpAndSupport />)
+    expect(container.firstChild).toBeInTheDocument()
+
+    await waitFor(() => {
+      expect(requestedUrl).toBe('/support/ticket')
+    })
+
+    const backButton = screen.getByText('Back')
+    fireEvent.click(backButton)
+
+    expect(setSelectedTicket).toBeCalledWith(undefined)
+  })
+
+  it('should break loadTickets action', async () => {
+    jest.spyOn(utils.localApi, 'get').mockImplementation(async (url) => {
+      throw new Error('it broke')
+    })
+
+    const { container } = render(<HelpAndSupport />)
+    expect(container.firstChild).toBeInTheDocument()
+
+    await waitFor(() => {
+      expect(toastCalls.includes('it broke')).toBe(true)
+    })
+  })
+
+  it('should render HelpAndSupport without selectedTicket', async () => {
+    process.env.NEXT_PUBLIC_SUPPORT_EMAIL = 'test@example.com'
+    selectedTicket = undefined
+    tickets = [
+      {
+        id: 123,
+        title: 'ticket1',
+        project: 'library',
+        category: 'error',
+        content: '123',
+        logversion: 0,
+        status: 'Active'
+      }
+    ]
+    setTickets.mockImplementation((val) => {
+      tickets = val
+    })
+    jest.spyOn(utils.localApi, 'get').mockImplementation(async (url) => {
+      return {
+        data: []
+      }
+    })
+
+    const { container } = render(<HelpAndSupport />)
+    expect(container.firstChild).toBeInTheDocument()
+
+    await waitFor(() => {
+      expect(tickets.length).toBe(1)
+      expect(screen.getByText('ticket1')).toBeInTheDocument()
     })
   })
 })

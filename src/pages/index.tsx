@@ -32,7 +32,9 @@ function Page() {
       prevButton={({ currentStep, setCurrentStep }) => (
         <Buttons.Ycodify
           onClick={() => setCurrentStep(currentStep - 1)}
-          icon={<ArrowLeftIcon className="w-3 h-3" />}
+          icon={
+            <ArrowLeftIcon className="w-3 h-3" data-testid="arrowLeftIcon" />
+          }
           iconPosition="left"
           className="mr-2"
         ></Buttons.Ycodify>
@@ -41,7 +43,12 @@ function Page() {
         return (
           <Buttons.Ycodify
             onClick={() => setCurrentStep(currentStep + 1)}
-            icon={<ArrowRightIcon className="w-3 h-3" />}
+            icon={
+              <ArrowRightIcon
+                className="w-3 h-3"
+                data-testid="arrowRightIcon"
+              />
+            }
             className="ml-2 w-max"
           >
             {currentStep === steps!.length - 1 ? 'Finish' : ''}
@@ -50,7 +57,6 @@ function Page() {
       }}
       showCloseButton={false}
       beforeClose={() => localStorage.setItem('toured-dashboard', 'true')}
-      onClickMask={() => {}}
     >
       <Head>
         <title>Projects - Dashboard</title>

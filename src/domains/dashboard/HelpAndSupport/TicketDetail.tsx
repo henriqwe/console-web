@@ -11,6 +11,8 @@ import * as services from 'services'
 import * as dashboard from 'domains/dashboard'
 import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 type FormData = {
   Content: string
@@ -44,15 +46,17 @@ export function TicketDetail({ user }: TicketDetail) {
     handleSubmit,
     formState: { errors },
     setValue
-  } = useForm()
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Content: yup.string().required('this field is required')
+      })
+    )
+  })
 
   async function createTicketMessage(formData: FormData) {
     try {
       setLoading(true)
-      if (!formData.Content || formData.Content === '') {
-        throw new Error('Cannot create a empty message')
-      }
-
       await services.ycodify.createTicketMessage({
         content: formData.Content,
         createdbyuser: user?.email !== process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
@@ -118,6 +122,7 @@ export function TicketDetail({ user }: TicketDetail) {
       <Controller
         name={'Content'}
         control={control}
+        defaultValue={''}
         render={({ field: { onChange, value } }) => (
           <div className="col-span-3">
             <common.Textarea
