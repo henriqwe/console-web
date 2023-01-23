@@ -20,7 +20,7 @@ export function Tabs({
   onchange
 }: TabsProps) {
   return (
-    <div className=" w-full  h-full ">
+    <div className="w-full h-full ">
       <div className="sm:hidden">
         <label htmlFor="tabs" className="sr-only">
           Select a tab
@@ -37,10 +37,10 @@ export function Tabs({
           }}
         />
       </div>
-      <div className="hidden sm:block h-full">
+      <div className="hidden h-full sm:block">
         <div className="h-full">
           <nav
-            className="flex justify-center w-full -mb-px h-full "
+            className="flex justify-center w-full h-full -mb-px "
             aria-label="Tabs roudend-t-md"
           >
             {tabs.map((tab) => (

@@ -13,7 +13,10 @@ const customJestConfig = {
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
   testPathIgnorePatterns: [
 
-    // '<rootDir>/src/common', '<rootDir>/src/domains/dashboard', '<rootDir>/src/services', '<rootDir>/src/domains/console/AdminLogin', '<rootDir>/src/domains/console/DataApiSection', '<rootDir>/src/domains/console/Header','<rootDir>/src/domains/console/SchemaManagerSection', '<rootDir>/src/domains/console/Sidebar', '<rootDir>/src/domains/login'
+    // '<rootDir>/src/common', 
+    // '<rootDir>/src/domains', 
+    // '<rootDir>/src/services', 
+    // '<rootDir>/src/pages'
 ],
   moduleDirectories: ['node_modules', '<rootDir>/src'],
   collectCoverage: true,
