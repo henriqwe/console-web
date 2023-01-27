@@ -19,7 +19,7 @@ type Message = {
   content: string
   id: string
   date: string
-  name: string
+  username: string
   createdbyuser: boolean
 }
 
@@ -57,6 +57,7 @@ export function TicketDetail({ user }: TicketDetail) {
           date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms'),
           createdbyuser: user?.email !== process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
           content: formData.Content,
+          username: user?.username,
           ticketid: selectedTicket?.id,
           ticket: selectedTicket?.id
         }
@@ -83,9 +84,9 @@ export function TicketDetail({ user }: TicketDetail) {
       )
 
       setMessages(
-        data?.[0]?.message?.map((ticket) => ({
-          ...ticket,
-          name: ticket?.createdbyuser ? user?.username : 'Ycodify'
+        data?.[0]?.message?.map((message) => ({
+          ...message,
+          username: message?.createdbyuser ? message?.username : 'Ycodify'
         })) ?? []
       )
     } catch (err) {
