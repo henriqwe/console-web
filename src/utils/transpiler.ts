@@ -210,15 +210,6 @@ export const ycl_transpiler = {
 
     ycl_transpiler.refs = {}
 
-    entity_names.forEach((entity_name) => {
-      if (!ycl_transpiler.is_alpha(entity_name))
-        throw new Error(
-          "error: model inconsistency. entity name '" +
-            entity_name +
-            "' contains invalid characters."
-        )
-    })
-
     while (index < tokens.length) {
       if (from == 0 && tokens[index].symbol == 'schema') {
         {
@@ -245,8 +236,7 @@ export const ycl_transpiler = {
         }
         if (
           !ycl_transpiler.ycl_reserved_word_contains(schema.name) &&
-          ycl_transpiler.check_schema_object_name(schema.name) &&
-          ycl_transpiler.is_alpha(schema.name)
+          ycl_transpiler.check_schema_object_name(schema.name)
         ) {
           /*
            * reconhecer a declaração de schema
@@ -395,7 +385,7 @@ export const ycl_transpiler = {
               command: aux[0],
               _conf: {
                 dbType: 'sql',
-                businessRule: false,
+                businessRule: [],
                 concurrencyControl: false,
                 accessControl: {
                   read: ['ADMIN'],
@@ -412,7 +402,7 @@ export const ycl_transpiler = {
               command: '',
               _conf: {
                 dbType: 'sql',
-                businessRule: false,
+                businessRule: [],
                 concurrencyControl: false,
                 accessControl: {
                   read: ['ADMIN'],
@@ -439,7 +429,7 @@ export const ycl_transpiler = {
                     ycl_transpiler.db_type = tokens[index].symbol
                     actual_entity._conf.dbType = ycl_transpiler.db_type
                   } else if (tokens[index].symbol == 'nosql') {
-                    ycl_transpiler.db_type = 'nosql(columnar)'
+                    ycl_transpiler.db_type = 'nosql'
                     actual_entity._conf.dbType = ycl_transpiler.db_type
                   }
                 }
@@ -497,6 +487,12 @@ export const ycl_transpiler = {
         code_body = code_body + ' ' + tokens[index].symbol + ' \n'
         index++
         while (tokens[index].symbol != ')') {
+          // console.log('actual_entity: ', actual_entity)
+          // console.log(
+          //   'actual_entity._conf.dbType: ',
+          //   actual_entity._conf.dbType
+          // )
+
           if (tokens[index].symbol == 'sql') {
             ycl_transpiler.db_type = tokens[index].symbol
             actual_entity._conf.dbType = ycl_transpiler.db_type
@@ -506,32 +502,18 @@ export const ycl_transpiler = {
             ycl_transpiler.db_type = tokens[index].symbol
             actual_entity._conf.dbType = ycl_transpiler.db_type
             code_body = code_body + '    ' + tokens[index].symbol
-            if (tokens[++index].symbol == '(') {
-              code_body = code_body + ' ' + tokens[index].symbol
-              if (
-                tokens[++index].symbol == 'columnar' ||
-                tokens[index].symbol == 'document'
-              ) {
-                actual_entity._conf.dbType = ycl_transpiler.db_type
-                  .concat('(')
-                  .concat(tokens[index].symbol)
-                  .concat(')')
-                code_body = code_body + ' ' + tokens[index].symbol
-                if (tokens[++index].symbol == ')') {
-                  code_body = code_body + ' ' + tokens[index].symbol
-                } else
-                  throw new Error(
-                    "error: unexpected token '" +
-                      tokens[index].symbol +
-                      "'. the expected token is ')'"
-                  )
-              } else
-                throw new Error(
-                  "error: unexpected token '" +
-                    tokens[index].symbol +
-                    "'. the expected token is 'columnar' or 'graph'"
-                )
-            }
+            /*
+                        if (tokens[++index].symbol == '(') {
+                            code_body = code_body + ' ' + tokens[index].symbol;
+                            if (tokens[++index].symbol == 'columnar' || tokens[index].symbol == 'document') {
+                                actual_entity._conf.dbType = ycl_transpiler.db_type.concat('(').concat(tokens[index].symbol).concat(')');
+                                code_body = code_body + ' ' + tokens[index].symbol;
+                                if (tokens[++index].symbol == ')') {
+                                    code_body = code_body + ' ' + tokens[index].symbol;
+                                } else throw new Error('error: unexpected token \''+tokens[index].symbol+'\'. the expected token is \')\'');
+                            } else throw new Error('error: unexpected token \''+tokens[index].symbol+'\'. the expected token is \'columnar\' or \'graph\'');
+                        }
+                         */
             code_body = code_body + '\n'
             index++
           } else if (
@@ -558,28 +540,81 @@ export const ycl_transpiler = {
               code_body + '    ' + tokens[index].symbol.replace('u:', '') + '\n'
             index++
           } else if (
-            tokens[index].symbol == 'businessRule' ||
-            tokens[index].symbol == '!businessRule' ||
-            tokens[index].symbol == 'u:businessRule' ||
-            tokens[index].symbol == 'u:!businessRule'
+            (tokens[index].symbol == 'businessRule' ||
+              tokens[index].symbol == 'u:businessRule') &&
+            tokens[index + 1].symbol == '['
           ) {
-            {
-              let aux = tokens[index].symbol.split(':')
-              if (aux.length == 2) {
-                actual_entity._conf.businessRule = {
-                  value: aux[1].startsWith('b'),
-                  command: aux[0]
-                }
+            /*{
+                            let aux = tokens[index].symbol.split(':')
+                            if (aux.length == 2) {
+                                actual_entity._conf.businessRule = {
+                                    value: aux[1].startsWith('b'),
+                                    command: aux[0]
+                                };
+                            } else {
+                                actual_entity._conf.businessRule = {
+                                    value: aux[0].startsWith('b'),
+                                    command: ''
+                                };
+                            }
+                        }
+                        code_body = code_body + '    ' + tokens[index].symbol.replace('u:','') + '\n';
+                        index++; */
+            // console.log(' >>> tokens[' + index + ']: ', tokens[index])
+            code_body =
+              code_body +
+              '    ' +
+              tokens[index].symbol.replace('u:', '') +
+              ' ' +
+              tokens[index + 1].symbol +
+              '\n'
+            // console.log(' >>> code_body: ', code_body)
+            actual_entity._conf.businessRule = {
+              values: [],
+              command: ''
+            }
+            // console.log(
+            //   ' >>> actual_entity._conf.businessRule: ',
+            //   actual_entity._conf.businessRule
+            // )
+            if (tokens[index].symbol.startsWith('u:')) {
+              actual_entity._conf.businessRule.command = 'u'
+            }
+            index++
+            index++
+            while (tokens[index].symbol != ']') {
+              if (
+                tokens[index].symbol == 'CREATE' ||
+                tokens[index].symbol == 'READ' ||
+                tokens[index].symbol == 'UPDATE' ||
+                tokens[index].symbol == 'DELETE'
+              ) {
+                actual_entity._conf.businessRule.values.push(
+                  tokens[index].symbol
+                )
+                code_body = code_body + '      ' + tokens[index].symbol + '\n'
+                index++
               } else {
-                actual_entity._conf.businessRule = {
-                  value: aux[0].startsWith('b'),
-                  command: ''
-                }
+                throw new Error(
+                  "error: businessRule type unknow. token '" +
+                    tokens[index].symbol +
+                    "', line " +
+                    tokens[index].line +
+                    ', position: ' +
+                    tokens[index].position +
+                    '. [from: ' +
+                    from +
+                    ']'
+                )
               }
             }
-            code_body =
-              code_body + '    ' + tokens[index].symbol.replace('u:', '') + '\n'
+            // console.log(
+            //   ' >>> actual_entity._conf.businessRule: ',
+            //   actual_entity._conf.businessRule
+            // )
+            code_body = code_body + '    ' + tokens[index].symbol + '\n' // o ']' do 'uniqueKey ['
             index++
+            // console.log(' >>> index: ', index)
           } else if (
             actual_entity._conf.dbType.startsWith('nosql') &&
             tokens[index].symbol == 'source' &&
@@ -1765,7 +1800,7 @@ export const ycl_transpiler = {
           name: associationEntityName,
           _conf: {
             dbType: 'sql',
-            businessRule: false,
+            businessRule: [],
             concurrencyControl: false,
             indexKey: [],
             uniqueKey: [String(ref.source.attribute_name)],
@@ -1851,6 +1886,8 @@ export const ycl_transpiler = {
     let toCreateEntities = []
     let toCreateAssociations = []
 
+    // console.log(' >>> model: ', model)
+
     if (model['command'] == 'c') {
       ycl_transpiler.createSchema(schema, callback)
     } else if (model['command'] == 'd') {
@@ -1880,7 +1917,7 @@ export const ycl_transpiler = {
             _conf: {
               dbType: model['entities'][key2]['_conf']['dbType'],
               concurrencyControl: false,
-              businessRule: false,
+              businessRule: [],
               accessControl: {
                 read: ['ADMIN'],
                 write: ['ADMIN']
@@ -1894,6 +1931,8 @@ export const ycl_transpiler = {
 
           if (model['entities'][key2]['command'] == 'c') {
             let _conf = model['entities'][key2]['_conf']
+
+            // console.log(' >>> ' + key2 + '._conf: ', _conf)
 
             if (_conf.concurrencyControl && _conf.concurrencyControl.value) {
               entity._conf.concurrencyControl = _conf.concurrencyControl.value
@@ -1932,7 +1971,7 @@ export const ycl_transpiler = {
               entity._conf.indexKey = _conf.indexKey.values
             }
 
-            if (_conf.dbType && _conf.dbType == 'nosql(columnar)') {
+            if (_conf.dbType && _conf.dbType == 'nosql') {
               entity._conf.uniqueKey = {}
               if (
                 _conf.uniqueKey.partitionKeys &&
@@ -2078,7 +2117,7 @@ export const ycl_transpiler = {
               }
             )
 
-            if (_conf.dbType == 'nosql(columnar)') {
+            if (_conf.dbType == 'nosql') {
               ycl_transpiler.createNoSQLEntity(schema.name, entity, callback)
               control.value = false
             } else {
@@ -2114,7 +2153,7 @@ export const ycl_transpiler = {
               }
             }
           } else if (model['entities'][key2]['command'] == 'd') {
-            if (entity._conf.dbType == 'nosql(columnar)') {
+            if (entity._conf.dbType == 'nosql') {
               ycl_transpiler.deleteNoSQLEntity(
                 schema.name,
                 entity.name,
@@ -2129,7 +2168,7 @@ export const ycl_transpiler = {
             model['entities'][key2]['_conf']['concurrencyControl']['command'] ==
               'u'
           ) {
-            if (entity._conf.dbType == 'nosql(columnar)') {
+            if (entity._conf.dbType == 'nosql') {
               ycl_transpiler.updateNoSQLEntity(
                 schema.name,
                 entity.name,
@@ -2175,40 +2214,27 @@ export const ycl_transpiler = {
             )
             control.value = false
           } else if (
+            entity._conf.dbType == 'sql' &&
             model['entities'][key2]['_conf']['businessRule'] &&
             model['entities'][key2]['_conf']['businessRule']['command'] == 'u'
           ) {
-            if (entity._conf.dbType == 'nosql(columnar)') {
-              ycl_transpiler.updateNoSQLEntity(
-                schema.name,
-                entity.name,
-                {
-                  _conf: {
-                    concurrencyControl:
-                      model['entities'][key2]['_conf']['businessRule']['value']
-                  }
-                },
-                callback
-              )
-            } else {
-              ycl_transpiler.updateEntity(
-                schema.name,
-                entity.name,
-                {
-                  _conf: {
-                    concurrencyControl:
-                      model['entities'][key2]['_conf']['businessRule']['value']
-                  }
-                },
-                callback
-              )
-            }
+            ycl_transpiler.updateEntity(
+              schema.name,
+              entity.name,
+              {
+                _conf: {
+                  businessRule:
+                    model['entities'][key2]['_conf']['businessRule']['values']
+                }
+              },
+              callback
+            )
             control.value = false
           } else if (
             model['entities'][key2]['_conf']['extension'] &&
             model['entities'][key2]['_conf']['extension']['command'] == 'u'
           ) {
-            if (entity._conf.dbType == 'nosql(columnar)') {
+            if (entity._conf.dbType == 'nosql') {
               ycl_transpiler.updateNoSQLEntity(
                 schema.name,
                 entity.name,
@@ -2238,7 +2264,7 @@ export const ycl_transpiler = {
             model['entities'][key2]['_conf']['accessControl'] &&
             model['entities'][key2]['_conf']['accessControl']['command'] == 'u'
           ) {
-            if (entity._conf.dbType == 'nosql(columnar)') {
+            if (entity._conf.dbType == 'nosql') {
               ycl_transpiler.updateNoSQLEntity(
                 schema.name,
                 entity.name,
@@ -2300,7 +2326,7 @@ export const ycl_transpiler = {
             model['entities'][key2]['_conf']['indexKey'] &&
             model['entities'][key2]['_conf']['indexKey']['command'] == 'u'
           ) {
-            if (entity._conf.dbType == 'nosql(columnar)') {
+            if (entity._conf.dbType == 'nosql') {
               ycl_transpiler.updateNoSQLEntity(
                 schema.name,
                 entity.name,
@@ -2425,7 +2451,7 @@ export const ycl_transpiler = {
                           ].value
                       }
 
-                      if (entity._conf.dbType == 'nosql(columnar)') {
+                      if (entity._conf.dbType == 'nosql') {
                         if (
                           attribute_.source.field == null &&
                           attribute_.source.url == null
@@ -2454,7 +2480,7 @@ export const ycl_transpiler = {
                       model['entities'][key2]['attributes'][key4]['command'] ==
                       'd'
                     ) {
-                      if (entity._conf.dbType == 'nosql(columnar)') {
+                      if (entity._conf.dbType == 'nosql') {
                         ycl_transpiler.deleteNoSQLAttribute(
                           schema.name,
                           entity.name,
@@ -2500,7 +2526,7 @@ export const ycl_transpiler = {
                           ]
                       }
 
-                      if (entity._conf.dbType == 'nosql(columnar)') {
+                      if (entity._conf.dbType == 'nosql') {
                         ycl_transpiler.updateNoSQLAttribute(
                           schema.name,
                           entity.name,
@@ -2526,7 +2552,7 @@ export const ycl_transpiler = {
                         'name'
                       ]['command'] == 'u'
                     ) {
-                      if (entity._conf.dbType == 'nosql(columnar)') {
+                      if (entity._conf.dbType == 'nosql') {
                         ycl_transpiler.updateNoSQLAttribute(
                           schema.name,
                           entity.name,
@@ -2560,7 +2586,7 @@ export const ycl_transpiler = {
                         'nullable'
                       ]['command'] == 'u'
                     ) {
-                      if (entity._conf.dbType == 'nosql(columnar)') {
+                      if (entity._conf.dbType == 'nosql') {
                         ycl_transpiler.updateNoSQLAttribute(
                           schema.name,
                           entity.name,
@@ -2617,7 +2643,7 @@ export const ycl_transpiler = {
                         'extension'
                       ]['command'] == 'u'
                     ) {
-                      if (entity._conf.dbType == 'nosql(columnar)') {
+                      if (entity._conf.dbType == 'nosql') {
                         ycl_transpiler.updateNoSQLAttribute(
                           schema.name,
                           entity.name,
@@ -2653,7 +2679,7 @@ export const ycl_transpiler = {
                         'source'
                       ]['command'] == 'u'
                     ) {
-                      if (entity._conf.dbType == 'nosql(columnar)') {
+                      if (entity._conf.dbType == 'nosql') {
                         ycl_transpiler.updateNoSQLAttribute(
                           schema.name,
                           entity.name,
@@ -2927,7 +2953,7 @@ export const ycl_transpiler = {
     _gtools_lib.request(endpoint_, null, callback)
   },
   deleteNoSQLEntity: function (schema, entity, callback) {
-    console.log('delete nosql entity: ', schema, entity)
+    // console.log('delete nosql entity: ', schema, entity)
 
     let endpoint_ = JSON.parse(
       JSON.stringify(api.endpoint.modeling.schema.entity.deleteNoSQL)

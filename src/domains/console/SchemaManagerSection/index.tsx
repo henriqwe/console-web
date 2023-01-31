@@ -162,17 +162,19 @@ export function SchemaManagerSection() {
                 )}
               </div>
               {!selectedEntity && currentTabSchema === 'Databases' && (
-                <common.Buttons.WhiteOutline
-                  type="button"
-                  onClick={() => {
-                    setShowCreateEntitySection(true)
-                    setBreadcrumbPages(breadcrumbPagesData.createEntity)
-                  }}
-                  icon={<PlusIcon className="w-3 h-3" />}
-                  className="database-step-3"
-                >
-                  Create entity
-                </common.Buttons.WhiteOutline>
+                <span className="bg-white rounded-md">
+                  <common.Buttons.WhiteOutline
+                    type="button"
+                    onClick={() => {
+                      setShowCreateEntitySection(true)
+                      setBreadcrumbPages(breadcrumbPagesData.createEntity)
+                    }}
+                    icon={<PlusIcon className="w-3 h-3" />}
+                    className="database-step-3"
+                  >
+                    Create entity
+                  </common.Buttons.WhiteOutline>
+                </span>
               )}
 
               {currentTabSchema === 'Modeler' && (
@@ -200,7 +202,11 @@ export function SchemaManagerSection() {
                   <common.Tabs
                     selectedTab={selectedEntityTab}
                     setSelectedTab={setSelectedEntityTab}
-                    tabs={[{ name: 'Attributes' }, { name: 'Associations' }]}
+                    tabs={[
+                      { name: 'Attributes' },
+                      { name: 'Associations' },
+                      { name: 'Lambda' }
+                    ]}
                   />
                 </div>
               )}
@@ -213,8 +219,10 @@ export function SchemaManagerSection() {
                 selectedEntity ? (
                   selectedEntityTab.name === 'Attributes' ? (
                     <consoleSection.ModifyTab loading={loading} />
-                  ) : (
+                  ) : selectedEntityTab.name === 'Associations' ? (
                     <consoleSection.AssociationTab loading={loading} />
+                  ) : (
+                    <consoleSection.LambdaTab loading={loading} />
                   )
                 ) : (
                   <consoleSection.DefaultPage />
