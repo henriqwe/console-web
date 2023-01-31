@@ -222,7 +222,7 @@ export function SchemaManagerSection() {
                   ) : selectedEntityTab.name === 'Associations' ? (
                     <consoleSection.AssociationTab loading={loading} />
                   ) : (
-                    <consoleSection.LambdaTab loading={loading} />
+                    <consoleSection.LambdaTab />
                   )
                 ) : (
                   <consoleSection.DefaultPage />
