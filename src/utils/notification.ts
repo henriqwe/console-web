@@ -20,15 +20,7 @@ function notification(
 function showError(err: any) {
   if (err.response) {
     if (err.response.data) {
-      const knownError = err.response.data.err ? false : true
-
-      /* 
-        se o erro for conhecido, o campo 'data' virá no formato
-        {message: '....', ...}
-
-        caso contrário, virá no formato
-        {err: {...}}
-      */
+      const knownError = err.response.data.err ? true : false
 
       if (knownError) {
         notification(err?.response?.data?.message, 'error')

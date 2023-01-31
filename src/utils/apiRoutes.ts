@@ -46,6 +46,9 @@ export const apiRoutes = {
     entityName: string
   }) =>
     `v0/modeling/project-name/${projectName}/schema/sql/entity/${entityName}/attribute`,
+  businessrule: {
+    upload: `/v0/businessrule/upload`
+  },
   local: {
     adminLogin: '/adminLogin',
     createAccount: '/createAccount',

@@ -15,7 +15,7 @@ export const Textarea = ({
   icon,
   ...props
 }: TextareaProps) => (
-  <div className="flex flex-col gap-2">
+  <div className="flex w-full flex-col gap-2">
     {label && (
       <label
         htmlFor={label}
