@@ -544,6 +544,7 @@ handlerAction()`
       utils.notification('Operation performed successfully', 'success')
     } catch (err) {
       utils.showError(err)
+      console.log('deploy error', err)
     }
   }
 

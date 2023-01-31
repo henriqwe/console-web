@@ -36,12 +36,17 @@ export function LambdaTab() {
         rule,
         {
           headers: {
-            'Content-Type': 'Application/json',
+            'Content-Type': 'text/plain',
             'X-TenantID': utils.getCookie('X-TenantID') as string,
             'X-TenantAC': utils.getCookie('X-TenantAC') as string
           }
         }
       )
+      .then((res) => {
+        if (res.status === 200) {
+          utils.notification(`Rule uploaded successfully`, 'success')
+        }
+      })
       .catch((err) => {
         console.log(err)
         utils.showError(err)
@@ -87,18 +92,15 @@ export function LambdaTab() {
 
 const placeholderRule = `import org.json.JSONArray;
 import org.json.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class message
+public class message implements BusinessRuleHandler
 {
-  public Datasource datasource;
+    public Datasource datasource = null;
 
-  public JSONObject runWithAuthorizationToken(JSONArray roles, JSONObject data)
-  {
-    return null;
-  }
+    public JSONObject run(String action, JSONArray roles, String entityName, JSONObject entityData) throws Exception
+    {
 
-  public JSONObject run(String action, String entityName, JSONObject entity) throws Exception
-  {
-    return null;
-  }
+        return entityData;
+    }
 }`
