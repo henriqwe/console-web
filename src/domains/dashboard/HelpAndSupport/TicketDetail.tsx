@@ -22,7 +22,7 @@ type Message = {
   content: string
   id: string
   date: string
-  name: string
+  username: string
   createdbyuser: boolean
 }
 
@@ -57,6 +57,10 @@ export function TicketDetail({ user }: TicketDetail) {
   async function createTicketMessage(formData: FormData) {
     try {
       setLoading(true)
+      if (!formData.Content || formData.Content === '') {
+        throw new Error('Cannot create a empty message')
+      }
+
       await services.ycodify.createTicketMessage({
         content: formData.Content,
         createdbyuser: user?.email !== process.env.NEXT_PUBLIC_SUPPORT_EMAIL,

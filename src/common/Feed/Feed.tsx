@@ -6,7 +6,7 @@ type FeedProps = {
     id: number | string
     content: string
     date: string
-    name: string
+    username: string
   }[]
 }
 export function Feed({ activity }: FeedProps) {
@@ -42,7 +42,7 @@ export function Feed({ activity }: FeedProps) {
                   <div>
                     <div className="text-sm">
                       <div className="font-medium text-gray-900 dark:text-gray-100">
-                        {activityItem.name}
+                        {activityItem.username}
                       </div>
                     </div>
                     <p className="mt-0.5 text-sm text-gray-500">
