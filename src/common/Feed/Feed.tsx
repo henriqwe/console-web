@@ -46,7 +46,7 @@ export function Feed({ activity }: FeedProps) {
                       </div>
                     </div>
                     <p className="mt-0.5 text-sm text-gray-500">
-                      {new Date(activityItem.date).toLocaleString('pt-br')}
+                      {new Date(activityItem.date).toLocaleString('pt-BR')}
                     </p>
                   </div>
                   <div className="mt-2 text-sm text-gray-700 dark:text-gray-50">

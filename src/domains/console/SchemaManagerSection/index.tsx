@@ -3,6 +3,8 @@ import * as types from 'domains/console/types'
 import * as consoleSection from 'domains/console'
 import { useEffect, useState } from 'react'
 import * as utils from 'utils'
+import * as services from 'services'
+
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 import { PencilIcon } from '@heroicons/react/outline'
@@ -25,7 +27,6 @@ export function SchemaManagerSection() {
     reload,
     setEntityData,
     showCreateEntitySection,
-    setSlideType,
     breadcrumbPages,
     setSchemaStatus,
     breadcrumbPagesData,
@@ -40,16 +41,12 @@ export function SchemaManagerSection() {
 
   async function loadEntityData() {
     try {
-      const { data } = await utils.api.get(
-        `${utils.apiRoutes.entity(
-          router.query.name as string
-        )}/${selectedEntity}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
-          }
-        }
-      )
+      const { data } = await services.ycodify.getEntity({
+        accessToken: getCookie('access_token') as string,
+        name: router.query.name as string,
+        selectedEntity: selectedEntity as string
+      })
+
       const entityData: types.EntityData[] = []
       Object.keys(data).map((key) => {
         if (key !== '_classDef') {
@@ -76,15 +73,15 @@ export function SchemaManagerSection() {
   }, [selectedEntity, reload])
 
   useEffect(() => {
-    utils.api
-      .get(`${utils.apiRoutes.schemas}/${router.query.name as string}`, {
-        headers: {
-          Authorization: `Bearer ${utils.getCookie('access_token')}`
-        }
+    services.ycodify
+      .getSchema({
+        accessToken: utils.getCookie('access_token') as string,
+        name: router.query.name as string
       })
       .then(({ data }) => {
         setSchemaStatus(data.status)
       })
+      .catch((err) => utils.showError(err))
   }, [])
 
   function beforeClose() {
@@ -102,7 +99,7 @@ export function SchemaManagerSection() {
 
   if (showCreateEntitySection) {
     return (
-      <div className="w-full h-full py-4 px-8 ">
+      <div className="w-full h-full px-8 py-4 ">
         <consoleSection.CreateEntity />
       </div>
     )
@@ -145,7 +142,7 @@ export function SchemaManagerSection() {
       beforeClose={() => beforeClose()}
       onClickMask={() => {}}
     >
-      <div className="w-full h-full py-4 px-8 ">
+      <div className="w-full h-full px-8 py-4 ">
         <common.Card className="flex flex-col h-full">
           <div className="flex w-full h-[3.3rem]">
             <div className="flex items-center justify-between w-full">
@@ -156,8 +153,8 @@ export function SchemaManagerSection() {
                     className="w-3 h-3 text-gray-500 cursor-pointer"
                     onClick={() => {
                       setOpenSlide(true)
-                      setSlideType('UPDATE ENTITY')
                     }}
+                    data-testid="editIcon"
                   />
                 )}
               </div>
@@ -213,7 +210,7 @@ export function SchemaManagerSection() {
             </div>
           </div>
           <consoleSection.SlidePanel />
-          <div className="bg-white rounded-md dark:bg-menu-primary w-full">
+          <div className="w-full bg-white rounded-md dark:bg-menu-primary">
             <common.ContentSection variant="WithoutTitleBackgroundColor">
               {currentTabSchema === 'Databases' ? (
                 selectedEntity ? (

@@ -8,6 +8,7 @@ describe('Accordion', () => {
     render(
       <Accordion
         title="Accordion!"
+        style="console"
         content={<div />}
         elementRef={createRef()}
       />
@@ -22,6 +23,7 @@ describe('Accordion', () => {
     render(
       <Accordion
         title="Accordion!"
+        style="console"
         content={
           <div>
             <p>Accordion content</p>
@@ -41,6 +43,7 @@ describe('Accordion', () => {
     render(
       <Accordion
         title="Accordion!"
+        style="console"
         content={
           <div>
             <p>Accordion content</p>
@@ -60,6 +63,7 @@ describe('Accordion', () => {
     render(
       <Accordion
         title="Accordion!"
+        style="console"
         action={mock}
         content={
           <div>

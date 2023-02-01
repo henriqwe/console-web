@@ -1,17 +1,12 @@
 import * as common from 'common'
 import * as consoleData from 'domains/console'
 import * as utils from 'utils'
+import * as services from 'services'
 import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
 import { CheckIcon, PlusIcon } from '@heroicons/react/outline'
 import * as UserContext from 'contexts/UserContext'
 import { useRouter } from 'next/router'
-import {
-  Controller,
-  FieldValues,
-  SubmitHandler,
-  useForm
-} from 'react-hook-form'
 
 export function RoleTab() {
   const router = useRouter()
@@ -20,24 +15,14 @@ export function RoleTab() {
   const { selectedEntity } = consoleData.useSchemaManager()
   const { reload, setSlideType, setOpenSlide, setRoles, roles } =
     consoleData.useUser()
-  const { control, handleSubmit, reset } = useForm()
-
   async function loadData() {
     try {
-      const { data } = await utils.api.post(
-        utils.apiRoutes.roles,
-        {
-          username: `${
-            utils.parseJwt(utils.getCookie('access_token'))?.username
-          }@${router.query.name}`,
-          password: user?.adminSchemaPassword
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
+      const { data } = await services.ycodify.getRoles({
+        password: user?.adminSchemaPassword as string,
+        username: `${
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
+        }@${router.query.name}`
+      })
       setRoles(data)
     } catch (err: any) {
       setUser({ ...user, adminSchemaPassword: undefined })
@@ -59,9 +44,10 @@ export function RoleTab() {
       loadData()
     }
   }, [selectedEntity, reload, user?.adminSchemaPassword])
+
   if (!user?.adminSchemaPassword) {
     return (
-      <div className="flex  p-8 justify-between ">
+      <div className="flex justify-between p-8 ">
         You need admin authorization to access this section
         <common.Buttons.WhiteOutline
           icon={<CheckIcon className="w-3 h-3" />}
@@ -92,7 +78,7 @@ export function RoleTab() {
           </p>
         </div>
       ) : (
-        <div className="w-full h-full  rounded-b-lg overflow-y pt-2">
+        <div className="w-full h-full pt-2 rounded-b-lg overflow-y">
           <div className="flex items-center w-full px-4 py-2">
             <common.Buttons.WhiteOutline
               type="button"

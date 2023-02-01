@@ -9,6 +9,8 @@ import {
 import * as yup from 'yup'
 import * as types from 'domains/console/types'
 import * as utils from 'utils'
+import * as services from 'services'
+
 import { getCookie } from 'utils/cookies'
 import { useRouter } from 'next/router'
 
@@ -24,8 +26,6 @@ type SchemaManagerContextProps = {
   setSelectedEntity: Dispatch<SetStateAction<string | undefined>>
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
-  fieldSchema: yup.AnyObjectSchema
-  updateAssociationSchema: yup.AnyObjectSchema
   selectedItemToExclude: any
   setSelectedItemToExclude: Dispatch<SetStateAction<any>>
   openSlide: boolean
@@ -36,13 +36,10 @@ type SchemaManagerContextProps = {
   setShowCreateEntitySection: Dispatch<SetStateAction<boolean>>
   showTableViewMode: boolean
   setShowTableViewMode: Dispatch<SetStateAction<boolean>>
-  slideType: 'UPDATE' | 'UPDATE ENTITY'
-  setSlideType: Dispatch<SetStateAction<'UPDATE' | 'UPDATE ENTITY'>>
   slideState: slideState
   setSlideState: Dispatch<SetStateAction<slideState>>
   schemaTables?: types.SchemaTable
   setSchemaTables: Dispatch<SetStateAction<types.SchemaTable | undefined>>
-  associationSchema: yup.AnyObjectSchema
   breadcrumbPages: breadcrumbPageType[]
   setBreadcrumbPages: Dispatch<SetStateAction<breadcrumbPageType[]>>
   breadcrumbPagesData: {
@@ -66,10 +63,8 @@ type SchemaManagerContextProps = {
   loadEntities(): Promise<void>
   entitiesLoading: boolean
   setEntitiesLoading: Dispatch<SetStateAction<boolean>>
-  createEntitySchema: (columnsGroup: number[]) => yup.AnyObjectSchema
   columnNames: string[]
   setColumnNames: Dispatch<SetStateAction<string[]>>
-  addAttributeSchema: yup.AnyObjectSchema
 }
 
 type ProviderProps = {
@@ -98,9 +93,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   const router = useRouter()
 
   const [openSlide, setOpenSlide] = useState(false)
-  const [slideType, setSlideType] = useState<'UPDATE' | 'UPDATE ENTITY'>(
-    'UPDATE'
-  )
   const [selectedTabUsersAndRoles, setSelectedTabUsersAndRoles] =
     useState<selectedTabUsersAndRolesType>({
       name: 'Roles'
@@ -130,34 +122,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
   })
 
   const [schemaStatus, setSchemaStatus] = useState<number>()
-
-  const fieldSchema = yup.object().shape({
-    Name: yup
-      .string()
-      .required('Entity name is required')
-      .test('equal', 'Entity name must contain only letters', (val) => {
-        const validation = new RegExp(/^[A-Za-z ]*$/)
-        return validation.test(val as string)
-      })
-      .test('equal', 'Entity name cannot contain spaces', (val) => {
-        const validation = new RegExp(/\s/g)
-        return !validation.test(val as string)
-      }),
-    Type: yup.object().required(),
-    Nullable: yup.object().required(),
-    Unique: yup.object().required(),
-    Index: yup.object().required(),
-    Comment: yup.string().required()
-  })
-
-  const updateAssociationSchema = yup.object().shape({
-    Name: yup.string().required()
-  })
-
-  const associationSchema = yup.object().shape({
-    AssociationName: yup.string().required('This field is required'),
-    ReferenceEntity: yup.object().required('This field is required')
-  })
 
   function goToEntitiesPage() {
     setShowCreateEntitySection(false)
@@ -227,14 +191,11 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
     try {
       setEntitiesLoading(true)
 
-      const { data } = await utils.api.get(
-        `${utils.apiRoutes.entityList(router.query.name as string)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie('access_token')}`
-          }
-        }
-      )
+      const { data } = await services.ycodify.getEntityList({
+        accessToken: getCookie('access_token') as string,
+        name: router.query.name as string
+      })
+
       setSchemaTables(data)
       setEntities(Object.keys(data) as string[])
     } catch (err: any) {
@@ -248,87 +209,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
 
   const [columnNames, setColumnNames] = useState<string[]>([])
 
-  function createEntitySchema(columnsGroup: number[]) {
-    let shape = {
-      Name: yup
-        .string()
-        .required('Entity name is required')
-        .test('equal', 'Entity name must contain only letters', (val) => {
-          const validation = new RegExp(/^[A-Za-z ]*$/)
-          return validation.test(val as string)
-        })
-        .test('equal', 'Entity name cannot contain spaces', (val) => {
-          const validation = new RegExp(/\s/g)
-          return !validation.test(val as string)
-        })
-    }
-
-    for (const col of columnsGroup.filter((col) => col !== 0)) {
-      shape = {
-        ...shape,
-        [`ColumnName${col}`]: yup
-          .string()
-          .required('Column name is required')
-          .test('equal', 'Column cannot contain spaces', (val) => {
-            const validation = new RegExp(/\s/g)
-            return !validation.test(val as string)
-          })
-          .test('equal', 'Column name must contain only letters', (val) => {
-            const validation = new RegExp(/^[A-Za-z ]*$/)
-            return validation.test(val as string)
-          })
-          .test('equal', 'Column name must be unique', (val) => {
-            if (
-              columnNames
-                .filter((col) => col !== '0' && col !== undefined)
-                .filter((col) => col === val).length > 1
-            ) {
-              return false
-            }
-            return true
-          }),
-        [`Type${col}`]: yup.object(),
-        [`Length${col}`]: yup
-          .number()
-          .typeError('Length must be a number')
-          .nullable()
-          .moreThan(-1, 'Length must be positive')
-          .transform((_, val) => (val !== '' ? Number(val) : null)),
-        [`Comment${col}`]: yup.string()
-      }
-    }
-
-    return yup.object().shape(shape)
-  }
-
-  const addAttributeSchema = yup.object().shape({
-    ColumnName: yup
-      .string()
-      .required('Column name is required')
-      .test('equal', 'Column cannot contain spaces', (val) => {
-        const validation = new RegExp(/\s/g)
-        return !validation.test(val as string)
-      })
-      .test('equal', 'Column name must contain only letters', (val) => {
-        const validation = new RegExp(/^[A-Za-z ]*$/)
-        return validation.test(val as string)
-      })
-      .test('equal', 'Column name must be unique', (val) => {
-        if (columnNames.indexOf(val ?? '') > -1) {
-          return false
-        }
-        return true
-      }),
-    Type: yup.object().required('Column type is required'),
-    Length: yup
-      .number()
-      .typeError('Length must be a number')
-      .nullable()
-      .moreThan(-1, 'Length must be positive')
-      .transform((_, val) => (val !== '' ? Number(val) : null)),
-    Comment: yup.string()
-  })
-
   return (
     <SchemaManagerContext.Provider
       value={{
@@ -338,7 +218,6 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         setSelectedEntity,
         reload,
         setReload,
-        fieldSchema,
         openSlide,
         setOpenSlide,
         selectedItemToExclude,
@@ -349,17 +228,13 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         setShowCreateEntitySection,
         showTableViewMode,
         setShowTableViewMode,
-        slideType,
-        setSlideType,
         slideState,
         setSlideState,
         schemaTables,
         setSchemaTables,
-        associationSchema,
         breadcrumbPages,
         setBreadcrumbPages,
         breadcrumbPagesData,
-        updateAssociationSchema,
         schemaStatus,
         setSchemaStatus,
         goToEntitiesPage,
@@ -375,10 +250,8 @@ export const SchemaManagerProvider = ({ children }: ProviderProps) => {
         loadEntities,
         entitiesLoading,
         setEntitiesLoading,
-        createEntitySchema,
         columnNames,
-        setColumnNames,
-        addAttributeSchema
+        setColumnNames
       }}
     >
       {children}

@@ -6,6 +6,8 @@ import * as consoleSection from 'domains/console'
 import { useRouter } from 'next/router'
 import { PlusIcon, CheckIcon } from '@heroicons/react/outline'
 import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import * as services from 'services'
 
 export function CreateEntity() {
   const router = useRouter()
@@ -14,8 +16,8 @@ export function CreateEntity() {
     setReload,
     reload,
     breadcrumbPages,
-    createEntitySchema,
-    setColumnNames
+    setColumnNames,
+    columnNames
   } = consoleSection.useSchemaManager()
   const [columnsGroup, setColumnsGroup] = useState<number[]>([1])
   const {
@@ -24,29 +26,68 @@ export function CreateEntity() {
     handleSubmit,
     watch
   } = useForm({
-    resolver: yupResolver(createEntitySchema(columnsGroup))
+    resolver: yupResolver(createEntitySchema())
   })
   const [lastNumber, setLastNumber] = useState(0)
   const [loading, setLoading] = useState(false)
   const [reloadFields, setReloadFields] = useState(false)
 
+  function createEntitySchema() {
+    let shape = {
+      Name: yup
+        .string()
+        .required('Entity name is required')
+        .test('equal', 'Entity name must contain only letters', (val) => {
+          const validation = new RegExp(/^[A-Za-z ]*$/)
+          return validation.test(val as string)
+        })
+        .test('equal', 'Entity name cannot contain spaces', (val) => {
+          const validation = new RegExp(/\s/g)
+          return !validation.test(val as string)
+        })
+    }
+
+    for (const col of columnsGroup.filter((col) => col !== 0)) {
+      shape = {
+        ...shape,
+        [`ColumnName${col}`]: yup
+          .string()
+          .required('Column name is required')
+          .test('equal', 'Column cannot contain spaces', (val) => {
+            const validation = new RegExp(/\s/g)
+            return !validation.test(val as string)
+          })
+          .test('equal', 'Column name must contain only letters', (val) => {
+            const validation = new RegExp(/^[A-Za-z ]*$/)
+            return validation.test(val as string)
+          })
+          .test('equal', 'Column name must be unique', (val) => {
+            if (
+              columnNames
+                .filter((col) => col !== '0' && col !== undefined)
+                .filter((col) => col === val).length > 1
+            ) {
+              return false
+            }
+            return true
+          }),
+        [`Type${col}`]: yup.object(),
+        [`Length${col}`]: yup
+          .number()
+          .typeError('Length must be a number')
+          .nullable()
+          .moreThan(-1, 'Length must be positive')
+          .transform((_, val) => (val !== '' ? Number(val) : null)),
+        [`Comment${col}`]: yup.string()
+      }
+    }
+
+    return yup.object().shape(shape)
+  }
+
   async function Submit(data: any) {
     try {
       setLoading(true)
-      // const response = await utils.api
-      //   .get(`${utils.apiRoutes.schemas}/${router.query.name}`, {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //       Accept: 'application/json',
-      //       Authorization: `Bearer ${utils.getCookie('access_token')}`
-      //     }
-      //   })
-      //   .catch(() => null)
-
-      // const tables = Object.keys(response ? response.data.data : {})
-      // if (tables.includes(data.Name.toLowerCase())) {
-      //   throw new Error(`Entity ${data.Name} already exists`)
-      // }
 
       const filteredData = columnsGroup.filter((column) => column !== 0)
 
@@ -61,20 +102,12 @@ export function CreateEntity() {
         })
       }
 
-      await utils.api.post(
-        utils.apiRoutes.entity(router.query.name as string),
-        {
-          name: data.Name,
-          attributes: columnValues,
-          associations: []
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.createEntitySchema({
+        accessToken: utils.getCookie('access_token') as string,
+        attributes: columnValues,
+        entityName: router.query.name as string,
+        name: data.Name
+      })
 
       // for (const column of columnValues) {
       //   await utils.api.post(
@@ -102,7 +135,6 @@ export function CreateEntity() {
       setShowCreateEntitySection(false)
       utils.notification(`Entity ${data.Name} created successfully`, 'success')
     } catch (err: any) {
-      console.log(err)
       utils.showError(err)
     } finally {
       setLoading(false)
@@ -127,12 +159,14 @@ export function CreateEntity() {
       <common.ContentSection variant="WithoutTitleBackgroundColor">
         <div
           className={`flex flex-col h-auto p-6 gap-y-2 bg-white dark:bg-menu-primary rounded-lg`}
+          data-testid="main"
         >
           <Controller
             name="Name"
             control={control}
+            defaultValue={''}
             render={({ field: { onChange, value } }) => (
-              <div className="flex-1 flex-col mb-2 relative">
+              <div className="relative flex-col flex-1 mb-2">
                 <label className="text-sm font-medium text-gray-700 dark:text-text-primary">
                   Entity name
                 </label>
@@ -143,12 +177,8 @@ export function CreateEntity() {
                   className={`${
                     errors['Name'] ? 'ring-red-500 ring-2 rounded-md' : ''
                   }`}
+                  errors={errors['Name']}
                 />
-                {errors['Name'] ? (
-                  <p className="text-sm text-red-500 absolute mt-auto">
-                    {errors['Name'].message}
-                  </p>
-                ) : null}
               </div>
             )}
           />
@@ -163,6 +193,7 @@ export function CreateEntity() {
                       {column !== 1 && (
                         <common.icons.XIcon
                           className="text-red-500 hover:cursor-pointer"
+                          data-testid="remove column"
                           onClick={() => {
                             columnsGroup[index] = 0
                             setReloadFields(!reloadFields)
@@ -180,8 +211,9 @@ export function CreateEntity() {
                     <Controller
                       name={`ColumnName${column}`}
                       control={control}
+                      defaultValue={''}
                       render={({ field: { onChange } }) => (
-                        <div className="flex-1 flex-col relative">
+                        <div className="relative flex-col flex-1">
                           <common.Input
                             name={`ColumnName${column}`}
                             placeholder="Column name"
@@ -199,12 +231,8 @@ export function CreateEntity() {
                                 ? 'ring-red-500 ring-2 rounded-md'
                                 : ''
                             }`}
+                            errors={errors[`ColumnName${column}`]}
                           />
-                          {errors[`ColumnName${column}`] ? (
-                            <p className="text-sm text-red-500 absolute mt-auto">
-                              {errors[`ColumnName${column}`].message}
-                            </p>
-                          ) : null}
                         </div>
                       )}
                     />
@@ -215,7 +243,7 @@ export function CreateEntity() {
                     defaultValue={{ name: 'String', value: 'String' }}
                     control={control}
                     render={({ field: { onChange, value } }) => (
-                      <div className="col-span-2 relative">
+                      <div className="relative col-span-2">
                         <common.Select
                           options={[
                             { name: 'String', value: 'String' },
@@ -228,12 +256,8 @@ export function CreateEntity() {
                           ]}
                           value={value}
                           onChange={onChange}
+                          errors={errors[`Type${column}`]}
                         />
-                        {errors[`Type${column}`] ? (
-                          <p className="text-sm text-red-500 absolute mt-auto">
-                            {errors[`Type${column}`].message}
-                          </p>
-                        ) : null}
                       </div>
                     )}
                   />
@@ -242,24 +266,20 @@ export function CreateEntity() {
                     <Controller
                       name={'Length' + column}
                       control={control}
+                      defaultValue={''}
                       render={({ field: { onChange, value } }) => (
-                        <div className="col-span-2 relative">
+                        <div className="relative col-span-2">
                           <common.Input
                             placeholder="String Length"
                             value={value}
                             onChange={onChange}
-                            errors={errors.Length}
+                            errors={errors[`Length${column}`]}
                             className={`${
                               errors[`Length${column}`]
                                 ? 'ring-red-500 ring-2 rounded-md'
                                 : ''
                             }`}
                           />
-                          {errors[`Length${column}`] ? (
-                            <p className="text-sm text-red-500 absolute mt-auto">
-                              {errors[`Length${column}`].message}
-                            </p>
-                          ) : null}
                         </div>
                       )}
                     />
@@ -268,6 +288,7 @@ export function CreateEntity() {
                   <Controller
                     name={'Comment' + column}
                     control={control}
+                    defaultValue={''}
                     render={({ field: { onChange, value } }) => (
                       <div
                         className={
@@ -275,18 +296,14 @@ export function CreateEntity() {
                             ? 'col-span-2'
                             : 'col-span-4'
                         }
+                        data-testid="comment"
                       >
                         <common.Input
                           placeholder="Comment"
                           value={value}
                           onChange={onChange}
-                          errors={errors.Comment}
+                          errors={errors[`Comment${column}`]}
                         />
-                        {errors[`Comment${column}`] ? (
-                          <p className="text-sm text-red-500">
-                            {errors[`Comment${column}`].message}
-                          </p>
-                        ) : null}
                       </div>
                     )}
                   />

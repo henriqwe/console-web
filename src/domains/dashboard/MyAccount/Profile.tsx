@@ -11,7 +11,7 @@ import {
   useForm
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import Error from 'next/error'
+import * as services from 'services'
 
 type formDataType = {
   oldPassword: string
@@ -25,40 +25,32 @@ export function Profile() {
   const {
     formState: { errors },
     handleSubmit,
-    control
+    control,
+    reset
   } = useForm({ resolver: yupResolver(passwordSchema) })
 
   const [loading, setLoading] = useState(false)
 
-  function Submit(formData: formDataType) {
+  async function Submit(formData: formDataType) {
     setLoading(true)
 
-    utils.api
-      .post(
-        utils.apiRoutes.changePassword,
-        {
-          username,
-          password: formData.password,
-          oldPassword: formData.oldPassword
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          utils.notification('Password changed successfully!', 'success')
-        } else {
-          console.log('res', res)
-          utils.notification(res.data.message, 'error')
-        }
+    try {
+      const res = await services.ycodify.changePassword({
+        username,
+        password: formData.password,
+        oldPassword: formData.oldPassword
       })
-      .finally(() => setLoading(false))
-      .catch((err) => {
-        utils.notification(err.response.data.message, 'error')
-      })
+      if (res.status === 200) {
+        utils.notification('Password changed successfully!', 'success')
+        reset()
+        return
+      }
+      utils.notification(res.data.message, 'error')
+    } catch (err: any) {
+      utils.notification(err.response.data.message, 'error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -66,7 +58,7 @@ export function Profile() {
       <div className="flex flex-col px-4 gap-y-4 ">
         <p className="text-xl dark:text-text-primary">My Info</p>
         <div className="grid grid-cols-2 gap-8">
-          <div className="flex flex-col gap-y-4 h-full">
+          <div className="flex flex-col h-full gap-y-4">
             <Common.Input
               placeholder="Username"
               label="Username"
@@ -84,77 +76,66 @@ export function Profile() {
           </div>
           <form
             onSubmit={handleSubmit(Submit as SubmitHandler<FieldValues>)}
-            className="flex flex-col gap-y-4 h-full"
+            className="flex flex-col h-full gap-y-4"
           >
             <Controller
               name="oldPassword"
               control={control}
-              render={({ field: { onChange } }) => (
-                <div className="w-full flex flex-col gap-y-2">
+              defaultValue={''}
+              render={({ field: { value, onChange } }) => (
+                <div className="flex flex-col w-full gap-y-2">
                   <Common.Input
                     onChange={onChange}
+                    value={value}
                     placeholder="Old Password"
                     label="Old Password"
                     name="oldPassword"
                     type="password"
+                    errors={errors.oldPassword}
                   />
-                  {errors.oldPassword && (
-                    <p className="text-sm text-red-500">
-                      {errors.oldPassword.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
             <Controller
               name="password"
               control={control}
-              render={({ field: { onChange } }) => (
-                <div className="w-full flex flex-col gap-y-2">
+              defaultValue={''}
+              render={({ field: { value, onChange } }) => (
+                <div className="flex flex-col w-full gap-y-2">
                   <Common.Input
                     onChange={onChange}
+                    value={value}
                     placeholder="New Password"
                     label="New Password"
                     name="newPassword"
                     type="password"
+                    errors={errors.password}
                   />
-                  {errors.password && (
-                    <p className="text-sm text-red-500">
-                      {errors.password.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
             <Controller
               name="passwordConfirmation"
               control={control}
-              render={({ field: { onChange } }) => (
-                <div className="w-full flex flex-col gap-y-2">
+              defaultValue={''}
+              render={({ field: { value, onChange } }) => (
+                <div className="flex flex-col w-full gap-y-2">
                   <Common.Input
                     onChange={onChange}
+                    value={value}
                     placeholder="Password Confirmation"
                     label="Password Confirmation"
                     name="passwordConfirmation"
                     type="password"
+                    errors={errors.passwordConfirmation}
                   />
-                  {errors.passwordConfirmation && (
-                    <p className="text-sm text-red-500">
-                      {errors.passwordConfirmation.message}
-                    </p>
-                  )}
                 </div>
               )}
             />
-            <span className="flex self-end mt-auto px-3 lg:col-start-2">
+            <span className="flex self-end px-3 mt-auto lg:col-start-2">
               <Common.Buttons.Ycodify
-                icon={
-                  loading ? (
-                    <Common.Spinner className="w-4 h-4" />
-                  ) : (
-                    <ChevronRightIcon className="w-4 h-4" />
-                  )
-                }
+                icon={<ChevronRightIcon className="w-4 h-4" />}
+                loading={loading}
                 className="w-max"
                 type="submit"
               >

@@ -1,6 +1,8 @@
 import { Column } from './Column'
+import * as yup from 'yup'
 import * as utils from 'utils'
 import * as common from 'common'
+import * as services from 'services'
 import * as consoleSection from 'domains/console'
 import { XIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline'
 import { SetStateAction, useState, Dispatch, useEffect } from 'react'
@@ -31,17 +33,12 @@ export function ModifyTab({ loading }: ModifyTabProps) {
   async function RemoveEntity() {
     try {
       setSubmitLoading(true)
-      await utils.api.delete(
-        `${utils.apiRoutes.entity(
-          router.query.name as string
-        )}/${selectedEntity}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.deleteEntity({
+        accessToken: utils.getCookie('access_token') as string,
+        name: router.query.name as string,
+        selectedEntity: selectedEntity as string
+      })
+
       setSelectedEntity(undefined)
       utils.notification(
         `Entity ${selectedEntity} deleted successfully`,
@@ -82,9 +79,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
 
   return (
     <div
-      className={`flex flex-col ${
-        loading ? 'items-center justify-center' : 'items-start'
-      } rounded-b-md bg-white dark:bg-gray-800 p-6 gap-2`}
+      className={`flex flex-col items-start rounded-b-md bg-white dark:bg-gray-800 p-6 gap-2`}
     >
       <div className="flex flex-row-reverse justify-between w-full gap-4 ">
         <common.Buttons.RedOutline
@@ -111,7 +106,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
       <common.Separator />
       <div className="flex flex-col gap-6 mt-4">
         <div className="flex flex-col gap-2">
-          <span className="text-gray-600 dark:text-text-primary font-semibold text-lg">
+          <span className="text-lg font-semibold text-gray-600 dark:text-text-primary">
             Ycodify control attributes
           </span>
           <Column key={'id'} data={idColumnData} noEdit />
@@ -130,7 +125,7 @@ export function ModifyTab({ loading }: ModifyTabProps) {
             ))}
         </div>
         <div className="flex flex-col gap-2">
-          <span className="text-gray-600 dark:text-text-primary font-semibold text-lg">
+          <span className="text-lg font-semibold text-gray-600 dark:text-text-primary">
             Entity attributes
           </span>
           {entityData
@@ -194,39 +189,61 @@ function AttributeForm({
 }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const { addAttributeSchema } = consoleSection.useSchemaManager()
+  const { columnNames } = consoleSection.useSchemaManager()
   const {
     control,
     watch,
     formState: { errors },
     handleSubmit
   } = useForm({
-    resolver: yupResolver(addAttributeSchema)
+    resolver: yupResolver(
+      yup.object().shape({
+        ColumnName: yup
+          .string()
+          .required('Column name is required')
+          .test('equal', 'Column cannot contain spaces', (val) => {
+            const validation = new RegExp(/\s/g)
+            return !validation.test(val as string)
+          })
+          .test('equal', 'Column name must contain only letters', (val) => {
+            const validation = new RegExp(/^[A-Za-z ]*$/)
+            return validation.test(val as string)
+          })
+          .test('equal', 'Column name must be unique', (val) => {
+            if (columnNames.indexOf(val ?? '') > -1) {
+              return false
+            }
+            return true
+          }),
+        Type: yup
+          .object()
+          .test('empty', 'This field is required', (val) => !!val.value)
+          .required('Column type is required'),
+        Length: yup
+          .number()
+          .typeError('Length must be a number')
+          .nullable()
+          .moreThan(-1, 'Length must be positive')
+          .transform((_, val) => (val !== '' ? Number(val) : null)),
+        Comment: yup.string()
+      })
+    )
   })
 
   async function Submit(data: any) {
     try {
       setLoading(true)
 
-      await utils.api.post(
-        utils.apiRoutes.attribute({
-          projectName: router.query.name as string,
-          entityName: selectedEntity as string
-        }),
-        {
-          name: data.ColumnName,
-          comment: data.Comment,
-          isNullable: data.Nullable || false,
-          length: data.Length,
-          type: data.Type.value
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.createAttribute({
+        accessToken: utils.getCookie('access_token') as string,
+        ColumnName: data.ColumnName,
+        Comment: data.Comment,
+        entityName: selectedEntity as string,
+        Length: data.Length,
+        Nullable: data.Nullable || false,
+        projectName: router.query.name as string,
+        Type: data.Type.value
+      })
 
       setReload(!reload)
       setOpenForm(false)
@@ -235,7 +252,6 @@ function AttributeForm({
         'success'
       )
     } catch (err: any) {
-      console.log(err)
       utils.showError(err)
     } finally {
       setLoading(false)
@@ -250,18 +266,15 @@ function AttributeForm({
       <Controller
         name={'ColumnName'}
         control={control}
+        defaultValue={''}
         render={({ field: { onChange, value } }) => (
-          <div className="col-span-3 w-full flex flex-col gap-y-2">
+          <div className="flex flex-col w-full col-span-3 gap-y-2">
             <common.Input
               placeholder="Column name"
               value={value}
               onChange={onChange}
+              errors={errors.ColumnName}
             />
-            {errors.ColumnName && (
-              <p className="text-sm text-red-500">
-                {errors.ColumnName.message}
-              </p>
-            )}
           </div>
         )}
       />
@@ -269,8 +282,9 @@ function AttributeForm({
       <Controller
         name={'Type'}
         control={control}
+        defaultValue={{}}
         render={({ field: { onChange, value } }) => (
-          <div className="col-span-2 w-full flex flex-col gap-y-2">
+          <div className="flex flex-col w-full col-span-2 gap-y-2">
             <common.Select
               options={[
                 { name: 'String', value: 'String' },
@@ -283,11 +297,9 @@ function AttributeForm({
               ]}
               value={value}
               onChange={onChange}
+              errors={errors.Type}
               placeholder="Type"
             />
-            {errors.Type && (
-              <p className="text-sm text-red-500">{errors.Type.message}</p>
-            )}
           </div>
         )}
       />
@@ -295,6 +307,7 @@ function AttributeForm({
       {watch('Type')?.name === 'String' && (
         <Controller
           name={'Length'}
+          defaultValue={''}
           control={control}
           render={({ field: { onChange, value } }) => (
             <div className="col-span-2">
@@ -312,6 +325,7 @@ function AttributeForm({
       <Controller
         name={'Comment'}
         control={control}
+        defaultValue={''}
         render={({ field: { onChange, value } }) => (
           <div
             className={
@@ -331,6 +345,7 @@ function AttributeForm({
       <Controller
         name={'Nullable'}
         control={control}
+        defaultValue={false}
         render={({ field: { onChange } }) => (
           <div className="flex items-center gap-2">
             <input type="checkbox" id={'Nullable'} onChange={onChange} />
@@ -345,7 +360,7 @@ function AttributeForm({
           disabled={loading}
           onClick={() => setOpenForm(false)}
         >
-          <XIcon className="w-5 h-5 " />
+          <XIcon className="w-5 h-5" data-testid="close" />
         </common.Buttons.RedOutline>
 
         <common.Buttons.GreenOutline
@@ -354,7 +369,7 @@ function AttributeForm({
           disabled={loading}
           onClick={() => setOpenForm(true)}
         >
-          <PlusIcon className="w-5 h-5 " />
+          <PlusIcon className="w-5 h-5" data-testid="submit" />
         </common.Buttons.GreenOutline>
       </div>
     </form>

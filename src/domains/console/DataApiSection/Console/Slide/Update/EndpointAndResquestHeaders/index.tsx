@@ -22,6 +22,7 @@ export function EndpointAndResquestHeadersView() {
         <Controller
           name="YclEndpoint"
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="mb-12">
               <common.Input

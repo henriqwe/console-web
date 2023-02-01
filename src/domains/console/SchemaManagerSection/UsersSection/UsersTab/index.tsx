@@ -1,6 +1,7 @@
 import * as common from 'common'
 import * as consoleData from 'domains/console'
 import * as utils from 'utils'
+import * as services from 'services'
 import { useEffect, useState } from 'react'
 import { RowActions } from './RowActions'
 import { CheckIcon, LinkIcon, PlusIcon } from '@heroicons/react/outline'
@@ -30,29 +31,22 @@ export function UsersTab() {
 
   async function loadData() {
     try {
-      const { data } = await utils.api.post(
-        utils.apiRoutes.userAccount,
-        {
-          username: `${
-            utils.parseJwt(utils.getCookie('access_token'))?.username
-          }@${router.query.name}`,
-          password: user?.adminSchemaPassword
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
+      const { data } = await services.ycodify.getAdminData({
+        password: user?.adminSchemaPassword as string,
+        username: `${
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
+        }@${router.query.name}`
+      })
       setUsersData(data)
     } catch (err: any) {
       setUser({ ...user, adminSchemaPassword: undefined })
-      if (err.response.status === 401 || err.response.status === 400) {
+      if (err?.response?.status === 401 || err?.response?.status === 400) {
         return
       }
-      if (err.response.status !== 404) {
+      if (err?.response?.status !== 404) {
         utils.notification(err.message, 'error')
       }
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
@@ -68,7 +62,7 @@ export function UsersTab() {
 
   if (!user?.adminSchemaPassword) {
     return (
-      <div className="flex  p-8 justify-between ">
+      <div className="flex justify-between p-8 ">
         You need admin authorization to access this section
         <common.Buttons.WhiteOutline
           icon={<CheckIcon className="w-3 h-3" />}
@@ -99,8 +93,8 @@ export function UsersTab() {
           </p>
         </div>
       ) : (
-        <div className="flex flex-col w-full h-full gap-2  rounded-b-lg pt-2">
-          <div className="flex items-center w-full px-4 py-2 gap-8 ">
+        <div className="flex flex-col w-full h-full gap-2 pt-2 rounded-b-lg">
+          <div className="flex items-center w-full gap-8 px-4 py-2 ">
             <common.Buttons.WhiteOutline
               type="button"
               onClick={() => {
@@ -129,8 +123,7 @@ export function UsersTab() {
               { name: 'username', displayName: 'Username' },
               {
                 name: 'email',
-                displayName: 'Email',
-                handler: (value) => (value ? value : undefined)
+                displayName: 'Email'
               },
               {
                 name: 'status',

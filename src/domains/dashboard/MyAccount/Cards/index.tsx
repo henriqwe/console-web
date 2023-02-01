@@ -16,17 +16,20 @@ export function Cards() {
   }, [])
 
   return (
-    <div className="flex flex-col px-4 gap-4 overflow-auto">
+    <div className="flex flex-col gap-4 px-4 overflow-auto">
       <section className="flex flex-col gap-y-8 ">
         <p className="text-2xl font-semibold dark:text-text-primary text-slate-900">
           Your credit cards
         </p>
 
-        <div className="flex w-full items-center justify-center">
+        <div className="flex items-center justify-center w-full">
           {loading ? (
-            <common.Spinner className="dark:text-text-primary w-8 h-8" />
+            <common.Spinner
+              className="w-8 h-8 dark:text-text-primary"
+              data-testid="spinner"
+            />
           ) : (
-            <div className="flex gap-6 w-full h-auto px-8">
+            <div className="flex w-full h-auto gap-6 px-8">
               <CardNewCreditCard />
               {cardsData.length > 0 &&
                 cardsData.map((card) => (

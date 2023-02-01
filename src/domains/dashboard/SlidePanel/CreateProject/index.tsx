@@ -9,7 +9,9 @@ import { useState } from 'react'
 import { CheckIcon, UploadIcon } from '@heroicons/react/outline'
 import { InformationCircleIcon } from '@heroicons/react/solid'
 import * as common from 'common'
+import * as services from 'services'
 import * as utils from 'utils'
+import * as yup from 'yup'
 import * as ThemeContext from 'contexts/ThemeContext'
 import * as dashboard from 'domains/dashboard'
 import { dracula } from '@uiw/codemirror-theme-dracula'
@@ -26,7 +28,6 @@ export function Create() {
   const [loading, setLoading] = useState(false)
   const [submittedSchema, setSubmittedSchema] = useState<string>()
   const {
-    createProjectSchema,
     setReload,
     reload,
     setCreatedSchemaName,
@@ -40,25 +41,37 @@ export function Create() {
     control,
     handleSubmit,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(createProjectSchema(submittedSchema)) })
+  } = useForm(
+    submittedSchema
+      ? {
+          resolver: yupResolver(
+            yup.object().shape({
+              ProjectName: yup
+                .string()
+                .min(3, 'Project name must be at least 3 characters')
+                .matches(/^[A-Za-z ]*$/, 'Project name must be only letters')
+                .required('Project name is a required field')
+                .test(
+                  'space',
+                  'Project name should not contain spaces',
+                  (value) => !value?.includes(' ')
+                )
+            })
+          )
+        }
+      : undefined
+  )
 
   async function Submit(data: { ProjectName: string }) {
     let projectName = ''
     try {
       setLoading(true)
 
-      const schemas = await utils.api
-        .get(utils.apiRoutes.schemas, {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        })
+      const schemas = await services.ycodify
+        .getSchemas({ accessToken: utils.getCookie('access_token') as string })
         .then((res) =>
           res ? res.data.map((schema: { name: string }) => schema.name) : []
         )
-        .catch((err) => console.log('Error getting schemas', err))
 
       if (submittedSchema) {
         let schemaParsed: {
@@ -67,19 +80,12 @@ export function Create() {
           src: any
           types: {}
         }
-        try {
-          schemaParsed = utils.ycl_transpiler.parse(submittedSchema, false)
-        } catch (err) {
-          return
-        }
+
+        schemaParsed = utils.ycl_transpiler.parse(submittedSchema, false)
 
         projectName = schemaParsed.schema.name
         if (projectName.length < 3) {
-          utils.notification(
-            'Project name must be at least 3 characters long',
-            'error'
-          )
-          return
+          throw new Error('Project name must be at least 3 characters long')
         }
 
         utils.ycl_transpiler.deploy(schemaParsed.schema, async () => {
@@ -90,63 +96,35 @@ export function Create() {
           }
 
           //create project
-          await utils.api.post(
-            utils.apiRoutes.schemas,
-            {
-              name: projectName
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${utils.getCookie('access_token')}`
-              }
-            }
-          )
+          await services.ycodify.createSchema({
+            accessToken: utils.getCookie('access_token') as string,
+            projectName: projectName
+          })
 
-          const { data: schemaData } = await utils.api.get(
-            `${utils.apiRoutes.schemas}/${projectName}`,
-            {
-              headers: {
-                Authorization: `Bearer ${utils.getCookie('access_token')}`
-              }
-            }
-          )
+          const { data: schemaData } = await services.ycodify.getSchema({
+            accessToken: utils.getCookie('access_token') as string,
+            name: projectName
+          })
 
           for (const entity of schemaParsed.schema.entities) {
-            await utils.api.post(
-              utils.apiRoutes.entity(projectName as string),
-              {
-                name: entity.name,
-                attributes: entity.attributes.map((attribute) => {
-                  return {
-                    ...attribute,
-                    type: attribute._conf.type.value
-                  }
-                }),
-                associations: entity.associations ?? []
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${utils.getCookie('access_token')}`
+            await services.ycodify.createEntitySchema({
+              accessToken: utils.getCookie('access_token') as string,
+              attributes: entity.attributes.map((attribute) => {
+                return {
+                  ...attribute,
+                  type: attribute._conf.type.value
                 }
-              }
-            )
+              }),
+              entityName: '',
+              name: entity.name,
+              associations: entity.associations ?? []
+            })
           }
 
-          const AdminAccount = await utils.api
-            .post(
-              utils.apiRoutes.createAdminAccount(projectName),
-              {},
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  Accept: 'application/json',
-                  Authorization: `Bearer ${utils.getCookie('access_token')}`
-                }
-              }
-            )
-            .catch((err) => console.log('Error creating admin account', err))
+          const AdminAccount = await services.ycodify.createAdminAccount({
+            accessToken: utils.getCookie('access_token') as string,
+            projectName: projectName
+          })
 
           setAdminUser(AdminAccount?.data)
           setCreatedSchemaName(projectName)
@@ -161,7 +139,6 @@ export function Create() {
           setSlideType('ViewAdminUser')
           setSlideSize('normal')
         })
-
         return
       }
 
@@ -171,41 +148,20 @@ export function Create() {
         throw new Error(`Project ${projectName} already exists`)
       }
 
-      await utils.api.post(
-        utils.apiRoutes.schemas,
-        {
-          name: projectName
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.createSchema({
+        accessToken: utils.getCookie('access_token') as string,
+        projectName: projectName
+      })
 
-      const { data: schemaData } = await utils.api.get(
-        `${utils.apiRoutes.schemas}/${projectName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      const { data: schemaData } = await services.ycodify.getSchema({
+        accessToken: utils.getCookie('access_token') as string,
+        name: projectName
+      })
 
-      const AdminAccount = await utils.api
-        .post(
-          utils.apiRoutes.createAdminAccount(projectName),
-          {},
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-              Authorization: `Bearer ${utils.getCookie('access_token')}`
-            }
-          }
-        )
-        .catch((err) => console.log('Error creating admin account', err))
+      const AdminAccount = await services.ycodify.createAdminAccount({
+        accessToken: utils.getCookie('access_token') as string,
+        projectName: projectName
+      })
 
       setAdminUser(AdminAccount?.data)
       setCreatedSchemaName(projectName)
@@ -213,6 +169,7 @@ export function Create() {
       utils.setCookie('X-TenantID', schemaData.tenantId)
       utils.setCookie('X-TenantAC', schemaData.tenantAc)
       setReload(!reload)
+
       utils.notification(
         `Project ${projectName} created successfully`,
         'success'
@@ -237,6 +194,7 @@ export function Create() {
           <Controller
             name={'ProjectName'}
             control={control}
+            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <div className="col-span-3">
                 <common.Input
@@ -244,9 +202,9 @@ export function Create() {
                   label={
                     <div className="flex items-center gap-2">
                       <span>Project Name</span>
-                      <div className="flex relative group">
+                      <div className="relative flex group">
                         <InformationCircleIcon className="w-4 h-4 text-slate-600 dark:text-gray-400" />
-                        <ul className="text-sm font-normal left-6 -top-1 absolute w-max p-2 rounded-lg group-hover:block hidden dark:bg-opacity-95 bg-white shadow-lg dark:bg-slate-900">
+                        <ul className="absolute hidden p-2 text-sm font-normal bg-white rounded-lg shadow-lg left-6 -top-1 w-max group-hover:block dark:bg-opacity-95 dark:bg-slate-900">
                           {tooltips.map((tooltip, i) => (
                             <li
                               key={i}
@@ -261,16 +219,12 @@ export function Create() {
                   }
                   value={value}
                   onChange={onChange}
+                  errors={errors.ProjectName}
                 />
-                {errors.ProjectName && (
-                  <p className="text-sm text-red-500">
-                    {errors.ProjectName.message}
-                  </p>
-                )}
               </div>
             )}
           />
-          <div className="flex w-full justify-center">
+          <div className="flex justify-center w-full">
             <div className="w-56 ">
               <common.illustrations.Colorschemes />
             </div>
@@ -283,6 +237,7 @@ export function Create() {
             value={submittedSchema}
             className="flex w-full h-[25rem] max-h-[25rem] min-h-[25rem] 2lx:h-[45rem] 2xl:max-h-[45rem] 2xl:min-h-[45rem] "
             width="100%"
+            data-testid="editor"
             onChange={(value) => {
               setSubmittedSchema(value)
             }}
@@ -323,6 +278,7 @@ export function Create() {
                 id="file"
                 accept=".yc"
                 className="hidden"
+                data-testid="schemafile"
                 onChange={(e) => {
                   try {
                     const file = e.target.files![0]

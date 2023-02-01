@@ -2,9 +2,9 @@ import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import * as dashboard from 'domains/dashboard'
 import * as common from 'common'
+import * as services from 'services'
 import * as utils from 'utils'
 import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/router'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import { DocumentDuplicateIcon } from '@heroicons/react/outline'
@@ -28,54 +28,50 @@ export function ViewSchema() {
 
   const yupSchema = yup.object().shape({ Name: yup.string().required() })
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors }
-  } = useForm({ resolver: yupResolver(yupSchema) })
+  // const {
+  //   control,
+  //   handleSubmit,
+  //   reset,
+  //   formState: { errors }
+  // } = useForm({ resolver: yupResolver(yupSchema) })
 
-  const onSubmit = async (formData: any) => {
-    try {
-      setLoading(true)
-      // await axios.put(
-      //   `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
-      //   {
-      //     name: formData.Name
-      //   },
-      //   {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //       Authorization: `Bearer ${utils.getCookie('access_token')}`
-      //     }
-      //   }
-      // )
+  // const onSubmit = async (formData: any) => {
+  //   try {
+  //     setLoading(true)
+  //     // await axios.put(
+  //     //   `${process.env.NEXT_PUBLIC_YCODIFY_API_URL}/api/modeler/schema/${router.query.name}/entity/${selectedTable}`,
+  //     //   {
+  //     //     name: formData.Name
+  //     //   },
+  //     //   {
+  //     //     headers: {
+  //     //       'Content-Type': 'application/json',
+  //     //       Authorization: `Bearer ${utils.getCookie('access_token')}`
+  //     //     }
+  //     //   }
+  //     // )
 
-      // reset()
-      // setSelectedTable(formData.Name)
-      // setReload(!reload)
-      setOpenSlide(false)
-      setLoading(false)
-      utils.notification('Operation performed successfully', 'success')
-    } catch (err: any) {
-      utils.showError(err)
-    } finally {
-      setLoading(false)
-    }
-  }
+  //     // reset()
+  //     // setSelectedTable(formData.Name)
+  //     // setReload(!reload)
+  //     setOpenSlide(false)
+  //     setLoading(false)
+  //     utils.notification('Operation performed successfully', 'success')
+  //   } catch (err: any) {
+  //     utils.showError(err)
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   async function DeleteProject() {
     try {
       setSubmitLoading(true)
-      await utils.api.delete(
-        `${utils.apiRoutes.schemas}/${selectedSchema?.name}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+
+      await services.ycodify.deleteSchema({
+        accessToken: utils.getCookie('access_token') as string,
+        selectedSchema: selectedSchema?.name as string
+      })
       setReload(!reload)
       setSelectedSchema(undefined)
       setOpenSlide(false)
@@ -85,7 +81,7 @@ export function ViewSchema() {
         'success'
       )
     } catch (err: any) {
-      utils.notification(err.response.data.message, 'error')
+      utils.notification(err?.response?.data?.message, 'error')
     } finally {
       setSubmitLoading(false)
     }
@@ -112,7 +108,7 @@ export function ViewSchema() {
 
   return (
     <div
-      onSubmit={handleSubmit(onSubmit)}
+      // onSubmit={handleSubmit(onSubmit)}
       data-testid="editForm"
       className="flex flex-col items-end"
     >
@@ -145,6 +141,7 @@ export function ViewSchema() {
               <div className="flex items-center">
                 <DocumentDuplicateIcon
                   className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-400"
+                  data-testid="tenantAc"
                   onClick={() =>
                     navigator.clipboard.writeText(
                       selectedSchema?.tenantAc as string
@@ -173,6 +170,7 @@ export function ViewSchema() {
               <div className="flex items-center">
                 <DocumentDuplicateIcon
                   className="w-5 h-5 text-gray-700 cursor-pointer dark:text-gray-400"
+                  data-testid="tenantId"
                   onClick={() =>
                     navigator.clipboard.writeText(
                       selectedSchema?.tenantId as string

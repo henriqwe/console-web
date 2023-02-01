@@ -18,7 +18,7 @@ export const Input = ({
   <div className={`flex flex-col gap-2 ${props.className}`}>
     {label && (
       <label
-        htmlFor={label}
+        htmlFor={label as string}
         className="text-sm font-medium text-gray-700 dark:text-text-primary"
       >
         {label}
@@ -33,7 +33,7 @@ export const Input = ({
       <input
         {...props}
         type={type}
-        id={label}
+        id={label as string}
         className={`pl-4 border border-gray-300 dark:border-gray-600 dark:bg-menu-primary  outline-1 outline-blue-300 dark:outline-blue-700 h-10 text-sm text-gray-700 dark:text-text-primary w-full dark:disabled:bg-menu-secondary disabled:bg-gray-300 disabled:cursor-not-allowed transition ${
           icon ? 'rounded-r-md' : 'rounded-md'
         }`}

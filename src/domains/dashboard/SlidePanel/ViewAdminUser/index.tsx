@@ -19,12 +19,12 @@ export function ViewAdminUser() {
   const [loading, setLoading] = useState(false)
   const { createdSchemaName, adminUser } = dashboard.useData()
 
-  async function Submit() {
+  function Submit() {
     setLoading(true)
     try {
       router.push(routes.console + '/' + createdSchemaName)
     } catch (err: any) {
-      console.log(err)
+      // console.log(err)
       utils.notification(err.message, 'error')
       setLoading(false)
     }
@@ -50,12 +50,13 @@ export function ViewAdminUser() {
               }
               title={'Admin username'}
               description={
-                <div className="flex gap-1 items-center">
+                <div className="flex items-center gap-1">
                   <p>{adminUser?.username as string}</p>
                   <CopyToClipboard text="Copy to clipboard">
                     <div>
                       <DocumentDuplicateIcon
                         className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
+                        data-testid="username"
                         onClick={() => {
                           utils.notification('Copied to clipboard', 'success')
                           navigator.clipboard.writeText(
@@ -74,7 +75,7 @@ export function ViewAdminUser() {
               }
               title={'Admin password'}
               description={
-                <div className="flex gap-1 items-center">
+                <div className="flex items-center gap-1">
                   <input
                     disabled
                     value={adminUser?.password as string}
@@ -85,6 +86,7 @@ export function ViewAdminUser() {
                     <div>
                       <DocumentDuplicateIcon
                         className="w-5 h-5 text-gray-700 cursor-pointer dark:text-text-tertiary"
+                        data-testid="password"
                         onClick={() => {
                           utils.notification('Copied to clipboard', 'success')
                           navigator.clipboard.writeText(
@@ -111,6 +113,7 @@ export function ViewAdminUser() {
         <div className="flex w-full gap-x-2">
           <input
             type="checkbox"
+            role="checkbox"
             className="w-5 h-5"
             onChange={() => {
               setAllowConclude(!allowConclude)

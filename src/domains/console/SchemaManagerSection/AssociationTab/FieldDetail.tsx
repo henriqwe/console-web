@@ -1,4 +1,6 @@
+import * as yup from 'yup'
 import * as utils from 'utils'
+import * as services from 'services'
 import * as common from 'common'
 import * as types from 'domains/console/types'
 import * as consoleData from 'domains/console'
@@ -28,32 +30,30 @@ export function FieldDetail({
 }) {
   const router = useRouter()
   const [openModal, setOpenModal] = useState(false)
-  const { updateAssociationSchema, selectedEntity, setReload, reload } =
-    consoleData.useSchemaManager()
+  const { selectedEntity, setReload, reload } = consoleData.useSchemaManager()
 
   const {
     formState: { errors },
     control,
     handleSubmit
-  } = useForm({ resolver: yupResolver(updateAssociationSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Name: yup.string().required()
+      })
+    )
+  })
 
   async function Save(formData: FormData) {
     try {
-      await utils.api.put(
-        `${utils.apiRoutes.association({
-          projectName: router.query.name as string,
-          entityName: selectedEntity as string
-        })}/${attribute}`,
-        {
-          name: formData.Name
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.updateAssociation({
+        accessToken: utils.getCookie('access_token') as string,
+        attribute: attribute,
+        name: formData.Name,
+        projectName: router.query.name as string,
+        selectedEntity: selectedEntity as string
+      })
+
       setReload(!reload)
       utils.notification('Attribute updated successfully', 'success')
       setShowDetails(false)
@@ -64,20 +64,14 @@ export function FieldDetail({
 
   async function Remove() {
     try {
-      await utils.api.delete(
-        `${utils.apiRoutes.association({
-          projectName: router.query.name as string,
-          entityName: selectedEntity as string
-        })}/${attribute}/type/${
-          schemaTables![selectedEntity as string][attribute].type
-        }`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      await services.ycodify.deleteAssociation({
+        accessToken: utils.getCookie('access_token') as string,
+        attribute: attribute,
+        projectName: router.query.name as string,
+        selectedEntity: selectedEntity as string,
+        type: schemaTables![selectedEntity as string][attribute].type
+      })
+
       setReload(!reload)
       utils.notification('Attribute updated successfully', 'success')
       setShowDetails(false)

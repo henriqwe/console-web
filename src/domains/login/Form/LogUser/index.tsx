@@ -1,6 +1,6 @@
 import * as common from 'common'
 import * as utils from 'utils'
-import * as login from 'domains/login'
+import * as yup from 'yup'
 import {
   useForm,
   FieldValues,
@@ -17,12 +17,29 @@ import Link from 'next/link'
 
 export function LogUser() {
   const [loading, setLoading] = useState(false)
-  const { logUserSchema } = login.useLogin()
+
   const {
     formState: { errors },
     handleSubmit,
     control
-  } = useForm({ resolver: yupResolver(logUserSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        userName: yup
+          .string()
+          .required('Username field is required')
+          .test('equal', 'This field cannot contain spaces', (val) => {
+            const validation = new RegExp(/\s/g)
+            return !validation.test(val as string)
+          })
+          .test('equal', 'This field must contain only letters', (val) => {
+            const validation = new RegExp(/^[A-Za-z ]*$/)
+            return validation.test(val as string)
+          }),
+        password: yup.string().required('Password field is required')
+      })
+    )
+  })
 
   async function Submit(formData: { userName: string; password: string }) {
     setLoading(true)
@@ -33,23 +50,13 @@ export function LogUser() {
         redirect: false
       })
       if (res?.status === 401) {
-        return utils.notification(
-          'Ops! Incorrect username or password',
-          'error'
-        )
+        throw new Error('Ops! Incorrect username or password')
       }
       if (res?.ok && res?.status === 200) {
-        router.push(routes.dashboard)
-        return
+        return router.push(routes.dashboard)
       }
-      return utils.notification('Ops! Something went wrong', 'error')
+      throw new Error('Ops! Something went wrong')
     } catch (err: any) {
-      if (err.response?.status === 401) {
-        return utils.notification(
-          'Ops! Incorrect username or password',
-          'error'
-        )
-      }
       utils.showError(err)
     } finally {
       setLoading(false)
@@ -65,7 +72,7 @@ export function LogUser() {
         name="userName"
         control={control}
         render={({ field: { onChange } }) => (
-          <div className="w-full flex flex-col gap-y-2">
+          <div className="flex flex-col w-full gap-y-2">
             <common.Input
               onChange={onChange}
               label="Username"
@@ -74,10 +81,8 @@ export function LogUser() {
               name="username"
               type="text"
               autoComplete="username"
+              errors={errors.userName}
             />
-            {errors.userName && (
-              <p className="text-sm text-red-500">{errors.userName.message}</p>
-            )}
           </div>
         )}
       />
@@ -86,7 +91,7 @@ export function LogUser() {
           name="password"
           control={control}
           render={({ field: { onChange } }) => (
-            <div className="w-full flex flex-col gap-y-2">
+            <div className="flex flex-col w-full gap-y-2">
               <common.Input
                 onChange={onChange}
                 label="Password"
@@ -95,12 +100,8 @@ export function LogUser() {
                 name="password"
                 type="password"
                 autoComplete="current-password"
+                errors={errors.password}
               />
-              {errors.password && (
-                <p className="text-sm text-red-500">
-                  {errors.password.message}
-                </p>
-              )}
             </div>
           )}
         />
@@ -112,7 +113,7 @@ export function LogUser() {
       </div>
 
       <div className="flex justify-between">
-        <a className=" w-max h-max " href="https://ycodify.com/">
+        <a className=" w-max h-max" href="https://ycodify.com/">
           <common.Buttons.Clean
             iconPosition="left"
             icon={<ArrowLeftIcon className="w-4 h-4 dark:text-text-primary" />}

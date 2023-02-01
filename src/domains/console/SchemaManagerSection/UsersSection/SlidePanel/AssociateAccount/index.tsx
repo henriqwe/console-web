@@ -7,26 +7,33 @@ import {
 import { useState } from 'react'
 import * as consoleSection from 'domains/console'
 import * as common from 'common'
+import * as yup from 'yup'
 import * as utils from 'utils'
-import { yupResolver } from '@hookform/resolvers/yup'
+import * as services from 'services'
 import { CheckIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import * as UserContext from 'contexts/UserContext'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 export function AssociateAccount() {
   const [loading, setLoading] = useState(false)
   const { user } = UserContext.useUser()
 
   const router = useRouter()
-  const { createUserSchema, reload, setReload, setOpenSlide, roles } =
-    consoleSection.useUser()
+  const { reload, setReload, setOpenSlide, roles } = consoleSection.useUser()
 
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm()
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Username: yup.string().required()
+      })
+    )
+  })
 
   const onSubmit = async (formData: {
     Username: string
@@ -34,27 +41,30 @@ export function AssociateAccount() {
   }) => {
     setLoading(true)
     try {
-      if (!formData.Username) {
-        throw new Error('Please enter a username')
-      }
       const roles =
         formData?.Roles?.map(({ name }) => {
           return { name }
-        }) || []
-      await utils.api.post(utils.apiRoutes.updateAccount, {
-        username: `${
-          utils.parseJwt(utils.getCookie('access_token'))?.username
-        }@${router.query.name}`,
-        password: user?.adminSchemaPassword,
-        account: { username: formData.Username, roles }
+        })
+
+      await services.ycodify.updateAccountAndRole({
+        password: user?.adminSchemaPassword as string,
+        roles: roles,
+        username: formData.Username,
+        usernameAdmin: `${
+          utils.parseJwt(utils.getCookie('access_token') as string)?.username
+        }@${router.query.name}`
       })
+
       reset()
       setReload(!reload)
       setOpenSlide(false)
       setLoading(false)
       utils.notification('User created successfully', 'success')
     } catch (err: any) {
-      utils.notification(err.response.data.message, 'error')
+      if (err?.response?.data?.message) {
+        return utils.notification(err.response.data.message, 'error')
+      }
+      utils.showError(err)
     } finally {
       setLoading(false)
     }
@@ -70,6 +80,7 @@ export function AssociateAccount() {
         <Controller
           name={'Username'}
           control={control}
+          defaultValue={''}
           render={({ field: { onChange, value } }) => (
             <div className="flex-1">
               <common.Input

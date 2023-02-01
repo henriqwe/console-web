@@ -12,9 +12,12 @@ import {
   MutableRefObject
 } from 'react'
 import * as common from 'common'
+import * as services from 'services'
+
 import { javascriptLanguage } from '@codemirror/lang-javascript'
 import { completeFromGlobalScope } from './DataApiSection/Console/Editors/Autocomplete'
 import { useRouter } from 'next/router'
+import { useUser } from 'contexts/UserContext'
 
 import * as data from 'domains/console'
 import * as utils from 'utils'
@@ -127,7 +130,7 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
   const [activeEntitiesSidebar, setActiveEntitiesSidebar] = useState(
     new Set<string>()
   )
-
+  const { user } = useUser()
   const [currentEditorAction, setCurrentEditorAction] =
     useState<actionType>('READ')
   const [textModeler, setTextModeler] = useState<string>('')
@@ -147,7 +150,6 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
         setTimeout(() => setConsoleValue(valueToFormat.current.slice(0, -1)), 0)
       }
     } catch (error) {
-      console.log('error', error)
       utils.notification('There was an error formatting', 'error')
     }
   }, [consoleValue])
@@ -165,17 +167,13 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
 
   async function loadParser() {
     try {
-      const { data } = await utils.localApi.get(
-        utils.apiRoutes.local.parser(router.query.name as string),
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      const { data } = await services.ycodify.getParser({
+        name: router.query.name as string,
+        accessToken: user?.accessToken!
+      })
+
       setdocumentationValue(data.data)
     } catch (err: any) {
-      console.log(err)
       if (err?.response?.status !== 404) {
         utils.showError(err)
       }
@@ -349,20 +347,12 @@ export const ConsoleEditorProvider = ({ children }: ProviderProps) => {
     try {
       setConsoleValueLastOperation(consoleValue)
       setconsoleResponseLoading(true)
-      const { data } = await utils.localApi.post(
-        utils.apiRoutes.local.interpreter,
-        {
-          data: JSON.parse(consoleValue),
-          access_token: `${utils.getCookie('access_token')}`,
-          'X-TenantID': utils.getCookie('X-TenantID'),
-          'X-TenantAC': utils.getCookie('X-TenantAC')
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${utils.getCookie('access_token')}`
-          }
-        }
-      )
+      const { data } = await services.ycodify.runInterpreter({
+        accessToken: utils.getCookie('access_token') as string,
+        data: consoleValue,
+        XTenantAC: utils.getCookie('X-TenantAC') as string,
+        XTenantID: utils.getCookie('X-TenantID') as string
+      })
       let formatedValue = ''
       formatedValue = format?.current
         ? format?.current(JSON.stringify(data.data, null, 4))
@@ -496,7 +486,7 @@ handlerAction()`
           content: (
             <div className="relative flex flex-col gap-y-3 md:text-center lg:text-left">
               <div className="relative">
-                <p className="inline bg-gradient-to-r from-indigo-400 via-sky-600 to-indigo-400 bg-clip-text font-display text-xl tracking-tight text-transparent dark:from-indigo-200 dark:via-sky-400 dark:to-indigo-200">
+                <p className="inline text-xl tracking-tight text-transparent bg-gradient-to-r from-indigo-400 via-sky-600 to-indigo-400 bg-clip-text font-display dark:from-indigo-200 dark:via-sky-400 dark:to-indigo-200">
                   Develop your software faster.
                 </p>
                 <p className="mt-3 tracking-tight text-slate-600 dark:text-slate-400">
@@ -505,7 +495,7 @@ handlerAction()`
                   products in up to 60% shorter timeframes, reducing the costs
                   of software production, operation and maintenance.
                 </p>
-                <div className="mt-8 flex gap-4 justify-center lg:justify-start">
+                <div className="flex justify-center gap-4 mt-8 lg:justify-start">
                   <common.Buttons.WhiteOutline
                     onClick={() =>
                       window.open('https://docs.ycodify.com/', '_blank')

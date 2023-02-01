@@ -9,6 +9,8 @@ import type { schemaEntitiesType } from 'domains/console/Sidebar/DataApiTab'
 import { LockClosedIcon } from '@heroicons/react/solid'
 
 export function Operations({ entity }: { entity: schemaEntitiesType }) {
+ 
+
   const [active, setActive] = useState(false)
   const {
     handleFormatQueryOrMutationEntityAndAttribute,
@@ -32,14 +34,15 @@ export function Operations({ entity }: { entity: schemaEntitiesType }) {
             }
             activeEntitiesSidebar.add(`${entity.name}`)
           }}
-          className=" cursor-pointer"
+          className="cursor-pointer"
+          data-testid="radioCheck"
         >
           <common.icons.RadioCheckIcon
             checked={activeEntitiesSidebar.has(`${entity.name}`)}
           />
         </div>
         <div
-          className="flex items-center gap-1  cursor-pointer"
+          className="flex items-center gap-1 cursor-pointer"
           onClick={() => {
             setActive(!active)
           }}
@@ -82,9 +85,12 @@ export function Operations({ entity }: { entity: schemaEntitiesType }) {
                       activeEntitiesSidebar.add(`${entity.name}-${attribute}`)
                     }
                   }}
+                  data-testid="handle"
                 >
                   {block ? (
-                    <LockClosedIcon className="w-4 h-4" />
+                    <LockClosedIcon
+                      className="w-4 h-4"
+                    />
                   ) : (
                     <common.icons.RadioCheckIcon
                       checked={activeEntitiesSidebar.has(

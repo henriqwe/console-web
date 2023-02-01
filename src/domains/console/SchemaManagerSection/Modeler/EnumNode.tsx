@@ -4,9 +4,8 @@ import { Handle, Position } from 'reactflow'
 
 import { EnumNodeData } from './types'
 
-const MAX_VALUES = 12
-
 const EnumNode = ({ data }: EnumNodeProps) => {
+  const MAX_VALUES = 12
   const [expanded, setExpanded] = useState(false)
 
   return (

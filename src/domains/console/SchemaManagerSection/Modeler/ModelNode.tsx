@@ -61,7 +61,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
 
   return (
     <table
-      className="font-sans bg-white border-2 border-separate border-black dark:border-gray-400 rounded-lg"
+      className="font-sans bg-white border-2 border-separate border-black rounded-lg dark:border-gray-400"
       style={{ minWidth: 200, maxWidth: 500, borderSpacing: 0 }}
     >
       <thead title={data.documentation}>
@@ -96,7 +96,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
               title={col.documentation}
             >
               <td className="font-mono font-semibold">
-                <div
+                <p
                   className={cc([
                     'relative',
                     'py-1',
@@ -111,7 +111,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
                 >
                   {col.name}:{' '}
                   <span className="text-gray-500">{col.displayType}</span>
-                </div>
+                </p>
               </td>
             </tr>
           ))}
@@ -123,7 +123,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
             }
           >
             <td className="font-mono font-semibold">
-              <div className={cc(['relative', 'py-1', 'px-2', 'h-6'])}></div>
+              <p className={cc(['relative', 'py-1', 'px-2', 'h-6'])}></p>
             </td>
           </tr>
         ))}

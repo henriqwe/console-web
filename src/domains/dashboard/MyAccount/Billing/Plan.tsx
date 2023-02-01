@@ -17,7 +17,7 @@ export function Plan({
   href,
   features,
   detail,
-  selectedPlan = false
+  selectedPlan
 }: PlanProps) {
   return (
     <div
@@ -40,11 +40,11 @@ export function Plan({
           <p className="px-1 text-sm text-text-secondary">{description}</p>
         </div>
 
-        <ul role="list" className="flex flex-col gap-y-2 text-sm">
+        <ul role="list" className="flex flex-col text-sm gap-y-2">
           {features.map((feature) => (
             <li
               key={feature}
-              className="flex gap-x-2 items-center text-slate-700 dark:text-text-primary"
+              className="flex items-center gap-x-2 text-slate-700 dark:text-text-primary"
             >
               <CheckIcon />
               <p>{feature}</p>
@@ -52,8 +52,8 @@ export function Plan({
           ))}
         </ul>
 
-        <div className="mt-auto flex flex-col gap-y-4">
-          <p className="mt-auto px-1 font-display text-xs text-text-secondary">
+        <div className="flex flex-col mt-auto gap-y-4">
+          <p className="px-1 mt-auto text-xs font-display text-text-secondary">
             {detail}
           </p>
           {/* <a href={href}> */}

@@ -4,12 +4,15 @@ import {
   SubmitHandler,
   useForm
 } from 'react-hook-form'
-import { CheckIcon, ReplyIcon } from '@heroicons/react/outline'
+import { CheckIcon } from '@heroicons/react/outline'
 import * as common from 'common'
 import * as utils from 'utils'
+import * as services from 'services'
 import * as dashboard from 'domains/dashboard'
 import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 type FormData = {
   Content: string
@@ -36,14 +39,20 @@ export function TicketDetail({ user }: TicketDetail) {
   const [reloadMessages, setReloadMessages] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
 
-  const { selectedTicket, setSelectedTicket } = dashboard.useData()
+  const { selectedTicket } = dashboard.useData()
 
   const {
     control,
     handleSubmit,
     formState: { errors },
     setValue
-  } = useForm()
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        Content: yup.string().required('this field is required')
+      })
+    )
+  })
 
   async function createTicketMessage(formData: FormData) {
     try {
@@ -52,15 +61,12 @@ export function TicketDetail({ user }: TicketDetail) {
         throw new Error('Cannot create a empty message')
       }
 
-      await utils.localApi.post(utils.apiRoutes.local.support.message, {
-        message: {
-          date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms'),
-          createdbyuser: user?.email !== process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
-          content: formData.Content,
-          username: user?.username,
-          ticketid: selectedTicket?.id,
-          ticket: selectedTicket?.id
-        }
+      await services.ycodify.createTicketMessage({
+        content: formData.Content,
+        createdbyuser: user?.email !== process.env.NEXT_PUBLIC_SUPPORT_EMAIL,
+        date: format(new Date(), 'yyyy-MM-dd HH:mm:ss.ms'),
+        ticket: selectedTicket?.id as number,
+        ticketid: selectedTicket?.id as number
       })
 
       setReloadMessages(!reloadMessages)
@@ -74,19 +80,14 @@ export function TicketDetail({ user }: TicketDetail) {
 
   async function loadMessages() {
     try {
-      const { data } = await utils.localApi.get(
-        `${utils.apiRoutes.local.support.message}`,
-        {
-          params: {
-            ticketid: selectedTicket?.id
-          }
-        }
-      )
+      const { data } = await services.ycodify.getTicketMessages({
+        ticketid: selectedTicket?.id as number
+      })
 
       setMessages(
-        data?.[0]?.message?.map((message) => ({
-          ...message,
-          username: message?.createdbyuser ? message?.username : 'Ycodify'
+        data?.[0]?.message?.map((ticket: Message) => ({
+          ...ticket,
+          name: ticket?.createdbyuser ? user?.username : 'Ycodify'
         })) ?? []
       )
     } catch (err) {
@@ -125,10 +126,13 @@ export function TicketDetail({ user }: TicketDetail) {
       <Controller
         name={'Content'}
         control={control}
+        defaultValue={''}
         render={({ field: { onChange, value } }) => (
           <div className="col-span-3">
             <common.Textarea
-              placeholder="Enter your message here..."
+              placeholder="Enter a new message here..."
+              label="New message"
+              id="textAreaNewMessage"
               value={value}
               onChange={onChange}
               errors={errors.Content}

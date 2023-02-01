@@ -33,7 +33,7 @@ describe('Dropdown', () => {
       </Dropdown>
     )
 
-    const dropdownButton = screen.getByTitle('open options')
+    const dropdownButton = screen.getByTitle('Open options')
     fireEvent.click(dropdownButton)
 
     const firstAction = screen.getByTitle('firstAction')
@@ -58,7 +58,7 @@ describe('Dropdown', () => {
         Dropdown
       </Dropdown>
     )
-    const dropdownButton = screen.getByTitle('open options')
+    const dropdownButton = screen.getByTitle('Open options')
     fireEvent.click(dropdownButton)
 
     const actionTitle = screen.getByText('action')

@@ -13,7 +13,6 @@ type DataContextProps = {
   setSelectedSchema: Dispatch<SetStateAction<Schemas | undefined>>
   reload: boolean
   setReload: Dispatch<SetStateAction<boolean>>
-  createProjectSchema: (submittedSchema?: string) => yup.AnyObjectSchema
   openSlide: boolean
   setOpenSlide: Dispatch<SetStateAction<boolean>>
   slideType: SlideType
@@ -22,7 +21,6 @@ type DataContextProps = {
   setSlideSize: Dispatch<SetStateAction<SlideSize>>
   schemas: Schemas[]
   setSchemas: Dispatch<SetStateAction<Schemas[]>>
-  createTicketSchema: yup.AnyObjectSchema
   tickets: Tickets[]
   setTickets: Dispatch<SetStateAction<Tickets[]>>
   selectedTicket?: Tickets
@@ -51,7 +49,7 @@ type Schemas = {
   tenantId: string
 }
 
-type Tickets = {
+export type Tickets = {
   logversion: number
   id: number
   project: string
@@ -85,38 +83,11 @@ export const DataProvider = ({ children }: ProviderProps) => {
 
   const [adminUser, setAdminUser] = useState<AdminUser>()
 
-  const createProjectSchema = (submittedSchema?: string) => {
-    return yup.object().shape({
-      ProjectName: submittedSchema
-        ? yup.string().nullable()
-        : yup
-            .string()
-            .required('Project name is a required field')
-            .min(3, 'Project name must be at least 3 characters')
-            .matches(/^[a-z ]*$/, 'Project name must be only lowercase letters')
-            .lowercase('Project name must be lowercase')
-            .test(
-              'space',
-              'Project name should not contain spaces',
-              (value) => !value?.includes(' ')
-            )
-    })
-  }
-
-  const createTicketSchema = yup.object().shape({
-    Project: yup.object().required('This field is required'),
-    Priority: yup.object().required('This field is required'),
-    Category: yup.object().required('This field is required'),
-    Title: yup.string().required('This field is required'),
-    Content: yup.string().required('This field is required')
-  })
-
   return (
     <DataContext.Provider
       value={{
         reload,
         setReload,
-        createProjectSchema,
         openSlide,
         setOpenSlide,
         slideType,
@@ -127,7 +98,6 @@ export const DataProvider = ({ children }: ProviderProps) => {
         setSlideSize,
         schemas,
         setSchemas,
-        createTicketSchema,
         tickets,
         setTickets,
         selectedTicket,

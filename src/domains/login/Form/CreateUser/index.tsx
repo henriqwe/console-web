@@ -1,6 +1,7 @@
 import * as common from 'common'
 import * as utils from 'utils'
-import * as login from 'domains/login'
+import * as yup from 'yup'
+
 import {
   useForm,
   FieldValues,
@@ -14,6 +15,7 @@ import { routes } from 'domains/routes'
 import { ArrowRightIcon } from '@heroicons/react/solid'
 import { signIn } from 'next-auth/react'
 import { usePixel } from 'contexts/PixelContext'
+import * as services from 'services'
 
 type formDataType = {
   name: string
@@ -26,57 +28,70 @@ export function CreateUser() {
   const { pixel } = usePixel()
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const { createUserSchema } = login.useLogin()
   const {
     formState: { errors },
     handleSubmit,
     control
-  } = useForm({ resolver: yupResolver(createUserSchema) })
+  } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        name: yup.string().required('Name is required'),
+        userName: yup
+          .string()
+          .required('Username is required')
+          .test('equal', 'This field cannot contain spaces', (val) => {
+            const validation = new RegExp(/\s/g)
+            return !validation.test(val as string)
+          })
+          .test('equal', 'This field must contain only letters', (val) => {
+            const validation = new RegExp(/^[A-Za-z ]*$/)
+            return validation.test(val as string)
+          }),
+        email: yup
+          .string()
+          .email('Email must be valid')
+          .required('Email is required'),
+        password: yup
+          .string()
+          .required('Password is required')
+          .min(6, 'Password must be at least 6 characters long')
+      })
+    )
+  })
 
   async function Submit(formData: formDataType) {
-    setLoading(true)
-
     try {
+      setLoading(true)
       //create customer pagarme
-      const { data: pagarme_customer } = await utils.localApi.post(
-        utils.apiRoutes.local.pagarme.customers.create,
+      const { data: pagarme_customer } = await services.pagarme.customersCreate(
         {
           name: formData.name,
           email: formData.email,
           username: formData.userName
         }
       )
+
       // create user ycodify
-      await utils.localApi.post(utils.apiRoutes.local.createAccount, {
+      await services.ycodify.createAccount({
         name: formData.name,
         username: formData.userName,
         password: formData.password,
         email: formData.email
       })
+
       // get user ycodify token
-      const { data: userData } = await utils.localApi.post(
-        utils.apiRoutes.local.getUserToken,
-        {
-          username: formData.userName,
-          password: formData.password
-        }
-      )
+      const { data: userData } = await services.ycodify.getUserToken({
+        username: formData.userName,
+        password: formData.password
+      })
 
       // update user ycodify with gatewayPaymentKey
-      await utils.api.post(
-        utils.apiRoutes.updateAccount,
-        {
-          username: formData.userName,
-          password: formData.password,
-          gatewayPaymentKey: pagarme_customer?.id as string
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: userData?.access_token as string
-          }
-        }
-      )
+      await services.ycodify.updateAccountGatewayPaymentKey({
+        username: formData.userName,
+        password: formData.password,
+        gatewayPaymentKey: pagarme_customer?.id,
+        accessToken: userData?.access_token
+      })
 
       const res = await signIn('credentials', {
         username: formData.userName,
@@ -86,18 +101,15 @@ export function CreateUser() {
 
       if (res?.ok && res?.status === 200) {
         pixel.track('Lead')
-        handleActiveCampaign(formData)
-
-        router.push(routes.dashboard)
-        return
+        await handleActiveCampaign(formData)
+        return router.push(routes.dashboard)
       }
       // utils.setCookie('access_token', data?.data?.access_token)
       utils.notification('User created successfully', 'success')
       router.push(routes.dashboard)
     } catch (err: any) {
       if (err?.response?.status === 417) {
-        utils.notification('Username already exists', 'error')
-        return
+        return utils.notification('Username already exists', 'error')
       }
       utils.showError(err)
     } finally {
@@ -114,17 +126,15 @@ export function CreateUser() {
         name="name"
         control={control}
         render={({ field: { onChange } }) => (
-          <div className="w-full flex flex-col gap-y-2">
+          <div className="flex flex-col w-full gap-y-2">
             <common.Input
               onChange={onChange}
               label="Name"
               placeholder="Full name"
               name="name"
               type="text"
+              errors={errors.name}
             />
-            {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
-            )}
           </div>
         )}
       />
@@ -132,7 +142,7 @@ export function CreateUser() {
         name="userName"
         control={control}
         render={({ field: { onChange } }) => (
-          <div className="w-full flex flex-col gap-y-2">
+          <div className="flex flex-col w-full gap-y-2">
             <common.Input
               onChange={onChange}
               label="Username"
@@ -141,10 +151,8 @@ export function CreateUser() {
               name="username"
               type="text"
               autoComplete="username"
+              errors={errors.userName}
             />
-            {errors.userName && (
-              <p className="text-sm text-red-500">{errors.userName.message}</p>
-            )}
           </div>
         )}
       />
@@ -153,7 +161,7 @@ export function CreateUser() {
         name="email"
         control={control}
         render={({ field: { onChange } }) => (
-          <div className="w-full flex flex-col gap-y-2">
+          <div className="flex flex-col w-full gap-y-2">
             <common.Input
               onChange={onChange}
               label="E-mail"
@@ -162,10 +170,8 @@ export function CreateUser() {
               name="email"
               type="text"
               autoComplete="email"
+              errors={errors.email}
             />
-            {errors.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
-            )}
           </div>
         )}
       />
@@ -174,7 +180,7 @@ export function CreateUser() {
         name="password"
         control={control}
         render={({ field: { onChange } }) => (
-          <div className="w-full flex flex-col gap-y-2">
+          <div className="flex flex-col w-full gap-y-2">
             <common.Input
               onChange={onChange}
               label="Password"
@@ -183,10 +189,8 @@ export function CreateUser() {
               name="password"
               type="password"
               autoComplete="current-password"
+              errors={errors.password}
             />
-            {errors.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
-            )}
           </div>
         )}
       />
@@ -204,7 +208,7 @@ export function CreateUser() {
   )
 }
 
-function handleActiveCampaign(formData: formDataType) {
+async function handleActiveCampaign(formData: formDataType) {
   const acFormData = new FormData()
 
   const acSubdomain = process.env.NEXT_PUBLIC_AC_SUBDOMAIN as string
@@ -223,11 +227,9 @@ function handleActiveCampaign(formData: formDataType) {
   acFormData.append('firstname', formData.userName)
   acFormData.append('email', formData.email)
 
-  fetch(acSubdomain, {
+  await fetch(acSubdomain, {
     method: 'POST',
     body: acFormData,
     mode: 'no-cors'
-  }).catch((err) => {
-    console.error(err)
   })
 }
